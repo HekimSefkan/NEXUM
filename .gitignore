@@ -1,0 +1,105 @@
+# =============================================
+# Unity 2022 LTS - Kapsamlı .gitignore
+# =============================================
+
+# ---- Unity Tarafından Oluşturulan Klasörler ----
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# ---- Bellek Anlık Görüntüleri ----
+/[Mm]emoryCaptures/
+
+# ---- Kayıt Varlıkları ----
+/[Rr]ecordings/
+
+# ---- Asset Imports ----
+/[Aa]ssets/AssetStoreTools*
+
+# ---- Visual Studio / Rider / IDE Dosyaları ----
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ---- MonoDevelop ----
+/*.userprefs
+
+# ---- OS Tarafından Oluşturulan Dosyalar ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ---- Derleme Çıktıları ----
+*.dll
+*.exe
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# ---- Crash Raporları ----
+sysinfo.txt
+crashlytics-build.properties
+
+# ---- Addressables ----
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# ---- TextMeshPro ----
+/[Aa]ssets/[Tt]ext[Mm]esh Pro/
+
+# ---- Plastic SCM ----
+ignore.conf
+*.private.0
+*.private
+
+# ---- Gradle (Android Build) ----
+/[Aa]ssets/[Pp]lugins/[Aa]ndroid/**/build/
+*.gradle
+local.properties
+.gradle/
+
+# ---- NuGet ----
+*.nupkg
+packages/
+
+# ---- Profiler Verileri ----
+*.data
+*.raw
+
+# ---- Annotation / Bakery Lightmaps ----
+/[Aa]ssets/[Ss]cenes/**/*.lightingdata*
+
+# ---- Unity Package Manager ----
+# Packages klasörü takip edilmeli, ancak cache edilmemeli
+# /Packages/ klasörünü DIŞLAMIYORUZ (manifest.json gerekli)
+
+# ---- Geçici Dosyalar ----
+*.swp
+*.swo
+*~
+\#*\#

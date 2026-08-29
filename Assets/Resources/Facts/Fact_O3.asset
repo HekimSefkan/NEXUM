@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c992036424e9974f873cca4bf7f6d52, type: 3}
+  m_Name: Fact_O3
+  m_EditorClassIdentifier: 
+  factText: "Ozon (O\u2083) gaz\u0131, atmosferin \xFCst katmanlar\u0131nda G\xFCne\u015F'ten
+    gelen zararl\u0131 ultraviyole (UV) \u0131\u015F\u0131nlar\u0131 s\xFCzerek D\xFCnya'daki
+    ya\u015Fam\u0131 koruyan g\xF6r\xFCnmez bir kalkan olu\u015Fturur."

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: N_Data
+  m_EditorClassIdentifier: 
+  elementName: Azot
+  symbol: N
+  elementIcon: {fileID: 0}
+  synthesisScore: 0
+  jokerCost: 30
+  recipe: 
+  description: "Atmosferin %78'i olmas\u0131na ra\u011Fmen matrisin koyu mavi renkli
+    nadir misafiri. Amonyak yap\u0131m\u0131nda ustad\u0131r."

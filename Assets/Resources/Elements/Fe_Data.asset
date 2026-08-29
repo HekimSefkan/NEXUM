@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: Fe_Data
+  m_EditorClassIdentifier: 
+  elementName: Demir
+  symbol: Fe
+  elementIcon: {fileID: 0}
+  synthesisScore: 0
+  jokerCost: 30
+  recipe: 
+  description: "Matrisin turuncu tak\u0131m elbiseli a\u011F\u0131r abisi. Kolay
+    kolay yerinden oynamaz, matriste oksijenle birle\u015Fip paslanmaya bay\u0131l\u0131r."

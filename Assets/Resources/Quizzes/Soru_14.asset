@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f261e93a975a0ad4f99ebed1e624a3cc, type: 3}
+  m_Name: Soru_14
+  m_EditorClassIdentifier: 
+  questionText: "Halk aras\u0131nda \"Kezzap\" olarak bilinen tehlikeli kimyasal
+    maddenin form\xFCl\xFC nedir?"
+  options:
+  - HNO<sub>3</sub>
+  - HCl
+  - H<sub>2</sub>SO<sub>4</sub>
+  - NaClO
+  correctAnswerIndex: 0

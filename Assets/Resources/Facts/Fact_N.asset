@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c992036424e9974f873cca4bf7f6d52, type: 3}
+  m_Name: Fact_N
+  m_EditorClassIdentifier: 
+  factText: "Soludu\u011Fumuz havan\u0131n %78'i Azot (N) gaz\u0131d\u0131r. Ayr\u0131ca
+    bitkilerin b\xFCy\xFCyebilmesi ve DNA'm\u0131z\u0131n yap\u0131s\u0131 i\xE7in
+    en kritik elementtir."

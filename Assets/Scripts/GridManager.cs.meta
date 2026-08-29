@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6604dd5b57669cc46a4e2ffc926209a6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gridBoard: {instanceID: 0}
+  - prefab_H: {fileID: 3634079177299486472, guid: 293d81e9e56243149b4c147559fe8972, type: 3}
+  - prefab_H2: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

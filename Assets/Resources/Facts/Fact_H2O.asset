@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c992036424e9974f873cca4bf7f6d52, type: 3}
+  m_Name: Fact_H2O
+  m_EditorClassIdentifier: 
+  factText: "\u0130ki yan\u0131c\u0131 (H) ve bir yak\u0131c\u0131 (O) gaz\u0131n
+    birle\u015Fmesi ate\u015Fi s\xF6nd\xFCren Suyu (H\u2082O) olu\u015Fturur. Ayr\u0131ca
+    su, kat\u0131 hali (buz) s\u0131v\u0131 halinden daha hafif olan nadir maddelerdendir.
+    Bu sayede g\xF6ller \xFCstten donar ve bal\u0131klar hayatta kal\u0131r!"

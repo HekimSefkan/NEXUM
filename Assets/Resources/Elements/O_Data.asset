@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: O_Data
+  m_EditorClassIdentifier: 
+  elementName: Oksijen
+  symbol: O
+  elementIcon: {fileID: 0}
+  synthesisScore: 0
+  jokerCost: 30
+  description: "Yak\u0131c\u0131 bir ki\u015Fili\u011Fi var. A\xE7\u0131k mavi rengiyle
+    nefes ald\u0131rsa da, demiri bile \xE7\xFCr\xFCtecek kadar sinsidir."

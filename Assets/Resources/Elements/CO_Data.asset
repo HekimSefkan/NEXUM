@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: CO_Data
+  m_EditorClassIdentifier: 
+  elementName: Karbonmonoksit
+  symbol: CO
+  elementIcon: {fileID: 0}
+  synthesisScore: 30
+  jokerCost: 60
+  recipe: C + O
+  description: "Karbondioksitin sinsi ve zehirli k\xFC\xE7\xFCk karde\u015Fi. Matriste
+    sessizce bekler, laboratuvarda fazla solumay\u0131n!"

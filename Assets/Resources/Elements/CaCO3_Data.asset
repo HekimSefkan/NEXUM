@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: CaCO3_Data
+  m_EditorClassIdentifier: 
+  elementName: "Kire\xE7 Ta\u015F\u0131"
+  symbol: CaCO<sub>3</sub>
+  elementIcon: {fileID: 0}
+  synthesisScore: 75
+  jokerCost: 150
+  recipe: CaO + O<sub>2</sub>
+  description: "Mermer de olur tebe\u015Fir de! Kire\xE7 ve karbondioksitin birle\u015Fmesiyle
+    olu\u015Fan olduk\xE7a kat\u0131 bir blok."
