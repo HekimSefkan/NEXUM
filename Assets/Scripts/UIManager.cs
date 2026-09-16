@@ -289,7 +289,7 @@ public class UIManager : MonoBehaviour
                 
                 if(dangerGlowImage != null)
                 {
-                    dangerGlowImage.DOFade(0.35f, 0.6f).SetLoops(-1, LoopType.Yoyo).SetId("DangerAlarm");
+                    dangerGlowImage.DOFade(0.35f, 0.6f).SetLoops(-1, LoopType.Yoyo).SetId("DangerAlarm").SetLink(gameObject);
                 }
             }
             else 
