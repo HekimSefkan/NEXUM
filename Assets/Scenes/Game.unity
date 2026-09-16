@@ -3809,15 +3809,15 @@ MonoBehaviour:
   hintMessageText: {fileID: 1053080661}
   assistantAvatarImage: {fileID: 630510169}
   avatarSprites:
-  - {fileID: 21300000, guid: 2dca6c5811fede849b3cfefe648dda55, type: 3}
-  - {fileID: 21300000, guid: a2c0baeac3eb1a84b9e950f32f9dd092, type: 3}
-  - {fileID: 21300000, guid: 39199bbcddbbb5f47be711a756055e99, type: 3}
-  - {fileID: 21300000, guid: cc651d63d21a419428c4283bb2231572, type: 3}
-  - {fileID: 21300000, guid: 4e415d28886b57e49b5b91e795e7a81c, type: 3}
-  - {fileID: 21300000, guid: fb1126316f0586048a3129626b9e1945, type: 3}
-  - {fileID: 21300000, guid: eb67f8fb083b3664a810ac0b8a9ff3ac, type: 3}
-  - {fileID: 21300000, guid: 060580465acc2ca428ada82048b64a53, type: 3}
-  - {fileID: 21300000, guid: efbe2cbc075738d46aef819814e46144, type: 3}
+  - {fileID: 21300000, guid: 328b4bf4ced6b8542bf18bb316f511a0, type: 3}
+  - {fileID: 21300000, guid: f8cb64bd4fa4021439d3a437ebf4dfcb, type: 3}
+  - {fileID: 21300000, guid: 8e7ecfec6f1cd9a44a636f27e03edfda, type: 3}
+  - {fileID: 21300000, guid: f661e9c433658194dad63fd0992131fe, type: 3}
+  - {fileID: 21300000, guid: 6ea2330a138aade429f62696c215f505, type: 3}
+  - {fileID: 21300000, guid: 57fb4e06aa3b55947820e7c30095513d, type: 3}
+  - {fileID: 21300000, guid: 9f41991c07386d94383b7547fd450ce5, type: 3}
+  - {fileID: 21300000, guid: efe48211a70f6034eb898466f22ea067, type: 3}
+  - {fileID: 21300000, guid: 52276e988a726464bae5dd0db3967f7a, type: 3}
   pressureLiquidFill: {fileID: 1507296264}
   tutorialPanel: {fileID: 560538552}
   tutorialTitleText: {fileID: 1974708782}
