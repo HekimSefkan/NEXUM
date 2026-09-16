@@ -47,6 +47,9 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `ElementData` / `ChemistryFact` / `ChemistryQuiz` | ScriptableObject veri sınıfları |
 | `AutoAnchorTools` | Editör aracı: seçili RectTransform'ların anchor'larını köşelerine taşır (`#if UNITY_EDITOR`) |
 | `Editor/FontReplacerWindow` | Editör aracı: sahnedeki TMP fontlarını isim kurallarına göre değiştirir |
+| `Editor/NexumValidation` | Editör aracı: batch mode sahne/prefab doğrulaması (kaydetmez) |
+| `Core/AppBootstrap` | Sahneye eklenmeden çalışır: 60 FPS, sahne yüklenince timeScale=1, arka planda PlayerPrefs.Save |
+| `Core/SafeArea` | RectTransform'u Screen.safeArea'ya göre anchor'lar (sahneye Editor'de eklenir) |
 
 ## Kesin kurallar
 - **Oyun mantığına DOKUNMA:** GridManager'daki kaydırma / birleşme / spawn / undo / entropi / kazanma-kaybetme akışı; LevelManager'daki level verileri ve spawn ağırlıkları; tarif tabloları; GameManager'daki skor ve Joker kuralları; quiz / revive mantığı.
@@ -62,6 +65,14 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - **Ekran yönü:** Sadece Portrait (`defaultScreenOrientation: 0`, diğer autorotate yönleri 0). Enum değerleri Unity 2022.3.62f3 DLL'inden doğrulandı: Portrait=0 … AutoRotation=4.
 - **Android en-boy oranı:** Custom (`androidSupportedAspectRatio: 2`) + `androidMaxAspectRatio: 2.4`. `2` = Custom, AndroidPlayerBuildProgram IL'inden doğrulandı (mode==2 iken max değer kullanılır).
 - **Kare hızı:** 60 FPS, vSync kapalı. `Assets/Scripts/Core/AppBootstrap.cs` `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` ile ayarlar; sahneye eklenmez. Başka yerde `targetFrameRate` / `vSyncCount` yazılmamalı.
+- **Uygulama yaşam döngüsü (AppBootstrap):** `SceneManager.sceneLoaded` her sahne yüklemesinde `Time.timeScale = 1f` yapar (pause'dan menüye dönünce donma). Bu yüzden hiçbir script `Awake` / `OnEnable` içinde timeScale'i 0'a çekmemeli (sceneLoaded bunlardan sonra çalışır). Gizli `AppLifecycle` objesi (HideAndDontSave + DontDestroyOnLoad) `OnApplicationPause(true)` ve `OnApplicationQuit`'te `PlayerPrefs.Save()` çağırır; Editor'de Play modundan çıkınca kendini yok eder.
+- **Swipe girdisi (GameManager):** Eşik = dpi > 0 ise `max(swipeThreshold, dpi × 0.25)`, değilse `max(swipeThreshold, Screen.width × 0.05)`. Dokunuş başladığında `EventSystem.RaycastAll` ile en üstteki hedef bir `Selectable` içindeyse o dokunuş swipe sayılmaz. `IsPointerOverGameObject` kullanılmaz (grid hücreleri ve taşlar da UI Image). Grid üzerinde raycast yakalayan bir Selectable veya tam ekran obje eklenirse swipe bozulur.
+- **Game HUD anchor kuralı:** Üst HUD (Hint, Undo, Joker, Score, Pause, logo, GoalsContainer) yatay konumuna göre (0,1) / (0.5,1) / (1,1). Grid'le görsel grup oluşturan objeler (PressureMeter) GridBoard ile aynı anchor (0.5, 0.41666666). Alt panel (AssistantPanel) (0.5,0). Popup'lar (Hypothesis, Pause, Undo) (0.5,0.5) sabit boyut; tam ekran karartma katmanları stretch kalır. Yüzdelik (her iki eksende stretch) anchor yeni HUD objelerinde kullanılmaz. Sonuç: uzun telefonlarda grid ile üst HUD arasındaki boşluk büyür (1080×2400'de ScoreButton–grid 403 birim).
+- **Değer yuvarlama:** Anchor dönüşümlerinde tam sayıya 0,01 birimden yakın değerler tam sayıya yuvarlanır (referans görünüm hatası ≤ 0,004 birim).
+- **SafeArea:** `Assets/Scripts/Core/SafeArea.cs`, Canvas altındaki tam ekran bir kök objeye eklenir ve HUD onun çocuğu olur; Background ve tam ekran karartma katmanları dışarıda kalır. Güvenli alan, ekran boyutu ve yön değişmedikçe RectTransform'a yazmaz.
+- **Doğrulama:** `Assets/Editor/NexumValidation.cs`. Build Settings sahneleri + `Assets/Prefabs` için missing script, kopuk (Missing) referans, proje scriptlerinde null GameObject referansı ve RectTransform NaN/Infinity kontrolü; hiçbir şeyi kaydetmez. Sahne/prefab değişikliklerinden sonra çalıştır:
+  `"C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -nographics -quit -projectPath C:\Projects\NEXUM -executeMethod NexumValidation.Run -logFile <log>`
+  Log'da `NEXUM_VALIDATION: OK|FAIL`, `error CS` aranır. Bilinen FAIL: Game.unity `UIManager.avatarSprites` 9 kopuk referans (Editor'de yeniden atanacak).
 - **GridBoard (Game.unity):** Sabit **900×900**, nokta anchor (0.5, 0.41666666), pivot (0.5, 0.5), AspectRatioFitter kapalı (`m_Enabled: 0`). GridLayoutGroup: hücre 200, boşluk 20, dolgu 20 → 4×200 + 3×20 + 2×20 = 900. Bu toplam değişirse tahta boyutu da güncellenmeli.
 - **Anchor dönüşümleri:** Kenara anchor'lanıp büyük offset'le konumlanan objeler, referans (1080×1920) görünümü koruyan hesapla merkez / üst-orta anchor'a çevrilir (`yeni_pos = eski_anchor × ebeveyn_boyutu + eski_pos − yeni_anchor × ebeveyn_boyutu`).
 - **DOTween göreli tween'ler:** `DOShakePosition` / `DOPunchScale` gibi başlangıç değerini yakalayan tween'lerden önce hedefte `DOKill(true)` çağrılır (üst üste binince kalıcı kayma olmasın).
