@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -8,6 +10,8 @@ public class GameManager : MonoBehaviour
     private Vector2 startTouchPosition;
     private Vector2 endTouchPosition;
     private float swipeThreshold = 50f; // Kaydırmanın algılanması için gereken minimum piksel mesafesi
+    private bool touchStartedOnSelectable = false; // Dokunuş bir butonun/kaydırıcının üzerinde başladıysa swipe sayılmaz
+    private readonly List<RaycastResult> raycastResults = new List<RaycastResult>();
 
     [Header("Joker Sistemi")]
     public bool isJokerModeActive = false;
@@ -34,13 +38,14 @@ public class GameManager : MonoBehaviour
             {
                 // Parmak ekrana ilk değdiğinde konumu kaydet
                 startTouchPosition = touch.position;
+                touchStartedOnSelectable = IsTouchOverSelectable(touch.position);
                 endTouchPosition = touch.position;
             }
             else if (touch.phase == TouchPhase.Ended)
             {
                 // Parmak ekrandan kalktığında son konumu kaydet ve hesapla
                 endTouchPosition = touch.position;
-                DetectSwipe();
+                if (!touchStartedOnSelectable) DetectSwipe();
             }
         }
     }
@@ -52,7 +57,8 @@ public class GameManager : MonoBehaviour
         float yDistance = endTouchPosition.y - startTouchPosition.y;
 
         // Parmağın kat ettiği mesafe, belirlediğimiz barajı (threshold) geçti mi? (Yanlışlıkla dokunmaları engeller)
-        if (Mathf.Abs(xDistance) > swipeThreshold || Mathf.Abs(yDistance) > swipeThreshold)
+        float threshold = GetSwipeThreshold();
+        if (Mathf.Abs(xDistance) > threshold || Mathf.Abs(yDistance) > threshold)
         {
             // Yatayda mı daha çok kaydırmış, dikeyde mi?
             if (Mathf.Abs(xDistance) > Mathf.Abs(yDistance))
@@ -68,6 +74,28 @@ public class GameManager : MonoBehaviour
                 else GridManager.Instance.Shift(Vector2.down); // Aşağı
             }
         }
+    }
+
+    // Eşik cihazın fiziksel boyutuna göre ölçeklenir; swipeThreshold alt sınır olarak kalır
+    private float GetSwipeThreshold()
+    {
+        if (Screen.dpi > 0f) return Mathf.Max(swipeThreshold, Screen.dpi * 0.25f);
+        return Mathf.Max(swipeThreshold, Screen.width * 0.05f);
+    }
+
+    // Dokunuşun en üstteki UI hedefi bir Selectable (Button, Toggle, Slider, Scrollbar, InputField) içinde mi?
+    // Grid hücreleri ve taşlar da UI Image olduğu için IsPointerOverGameObject yerine sadece Selectable aranır.
+    private bool IsTouchOverSelectable(Vector2 screenPosition)
+    {
+        if (EventSystem.current == null) return false;
+
+        var pointerData = new PointerEventData(EventSystem.current) { position = screenPosition };
+        raycastResults.Clear();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+        if (raycastResults.Count == 0) return false;
+
+        GameObject topHit = raycastResults[0].gameObject;
+        return topHit != null && topHit.GetComponentInParent<Selectable>() != null;
     }
 
     public void ToggleJokerMode()
