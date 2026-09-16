@@ -57,6 +57,25 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - Her adımı **ayrı commit** olarak kaydet.
 - Çalışma branch'i: `tech-cleanup`.
 
+## Alınan kararlar
+- **CanvasScaler:** İki sahnede de Scale With Screen Size, 1080×1920, **Screen Match Mode = Expand** (`m_ScreenMatchMode: 1`). 1080×1920 tasarım alanı her ekranda tamamen görünür; fazla alan uzun eksene eklenir. Yeni UI bu varsayıma göre kurulmalı: canvas genişliği hiçbir zaman 1080'in, yüksekliği 1920'nin altına düşmez.
+- **Ekran yönü:** Sadece Portrait (`defaultScreenOrientation: 0`, diğer autorotate yönleri 0). Enum değerleri Unity 2022.3.62f3 DLL'inden doğrulandı: Portrait=0 … AutoRotation=4.
+- **Android en-boy oranı:** Custom (`androidSupportedAspectRatio: 2`) + `androidMaxAspectRatio: 2.4`. `2` = Custom, AndroidPlayerBuildProgram IL'inden doğrulandı (mode==2 iken max değer kullanılır).
+- **Kare hızı:** 60 FPS, vSync kapalı. `Assets/Scripts/Core/AppBootstrap.cs` `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` ile ayarlar; sahneye eklenmez. Başka yerde `targetFrameRate` / `vSyncCount` yazılmamalı.
+- **GridBoard (Game.unity):** Sabit **900×900**, nokta anchor (0.5, 0.41666666), pivot (0.5, 0.5), AspectRatioFitter kapalı (`m_Enabled: 0`). GridLayoutGroup: hücre 200, boşluk 20, dolgu 20 → 4×200 + 3×20 + 2×20 = 900. Bu toplam değişirse tahta boyutu da güncellenmeli.
+- **Anchor dönüşümleri:** Kenara anchor'lanıp büyük offset'le konumlanan objeler, referans (1080×1920) görünümü koruyan hesapla merkez / üst-orta anchor'a çevrilir (`yeni_pos = eski_anchor × ebeveyn_boyutu + eski_pos − yeni_anchor × ebeveyn_boyutu`).
+- **DOTween göreli tween'ler:** `DOShakePosition` / `DOPunchScale` gibi başlangıç değerini yakalayan tween'lerden önce hedefte `DOKill(true)` çağrılır (üst üste binince kalıcı kayma olmasın).
+- **IL2CPP / ARM64 / package name:** Kullanıcı Unity Editor'de ayarlayacak; YAML ile dokunulmaz.
+
+## YAML düzenleme kuralları
+- Düzenlemeden önce Unity Editor'ün **kapalı** olduğunu kullanıcıya sorarak teyit et.
+- Sadece ilgili alanların **değerlerini** değiştir. Blok ekleme / silme yok; `fileID` ve `guid` değerlerine dokunma.
+- Obje silme YAML ile yapılmaz; Editor'de kullanıcı yapar.
+- Satır sonlarını (sahneler ve ProjectSettings LF, `.cs` dosyaları çalışma kopyasında CRLF) ve girintiyi koru.
+- Satır numarası + beklenen eski içerik doğrulamasıyla düzenle; eşleşmezse hiçbir şey yazma.
+- Her düzenlemeden sonra `git diff` ile yalnızca hedeflenen satırların değiştiğini doğrula; beklenmeyen satır varsa geri al ve kullanıcıya bildir.
+- Float değerleri Unity biçiminde yaz (float32'nin en kısa geri-dönüşümlü gösterimi, örn. `0.41666666`).
+
 ## Kapsam dışı (bu temizlik çalışmasında yapılmayacak)
 - Spawn kuralı (her geçerli hamlede spawn)
 - Taşların duvara kadar kayması
