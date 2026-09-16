@@ -191,7 +191,7 @@ public static class NexumValidation
             if (component is ScrollRect && eventPath == "m_OnValueChanged" && IsSoundCall(target, methodName))
                 warnings.Add($"ScrollRect.onValueChanged ses çağırıyor (kaydırırken her karede çalar): {label} -> {where}");
 
-            if (target is MonoBehaviour behaviour && IsDestroyableSingletonCopy(behaviour.GetType()))
+            if (target is MonoBehaviour behaviour && IsDestroyableSingletonCopy(behaviour))
                 warnings.Add($"Singleton hedefleniyor; sahne yeniden yüklenince bu kopya yok edilir ve çağrı sessizce düşer: {label} -> {where}");
         }
 
@@ -235,13 +235,19 @@ public static class NexumValidation
                || methodName.IndexOf("SFX", StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
-    // Kendi tipinden static Instance taşıyan (singleton) ve proxy desteği (IsProxy üyesi) olmayan tipler
-    private static bool IsDestroyableSingletonCopy(Type type)
+    // Sahneler arası kalıcı singleton (kendi tipinden static Instance + script içinde DontDestroyOnLoad) olup
+    // proxy desteği (IsProxy üyesi) olmayan tipler: sahne yeniden yüklenince kopyası yok edilir.
+    // Sahneye bağlı singleton'lar (UIManager, GridManager gibi) sahneyle birlikte yeniden oluştuğu için uyarı almaz.
+    private static bool IsDestroyableSingletonCopy(MonoBehaviour behaviour)
     {
+        Type type = behaviour.GetType();
         const BindingFlags staticFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         bool hasInstance = type.GetField("Instance", staticFlags)?.FieldType == type
                            || type.GetProperty("Instance", staticFlags)?.PropertyType == type;
         if (!hasInstance) return false;
+
+        MonoScript script = MonoScript.FromMonoBehaviour(behaviour);
+        if (script == null || !script.text.Contains("DontDestroyOnLoad")) return false;
 
         const BindingFlags instanceFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         bool supportsProxy = type.GetProperty("IsProxy", instanceFlags) != null || type.GetField("IsProxy", instanceFlags) != null;
