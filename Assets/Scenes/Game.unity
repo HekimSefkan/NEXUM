@@ -3705,7 +3705,7 @@ MonoBehaviour:
   maxHints: 3
   usedHints: 0
   currentGameMode: 0
-  mergeParticlePrefab: {fileID: 890111403522508749, guid: 73435be1dfde14b41b0f6878cf21bcaf, type: 3}
+  mergeParticlePrefab: {fileID: 0}
 --- !u!4 &641637252
 Transform:
   m_ObjectHideFlags: 0
