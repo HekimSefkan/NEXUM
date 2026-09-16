@@ -60,6 +60,11 @@ desktop.ini
 *.unitypackage
 *.app
 
+# ---- Assets altındaki eklenti DLL'leri takip edilmeli (örn. DOTween) ----
+!/[Aa]ssets/**/*.dll
+!/[Aa]ssets/**/*.mdb
+!/[Aa]ssets/**/*.pdb
+
 # ---- Crash Raporları ----
 sysinfo.txt
 crashlytics-build.properties
@@ -70,7 +75,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # ---- TextMeshPro ----
-/[Aa]ssets/[Tt]ext[Mm]esh Pro/
+# Assets/TextMesh Pro/ (TMP Essentials) takip edilmeli: sahneler font/shader/ayar asset'lerine referans veriyor
 
 # ---- Plastic SCM ----
 ignore.conf
@@ -84,8 +89,8 @@ local.properties
 .gradle/
 
 # ---- NuGet ----
+# Not: "packages/" kuralı core.ignorecase=true iken Packages/manifest.json'u dışladığı için kaldırıldı
 *.nupkg
-packages/
 
 # ---- Profiler Verileri ----
 *.data
@@ -97,6 +102,9 @@ packages/
 # ---- Unity Package Manager ----
 # Packages klasörü takip edilmeli, ancak cache edilmemeli
 # /Packages/ klasörünü DIŞLAMIYORUZ (manifest.json gerekli)
+
+# ---- Proje Dışı Kaynaklar (ham görseller, APK, PDF'ler) ----
+/NEXUM stuff/
 
 # ---- Geçici Dosyalar ----
 *.swp
