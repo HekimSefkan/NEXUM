@@ -130,6 +130,7 @@ public class ProfileManager : MonoBehaviour
         if (!IsValidEmail(newEmail))
         {
             if (emailWarningText != null) emailWarningText.text = "<color=red>Kabul edilmeyen E-Posta formatı!</color>";
+            if (emailInputField != null) emailInputField.transform.DOKill(true);
             if (emailInputField != null) emailInputField.transform.DOShakePosition(0.4f, new Vector3(15f, 0, 0), 20);
             return;
         }
