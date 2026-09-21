@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -32,6 +33,13 @@ public static class NexumValidation
         "UIManager.RestartGame",
         "UIManager.GoToMainMenu",
         "UIManager.NextLevel",
+    };
+
+    // Resources altında kalmasına izin verilen (kod tarafından yüklenen) girdiler
+    private static readonly HashSet<string> AllowedResources = new HashSet<string>
+    {
+        "Elements",               // EncyclopediaManager: Resources.LoadAll<ElementData>("Elements")
+        "DOTweenSettings.asset",  // DOTween kendi yükler
     };
 
     // =========================================
@@ -94,6 +102,9 @@ public static class NexumValidation
                 }
             }
         }
+
+        CheckProjectSettings(problems);
+        CheckResourcesFolder(warnings);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
         foreach (string warning in warnings) Debug.Log($"{WarnTag}: {warning}");
@@ -269,6 +280,36 @@ public static class NexumValidation
 
         if (bad.Count > 0)
             problems.Add($"NaN/Infinity ({string.Join(", ", bad)}) -> {assetPath} :: {HierarchyPath(rect)}");
+    }
+
+    // ProjectSettings içindeki asset referansları (uygulama ikonu, splash vb.) çözülüyor mu?
+    private static void CheckProjectSettings(List<string> problems)
+    {
+        foreach (string file in Directory.GetFiles("ProjectSettings", "*.asset"))
+        {
+            string text = File.ReadAllText(file);
+            foreach (Match m in Regex.Matches(text, "guid: ([0-9a-f]{32})"))
+            {
+                string guid = m.Groups[1].Value;
+                if (guid.Trim('0').Length == 0) continue;                       // boş referans
+                if (!string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath(guid))) continue;  // yerleşik kaynaklar dahil
+                problems.Add($"ProjectSettings'te çözülemeyen asset referansı: {guid} -> {file}");
+            }
+        }
+    }
+
+    // Resources altındaki her şey build'e girer; kod tarafından yüklenmeyenler uyarı alır
+    private static void CheckResourcesFolder(List<string> warnings)
+    {
+        const string root = "Assets/Resources";
+        if (!Directory.Exists(root)) return;
+
+        foreach (string entry in Directory.GetFileSystemEntries(root))
+        {
+            string name = Path.GetFileName(entry);
+            if (name.EndsWith(".meta") || AllowedResources.Contains(name)) continue;
+            warnings.Add($"Resources altında kod tarafından yüklenmeyen girdi (build'e giriyor): {root}/{name}");
+        }
     }
 
     private static bool IsProjectScript(Component component)
