@@ -8,6 +8,9 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance; 
 
+    // Sahne başında bir kez bulunur; her panel açılışında aranmaz
+    private GameManager gameManager;
+
     [Header("Arayüz Bağlantıları")]
     public GameObject gameOverPanel; 
     public GameObject winPanel; 
@@ -71,6 +74,7 @@ public class UIManager : MonoBehaviour
     void Awake() 
     { 
         Instance = this; 
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     void Start()
@@ -146,7 +150,7 @@ public class UIManager : MonoBehaviour
     { 
         int cost = GridManager.Instance.undoCost;
         int remaining = GridManager.Instance.currentUndoLimit - GridManager.Instance.usedUndos;
-        GameManager gm = FindObjectOfType<GameManager>();
+        GameManager gm = gameManager != null ? gameManager : FindObjectOfType<GameManager>();
         int currentScore = (gm != null) ? gm.currentScore : 0;
 
         string costColor = (currentScore >= cost) ? "green" : "red";
