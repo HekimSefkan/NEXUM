@@ -376,12 +376,12 @@ public class UIManager : MonoBehaviour
         tmpText.color = comboColor;
 
         floatingObj.transform.localScale = Vector3.zero;
-        floatingObj.transform.DOScale(Vector3.one * 1.2f, 0.3f).SetEase(Ease.OutBack);
+        floatingObj.transform.DOScale(Vector3.one * 1.2f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
 
         Sequence seq = DOTween.Sequence();
         seq.Append(floatingObj.transform.DOMoveY(150f * (canvasTransform.GetComponentInParent<Canvas>()?.scaleFactor ?? 1f), 1.5f).SetRelative().SetEase(Ease.OutQuad)); 
         seq.Join(tmpText.DOFade(0, 1.5f).SetEase(Ease.InExpo)); 
-        seq.OnComplete(() => Destroy(floatingObj)); 
+        seq.SetUpdate(true).OnComplete(() => Destroy(floatingObj)); 
     }
 
     public void PlayButtonSound()
