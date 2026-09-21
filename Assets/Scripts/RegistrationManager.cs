@@ -87,6 +87,7 @@ public class RegistrationManager : MonoBehaviour
             if(detailsButton != null)
             {
                 detailsButton.interactable = true;
+                detailsButton.transform.DOKill(true);
                 detailsButton.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0), 0.3f);
             }
         }
@@ -148,6 +149,7 @@ public class RegistrationManager : MonoBehaviour
                     emailWarningText.text = "<color=red>Kabul edilmeyen E-Posta formatı!</color>";
                     
                     // Giriş kutusunu oyuncuyu uyarmak için hafifçe titret
+                    emailInputField.transform.DOKill(true);
                     emailInputField.transform.DOShakePosition(0.4f, new Vector3(15f, 0, 0), 20);
                 }
                 

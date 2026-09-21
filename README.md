@@ -1,13 +1,17 @@
 # NEXUM# 🧪 NEXUM: Kimya Akademisi
 
-**NEXUM**, kimya bilimi ile bulmaca dinamiklerini bir araya getiren, 12 seviyeli ve 4x4 ızgara (grid) tabanlı bir mobil strateji ve sentez oyunudur. Oyuncular, temel elementleri birleştirerek daha karmaşık bileşikleri sentezler ve akademi basamaklarında yükselirler.
+**NEXUM**, kimya bilimi ile bulmaca dinamiklerini bir araya getiren, 7 seviyeli ve 4x4 ızgara (grid) tabanlı bir mobil strateji ve sentez oyunudur. Oyuncular, temel elementleri birleştirerek daha karmaşık bileşikleri sentezler ve akademi basamaklarında yükselirler.
 
 ## 🚀 Proje Özeti
 - **Geliştirici:** Hekim Sefkan Elik
 - **Platform:** Android (Mobil Öncelikli - Dikey Ekran)
-- **Oyun Motoru:** Unity 2022 LTS
+- **Oyun Motoru:** Unity 2022.3.62f3 (LTS)
 - **Dil & Teknolojiler:** C#, DOTween (Animasyonlar), Regex (Veri Doğrulama)
 - **Durum:** Geliştirme Aşamasında (Aktif)
+
+## 🧰 Projeyi Açma
+- Unity Hub > **Add** ile proje klasörünü ekleyin ve **Unity 2022.3.62f3** ile açın.
+- DOTween repoda dahildir (`Assets/Plugins/Demigiant/DOTween`); ayrıca kurulum gerekmez.
 
 ## 🎮 Temel Oyun Mekanikleri
 

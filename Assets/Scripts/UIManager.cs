@@ -289,7 +289,7 @@ public class UIManager : MonoBehaviour
                 
                 if(dangerGlowImage != null)
                 {
-                    dangerGlowImage.DOFade(0.35f, 0.6f).SetLoops(-1, LoopType.Yoyo).SetId("DangerAlarm");
+                    dangerGlowImage.DOFade(0.35f, 0.6f).SetLoops(-1, LoopType.Yoyo).SetId("DangerAlarm").SetLink(gameObject);
                 }
             }
             else 
@@ -375,7 +375,7 @@ public class UIManager : MonoBehaviour
         floatingObj.transform.DOScale(Vector3.one * 1.2f, 0.3f).SetEase(Ease.OutBack);
 
         Sequence seq = DOTween.Sequence();
-        seq.Append(floatingObj.transform.DOMoveY(150f, 1.5f).SetRelative().SetEase(Ease.OutQuad)); 
+        seq.Append(floatingObj.transform.DOMoveY(150f * (canvasTransform.GetComponentInParent<Canvas>()?.scaleFactor ?? 1f), 1.5f).SetRelative().SetEase(Ease.OutQuad)); 
         seq.Join(tmpText.DOFade(0, 1.5f).SetEase(Ease.InExpo)); 
         seq.OnComplete(() => Destroy(floatingObj)); 
     }

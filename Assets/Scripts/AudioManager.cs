@@ -4,6 +4,10 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
+    // Sahne yeniden yüklendiğinde oluşan kopya yok edilmez; sahnedeki butonların çağrılarını gerçek Instance'a iletir
+    private bool isProxy = false;
+    public bool IsProxy => isProxy;
+
     [Header("Ses Kaynakları (Audio Sources)")]
     public AudioSource bgmSource; 
     public AudioSource sfxSource; 
@@ -31,12 +35,25 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            BecomeProxy();
+        }
+    }
+
+    // Proxy: kendi seslerini susturur, müzik başlatmaz, DontDestroyOnLoad'a girmez ve Instance'ı değiştirmez
+    private void BecomeProxy()
+    {
+        isProxy = true;
+        foreach (AudioSource source in GetComponents<AudioSource>())
+        {
+            source.Stop();
+            source.mute = true;
         }
     }
 
     void Start()
     {
+        if (isProxy) return;
+
         if (bgmClip != null && bgmSource != null)
         {
             bgmSource.clip = bgmClip;
@@ -51,6 +68,12 @@ public class AudioManager : MonoBehaviour
     // YENİ: Ayarlar menüsünden butona basıldığı an müziği anında kesen/açan fonksiyon
     public void UpdateMusicState()
     {
+        if (isProxy)
+        {
+            if (Instance != null && Instance != this) Instance.UpdateMusicState();
+            return;
+        }
+
         if (bgmSource != null)
         {
             int musicOn = PlayerPrefs.GetInt("MusicOn", 1);
@@ -60,6 +83,12 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(AudioClip clip, float volume = 1f)
     {
+        if (isProxy)
+        {
+            if (Instance != null && Instance != this) Instance.PlaySFX(clip, volume);
+            return;
+        }
+
         // YENİ: Efekt çalmadan önce hafızaya bak. Kapalıysa (0), hiç çalmadan geri dön!
         int sfxOn = PlayerPrefs.GetInt("SfxOn", 1);
         if (sfxOn == 0) return; 
@@ -72,6 +101,12 @@ public class AudioManager : MonoBehaviour
 
     public void PlayButtonSound()
     {
+        if (isProxy)
+        {
+            if (Instance != null && Instance != this) Instance.PlayButtonSound();
+            return;
+        }
+
         PlaySFX(buttonClip);
     }
 }
