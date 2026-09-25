@@ -87,13 +87,20 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
   - **İstisnalar:** dosya başındaki `AllowedNullFields` (bilerek boş alanlar, `Tip.alan`; şu an `GridManager.mergeParticlePrefab`) ve `SceneLoadMethods` (sahne yükleyen metotlar, `Tip.Metot`). Yeni bilerek-boş alan veya sahne yükleyen metot eklenirse bu listeler güncellenmeli.
   - **UnityEvent FAIL:** hedef null/Missing; metot hedef tipte dinleyici moduna uygun parametreyle yok.
   - **UnityEvent WARN (sonucu FAIL yapmaz):** aynı olayda birden fazla sahne yükleme; ScrollRect.onValueChanged'e bağlı ses; script'inde `DontDestroyOnLoad` geçen, kendi tipinden static `Instance` taşıyan ve `IsProxy` üyesi olmayan singleton'ı hedefleme.
+  - **Diğer WARN'lar:** ElementData'da boş/çok kısa metin alanları (temel elementlerde boş recipe hariç); ses import kuralına uymayan dosyalar; sahnede kaydırılmış kaydedilmiş ScrollRect içeriği.
+  - **FAIL:** ProjectSettings'te çözülemeyen asset referansı (silinen ikon gibi).
 - **GridBoard (Game.unity):** Sabit **900×900**, nokta anchor (0.5, 0.41666666), pivot (0.5, 0.5), AspectRatioFitter kapalı (`m_Enabled: 0`). GridLayoutGroup: hücre 200, boşluk 20, dolgu 20 → 4×200 + 3×20 + 2×20 = 900. Bu toplam değişirse tahta boyutu da güncellenmeli.
 - **Anchor dönüşümleri:** Kenara anchor'lanıp büyük offset'le konumlanan objeler, referans (1080×1920) görünümü koruyan hesapla merkez / üst-orta anchor'a çevrilir (`yeni_pos = eski_anchor × ebeveyn_boyutu + eski_pos − yeni_anchor × ebeveyn_boyutu`).
 - **DOTween göreli tween'ler:** `DOShakePosition` / `DOPunchScale` gibi başlangıç değerini yakalayan tween'lerden önce hedefte `DOKill(true)` çağrılır (üst üste binince kalıcı kayma olmasın).
 - **IL2CPP / ARM64 / package name:** Kullanıcı Unity Editor'de ayarlayacak; YAML ile dokunulmaz.
 
-- **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma.
-- **Doku import kuralı:** `maxTextureSize` = dokunun sahnelerdeki en büyük kullanım boyutunun 1,5 katından büyük en küçük 2'nin kuvveti (en az 256, en çok 2048, kaynak boyutu aşmadan). UI dokularında mipmap kapalı, Read/Write kapalı. Değişiklik yalnızca `TextureImporter.maxTextureSize` ve `DefaultTexturePlatform` bloğunda yapılır; Android blokları `overridden: 0` olduğu için Default değeri geçerlidir. Yeni platform bloğu eklemek Editor işidir.
+- **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma. Batch mode Unity komutlarının sonuna `| Out-Null` eklenir.
+- **Satır sonları (.gitattributes):** Depo kökündeki `.gitattributes` `* text=auto eol=lf` ile hem depoyu hem çalışma kopyasını LF'e sabitler; `core.autocrlf` ayarı artık sonucu değiştirmez. Unity YAML ve kod uzantıları metin, görsel/font/ses/dll/apk ikili olarak işaretlidir. (Sahne birleştirme için UnityYAMLMerge ayrıca kurulabilir; şu an yapılandırılmadı.)
+- **Ses import kuralı:** 10 sn üstü → Streaming + Vorbis + quality ~0.7 + loadInBackground; 3 sn altı → Decompress On Load + ADPCM + forceToMono; arası → Compressed In Memory + Vorbis. Süre MP3 başlığından tahmin edilmez, Unity'nin `AudioClip.length` değeri esas alınır (validator bunu kontrol eder). Yalnızca mevcut alanların değeri değiştirilir; yeni platform bloğu Editor işidir.
+- **İkinci şans (quiz):** Hak, quiz paneli açıldığı anda tüketilir (`UIManager.ShowQuizPanel` içinde `GridManager.Instance.hasUsedRevive = true`). Yanlış cevapta oyun sonu ekranına dönülür ve buton bir daha görünmez; doğru cevapta oyun devam eder. Bayrak GridManager örneğinde tutulur, sahne yeniden yüklenince (Yeniden Başlat / Sonraki Bölüm / menüden bölüme giriş) sıfırlanır.
+- **Panel kaydırması:** `MainMenuManager.SwitchPanel`, açılan panelin altındaki tüm ScrollRect'leri en üste alır (`LayoutRebuilder.ForceRebuildLayoutImmediate` + `Canvas.ForceUpdateCanvases` sonrası). Yeni ScrollRect'li panel eklenirse bu davranış kendiliğinden geçerli olur; sahnede içerik kaydırılmış kaydedilmişse validator uyarır.
+- **Quiz paneli yerleşimi:** QuizPanel tam ekran karartma (stretch) kalır; içindeki çerçeve 900×1100 merkezde, soru 800×300 @ y=330 (TMP otomatik boyut 34-50), şıklar y = 60 / -80 / -220 / -360. Geri bildirim sırasında soru metni koda göre ortaya alınır (800×700 @ y=0) ve quiz tekrar açılınca eski yerine döner.
+- **Doku import kuralı:** Kullanım boyutu hesaplanırken **çalışma zamanında atanan sprite'lar da** dikkate alınır (ör. avatarlar kayıt ekranında 663×724 gösteriliyor; yalnızca sahnedeki Image boyutuna bakmak yanıltır). `maxTextureSize` = dokunun en büyük kullanım boyutunun 1,5 katından büyük en küçük 2'nin kuvveti (en az 256, en çok 2048, kaynak boyutu aşmadan). UI dokularında mipmap kapalı, Read/Write kapalı. Değişiklik yalnızca `TextureImporter.maxTextureSize` ve `DefaultTexturePlatform` bloğunda yapılır; Android blokları `overridden: 0` olduğu için Default değeri geçerlidir. Yeni platform bloğu eklemek Editor işidir.
 - **Görsel kuralı (Linear renk uzayı):** Şeffaf alanların alfası tam 0 olmalı. Alfası 1–9 olan geniş katmanlar koyu arka planda gri kutu olarak görünür. Tarama aracı: `scratchpad/AlphaScan.ps1`; temizleme + Lanczos küçültme: `scratchpad/CleanSprite.ps1` (spriteMode Single ve border yoksa boyut değiştirilebilir).
 - **Resources kuralı:** `Assets/Resources` altında yalnızca kodla yüklenenler durur (şu an Elements ve DOTweenSettings). Yeni bir şey eklenirse `NexumValidation.AllowedResources` listesi de güncellenmeli; aksi hâlde validator uyarı verir. Görseller `Assets/Art`, sesler `Assets/Audio`, ScriptableObject verileri `Assets/Data` altına konur.
 - **TMP font önbelleği:** `Assets/TextMesh Pro` altındaki font asset'lerinde (özellikle `LiberationSans SDF - Fallback.asset`) yalnızca dinamik atlas / glif önbelleği değişmişse bu sorun sayılmaz; sorulmadan `git restore` ile geri alınır ve raporda tek satırla belirtilir. Bu dosyalarda başka türden bir değişiklik olursa durulup kullanıcıya sorulur.
@@ -103,10 +110,15 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - Düzenlemeden önce Unity Editor'ün **kapalı** olduğunu kullanıcıya sorarak teyit et.
 - Sadece ilgili alanların **değerlerini** değiştir. Blok ekleme / silme yok; `fileID` ve `guid` değerlerine dokunma.
 - Obje silme YAML ile yapılmaz; Editor'de kullanıcı yapar.
-- Satır sonlarını ve girintiyi koru. Depoda her şey LF; çalışma kopyasında `core.autocrlf=true` yüzünden dosyalar CRLF olabilir (dal değiştirdikten sonra sahneler de CRLF olur). Düzenleme araçları satır sonunu satır satır korumalı, karşılaştırma yaparken `` kırpmalı.
+- Satır sonlarını ve girintiyi koru. Depoda her şey LF; çalışma kopyasında `core.autocrlf=true` yüzünden dosyalar CRLF olabilir (dal değiştirdikten sonra sahneler de CRLF olur). Düzenleme araçları satır sonunu satır satır korumalı, karşılaştırma yaparken `
+` kırpmalı.
 - Satır numarası + beklenen eski içerik doğrulamasıyla düzenle; eşleşmezse hiçbir şey yazma.
 - Her düzenlemeden sonra `git diff` ile yalnızca hedeflenen satırların değiştiğini doğrula; beklenmeyen satır varsa geri al ve kullanıcıya bildir.
 - Float değerleri Unity biçiminde yaz (float32'nin en kısa geri-dönüşümlü gösterimi, örn. `0.41666666`).
+
+## Kapsam (5. turda güncellendi)
+- **Kapsam içi:** quiz / ikinci şans akışı ve ansiklopedi veri alanları (ElementData'nın görünen metinleri). Bunlar dışında GridManager ve LevelManager'a dokunulmaz.
+- ElementData'da **puan, silme maliyeti ve GridManager birleşme tablosu** hâlâ kapsam dışıdır.
 
 ## Kapsam dışı (bu temizlik çalışmasında yapılmayacak)
 - Spawn kuralı (her geçerli hamlede spawn)
@@ -116,7 +128,6 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - Kazanma ekranının tekrar tetiklenmesi
 - Undo sayaçları (hedef sayacı, skor, entropi geri alma, boş hamle snapshot'ları)
 - Joker / revive silme hatası (DOKill ile iptal olan Destroy)
-- Quiz hakkı (sınırsız revive denemesi)
 - Entropi uyarısının yanlış metne yazılması
 - TotalAccidents / flashcard / mentor ipucu özellikleri
 - `Shift()` refactor'ü
