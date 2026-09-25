@@ -8,10 +8,22 @@ public class TileInteraction : MonoBehaviour, IPointerDownHandler
     [Header("Element Verisi")]
     public ElementData myElementData; // Şüpheli 2'deki aradığımız kutu bu!
 
+    // Taşlar sık yaratıldığı için referans statik ve tembel olarak tutulur;
+    // sahne değişince eski referans Unity tarafından null sayılır ve yeniden aranır.
+    private static GameManager cachedManager;
+    private static GameManager Manager
+    {
+        get
+        {
+            if (cachedManager == null) cachedManager = FindObjectOfType<GameManager>();
+            return cachedManager;
+        }
+    }
+
     // OnMouseDown YERİNE artık UI sisteminin kendi tıklama algılayıcısını kullanıyoruz
     public void OnPointerDown(PointerEventData eventData)
     {
-        GameManager manager = FindObjectOfType<GameManager>();
+        GameManager manager = Manager;
 
         // Eğer GameManager varsa ve Joker Modu açıksa
         if (manager != null && manager.isJokerModeActive)

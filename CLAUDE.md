@@ -10,18 +10,21 @@
 ## Klasör yapısı
 ```
 Assets/
-  Editor/            FontReplacerWindow.cs, NexumValidation.cs (editör araçları)
+  Art/
+    Avatars/         Mentor portreleri
+    Figures/         UI görselleri
+  Audio/
+    Voice/           Müzik ve efekt sesleri
+  Data/
+    Facts/           ChemistryFact asset'leri
+    Quizzes/         ChemistryQuiz asset'leri
+  Editor/            AutoAnchorTools.cs, FontReplacerWindow.cs, NexumValidation.cs (editör araçları)
   Fonts/             Orbitron / Oxanium TTF + TMP SDF asset'leri
   Plugins/Demigiant/ DOTween
   Prefabs/           Tile_*.prefab (elementler/bileşikler), BeakerGoalPrefab, ComboTextPrefab, ElementCard, MergeParticle
-  Resources/
-    Avatars/         Mentor portreleri
-    Elements/        ElementData asset'leri (Resources.LoadAll ile yüklenir)
-    Facts/           ChemistryFact asset'leri
-    Quizzes/         ChemistryQuiz asset'leri
-    Figures/         UI görselleri
-    Voice/           Müzik ve efekt sesleri
-    DOTweenSettings.asset
+  Resources/         SADECE kodla yüklenenler
+    Elements/        ElementData asset'leri (Resources.LoadAll<ElementData>("Elements"))
+    DOTweenSettings.asset  (DOTween kendi yükler)
   Scenes/            MainMenu, Game, SampleScene
   Scripts/           Oyun scriptleri (aşağıda)
   TextMesh Pro/      TMP Essentials
@@ -45,7 +48,7 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `EncyclopediaManager` | ElementData'lardan ansiklopedi kartları üretir |
 | `HowToPlayManager` | Nasıl oynanır pop-up'ları |
 | `ElementData` / `ChemistryFact` / `ChemistryQuiz` | ScriptableObject veri sınıfları |
-| `AutoAnchorTools` | Editör aracı: seçili RectTransform'ların anchor'larını köşelerine taşır (`#if UNITY_EDITOR`) |
+| `Editor/AutoAnchorTools` | Editör aracı: seçili RectTransform'ların anchor'larını köşelerine taşır |
 | `Editor/FontReplacerWindow` | Editör aracı: sahnedeki TMP fontlarını isim kurallarına göre değiştirir |
 | `Editor/NexumValidation` | Editör aracı: batch mode sahne/prefab doğrulaması (kaydetmez) |
 | `Core/AppBootstrap` | Sahneye eklenmeden çalışır: 60 FPS, sahne yüklenince timeScale=1, arka planda PlayerPrefs.Save |
@@ -68,7 +71,8 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - **Uygulama yaşam döngüsü (AppBootstrap):** `SceneManager.sceneLoaded` her sahne yüklemesinde `Time.timeScale = 1f` yapar (pause'dan menüye dönünce donma). Bu yüzden hiçbir script `Awake` / `OnEnable` içinde timeScale'i 0'a çekmemeli (sceneLoaded bunlardan sonra çalışır). Gizli `AppLifecycle` objesi (HideAndDontSave + DontDestroyOnLoad) `OnApplicationPause(true)` ve `OnApplicationQuit`'te `PlayerPrefs.Save()` çağırır; Editor'de Play modundan çıkınca kendini yok eder.
 - **Swipe girdisi (GameManager):** Eşik = dpi > 0 ise `max(swipeThreshold, dpi × 0.25)`, değilse `max(swipeThreshold, Screen.width × 0.05)`. Dokunuş başladığında `EventSystem.RaycastAll` ile en üstteki hedef bir `Selectable` içindeyse o dokunuş swipe sayılmaz. `IsPointerOverGameObject` kullanılmaz (grid hücreleri ve taşlar da UI Image). Grid üzerinde raycast yakalayan bir Selectable veya tam ekran obje eklenirse swipe bozulur.
 - **Game HUD anchor kuralı (şu anki durum):** Üst HUD (Hint, Undo, Joker, Score, Pause, logo, GoalsContainer) yatay konumuna göre (0,1) / (0.5,1) / (1,1). Grid'le görsel grup oluşturan objeler (PressureMeter) GridBoard ile aynı anchor (0.5, 0.41666666). Alt panel (AssistantPanel) (0.5,0). Popup'lar (Hypothesis, Pause, Undo) (0.5,0.5) sabit boyut; tam ekran karartma katmanları stretch kalır. Yüzdelik (her iki eksende stretch) anchor yeni HUD objelerinde kullanılmaz. Sonuç: uzun telefonlarda grid ile üst HUD arasındaki boşluk büyür (1080×2400'de ScoreButton–grid 403 birim).
-- **HUD kümesinin grid anchor'ı (hedef karar, UYGULANMADI):** GoalsContainer, ScoreButton, JokerButton, UndoButton ve HintButton'ın GridBoard ile aynı anchor'a (0.5, 0.41666666) alınması kararlaştırıldı; logo ve PauseButton üst kenarda kalır. Uygulanmadı çünkü referansta var olan GoalsContainer × logo 21,2 birimlik örtüşme, GoalsContainer tek başına aşağı alınınca ScoreButton ile 1,9 birim çakışmaya dönüşüyor. Kullanıcının seçmesi bekleniyor: (A) Goals 21,2 aşağı + ScoreButton 2 aşağı, (B) Goals 11 aşağı + logo 10,2 yukarı. İkisi de 1080×1920 / 1080×2114 / 1080×2300 / 1440×1920 safe area boyutlarında çakışmasız.
+- **HUD kümesinin grid anchor'ı (UYGULANDI, alternatif A):** GoalsContainer, ScoreButton, JokerButton, UndoButton ve HintButton GridBoard ile aynı anchor'da (0.5, 0.41666666); logo ve PauseButton üst kenarda. GoalsContainer 21,2 ve ScoreButton 2 birim aşağı alınarak GoalsContainer × logo örtüşmesi giderildi. Dört safe area boyutunda (1080×1920 / 1080×2114 / 1080×2300 / 1440×1920) taşma ve çakışma yok; HUD–grid boşluğu her ekranda sabit (58 / Score 121).
+- ~~**HUD kümesinin grid anchor'ı (hedef karar, UYGULANMADI):**~~ GoalsContainer, ScoreButton, JokerButton, UndoButton ve HintButton'ın GridBoard ile aynı anchor'a (0.5, 0.41666666) alınması kararlaştırıldı; logo ve PauseButton üst kenarda kalır. Uygulanmadı çünkü referansta var olan GoalsContainer × logo 21,2 birimlik örtüşme, GoalsContainer tek başına aşağı alınınca ScoreButton ile 1,9 birim çakışmaya dönüşüyor. Kullanıcının seçmesi bekleniyor: (A) Goals 21,2 aşağı + ScoreButton 2 aşağı, (B) Goals 11 aşağı + logo 10,2 yukarı. İkisi de 1080×1920 / 1080×2114 / 1080×2300 / 1440×1920 safe area boyutlarında çakışmasız.
 - **MainMenu menü butonları:** PlayButton, HowToPlayButton, EncyclopediaButton, SettingButton merkez anchor (0.5, 0.5); y = 395 / 121 / -137 / -402. ProfileButton sol üstte (0,1). Uzun ekranlarda grup ortada kalır.
 - **LevelMap:** `LevelSelectionPanel/LevelMap` (merkez, 1080×1920) → `MapBG` (stretch, level_selection_arkaplan). Level1–7 butonları `MapBG`'nin çocuğu (LevelMap değil); MapBG LevelMap'i tamamen kapladığı için görsel/işlevsel fark yok — **kabul edildi, düzeltilmeyecek**.
 - **Arka planlar:** `Canvas/Background` ve panel `BG` çocuklarında AspectRatioFitter Envelope Parent; oran = sprite genişlik/yükseklik (arkaplan ve Registration_arkaplan: 941×1672 → 0.56279904). ARF anchor/pozisyon/boyutu çalışma zamanında sürdüğü için YAML'daki rect değerleri (özellikle kapalı panellerde) bayat görünebilir; bu normaldir. Panelin kendi Image'ı: enabled, sprite None, alpha 0, raycast açık (tıklamayı arkaya geçirmemek için).
@@ -88,11 +92,18 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - **DOTween göreli tween'ler:** `DOShakePosition` / `DOPunchScale` gibi başlangıç değerini yakalayan tween'lerden önce hedefte `DOKill(true)` çağrılır (üst üste binince kalıcı kayma olmasın).
 - **IL2CPP / ARM64 / package name:** Kullanıcı Unity Editor'de ayarlayacak; YAML ile dokunulmaz.
 
+- **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma.
+- **Doku import kuralı:** `maxTextureSize` = dokunun sahnelerdeki en büyük kullanım boyutunun 1,5 katından büyük en küçük 2'nin kuvveti (en az 256, en çok 2048, kaynak boyutu aşmadan). UI dokularında mipmap kapalı, Read/Write kapalı. Değişiklik yalnızca `TextureImporter.maxTextureSize` ve `DefaultTexturePlatform` bloğunda yapılır; Android blokları `overridden: 0` olduğu için Default değeri geçerlidir. Yeni platform bloğu eklemek Editor işidir.
+- **Görsel kuralı (Linear renk uzayı):** Şeffaf alanların alfası tam 0 olmalı. Alfası 1–9 olan geniş katmanlar koyu arka planda gri kutu olarak görünür. Tarama aracı: `scratchpad/AlphaScan.ps1`; temizleme + Lanczos küçültme: `scratchpad/CleanSprite.ps1` (spriteMode Single ve border yoksa boyut değiştirilebilir).
+- **Resources kuralı:** `Assets/Resources` altında yalnızca kodla yüklenenler durur (şu an Elements ve DOTweenSettings). Yeni bir şey eklenirse `NexumValidation.AllowedResources` listesi de güncellenmeli; aksi hâlde validator uyarı verir. Görseller `Assets/Art`, sesler `Assets/Audio`, ScriptableObject verileri `Assets/Data` altına konur.
+- **TMP font önbelleği:** `Assets/TextMesh Pro` altındaki font asset'lerinde (özellikle `LiberationSans SDF - Fallback.asset`) yalnızca dinamik atlas / glif önbelleği değişmişse bu sorun sayılmaz; sorulmadan `git restore` ile geri alınır ve raporda tek satırla belirtilir. Bu dosyalarda başka türden bir değişiklik olursa durulup kullanıcıya sorulur.
+- **Boyut tahminleri:** Build boyutu tahminleri yalnızca gerçekten referanssız asset'ler ve doku import ayarları üzerinden yapılır. Sahnede kullanılan bir asset klasörü değişse de build'e girmeye devam eder.
+
 ## YAML düzenleme kuralları
 - Düzenlemeden önce Unity Editor'ün **kapalı** olduğunu kullanıcıya sorarak teyit et.
 - Sadece ilgili alanların **değerlerini** değiştir. Blok ekleme / silme yok; `fileID` ve `guid` değerlerine dokunma.
 - Obje silme YAML ile yapılmaz; Editor'de kullanıcı yapar.
-- Satır sonlarını (sahneler ve ProjectSettings LF, `.cs` dosyaları çalışma kopyasında CRLF) ve girintiyi koru.
+- Satır sonlarını ve girintiyi koru. Depoda her şey LF; çalışma kopyasında `core.autocrlf=true` yüzünden dosyalar CRLF olabilir (dal değiştirdikten sonra sahneler de CRLF olur). Düzenleme araçları satır sonunu satır satır korumalı, karşılaştırma yaparken `` kırpmalı.
 - Satır numarası + beklenen eski içerik doğrulamasıyla düzenle; eşleşmezse hiçbir şey yazma.
 - Her düzenlemeden sonra `git diff` ile yalnızca hedeflenen satırların değiştiğini doğrula; beklenmeyen satır varsa geri al ve kullanıcıya bildir.
 - Float değerleri Unity biçiminde yaz (float32'nin en kısa geri-dönüşümlü gösterimi, örn. `0.41666666`).
