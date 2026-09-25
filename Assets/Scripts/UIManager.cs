@@ -166,6 +166,10 @@ public class UIManager : MonoBehaviour
 
     public void ShowQuizPanel()
     {
+        // İkinci şans hakkı quiz açıldığı anda tüketilir: yanlış cevap verilse de panel kapatılıp
+        // tekrar açılsa da aynı oyun oturumunda ikinci bir hak doğmaz.
+        if (GridManager.Instance != null) GridManager.Instance.hasUsedRevive = true;
+
         quizPanel.SetActive(true);
         int randomIndex = Random.Range(0, allQuizzes.Count);
         ChemistryQuiz selectedQuiz = allQuizzes[randomIndex];
