@@ -55,11 +55,30 @@ public class MainMenuManager : MonoBehaviour
             currentPanel.SetActive(false);
             
             targetPanel.SetActive(true);
+            ResetScrollPositions(targetPanel);
             targetPanel.transform.localScale = Vector3.zero;
             targetPanel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
             
             currentPanel = targetPanel;
         });
+    }
+
+    // Panel her açıldığında kaydırma en üstten başlasın. İçerik boyutu (ContentSizeFitter / LayoutGroup)
+    // hesaplanmadan konum yazılırsa etkisiz kalır; bu yüzden önce düzen yeniden hesaplanır.
+    private void ResetScrollPositions(GameObject panel)
+    {
+        Canvas.ForceUpdateCanvases();
+
+        foreach (UnityEngine.UI.ScrollRect scroll in panel.GetComponentsInChildren<UnityEngine.UI.ScrollRect>(true))
+        {
+            if (scroll.content != null) UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(scroll.content);
+
+            scroll.StopMovement();
+            scroll.verticalNormalizedPosition = 1f;   // 1 = en üst
+            scroll.horizontalNormalizedPosition = 0f;
+        }
+
+        Canvas.ForceUpdateCanvases();
     }
 
     public void OpenLevelSelection() { SwitchPanel(levelSelectionPanel); }
