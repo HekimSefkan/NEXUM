@@ -104,6 +104,8 @@ public static class NexumValidation
         }
 
         CheckProjectSettings(problems);
+        CheckElementData(warnings);
+        CheckAudioImport(warnings);
         CheckResourcesFolder(warnings);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
@@ -166,6 +168,13 @@ public static class NexumValidation
             }
         }
 
+        // Sahnede kaydırma konumu sıfırlanmamışsa panel ortadan açılır (çalışma zamanı sıfırlaması ayrı)
+        foreach (ScrollRect scroll in go.GetComponents<ScrollRect>())
+        {
+            if (scroll.content != null && scroll.content.anchoredPosition != Vector2.zero)
+                warnings.Add($"ScrollRect içeriği sahnede kaydırılmış durumda ({scroll.content.anchoredPosition}) -> {where}");
+        }
+
         return eventCalls;
     }
 
@@ -202,6 +211,7 @@ public static class NexumValidation
             if (component is ScrollRect && eventPath == "m_OnValueChanged" && IsSoundCall(target, methodName))
                 warnings.Add($"ScrollRect.onValueChanged ses çağırıyor (kaydırırken her karede çalar): {label} -> {where}");
 
+            // (ScrollRect konum kontrolü CheckGameObject içinde)
             if (target is MonoBehaviour behaviour && IsDestroyableSingletonCopy(behaviour))
                 warnings.Add($"Singleton hedefleniyor; sahne yeniden yüklenince bu kopya yok edilir ve çağrı sessizce düşer: {label} -> {where}");
         }
@@ -280,6 +290,62 @@ public static class NexumValidation
 
         if (bad.Count > 0)
             problems.Add($"NaN/Infinity ({string.Join(", ", bad)}) -> {assetPath} :: {HierarchyPath(rect)}");
+    }
+
+    // Ansiklopedi verisi: boş ya da tek karakterlik metin alanları (ör. Fe2O3 için "c")
+    private static void CheckElementData(List<string> warnings)
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:ElementData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            ElementData data = AssetDatabase.LoadAssetAtPath<ElementData>(path);
+            if (data == null) continue;
+
+            CheckText(warnings, path, "elementName", data.elementName, 2);
+            CheckText(warnings, path, "symbol", data.symbol, 1);
+            CheckText(warnings, path, "description", data.description, 10);
+            // Temel elementlerin (puanı 0) sentez formülü doğal olarak boştur
+            if (data.synthesisScore > 0) CheckText(warnings, path, "recipe", data.recipe, 3);
+        }
+    }
+
+    private static void CheckText(List<string> warnings, string path, string field, string value, int minLength)
+    {
+        if (string.IsNullOrWhiteSpace(value)) warnings.Add($"ElementData.{field} boş -> {path}");
+        else if (value.Trim().Length < minLength) warnings.Add($"ElementData.{field} çok kısa (\"{value}\") -> {path}");
+    }
+
+    // Ses import kuralı: >10 sn Streaming+Vorbis+arka planda yükleme, <3 sn Decompress+ADPCM+mono
+    private static void CheckAudioImport(List<string> warnings)
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets" }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (path.StartsWith("Assets/Plugins") || path.StartsWith("Assets/TextMesh Pro")) continue;
+
+            AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+            AudioImporter importer = AssetImporter.GetAtPath(path) as AudioImporter;
+            if (clip == null || importer == null) continue;
+
+            AudioImporterSampleSettings s = importer.defaultSampleSettings;
+            if (clip.length > 10f)
+            {
+                if (s.loadType != AudioClipLoadType.Streaming) warnings.Add($"Ses ({clip.length:F1} sn) Streaming olmalı: {path}");
+                if (s.compressionFormat != AudioCompressionFormat.Vorbis) warnings.Add($"Ses ({clip.length:F1} sn) Vorbis olmalı: {path}");
+                if (!importer.loadInBackground) warnings.Add($"Ses ({clip.length:F1} sn) loadInBackground açık olmalı: {path}");
+            }
+            else if (clip.length < 3f)
+            {
+                if (s.loadType != AudioClipLoadType.DecompressOnLoad) warnings.Add($"Ses ({clip.length:F1} sn) Decompress On Load olmalı: {path}");
+                if (s.compressionFormat != AudioCompressionFormat.ADPCM) warnings.Add($"Ses ({clip.length:F1} sn) ADPCM olmalı: {path}");
+                if (!importer.forceToMono) warnings.Add($"Ses ({clip.length:F1} sn) forceToMono açık olmalı: {path}");
+            }
+            else
+            {
+                if (s.loadType != AudioClipLoadType.CompressedInMemory) warnings.Add($"Ses ({clip.length:F1} sn) Compressed In Memory olmalı: {path}");
+                if (s.compressionFormat != AudioCompressionFormat.Vorbis) warnings.Add($"Ses ({clip.length:F1} sn) Vorbis olmalı: {path}");
+            }
+        }
     }
 
     // ProjectSettings içindeki asset referansları (uygulama ikonu, splash vb.) çözülüyor mu?
