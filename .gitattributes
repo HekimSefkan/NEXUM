@@ -1,0 +1,58 @@
+# =============================================
+# NEXUM - satır sonu ve ikili dosya kuralları
+# Depoda her şey LF; çalışma kopyası da LF olur (core.autocrlf ayarını ezer).
+# =============================================
+
+* text=auto eol=lf
+
+# ---- Unity YAML ----
+*.unity      text eol=lf
+*.prefab     text eol=lf
+*.asset      text eol=lf
+*.meta       text eol=lf
+*.mat        text eol=lf
+*.anim       text eol=lf
+*.controller text eol=lf
+*.physicMaterial text eol=lf
+*.physicsMaterial2D text eol=lf
+*.spriteatlas text eol=lf
+*.asmdef     text eol=lf
+*.asmref     text eol=lf
+
+# ---- Kod ve metin ----
+*.cs     text eol=lf diff=csharp
+*.shader text eol=lf
+*.cginc  text eol=lf
+*.hlsl   text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.txt    text eol=lf
+*.xml    text eol=lf
+*.yml    text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# ---- İkili dosyalar ----
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.psd  binary
+*.tga  binary
+*.tif  binary
+*.ttf  binary
+*.otf  binary
+*.fbx  binary
+*.wav  binary
+*.mp3  binary
+*.ogg  binary
+*.aif  binary
+*.dll  binary
+*.mdb  binary
+*.pdb  binary
+*.so   binary
+*.a    binary
+*.apk  binary
+*.aab  binary
+*.unitypackage binary
+*.pdf  binary
