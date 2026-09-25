@@ -17,6 +17,6 @@ MonoBehaviour:
   elementIcon: {fileID: 0}
   synthesisScore: 50
   jokerCost: 100
-  recipe: c
+  recipe: Fe<sub>2</sub> + O<sub>3</sub>
   description: "Demirin oksijenle yasad\u0131\u015F\u0131 a\u015Fk\u0131n\u0131n
     pasl\u0131 meyvesi. Matrisi kitlemekte \xFCst\xFCne yoktur."
