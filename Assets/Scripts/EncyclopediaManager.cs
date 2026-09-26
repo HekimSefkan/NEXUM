@@ -59,7 +59,10 @@ public class EncyclopediaManager : MonoBehaviour
     {
         // Seçilen elementin verilerini Pop-up paneline aktar
         detailNameText.text = clickedElement.elementName + " (" + clickedElement.symbol + ")";
-        detailRecipeText.text = "Formül: " + clickedElement.recipe;
+        // Satır formülü değil sentez tarifini gösteriyor; formül zaten başlıkta.
+        // Tarifi olmayan temel elementlerde (H, O, C, N, Na, Cl, Fe, Ca) sabit metin yazılır.
+        string recipeText = string.IsNullOrWhiteSpace(clickedElement.recipe) ? "Temel element" : clickedElement.recipe;
+        detailRecipeText.text = "Sentez: " + recipeText;
         detailScoreText.text = $"Puan: {clickedElement.synthesisScore} | Silme: {clickedElement.jokerCost}";
         detailDescText.text = clickedElement.description;
 
