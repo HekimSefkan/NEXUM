@@ -65,6 +65,8 @@ public static class NexumValidation
             Scene scene = EditorSceneManager.OpenScene(buildScene.path, OpenSceneMode.Single);
             sceneCount++;
 
+            CheckLevelSolvability(buildScene.path, problems, warnings);
+
             foreach (GameObject root in scene.GetRootGameObjects())
             {
                 foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
@@ -293,6 +295,89 @@ public static class NexumValidation
     }
 
     // Ansiklopedi verisi: boş ya da tek karakterlik metin alanları (ör. Fe2O3 için "c")
+    // Her bölümün hedef bileşiği, o bölümün spawn havuzundan birleşme grafiğiyle üretilebiliyor mu?
+    // Üretilemiyorsa bölüm çözülemez demektir (FAIL). Yinelenen tarif uyarı verir.
+    private static void CheckLevelSolvability(string scenePath, List<string> problems, List<string> warnings)
+    {
+        GridManager grid = UnityEngine.Object.FindObjectOfType<GridManager>(true);
+        LevelManager levelManager = UnityEngine.Object.FindObjectOfType<LevelManager>(true);
+        if (grid == null || levelManager == null) return;
+        if (grid.recipes == null || levelManager.levels == null) return;
+
+        // GridManager.BuildDictionary ile aynı davranış: aynı anahtardan ilk tarif geçerli
+        var active = new List<MergeRecipe>();
+        var seen = new HashSet<string>();
+        foreach (MergeRecipe recipe in grid.recipes)
+        {
+            if (recipe.element1 == null || recipe.element2 == null || recipe.resultPrefab == null)
+            {
+                problems.Add($"{scenePath}: GridManager tarif tablosunda boş alan var");
+                continue;
+            }
+
+            string key = MergeKey(recipe.element1.name, recipe.element2.name);
+            if (seen.Add(key)) active.Add(recipe);
+            else warnings.Add($"{scenePath}: yinelenen tarif ({recipe.element1.name} + {recipe.element2.name} -> {recipe.resultPrefab.name}), ilk tanım geçerli");
+        }
+
+        for (int i = 0; i < levelManager.levels.Count; i++)
+        {
+            LevelData level = levelManager.levels[i];
+            string levelName = string.IsNullOrEmpty(level.levelName) ? $"Level {i + 1}" : level.levelName;
+
+            var reachable = new HashSet<string>();
+            if (level.spawnPool != null)
+            {
+                foreach (SpawnElement spawn in level.spawnPool)
+                {
+                    if (spawn.elementPrefab != null && spawn.spawnWeight > 0) reachable.Add(spawn.elementPrefab.name);
+                }
+            }
+
+            // Üretilebilir bileşikler kümesi büyümeyi bırakana kadar tarifleri uygula
+            bool grew = true;
+            while (grew)
+            {
+                grew = false;
+                foreach (MergeRecipe recipe in active)
+                {
+                    if (reachable.Contains(recipe.element1.name) && reachable.Contains(recipe.element2.name)
+                        && reachable.Add(recipe.resultPrefab.name)) grew = true;
+                }
+            }
+
+            if (level.levelGoals == null || level.levelGoals.Count == 0)
+            {
+                problems.Add($"{scenePath}: {levelName} bölümünün hedefi yok");
+                continue;
+            }
+
+            foreach (LevelGoal goal in level.levelGoals)
+            {
+                if (goal.targetPrefab == null)
+                {
+                    problems.Add($"{scenePath}: {levelName} bölümünde boş hedef var");
+                    continue;
+                }
+
+                if (!reachable.Contains(goal.targetPrefab.name))
+                {
+                    problems.Add($"{scenePath}: {levelName} hedefi {goal.targetPrefab.name}, bu bölümün spawn havuzuyla üretilemiyor");
+                }
+            }
+        }
+
+        Debug.Log($"{ResultTag}_LEVELS: {levelManager.levels.Count} bölüm, {active.Count} etkin tarif kontrol edildi");
+    }
+
+    // GridManager.GetMergeKey ile aynı sıralama
+    private static string MergeKey(string name1, string name2)
+    {
+        string a = name1.Replace("(Clone)", "");
+        string b = name2.Replace("(Clone)", "");
+        return string.Compare(a, b) < 0 ? a + "_" + b : b + "_" + a;
+    }
+
     private static void CheckElementData(List<string> warnings)
     {
         foreach (string guid in AssetDatabase.FindAssets("t:ElementData"))
