@@ -74,9 +74,32 @@ public class UIManager : MonoBehaviour
     [Header("Görsel Efektler")]
     public UnityEngine.UI.Image dangerGlowImage; // YENİ: Kırmızı alarm ışığı
 
-    void Awake() 
-    { 
-        Instance = this; 
+    // Girdiyi engelleyen (modal) paneller: açıkken swipe ve klavye hamlesi işlenmez.
+    // AssistantPanel ve FocusPanel bilerek dışarıda: ipucu mesajı oyunu durdurmaz,
+    // oyuncu mesaj ekrandayken hamle yapabilmeli.
+    // Her karede çağrıldığı için arama yapmaz; sadece activeInHierarchy okur.
+    public bool IsModalPanelOpen
+    {
+        get
+        {
+            return IsPanelOpen(tutorialPanel)
+                || IsPanelOpen(pausePanel)
+                || IsPanelOpen(quizPanel)
+                || IsPanelOpen(gameOverPanel)
+                || IsPanelOpen(winPanel)
+                || IsPanelOpen(hypothesisPanel)
+                || IsPanelOpen(undoPanel);
+        }
+    }
+
+    private static bool IsPanelOpen(GameObject panel)
+    {
+        return panel != null && panel.activeInHierarchy;
+    }
+
+    void Awake()
+    {
+        Instance = this;
         gameManager = FindObjectOfType<GameManager>();
     }
 

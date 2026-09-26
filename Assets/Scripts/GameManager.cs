@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // 0. GİRDİ KİLİDİ: modal panel açıkken ya da grid hazır değilken hiçbir hamle işlenmez
+        if (IsInputBlocked()) return;
+
         // 1. BİLGİSAYAR TESTLERİ İÇİN KLAVYE GİRDİLERİ
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) GridManager.Instance.Shift(Vector2.up);
         else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) GridManager.Instance.Shift(Vector2.down);
@@ -48,6 +51,16 @@ public class GameManager : MonoBehaviour
                 if (!touchStartedOnSelectable) DetectSwipe();
             }
         }
+    }
+
+    // Girdinin GridManager'a ulaşıp ulaşmayacağına karar verir.
+    // 1) Grid henüz kurulmadıysa (Instance null) ya da tutorial sırasında devre dışıysa,
+    // 2) UIManager'da modal bir panel açıksa girdi yok sayılır.
+    private bool IsInputBlocked()
+    {
+        if (GridManager.Instance == null || !GridManager.Instance.enabled) return true;
+        if (UIManager.Instance != null && UIManager.Instance.IsModalPanelOpen) return true;
+        return false;
     }
 
     // Parmağın hangi yöne çekildiğini hesaplayan matematiksel fonksiyon
