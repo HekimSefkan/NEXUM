@@ -17,6 +17,6 @@ MonoBehaviour:
   elementIcon: {fileID: 0}
   synthesisScore: 75
   jokerCost: 150
-  recipe: CaO + O<sub>2</sub>
+  recipe: CaO + CO<sub>2</sub>
   description: "Mermer de olur tebe\u015Fir de! Kire\xE7 ve karbondioksitin birle\u015Fmesiyle
     olu\u015Fan olduk\xE7a kat\u0131 bir blok."
