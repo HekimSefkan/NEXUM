@@ -18,5 +18,5 @@ MonoBehaviour:
   synthesisScore: 30
   jokerCost: 60
   recipe: N + H
-  description: "Amonyak (N + H<sub>3</sub>) olma yolunda at\u0131lan ilk karars\u0131z
+  description: "Amonyak (NH<sub>3</sub>) olma yolunda at\u0131lan ilk karars\u0131z
     ve kokulu ad\u0131m. Azot ve Hidrojenin zoraki i\u015Fbirli\u011Fi."

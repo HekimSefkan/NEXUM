@@ -32,6 +32,9 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] optionTexts;  
     public List<ChemistryQuiz> allQuizzes; 
     private int currentCorrectIndex; 
+    private Vector2 quizQuestionPos;      // Soru metninin tasarımdaki yeri
+    private Vector2 quizQuestionSize;
+    private bool quizRectCaptured;
 
     [Header("Game Over & Revive Butonu")]
     public GameObject reviveButton; 
@@ -166,6 +169,26 @@ public class UIManager : MonoBehaviour
 
     public void ShowQuizPanel()
     {
+        // İkinci şans hakkı quiz açıldığı anda tüketilir: yanlış cevap verilse de panel kapatılıp
+        // tekrar açılsa da aynı oyun oturumunda ikinci bir hak doğmaz.
+        if (GridManager.Instance != null) GridManager.Instance.hasUsedRevive = true;
+
+        // Soru düzeni: metin üstte. Geri bildirimde ortaya alınıyor, tekrar açılışta eski yerine döner.
+        if (questionTextUI != null)
+        {
+            if (!quizRectCaptured)
+            {
+                quizQuestionPos = questionTextUI.rectTransform.anchoredPosition;
+                quizQuestionSize = questionTextUI.rectTransform.sizeDelta;
+                quizRectCaptured = true;
+            }
+            else
+            {
+                questionTextUI.rectTransform.anchoredPosition = quizQuestionPos;
+                questionTextUI.rectTransform.sizeDelta = quizQuestionSize;
+            }
+        }
+
         quizPanel.SetActive(true);
         int randomIndex = Random.Range(0, allQuizzes.Count);
         ChemistryQuiz selectedQuiz = allQuizzes[randomIndex];
@@ -179,6 +202,13 @@ public class UIManager : MonoBehaviour
     private System.Collections.IEnumerator ProvideFeedbackRoutine(int selectedIndex)
     {
         foreach (var btn in optionButtonObjects) btn.SetActive(false);
+
+        // Şıklar gizlendi; geri bildirim metni panelin ortasında dursun (üstte sıkışmasın)
+        if (questionTextUI != null && quizRectCaptured)
+        {
+            questionTextUI.rectTransform.anchoredPosition = new Vector2(quizQuestionPos.x, 0f);
+            questionTextUI.rectTransform.sizeDelta = new Vector2(quizQuestionSize.x, 700f);
+        }
 
         int totalAttempts = PlayerPrefs.GetInt("QuizAttempts", 0) + 1;
         PlayerPrefs.SetInt("QuizAttempts", totalAttempts);

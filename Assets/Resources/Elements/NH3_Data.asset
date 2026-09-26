@@ -17,6 +17,6 @@ MonoBehaviour:
   elementIcon: {fileID: 0}
   synthesisScore: 50
   jokerCost: 100
-  recipe: N + H<sub>3</sub>
+  recipe: NH + H<sub>2</sub>
   description: "Kokusuyla matrisi inleten, Azot'un Hidrojenlerle kurdu\u011Fu temizlik
     \xE7etesi."

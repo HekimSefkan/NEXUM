@@ -25,6 +25,15 @@ public class EncyclopediaManager : MonoBehaviour
 
     public void LoadEncyclopedia()
     {
+        // Idempotent olsun: kartlar normalde Start'ta bir kez üretilir ve panel kapanıp açılınca korunur.
+        // Bu metot ileride bir butona bağlanırsa kartlar kopyalanmasın diye eskiler önce temizlenir.
+        for (int i = contentArea.childCount - 1; i >= 0; i--)
+        {
+            Transform oldCard = contentArea.GetChild(i);
+            oldCard.SetParent(null);   // Destroy ertelendiği için hemen listeden çıkar
+            Destroy(oldCard.gameObject);
+        }
+
         ElementData[] allElements = Resources.LoadAll<ElementData>("Elements");
 
         foreach (ElementData element in allElements)
