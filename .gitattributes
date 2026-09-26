@@ -56,3 +56,6 @@
 *.aab  binary
 *.unitypackage binary
 *.pdf  binary
+
+# ---- Sprite Atlas (V2) ----
+*.spriteatlasv2 text eol=lf
