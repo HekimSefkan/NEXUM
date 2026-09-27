@@ -44,6 +44,8 @@ public static class NexumValidation
 
     // =========================================
 
+    private const string AtlasFolder = "Assets/Art/Atlases";
+
     private const string ResultTag = "NEXUM_VALIDATION";
     private const string IssueTag = "NEXUM_VALIDATION_ISSUE";
     private const string WarnTag = "NEXUM_VALIDATION_WARN";
@@ -73,6 +75,7 @@ public static class NexumValidation
                 {
                     objectCount++;
                     eventCallCount += CheckGameObject(buildScene.path, t.gameObject, problems, warnings);
+                    RecordSpriteUsage(t.gameObject);
                     if (t is RectTransform rect)
                     {
                         rectCount++;
@@ -97,6 +100,7 @@ public static class NexumValidation
             {
                 objectCount++;
                 eventCallCount += CheckGameObject(path, t.gameObject, problems, warnings);
+                RecordSpriteUsage(t.gameObject);
                 if (t is RectTransform rect)
                 {
                     rectCount++;
@@ -109,6 +113,7 @@ public static class NexumValidation
         CheckElementData(warnings);
         CheckAudioImport(warnings);
         CheckResourcesFolder(warnings);
+        CheckTextureRules(warnings);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
         foreach (string warning in warnings) Debug.Log($"{WarnTag}: {warning}");
@@ -376,6 +381,139 @@ public static class NexumValidation
         string a = name1.Replace("(Clone)", "");
         string b = name2.Replace("(Clone)", "");
         return string.Compare(a, b) < 0 ? a + "_" + b : b + "_" + a;
+    }
+
+    // ===== EH: doku / yayın ayarı kontrolleri =====
+
+    // Çalışma zamanında atanan sprite'ların ekrandaki gerçek boyutu (sahnedeki Image'a bakmak yanıltır).
+    // Ölçüm: MainMenu ve Game sahnelerindeki hedef Image'ların RectTransform boyutları.
+    private static readonly Dictionary<string, Vector2> RuntimeSpriteUsage = new Dictionary<string, Vector2>
+    {
+        { "Assets/Art/Avatars", new Vector2(663f, 724f) },                          // RegistrationManager.detailAvatar
+        { "Assets/Art/Figures/SettingsPanel_toogleacık.png", new Vector2(130f, 60f) },
+        { "Assets/Art/Figures/SettingsPanel_tooglekapalı.png", new Vector2(130f, 60f) },
+        { "Assets/Art/Figures/level_selection_kilitlibutton.png", new Vector2(400f, 150f) },
+
+        // Prefab kökleri boyutlarını yerleştirildikleri kaptan alır; asset olarak 0x0 görünürler
+        { "Assets/Art/Figures/1.seviyetas.png", new Vector2(200f, 200f) },   // GridBoard hücresi
+        { "Assets/Art/Figures/2.seviyetas.png", new Vector2(200f, 200f) },
+        { "Assets/Art/Figures/3.seviyetas.png", new Vector2(200f, 200f) },
+        { "Assets/Art/Figures/Cember.png", new Vector2(300f, 300f) },        // ElementCard (ansiklopedi ızgarası)
+        { "Assets/Art/Figures/Beherglas.png", new Vector2(250f, 300f) },     // BeakerGoalPrefab
+        { "Assets/Art/Figures/white-screen.png", new Vector2(95f, 151f) },   // beher içindeki sıvı dolgusu
+    };
+
+    // Deney föyü görselleri: 400 birimde çiziliyorlar, kural 1024 derdi ama 512'de
+    // kalmaları bilinçli bir karar (APK boyutu). Bulanıklık uyarısından muaflar.
+    private static readonly HashSet<string> BlurCheckExceptions = new HashSet<string>
+    {
+        "Assets/Art/Figures/CO2.png", "Assets/Art/Figures/CO2_formul.png", "Assets/Art/Figures/CaCO3.png",
+        "Assets/Art/Figures/CaO.png", "Assets/Art/Figures/F2CO3.png", "Assets/Art/Figures/H2CO3_Mavi.png",
+        "Assets/Art/Figures/H2CO3_Yeşil.png", "Assets/Art/Figures/H2O.png", "Assets/Art/Figures/NH3.png",
+        "Assets/Art/Figures/NaCl.png", "Assets/Art/Figures/NaCl_Formul.png", "Assets/Art/Figures/Su damla.png",
+        "Assets/Art/Figures/Su_Formul.png",
+    };
+
+    // Sahne/prefab taramasında toplanan en büyük Image boyutları (referans birimi, 1080x1920)
+    private static readonly Dictionary<string, Vector2> spriteUsage = new Dictionary<string, Vector2>();
+
+    private static void RecordSpriteUsage(GameObject go)
+    {
+        Image image = go.GetComponent<Image>();
+        if (image == null || image.sprite == null) return;
+
+        string path = AssetDatabase.GetAssetPath(image.sprite);
+        if (string.IsNullOrEmpty(path)) return;
+
+        RectTransform rect = go.transform as RectTransform;
+        if (rect == null) return;
+
+        Vector2 size = new Vector2(Mathf.Abs(rect.rect.width), Mathf.Abs(rect.rect.height));
+        if (!spriteUsage.TryGetValue(path, out Vector2 best) || Mathf.Max(size.x, size.y) > Mathf.Max(best.x, best.y))
+        {
+            spriteUsage[path] = size;
+        }
+    }
+
+    private static void CheckTextureRules(List<string> warnings)
+    {
+        // 1) Atlasa giren dokuda importer sıkıştırması açıksa çift sıkıştırma olur
+        var atlased = new Dictionary<string, string>();
+        if (Directory.Exists(AtlasFolder))
+        {
+            foreach (string atlasPath in Directory.GetFiles(AtlasFolder, "*.spriteatlasv2", SearchOption.AllDirectories))
+            {
+                string atlasName = Path.GetFileNameWithoutExtension(atlasPath);
+                foreach (Match m in Regex.Matches(File.ReadAllText(atlasPath), "guid: ([0-9a-f]{32})"))
+                {
+                    string assetPath = AssetDatabase.GUIDToAssetPath(m.Groups[1].Value);
+                    if (!string.IsNullOrEmpty(assetPath)) atlased[assetPath] = atlasName;
+                }
+            }
+        }
+
+        foreach (KeyValuePair<string, string> pair in atlased)
+        {
+            TextureImporter importer = AssetImporter.GetAtPath(pair.Key) as TextureImporter;
+            if (importer == null) continue;
+            TextureImporterPlatformSettings settings = importer.GetDefaultPlatformTextureSettings();
+            if (settings.textureCompression != TextureImporterCompression.Uncompressed)
+            {
+                warnings.Add($"{pair.Key}: {pair.Value} atlasına giriyor ama importer sıkıştırması açık (çift sıkıştırma)");
+            }
+        }
+
+        // 2) Target API Level "Automatic" ise yayın öncesi sabitlenmeli
+        if (PlayerSettings.Android.targetSdkVersion == AndroidSdkVersions.AndroidApiLevelAuto)
+        {
+            warnings.Add("ProjectSettings: Android Target API Level 'Automatic'; yayın öncesi sabit bir sürüme ayarlanmalı");
+        }
+
+        // 3) Etkin doku boyutu, ekrandaki en büyük kullanımın 1,5 katının altındaysa bulanıklaşır
+        foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/Art" }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (BlurCheckExceptions.Contains(path)) continue;
+
+            TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null) continue;
+
+            Vector2 usage;
+            if (!TryGetUsage(path, out usage)) continue;
+
+            // DİKKAT: LoadAssetAtPath ile gelen Texture2D'nin width/height'ı İÇE AKTARILMIŞ
+            // boyuttur (maxTextureSize uygulanmış hâli). Kaynak görselin gerçek boyutu
+            // importer'dan alınmalı, yoksa "ayar mı kısıtlıyor" sorusu yanlış cevaplanır.
+            int sourceWidth, sourceHeight;
+            importer.GetSourceTextureWidthAndHeight(out sourceWidth, out sourceHeight);
+            if (sourceWidth == 0 || sourceHeight == 0) continue;
+
+            // Yalnızca DÜZELTİLEBİLİR durum uyarı verir: sınırı koyan maxTextureSize ayarı.
+            // Kaynak görselin kendisi küçükse (ör. avatarlar 1024, arka planlar 941x1672)
+            // import ayarıyla çözülmez, yeni görsel gerekir; bu her koşuda tekrarlayan
+            // gürültü olurdu. Not: kapalı panellerde AspectRatioFitter'ın bıraktığı rect
+            // değerleri bayat olabilir, bu yüzden ölçüt kaynak boyutuyla sınırlanıyor.
+            int sourceMax = Mathf.Max(sourceWidth, sourceHeight);
+            float needed = Mathf.Max(usage.x, usage.y) * 1.5f;
+
+            if (importer.maxTextureSize < needed && importer.maxTextureSize < sourceMax)
+            {
+                warnings.Add($"{path}: maxTextureSize {importer.maxTextureSize}px, ekranda {Mathf.Max(usage.x, usage.y):F0} birim kullanılıyor (gereken ≥ {Mathf.Min(needed, sourceMax):F0}px) - bulanıklaşabilir");
+            }
+        }
+    }
+
+    private static bool TryGetUsage(string path, out Vector2 usage)
+    {
+        foreach (KeyValuePair<string, Vector2> pair in RuntimeSpriteUsage)
+        {
+            if (path == pair.Key || path.StartsWith(pair.Key + "/"))
+            {
+                usage = pair.Value;
+                return true;
+            }
+        }
+        return spriteUsage.TryGetValue(path, out usage);
     }
 
     private static void CheckElementData(List<string> warnings)
