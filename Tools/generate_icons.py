@@ -96,8 +96,12 @@ def centered_text(draw, box, text, font, fill):
     draw.text((x, y), text, font=font, fill=fill)
 
 
-def draw_tile(size, with_background):
-    """Karoyu (kenarlık + harf + metinler) çizer. RGBA döner, SS katında."""
+def draw_tile(size, with_background, circle=False):
+    """Karoyu (kenarlık + harf + metinler) çizer. RGBA döner, SS katında.
+
+    circle=True: Android "round" ikonu için karo yerine daire çizilir; daire
+    maskesi kare karonun köşelerini kesmesin diye şekil baştan yuvarlak olur.
+    """
     s = size * SS
     p = PARAMS
 
@@ -108,9 +112,12 @@ def draw_tile(size, with_background):
     tile_side = box[2] - box[0]
     radius = p["corner_radius"] * tile_side
 
-    # karo maskesi
+    # gövde maskesi
     mask = Image.new("L", (s, s), 0)
-    ImageDraw.Draw(mask).rounded_rectangle(box, radius=radius, fill=255)
+    if circle:
+        ImageDraw.Draw(mask).ellipse(box, fill=255)
+    else:
+        ImageDraw.Draw(mask).rounded_rectangle(box, radius=radius, fill=255)
 
     # dış parlama: maskenin bulanık hâli, camgöbeği
     glow = Image.new("RGBA", (s, s), p["border"] + (0,))
@@ -125,12 +132,17 @@ def draw_tile(size, with_background):
 
     # kenarlık
     border_layer = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    ImageDraw.Draw(border_layer).rounded_rectangle(
-        box, radius=radius, outline=p["border"] + (255,), width=max(1, int(p["border_width"] * s)))
+    bd = ImageDraw.Draw(border_layer)
+    width = max(1, int(p["border_width"] * s))
+    if circle:
+        bd.ellipse(box, outline=p["border"] + (255,), width=width)
+    else:
+        bd.rounded_rectangle(box, radius=radius, outline=p["border"] + (255,), width=width)
     layer = Image.alpha_composite(layer, border_layer)
 
     # büyük harf: önce parlama, sonra harf
-    font_big = load_font(p["letter_size"] * s)
+    # Dairede kenarlar daraldığı için harf küçültülür, "7" ve kütle numarasına yer kalsın
+    font_big = load_font(p["letter_size"] * (0.80 if circle else 1.0) * s)
     letter_box = (box[0], box[1] + p["letter_shift_y"] * s, box[2], box[3])
 
     halo = Image.new("RGBA", (s, s), (0, 0, 0, 0))
@@ -142,16 +154,18 @@ def draw_tile(size, with_background):
     d = ImageDraw.Draw(text_layer)
     centered_text(d, letter_box, p["letter"], font_big, p["letter_color"] + (255,))
 
-    # sol üst "7"
+    # sol üst "7" — dairede kenar eğrildiği için içeri alınır
     font_top = load_font(p["top_text_size"] * s)
-    pad = 0.055 * tile_side
-    d.text((box[0] + pad, box[1] + pad * 0.7), p["top_text"], font=font_top, fill=p["small_text"] + (255,))
+    pad = (0.16 if circle else 0.055) * tile_side
+    d.text((box[0] + pad, box[1] + pad * (1.0 if circle else 0.7)),
+           p["top_text"], font=font_top, fill=p["small_text"] + (255,))
 
     # alt kütle numarası
     font_bottom = load_font(p["bottom_text_size"] * s)
     l, t, r, b = d.textbbox((0, 0), p["bottom_text"], font=font_bottom)
     bx = box[0] + (tile_side - (r - l)) / 2.0 - l
-    by = box[3] - pad * 1.2 - (b - t) - t
+    bottom_pad = (0.13 if circle else 0.055) * tile_side
+    by = box[3] - bottom_pad * 1.2 - (b - t) - t
     d.text((bx, by), p["bottom_text"], font=font_bottom, fill=p["small_text"] + (255,))
 
     layer = Image.alpha_composite(layer, text_layer)
@@ -199,11 +213,8 @@ def background(size):
 
 
 def round_icon(size):
-    art = render(size, with_background=True)
-    mask = Image.new("L", (size * SS, size * SS), 0)
-    ImageDraw.Draw(mask).ellipse((0, 0, size * SS - 1, size * SS - 1), fill=255)
-    art.putalpha(mask.resize((size, size), Image.LANCZOS))
-    return art
+    """Android round ikonu: şekil baştan daire çizilir, dışı şeffaf kalır."""
+    return draw_tile(size, with_background=False, circle=True).resize((size, size), Image.LANCZOS)
 
 
 def main():
