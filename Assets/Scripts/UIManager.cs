@@ -274,9 +274,22 @@ public class UIManager : MonoBehaviour
         else { Time.timeScale = 1f; pausePanel.SetActive(false); }
     }
 
+    // Kaza sayacı oyun başına bir kez artar. Oyun sonu ekranı ikinci şans quizi
+    // yanlış cevaplanınca tekrar açıldığı için aynı oyun iki kez sayılmamalı.
+    // Bayrak sahne örneğinde durur; yeniden başlatınca (sahne yüklenince) sıfırlanır.
+    private bool accidentCounted = false;
+
     public void ShowGameOver()
     {
         if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.gameOverClip);
+
+        if (!accidentCounted)
+        {
+            accidentCounted = true;
+            PlayerPrefs.SetInt("TotalAccidents", PlayerPrefs.GetInt("TotalAccidents", 0) + 1);
+            PlayerPrefs.Save();
+        }
+
         gameOverPanel.SetActive(true);
         reviveButton.SetActive(!GridManager.Instance.hasUsedRevive);
     }

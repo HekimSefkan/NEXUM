@@ -61,7 +61,8 @@ public class ProfileManager : MonoBehaviour
         }
         string nexumID = PlayerPrefs.GetString("NexumID");
 
-        string quizRatioText = "%0";
+        // Hiç quiz çözülmediyse "%0" yanıltıcı olur; veri yok demek için tire gösterilir
+        string quizRatioText = "—";
         if (quizAttempts > 0)
         {
             float ratio = ((float)quizCorrect / quizAttempts) * 100f;
