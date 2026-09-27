@@ -57,7 +57,7 @@ public static class NexumAtlasBuilder
         "Assets/Art/Figures/SettingsPanel_modsecimkartı.png",
         "Assets/Art/Figures/ProfilPanel_ToplamSentez.png",
         "Assets/Art/Figures/ProfilPanel_KeşfedilenBileşik.png",
-        "Assets/Art/Figures/ProfilPanel_LabaratuarKazası.png",
+        "Assets/Art/Figures/ProfilPanel_LaboratuvarKazasi.png",
         "Assets/Art/Figures/ProfilPanel_TeorikBasarı.png",
     };
 
