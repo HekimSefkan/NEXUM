@@ -16,8 +16,8 @@ public static class NexumBuild
 {
     private const string Tag = "NEXUM_BUILD";
     private const string OutputDir = "Builds";
-    private const string ApkName = "NEXUM_polish8.apk";
-    private const string AabName = "NEXUM_polish8.aab";
+    private const string ApkName = "NEXUM_release_prep.apk";
+    private const string AabName = "NEXUM_release_prep.aab";
 
     // Hem APK hem AAB üretir. Yayın paketi AAB'dir; APK ölçüm ve cihaza kurulum içindir.
     public static void BuildAndroidApk()
