@@ -10735,7 +10735,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\xDCRET\u0130LEN B\u0130LE\u015E\u0130K"
+  m_text: "A\xC7ILAN B\xD6L\xDCM"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e62ab56da5bf916449897a384ca82622, type: 2}
   m_sharedMaterial: {fileID: -5190437069725465332, guid: e62ab56da5bf916449897a384ca82622, type: 2}
@@ -11552,7 +11552,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "TEOR\u0130K BA\u015EARI"
+  m_text: "QU\u0130Z BA\u015EARISI"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e62ab56da5bf916449897a384ca82622, type: 2}
   m_sharedMaterial: {fileID: -5190437069725465332, guid: e62ab56da5bf916449897a384ca82622, type: 2}

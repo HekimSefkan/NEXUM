@@ -16,24 +16,45 @@ public static class NexumBuild
 {
     private const string Tag = "NEXUM_BUILD";
     private const string OutputDir = "Builds";
-    private const string ApkName = "NEXUM_polish7.apk";
+    private const string ApkName = "NEXUM_polish8.apk";
+    private const string AabName = "NEXUM_polish8.aab";
 
+    // Hem APK hem AAB üretir. Yayın paketi AAB'dir; APK ölçüm ve cihaza kurulum içindir.
     public static void BuildAndroidApk()
     {
-        if (!Directory.Exists(OutputDir)) Directory.CreateDirectory(OutputDir);
-        string path = Path.Combine(OutputDir, ApkName).Replace('\\', '/');
+        LogSettings();
 
-        Debug.Log(string.Format("{0}: scripting={1} mimari={2} il2cppConfig={3} stripping={4} appBundle={5} development={6}",
+        bool okApk = BuildOne(ApkName, false);
+        bool okAab = BuildOne(AabName, true);
+
+        Debug.Log(Tag + (okApk && okAab ? ": OK" : ": FAIL"));
+        if (!(okApk && okAab)) EditorApplication.Exit(1);
+    }
+
+    private static void LogSettings()
+    {
+        // Enum değerleri sayı olarak da yazılır; ProjectSettings'teki ham değerle karşılaştırılabilsin
+        Debug.Log(string.Format(
+            "{0}_SETTINGS: scripting={1} mimari={2} ({3}) targetSdk={4} ({5}) minSdk={6} ({7}) il2cppConfig={8} stripping={9} development={10}",
             Tag,
             PlayerSettings.GetScriptingBackend(BuildTargetGroup.Android),
-            PlayerSettings.Android.targetArchitectures,
+            PlayerSettings.Android.targetArchitectures, (int)PlayerSettings.Android.targetArchitectures,
+            PlayerSettings.Android.targetSdkVersion, (int)PlayerSettings.Android.targetSdkVersion,
+            PlayerSettings.Android.minSdkVersion, (int)PlayerSettings.Android.minSdkVersion,
             PlayerSettings.GetIl2CppCompilerConfiguration(BuildTargetGroup.Android),
             PlayerSettings.GetManagedStrippingLevel(BuildTargetGroup.Android),
-            EditorUserBuildSettings.buildAppBundle,
             EditorUserBuildSettings.development));
+    }
+
+    private static bool BuildOne(string fileName, bool appBundle)
+    {
+        if (!Directory.Exists(OutputDir)) Directory.CreateDirectory(OutputDir);
+        string path = Path.Combine(OutputDir, fileName).Replace('\\', '/');
+
+        EditorUserBuildSettings.buildAppBundle = appBundle;
 
         string[] scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
-        Debug.Log(string.Format("{0}: {1} sahne -> {2}", Tag, scenes.Length, path));
+        Debug.Log(string.Format("{0}: {1} sahne -> {2} (appBundle={3})", Tag, scenes.Length, path, appBundle));
 
         BuildPlayerOptions options = new BuildPlayerOptions
         {
@@ -47,8 +68,8 @@ public static class NexumBuild
         BuildReport report = BuildPipeline.BuildPlayer(options);
         BuildSummary summary = report.summary;
 
-        Debug.Log(string.Format("{0}: sonuc={1} sure={2:F1} sn hata={3} uyari={4}",
-            Tag, summary.result, summary.totalTime.TotalSeconds, summary.totalErrors, summary.totalWarnings));
+        Debug.Log(string.Format("{0}: {1} sonuc={2} sure={3:F1} sn hata={4} uyari={5}",
+            Tag, fileName, summary.result, summary.totalTime.TotalSeconds, summary.totalErrors, summary.totalWarnings));
 
         if (summary.result != BuildResult.Succeeded)
         {
@@ -60,16 +81,14 @@ public static class NexumBuild
                         Debug.Log(string.Format("{0}_ERROR: {1}", Tag, msg.content.Replace("\n", " ")));
                 }
             }
-            Debug.Log(Tag + ": FAIL");
-            EditorApplication.Exit(1);
-            return;
+            return false;
         }
 
-        long apkBytes = File.Exists(path) ? new FileInfo(path).Length : (long)summary.totalSize;
-        Debug.Log(string.Format("{0}_APK: {1:F2} MB ({2} bayt)", Tag, apkBytes / 1048576f, apkBytes));
+        long bytes = File.Exists(path) ? new FileInfo(path).Length : (long)summary.totalSize;
+        Debug.Log(string.Format("{0}_PACKAGE: {1} {2:F2} MiB ({3} bayt)", Tag, fileName, bytes / 1048576f, bytes));
 
-        ReportAssets(report);
-        Debug.Log(Tag + ": OK");
+        if (!appBundle) ReportAssets(report);   // asset dökümü bir kez yeter
+        return true;
     }
 
     private static void ReportAssets(BuildReport report)
