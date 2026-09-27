@@ -11,8 +11,10 @@
 ```
 Assets/
   Art/
+    Atlases/         Sprite Atlas V2 asset'leri (NexumAtlasBuilder üretir)
     Avatars/         Mentor portreleri
     Figures/         UI görselleri
+    Icons/           Uygulama ikonu görselleri (Tools/generate_icons.py üretir)
   Audio/
     Voice/           Müzik ve efekt sesleri
   Data/
@@ -28,6 +30,9 @@ Assets/
   Scenes/            MainMenu, Game, SampleScene
   Scripts/           Oyun scriptleri (aşağıda)
   TextMesh Pro/      TMP Essentials
+Tools/               Unity dışı araçlar
+  generate_icons.py  Uygulama ikonu üreteci (Python + Pillow)
+  store/             Mağaza görselleri; build'e girmez (önizlemeler git'te yok sayılır)
 NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity dışı)
 ```
 
@@ -52,7 +57,9 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `Editor/FontReplacerWindow` | Editör aracı: sahnedeki TMP fontlarını isim kurallarına göre değiştirir |
 | `Editor/NexumValidation` | Editör aracı: batch mode sahne/prefab doğrulaması (kaydetmez) |
 | `Editor/NexumAtlasBuilder` | Editör aracı: Sprite Atlas V2 asset'lerini üretir (tekrar çalıştırılabilir) |
-| `Editor/NexumBuild` | Editör aracı: batch mode Android APK build'i + BuildReport ölçümü |
+| `Editor/NexumBuild` | Editör aracı: batch mode Android APK + AAB build'i ve BuildReport ölçümü |
+| `Editor/NexumIconSetup` | Editör aracı: Android ikon slotlarını PlayerSettings API'siyle doldurur |
+| `Editor/NexumSplashSetup` | Editör aracı: açılış ekranına NEXUM logosunu ekler |
 | `Core/AppBootstrap` | Sahneye eklenmeden çalışır: 60 FPS, sahne yüklenince timeScale=1, arka planda PlayerPrefs.Save |
 | `Core/SafeArea` | RectTransform'u Screen.safeArea'ya göre anchor'lar (sahneye Editor'de eklenir) |
 
@@ -91,11 +98,14 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
   - **UnityEvent WARN (sonucu FAIL yapmaz):** aynı olayda birden fazla sahne yükleme; ScrollRect.onValueChanged'e bağlı ses; script'inde `DontDestroyOnLoad` geçen, kendi tipinden static `Instance` taşıyan ve `IsProxy` üyesi olmayan singleton'ı hedefleme.
   - **Bölüm çözülebilirliği (FAIL):** Game sahnesindeki `GridManager.recipes` ve `LevelManager.levels` okunur; her bölüm için spawn havuzundan (ağırlık > 0) başlayıp tarifler kapanana kadar uygulanır. Bir bölümün hedefi üretilemiyorsa FAIL. Aynı anahtardan ikinci tarif WARN (GridManager'da ilk tanım geçerli).
   - **Doku / yayın WARN'ları (EH):** atlasa giren bir dokunun importer sıkıştırması açıksa (çift sıkıştırma); Android Target API Level "Automatic" ise; bir dokunun `maxTextureSize` değeri ekrandaki en büyük kullanımının 1,5 katının altındaysa. Sonuncusu yalnızca **ayarın** sınırladığı durumu bildirir (kaynak görselin kendisi küçükse uyarmaz) ve 13 deney föyü görselini muaf tutar. Çalışma zamanında atanan sprite'lar ile prefab köklerinin (taş, beher, ansiklopedi kartı) kullanım boyutları `RuntimeSpriteUsage` tablosunda elle tanımlıdır; yeni böyle bir kullanım eklenirse tabloya da eklenmeli.
+  - **İkon WARN'ı:** Android Adaptive / Round / Legacy ikon türlerinden birinde boş slot varsa.
   - **Diğer WARN'lar:** ElementData'da boş/çok kısa metin alanları (temel elementlerde boş recipe hariç); ses import kuralına uymayan dosyalar; sahnede kaydırılmış kaydedilmiş ScrollRect içeriği.
   - **FAIL:** ProjectSettings'te çözülemeyen asset referansı (silinen ikon gibi).
 - **GridBoard (Game.unity):** Sabit **900×900**, nokta anchor (0.5, 0.41666666), pivot (0.5, 0.5), AspectRatioFitter kapalı (`m_Enabled: 0`). GridLayoutGroup: hücre 200, boşluk 20, dolgu 20 → 4×200 + 3×20 + 2×20 = 900. Bu toplam değişirse tahta boyutu da güncellenmeli.
 - **Anchor dönüşümleri:** Kenara anchor'lanıp büyük offset'le konumlanan objeler, referans (1080×1920) görünümü koruyan hesapla merkez / üst-orta anchor'a çevrilir (`yeni_pos = eski_anchor × ebeveyn_boyutu + eski_pos − yeni_anchor × ebeveyn_boyutu`).
 - **DOTween göreli tween'ler:** `DOShakePosition` / `DOPunchScale` gibi başlangıç değerini yakalayan tween'lerden önce hedefte `DOKill(true)` çağrılır (üst üste binince kalıcı kayma olmasın).
+- **Uygulama ikonu:** Projede 512×512 kare logo olmadığı için ikon `Tools/generate_icons.py` ile **vektör olarak çizilir** (hiçbir görsel büyütülmez; içeride 4× süperörnekleme + LANCZOS). Tasarım HUD'daki azot karosunu temel alır: yuvarlatılmış koyu mavi karo (#0E3B63 → #0A2949), camgöbeği kenarlık (#35D0F0) ve dış parlama, ortada Orbitron-Bold "N", sol üstte "7", altta "14.007". Renk/metin değişikliği için scriptin başındaki `PARAMS` sözlüğü düzenlenip script yeniden çalıştırılır. Çıktılar `Assets/Art/Icons` altındadır; mağaza görseli `Tools/store/icon_store_512.png` (Assets dışında, build'e girmez). Adaptive ön planın içeriği ortadaki 288×288 güvenli alana sığar (Android maskeleri kenarları kırpar). Slotlar `NexumIconSetup.Apply` ile doldurulur — **ProjectSettings.asset elle düzenlenmez**. Not: `AndroidPlatformIconKind` `UnityEditor.Android.Extensions.dll` içinde olduğu ve Assembly-CSharp-Editor onu referans almadığı için tür `GetSupportedIconKinds` içinden ada göre bulunur; adlar API sürümü taşır ("Adaptive (API 26)", "Round (API 25)", "Legacy").
+- **Açılış ekranı:** Unity Personal lisansında Unity logosu kaldırılamaz; yanına NEXUM logosu (master ikon, 2 sn) `PlayerSettings.SplashScreen` API'siyle eklendi. Süre ve stil varsayılan.
 - **Android yayın ayarları:** IL2CPP, **sadece ARM64** (`AndroidTargetArchitectures: 2`), **Target API 36** (`AndroidTargetSdkVersion: 36`, artık Automatic değil), Minimum API 22, paket adı `com.hekimsefkan.nexum`. Enum değerleri build sırasında çalışma anında doğrulandı (`mimari=ARM64 (2)`, `targetSdk=AndroidApiLevel36 (36)`). ARMv7 kaldırıldığı için APK'dan 13,37 MiB düştü. Keystore ve imza kullanıcıya ait; YAML ile dokunulmaz.
 
 - **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma. Batch mode Unity komutlarının sonuna `| Out-Null` eklenir.
@@ -138,7 +148,7 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 ## Bilinen durumlar (sonraki turlarda ele alınacak)
 - **Arka plan ve avatar çözünürlüğü:** Bazı görsellerin kaynağı ekrandaki kullanımın 1,5 katından küçük (avatarlar 1024 kaynak / 724 birim kullanım, `arkaplan` 941×1672, `grid.png` 783, `gamepanel` 1536). Import ayarıyla çözülmez, daha büyük kaynak görsel gerekir; validator bu durumda bilerek uyarmaz.
 - **Ölü PlayerPrefs anahtarı:** `TotalScore` yalnızca `RegistrationManager`'da 0'a kuruluyor; hiçbir yerde yazılmıyor ve okunmuyor.
-- **Yayın öncesi kalanlar:** uygulama ikonu (kaynak 146×148; mağaza için 512×512, adaptive için 432×432 gerekiyor), release keystore, Play Console mağaza görselleri / içerik derecelendirme / Data safety formu.
+- **Yayın öncesi kalanlar:** release keystore ve imza (kullanıcıya ait, koda dokunulmaz), Play Console mağaza görselleri (feature graphic 1024×500, ekran görüntüleri), içerik derecelendirme anketi, Data safety formu, gizlilik politikası bağlantısı.
 
 ## Kapsam dışı (bu temizlik çalışmasında yapılmayacak)
 - Spawn kuralı (her geçerli hamlede spawn)
