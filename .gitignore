@@ -114,3 +114,6 @@ local.properties
 
 # Build ciktilari
 /Builds/
+
+# Ikon onizlemeleri (uretilen, gecici)
+Tools/store/preview_*.png

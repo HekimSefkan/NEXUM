@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
@@ -114,6 +115,7 @@ public static class NexumValidation
         CheckAudioImport(warnings);
         CheckResourcesFolder(warnings);
         CheckTextureRules(warnings);
+        CheckAndroidIcons(warnings);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
         foreach (string warning in warnings) Debug.Log($"{WarnTag}: {warning}");
@@ -432,6 +434,35 @@ public static class NexumValidation
         if (!spriteUsage.TryGetValue(path, out Vector2 best) || Mathf.Max(size.x, size.y) > Mathf.Max(best.x, best.y))
         {
             spriteUsage[path] = size;
+        }
+    }
+
+    // Android ikon slotları: Adaptive / Round / Legacy türlerinden biri bile boşsa
+    // uygulama mağazada ve launcher'da varsayılan ikonla görünür.
+    private static void CheckAndroidIcons(List<string> warnings)
+    {
+        // Tür adları bu sürümde API numarası taşır ("Adaptive (API 26)"), önekle eşleşilir
+        foreach (string kindName in new[] { "Adaptive", "Round", "Legacy" })
+        {
+            PlatformIconKind kind = PlayerSettings.GetSupportedIconKinds(NamedBuildTarget.Android)
+                .FirstOrDefault(k => k.ToString().StartsWith(kindName, StringComparison.OrdinalIgnoreCase));
+            if (kind == null)
+            {
+                warnings.Add($"ProjectSettings: Android {kindName} ikon türü bulunamadı");
+                continue;
+            }
+
+            PlatformIcon[] icons = PlayerSettings.GetPlatformIcons(NamedBuildTarget.Android, kind);
+            int empty = icons.Count(icon =>
+            {
+                Texture2D[] textures = icon.GetTextures();
+                return textures == null || textures.Length == 0 || textures.All(t => t == null);
+            });
+
+            if (empty > 0)
+            {
+                warnings.Add($"ProjectSettings: Android {kindName} ikon slotlarının {empty}/{icons.Length} tanesi boş");
+            }
         }
     }
 
