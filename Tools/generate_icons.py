@@ -225,6 +225,72 @@ def round_icon(size):
     return draw_tile(size, with_background=False, circle=True).resize((size, size), Image.LANCZOS)
 
 
+# --- Oyun içi NEXUM logoları ---
+# Biçim eskisiyle aynı: solda azot karosu, sağında "EXUM" yazısı; görsel dil ikonla bir.
+# Zemin tamamen saydam (alfa 0) olmalı; paneller kendi arka planını gösteriyor.
+LOGO = {
+    "wordmark": "EXUM",
+    "yatay": {"path": "Assets/Art/Figures/NEXUM_logo.png", "size": (1366, 320)},   # 683x160'in tam 2 katı
+    "kare": {"path": "Assets/Art/Figures/NEXUM_logo-.png", "size": (512, 519)},    # 146x148 oranı
+    "gap": 0.06,           # karo ile yazı arası (yüksekliğe oran)
+    "text_height": 0.62,   # yazının büyük harf yüksekliği (yüksekliğe oran)
+}
+
+
+def horizontal_logo():
+    """Karo + EXUM yazısı, şeffaf zeminli."""
+    w, h = LOGO["yatay"]["size"]
+    s = SS
+    canvas = Image.new("RGBA", (w * s, h * s), (0, 0, 0, 0))
+
+    tile = draw_tile(h, with_background=False).resize((h * s, h * s), Image.LANCZOS)
+
+    gap = int(LOGO["gap"] * h * s)
+    layer = Image.new("RGBA", (w * s, h * s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+
+    # Yazı boyutu: hem yüksekliğe hem kalan genişliğe sığacak en büyük değer
+    available = w * s - tile.size[0] - gap
+    size = LOGO["text_height"] * h * s
+    while size > 10:
+        font = load_font(size)
+        l, t, r, b = d.textbbox((0, 0), LOGO["wordmark"], font=font)
+        if (r - l) <= available and (b - t) <= LOGO["text_height"] * h * s:
+            break
+        size *= 0.97
+    font = load_font(size)
+    l, t, r, b = d.textbbox((0, 0), LOGO["wordmark"], font=font)
+
+    # Karo + boşluk + yazı grubunu yatayda ortala
+    group = tile.size[0] + gap + (r - l)
+    x0 = (w * s - group) / 2.0
+    canvas.alpha_composite(tile, (int(round(x0)), 0))
+
+    text_x = x0 + tile.size[0] + gap - l
+    text_y = (h * s - (b - t)) / 2.0 - t
+
+    halo = Image.new("RGBA", (w * s, h * s), (0, 0, 0, 0))
+    ImageDraw.Draw(halo).text((text_x, text_y), LOGO["wordmark"], font=font, fill=PARAMS["border"] + (190,))
+    canvas = Image.alpha_composite(canvas, halo.filter(ImageFilter.GaussianBlur(0.03 * h * s)))
+
+    d = ImageDraw.Draw(layer)
+    d.text((text_x, text_y), LOGO["wordmark"], font=font, fill=PARAMS["letter_color"] + (255,))
+    canvas = Image.alpha_composite(canvas, layer)
+
+    return canvas.resize((w, h), Image.LANCZOS)
+
+
+def square_logo():
+    """Yalnızca karo, şeffaf zeminli; mevcut dosyanın oranı korunur."""
+    w, h = LOGO["kare"]["size"]
+    s = SS
+    canvas = Image.new("RGBA", (w * s, h * s), (0, 0, 0, 0))
+    side = min(w, h)
+    tile = draw_tile(side, with_background=False).resize((side * s, side * s), Image.LANCZOS)
+    canvas.alpha_composite(tile, ((w * s - tile.size[0]) // 2, (h * s - tile.size[1]) // 2))
+    return canvas.resize((w, h), Image.LANCZOS)
+
+
 # --- Play Console öne çıkan görseli (feature graphic) ---
 # Alt başlık alternatifleri; varsayılan ilki:
 #   "Kimya temelli 4x4 sentez bulmacası"
@@ -340,6 +406,10 @@ def main():
     # Mağaza görseli build'e girmemeli: Assets dışında duruyor
     save(render(512, True), "Tools/store/icon_store_512.png", opaque=True, keep_alpha_channel=True)
     save(feature_graphic(), "Tools/store/feature_graphic_1024x500.png", opaque=True)
+
+    # Oyun içi logolar: mevcut dosyaların üzerine yazılır ki GUID ve sahne referansları bozulmasın
+    save(horizontal_logo(), LOGO["yatay"]["path"], opaque=False)
+    save(square_logo(), LOGO["kare"]["path"], opaque=False)
 
     # Küçük boyutta okunaklılık önizlemesi (commit edilmez, Tools/store altında)
     master = Image.open(os.path.join(ROOT, "Assets/Art/Icons/icon_master_1024.png"))
