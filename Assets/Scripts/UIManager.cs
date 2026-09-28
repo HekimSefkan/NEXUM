@@ -265,6 +265,8 @@ public class UIManager : MonoBehaviour
 
     public void TogglePause(bool isPaused)
     {
+        PlayButtonSound();   // PausePanel'deki "Devam Et" butonunun OnClick'inde ses yok
+
         if (isPaused)
         {
             Time.timeScale = 0f;
@@ -311,10 +313,23 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void RestartGame() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
-    public void GoToMainMenu() { SceneManager.LoadScene("MainMenu"); }
+    // Sahne yükleyen üç metotta da ses koddan çalınır: PausePanel'deki "Ana Menü" ve
+    // GameOverPanel'deki "Yeniden Başlat" butonlarının OnClick'inde ses bağlı değil.
+    public void RestartGame()
+    {
+        PlayButtonSound();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void GoToMainMenu()
+    {
+        PlayButtonSound();
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void NextLevel()
     {
+        PlayButtonSound();
         int nextLevel = PlayerPrefs.GetInt("SelectedLevel", 0) + 1;
         if(nextLevel >= LevelManager.Instance.levels.Count) SceneManager.LoadScene("MainMenu");
         else { PlayerPrefs.SetInt("SelectedLevel", nextLevel); SceneManager.LoadScene("Game"); }
@@ -450,8 +465,18 @@ public class UIManager : MonoBehaviour
         seq.SetUpdate(true).OnComplete(() => Destroy(floatingObj)); 
     }
 
+    // Buton sesi tek kaynaktan çalar. Bazı butonlarda ses OnClick listesinde bağlı,
+    // bazılarında yok; sesi ilgili metotların içine de koyduğumuz için aynı karede
+    // iki kez çalma riski doğuyor. Kare koruması bunu engeller (çift ses olmaz),
+    // sahne OnClick listelerine dokunmak gerekmez.
+    private int lastButtonSoundFrame = -1;
+
     public void PlayButtonSound()
     {
+        if (lastButtonSoundFrame == Time.frameCount) return;
+        lastButtonSoundFrame = Time.frameCount;
+
+        // AudioManager.PlaySFX zaten "SfxOn" ayarına bakıyor; kapalıyken ses çıkmaz
         if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonSound();
     }
 }
