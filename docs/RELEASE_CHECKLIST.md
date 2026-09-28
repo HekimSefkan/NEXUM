@@ -53,13 +53,37 @@ Her Play yüklemesinde **versionCode benzersiz ve bir öncekinden büyük** olma
 3. **Bundle Version Code** (versionCode): tam sayı, örn. `1` → `2` (her yüklemede mutlaka artır)
 4. Aynı versionCode ile ikinci kez yükleme yapılamaz; yanlışlıkla atlanan numaralar sorun değildir.
 
-### 1.6 Paketleri üret
+### 1.6 İmzalı yayın paketi (AAB) — Unity Editor'de
+
+Play'e yüklenecek paket **imzalı olmak zorundadır** ve imzalama şifreleri depoya girmediği için bu adım Editor'de, elle yapılır.
+
+1. Unity'de projeyi aç.
+2. *Edit → Project Settings → Player → Publishing Settings*
+   - **Custom Keystore** işaretli olmalı (depoda öyle kayıtlı).
+   - **Keystore** yolu doğru mu bak: `ProjectSettings` içindeki yol **bu makineye özeldir**; başka bir bilgisayarda çalışıyorsan *Select Keystore* ile kendi dosyanı seç.
+   - **Keystore password**, **Alias** ve **Alias password** alanlarını doldur.
+   - ⚠️ **Unity'yi her kapatıp açtığında şifreleri yeniden girmen gerekir.** Şifreler ProjectSettings'e yazılmaz; bu bilinçli bir tercihtir (depo herkese açık). Build başarısız olur ya da paket debug anahtarıyla imzalanırsa ilk bakacağın yer burasıdır.
+3. *File → Build Settings*
+   - Platform: **Android** (gerekiyorsa *Switch Platform*).
+   - **Build App Bundle (Google Play)** kutusunu **işaretle**.
+   - *Development Build* **işaretli olmamalı**.
+4. **Build** düğmesine bas, çıktıyı `Builds` klasörüne **`NEXUM_v1.0.aab`** adıyla kaydet.
+5. Cihazda denemek için aynı ekranda *Build App Bundle* kutusunu kaldırıp bir de `Builds/NEXUM_v1.0.apk` al (bu APK yalnızca kendi cihazında test içindir).
+6. Doğrula:
+   ```powershell
+   Get-ChildItem "C:\Projects\NEXUM\Builds\NEXUM_v1.0.*" | Select-Object Name, @{n='MiB';e={[math]::Round($_.Length/1MB,2)}}, LastWriteTime
+   ```
+   Beklenen büyüklük ~30 MiB.
+
+`Builds/` klasörü git'e girmez; paketleri depoya ekleme.
+
+#### Ölçüm amaçlı (imzasız) build
+Yalnızca boyut/rapor ölçmek için, imzalama gerektirmeyen batch build:
 ```powershell
 & "C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -nographics -quit -projectPath "C:\Projects\NEXUM" -executeMethod NexumBuild.BuildAndroidApk -logFile "C:\Projects\NEXUM\Logs\build.log" | Out-Null
 Select-String -Path "C:\Projects\NEXUM\Logs\build.log" -Pattern "NEXUM_BUILD" | ForEach-Object { $_.Line }
-Get-ChildItem "C:\Projects\NEXUM\Builds\*.a*" | Select-Object Name, @{n='MiB';e={[math]::Round($_.Length/1MB,2)}}
 ```
-`.aab` Play'e yüklenir, `.apk` cihazda denemek içindir. `Builds/` git'e girmez.
+Bu paketler **Play'e yüklenmez**; yalnızca ölçüm içindir.
 
 ### 1.7 Cihazda duman testi
 - Uygulama açılıyor, açılış logosu görünüyor.
@@ -109,7 +133,17 @@ Get-ChildItem "C:\Projects\NEXUM\Builds\*.a*" | Select-Object Name, @{n='MiB';e=
 
 ---
 
-## 4. Mağaza görsellerini yeniden üretme
+## 4. Ekran görüntüleri
+
+Play en az 2, en fazla 8 telefon ekran görüntüsü ister (kenar 320–3840 px, oran 2:1'i aşmamalı).
+
+**Editor'den almak için:** Game sekmesindeki çözünürlük listesine `+` ile **1080×1920** ekleyip seç, Play'e bas, istediğin ekranı aç ve **NEXUM → Ekran Görüntüsü Al (1080×1920)** komutunu (kısayol `Ctrl+Shift+S`) çalıştır. Görüntü `Tools/store/screenshots/ekran_yyyyAAgg_ssddss.png` olarak kaydedilir (klasör git'te yok sayılır). Komut yalnızca Play modunda çalışır, dosya birkaç kare sonra diske yazılır ve Game view farklı bir çözünürlükteyse konsola uyarı düşer.
+
+**Cihazdan almak için (daha doğal sonuç):** APK'yı kur, oyna, **Güç + Ses Kısma** tuşlarına bas.
+
+Önerilen sıra: oyun ekranı → deney föyü → bölüm haritası → ansiklopedi → profil (istersen quiz ekranını da ekle).
+
+## 5. Mağaza görsellerini yeniden üretme
 
 ```powershell
 Set-Location "C:\Projects\NEXUM"; python Tools\generate_icons.py

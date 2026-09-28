@@ -117,3 +117,6 @@ local.properties
 
 # Ikon onizlemeleri (uretilen, gecici)
 Tools/store/preview_*.png
+
+# Magaza ekran goruntuleri (uretilen, depoya girmez)
+Tools/store/screenshots/
