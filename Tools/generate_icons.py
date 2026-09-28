@@ -182,14 +182,22 @@ def render(size, with_background):
     return draw_tile(size, with_background).resize((size, size), Image.LANCZOS)
 
 
-def save(img, path, opaque):
+def save(img, path, opaque, keep_alpha_channel=False):
+    """opaque: şeffaf alanlar zemin rengiyle doldurulur.
+    keep_alpha_channel: sonuç tamamen opak ama 32-bit RGBA olarak yazılır
+    (Play Console mağaza ikonunu 32-bit PNG istiyor)."""
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     if opaque:
         flat = Image.new("RGB", img.size, PARAMS["bg_outer"])
         flat.paste(img, (0, 0), img)
+        if keep_alpha_channel:
+            flat = flat.convert("RGBA")
+            flat.putalpha(255)
+            mode = "opak (RGBA, 32-bit)"
+        else:
+            mode = "opak (RGB)"
         flat.save(full, "PNG")
-        mode = "opak (RGB)"
     else:
         img.save(full, "PNG")
         mode = "şeffaf (RGBA)"
@@ -217,6 +225,108 @@ def round_icon(size):
     return draw_tile(size, with_background=False, circle=True).resize((size, size), Image.LANCZOS)
 
 
+# --- Play Console öne çıkan görseli (feature graphic) ---
+# Alt başlık alternatifleri; varsayılan ilki:
+#   "Kimya temelli 4x4 sentez bulmacası"
+#   "Elementleri birleştir, bileşikleri keşfet"
+#   "Laboratuvarını kur, 7 deneyi tamamla"
+FEATURE = {
+    "size": (1024, 500),
+    "title": "NEXUM",
+    "subtitle": "Kimya temelli 4x4 sentez bulmacası",
+    "margin": 0.05,          # kenarlardan en az %5 boşluk
+    "icon_ratio": 0.68,      # ikon karosunun yüksekliğe oranı
+    "title_size": 0.22,      # yüksekliğe oran
+    "subtitle_size": 0.072,
+}
+
+
+def wrap_lines(draw, text, font, max_width):
+    """Metni kelime bazında sararak satırlara böler."""
+    words = text.split()
+    lines, current = [], ""
+    for word in words:
+        trial = (current + " " + word).strip()
+        l, t, r, b = draw.textbbox((0, 0), trial, font=font)
+        if r - l <= max_width or not current:
+            current = trial
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
+
+
+def feature_graphic():
+    """1024x500 Play Console öne çıkan görseli. İkonla aynı görsel dil."""
+    w, h = FEATURE["size"]
+    s = SS
+    big = (w * s, h * s)
+
+    canvas = radial_gradient((w, h), PARAMS["bg_inner"], PARAMS["bg_outer"]).resize(big, Image.BILINEAR).convert("RGBA")
+
+    # Yatay ve dikey boşluk ayrı hesaplanır; Play kenarları kırpabildiği için
+    # önemli içerik kenardan en az %5 içeride durur.
+    margin_x = int(FEATURE["margin"] * w * s)
+
+    # sol: karo ikonu (arka plansız, gradyan zeminin üstüne biner)
+    icon_side = int(FEATURE["icon_ratio"] * h)
+    icon = draw_tile(icon_side, with_background=False).resize((icon_side * s, icon_side * s), Image.LANCZOS)
+    icon_x = margin_x
+    icon_y = (big[1] - icon.size[1]) // 2
+    canvas.alpha_composite(icon, (icon_x, icon_y))
+
+    text_left = icon_x + icon.size[0] + int(0.07 * h * s)
+    text_right = big[0] - margin_x
+    text_width = text_right - text_left
+
+    layer = Image.new("RGBA", big, (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+
+    # başlık: alana sığana kadar küçült
+    title_size = FEATURE["title_size"] * h * s
+    while title_size > 10:
+        font_title = load_font(title_size)
+        l, t, r, b = d.textbbox((0, 0), FEATURE["title"], font=font_title)
+        if r - l <= text_width:
+            break
+        title_size *= 0.95
+    font_title = load_font(title_size)
+
+    # alt başlık: en çok iki satır olacak şekilde küçült
+    sub_size = FEATURE["subtitle_size"] * h * s
+    while sub_size > 8:
+        font_sub = load_font(sub_size)
+        lines = wrap_lines(d, FEATURE["subtitle"], font_sub, text_width)
+        if len(lines) <= 2:
+            break
+        sub_size *= 0.95
+    font_sub = load_font(sub_size)
+    lines = wrap_lines(d, FEATURE["subtitle"], font_sub, text_width)
+
+    tl, tt, tr, tb = d.textbbox((0, 0), FEATURE["title"], font=font_title)
+    line_h = sub_size * 1.35
+    block_h = (tb - tt) + sub_size * 0.6 + line_h * len(lines)
+    y = (big[1] - block_h) / 2.0
+
+    # başlık parlaması
+    halo = Image.new("RGBA", big, (0, 0, 0, 0))
+    ImageDraw.Draw(halo).text((text_left - tl, y - tt), FEATURE["title"], font=font_title,
+                              fill=PARAMS["border"] + (170,))
+    canvas = Image.alpha_composite(canvas, halo.filter(ImageFilter.GaussianBlur(0.012 * h * s)))
+
+    d.text((text_left - tl, y - tt), FEATURE["title"], font=font_title, fill=PARAMS["letter_color"] + (255,))
+    y += (tb - tt) + sub_size * 0.6
+    for line in lines:
+        sl, st, sr, sb = d.textbbox((0, 0), line, font=font_sub)
+        d.text((text_left - sl, y - st), line, font=font_sub, fill=PARAMS["small_text"] + (255,))
+        y += line_h
+
+    canvas = Image.alpha_composite(canvas, layer)
+    return canvas.resize((w, h), Image.LANCZOS)
+
+
 def main():
     print("NEXUM ikon üreteci - font:", PARAMS["font"])
     print("%-54s %-10s %-14s %s" % ("dosya", "boyut", "şeffaflık", "ağırlık"))
@@ -228,7 +338,8 @@ def main():
     save(round_icon(512), "Assets/Art/Icons/icon_round_512.png", opaque=False)
 
     # Mağaza görseli build'e girmemeli: Assets dışında duruyor
-    save(render(512, True), "Tools/store/icon_store_512.png", opaque=True)
+    save(render(512, True), "Tools/store/icon_store_512.png", opaque=True, keep_alpha_channel=True)
+    save(feature_graphic(), "Tools/store/feature_graphic_1024x500.png", opaque=True)
 
     # Küçük boyutta okunaklılık önizlemesi (commit edilmez, Tools/store altında)
     master = Image.open(os.path.join(ROOT, "Assets/Art/Icons/icon_master_1024.png"))

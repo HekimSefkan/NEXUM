@@ -46,6 +46,7 @@ public static class NexumValidation
     // =========================================
 
     private const string AtlasFolder = "Assets/Art/Atlases";
+    private const string PrivacyPolicyPath = "docs/privacy-policy.html";
 
     private const string ResultTag = "NEXUM_VALIDATION";
     private const string IssueTag = "NEXUM_VALIDATION_ISSUE";
@@ -116,6 +117,7 @@ public static class NexumValidation
         CheckResourcesFolder(warnings);
         CheckTextureRules(warnings);
         CheckAndroidIcons(warnings);
+        CheckReleaseReadiness(warnings);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
         foreach (string warning in warnings) Debug.Log($"{WarnTag}: {warning}");
@@ -439,6 +441,26 @@ public static class NexumValidation
 
     // Android ikon slotları: Adaptive / Round / Legacy türlerinden biri bile boşsa
     // uygulama mağazada ve launcher'da varsayılan ikonla görünür.
+    // Yayın öncesi sürüm bilgisi ve gizlilik politikası kontrolü
+    private static void CheckReleaseReadiness(List<string> warnings)
+    {
+        string version = PlayerSettings.bundleVersion;
+        if (string.IsNullOrWhiteSpace(version) || version == "0.1")
+        {
+            warnings.Add($"ProjectSettings: versionName varsayılan/boş (\"{version}\"); yayın öncesi ayarlanmalı");
+        }
+
+        if (PlayerSettings.Android.bundleVersionCode < 1)
+        {
+            warnings.Add($"ProjectSettings: versionCode {PlayerSettings.Android.bundleVersionCode}; en az 1 olmalı");
+        }
+
+        if (!File.Exists(PrivacyPolicyPath))
+        {
+            warnings.Add($"{PrivacyPolicyPath} yok; Play Console herkese açık bir gizlilik politikası URL'si istiyor");
+        }
+    }
+
     private static void CheckAndroidIcons(List<string> warnings)
     {
         // Tür adları bu sürümde API numarası taşır ("Adaptive (API 26)"), önekle eşleşilir

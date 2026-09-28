@@ -31,8 +31,11 @@ Assets/
   Scripts/           Oyun scriptleri (aşağıda)
   TextMesh Pro/      TMP Essentials
 Tools/               Unity dışı araçlar
-  generate_icons.py  Uygulama ikonu üreteci (Python + Pillow)
+  generate_icons.py  Uygulama ikonu + mağaza görselleri üreteci (Python + Pillow)
   store/             Mağaza görselleri; build'e girmez (önizlemeler git'te yok sayılır)
+docs/                GitHub Pages ile yayınlanan belgeler
+  privacy-policy.html  Gizlilik politikası (TR + EN)
+  RELEASE_CHECKLIST.md Yayın kontrol listesi
 NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity dışı)
 ```
 
@@ -98,6 +101,7 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
   - **UnityEvent WARN (sonucu FAIL yapmaz):** aynı olayda birden fazla sahne yükleme; ScrollRect.onValueChanged'e bağlı ses; script'inde `DontDestroyOnLoad` geçen, kendi tipinden static `Instance` taşıyan ve `IsProxy` üyesi olmayan singleton'ı hedefleme.
   - **Bölüm çözülebilirliği (FAIL):** Game sahnesindeki `GridManager.recipes` ve `LevelManager.levels` okunur; her bölüm için spawn havuzundan (ağırlık > 0) başlayıp tarifler kapanana kadar uygulanır. Bir bölümün hedefi üretilemiyorsa FAIL. Aynı anahtardan ikinci tarif WARN (GridManager'da ilk tanım geçerli).
   - **Doku / yayın WARN'ları (EH):** atlasa giren bir dokunun importer sıkıştırması açıksa (çift sıkıştırma); Android Target API Level "Automatic" ise; bir dokunun `maxTextureSize` değeri ekrandaki en büyük kullanımının 1,5 katının altındaysa. Sonuncusu yalnızca **ayarın** sınırladığı durumu bildirir (kaynak görselin kendisi küçükse uyarmaz) ve 13 deney föyü görselini muaf tutar. Çalışma zamanında atanan sprite'lar ile prefab köklerinin (taş, beher, ansiklopedi kartı) kullanım boyutları `RuntimeSpriteUsage` tablosunda elle tanımlıdır; yeni böyle bir kullanım eklenirse tabloya da eklenmeli.
+  - **Yayın WARN'ları:** `versionName` boş ya da Unity varsayılanı ("0.1") ise; `versionCode` 1'den küçükse; `docs/privacy-policy.html` yoksa.
   - **İkon WARN'ı:** Android Adaptive / Round / Legacy ikon türlerinden birinde boş slot varsa.
   - **Diğer WARN'lar:** ElementData'da boş/çok kısa metin alanları (temel elementlerde boş recipe hariç); ses import kuralına uymayan dosyalar; sahnede kaydırılmış kaydedilmiş ScrollRect içeriği.
   - **FAIL:** ProjectSettings'te çözülemeyen asset referansı (silinen ikon gibi).
@@ -105,6 +109,8 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - **Anchor dönüşümleri:** Kenara anchor'lanıp büyük offset'le konumlanan objeler, referans (1080×1920) görünümü koruyan hesapla merkez / üst-orta anchor'a çevrilir (`yeni_pos = eski_anchor × ebeveyn_boyutu + eski_pos − yeni_anchor × ebeveyn_boyutu`).
 - **DOTween göreli tween'ler:** `DOShakePosition` / `DOPunchScale` gibi başlangıç değerini yakalayan tween'lerden önce hedefte `DOKill(true)` çağrılır (üst üste binince kalıcı kayma olmasın).
 - **Uygulama ikonu:** Projede 512×512 kare logo olmadığı için ikon `Tools/generate_icons.py` ile **vektör olarak çizilir** (hiçbir görsel büyütülmez; içeride 4× süperörnekleme + LANCZOS). Tasarım HUD'daki azot karosunu temel alır: yuvarlatılmış koyu mavi karo (#0E3B63 → #0A2949), camgöbeği kenarlık (#35D0F0) ve dış parlama, ortada Orbitron-Bold "N", sol üstte "7", altta "14.007". Renk/metin değişikliği için scriptin başındaki `PARAMS` sözlüğü düzenlenip script yeniden çalıştırılır. Çıktılar `Assets/Art/Icons` altındadır; mağaza görseli `Tools/store/icon_store_512.png` (Assets dışında, build'e girmez). Adaptive ön planın içeriği ortadaki 288×288 güvenli alana sığar (Android maskeleri kenarları kırpar). Slotlar `NexumIconSetup.Apply` ile doldurulur — **ProjectSettings.asset elle düzenlenmez**. Not: `AndroidPlatformIconKind` `UnityEditor.Android.Extensions.dll` içinde olduğu ve Assembly-CSharp-Editor onu referans almadığı için tür `GetSupportedIconKinds` içinden ada göre bulunur; adlar API sürümü taşır ("Adaptive (API 26)", "Round (API 25)", "Legacy").
+- **Mağaza görselleri:** `Tools/generate_icons.py` ikonların yanında Play Console görsellerini de üretir. Mağaza ikonu (`Tools/store/icon_store_512.png`) tamamen opak ama **32-bit RGBA** yazılır (Play alfa kanallı PNG istiyor). Öne çıkan görsel (`Tools/store/feature_graphic_1024x500.png`) ikonla aynı dili kullanır; alt başlık `FEATURE` sözlüğünden değiştirilir, içerik kenarlardan en az %6 içeride durur. Bu dosyalar `Assets` dışında olduğu için build'e girmez.
+- **Gizlilik ve veri:** Uygulama **hiçbir veriyi dışarı göndermez**: scriptlerde ağ çağrısı yok, `UnityConnectSettings` içinde analytics/ads/crash reporting/purchasing/performance reporting kapalı, üretilen manifestte tek izin `VIBRATE` (INTERNET izni yok). Tüm veriler `PlayerPrefs` ile cihazda kalır. Politika metni `docs/privacy-policy.html` (TR + EN); **veri toplayan bir özellik eklenirse önce bu dosya güncellenmeli**. Yayın adımları `docs/RELEASE_CHECKLIST.md` içinde.
 - **Açılış ekranı:** Unity Personal lisansında Unity logosu kaldırılamaz; yanına NEXUM logosu (master ikon, 2 sn) `PlayerSettings.SplashScreen` API'siyle eklendi. Süre ve stil varsayılan.
 - **Android yayın ayarları:** IL2CPP, **sadece ARM64** (`AndroidTargetArchitectures: 2`), **Target API 36** (`AndroidTargetSdkVersion: 36`, artık Automatic değil), Minimum API 22, paket adı `com.hekimsefkan.nexum`. Enum değerleri build sırasında çalışma anında doğrulandı (`mimari=ARM64 (2)`, `targetSdk=AndroidApiLevel36 (36)`). ARMv7 kaldırıldığı için APK'dan 13,37 MiB düştü. Keystore ve imza kullanıcıya ait; YAML ile dokunulmaz.
 
@@ -148,7 +154,8 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 ## Bilinen durumlar (sonraki turlarda ele alınacak)
 - **Arka plan ve avatar çözünürlüğü:** Bazı görsellerin kaynağı ekrandaki kullanımın 1,5 katından küçük (avatarlar 1024 kaynak / 724 birim kullanım, `arkaplan` 941×1672, `grid.png` 783, `gamepanel` 1536). Import ayarıyla çözülmez, daha büyük kaynak görsel gerekir; validator bu durumda bilerek uyarmaz.
 - **Ölü PlayerPrefs anahtarı:** `TotalScore` yalnızca `RegistrationManager`'da 0'a kuruluyor; hiçbir yerde yazılmıyor ve okunmuyor.
-- **Yayın öncesi kalanlar:** release keystore ve imza (kullanıcıya ait, koda dokunulmaz), Play Console mağaza görselleri (feature graphic 1024×500, ekran görüntüleri), içerik derecelendirme anketi, Data safety formu, gizlilik politikası bağlantısı.
+- **Yayın öncesi kalanlar:** release keystore ve imza (kullanıcıya ait; `ProjectSettings` içindeki `AndroidKeystoreName` / `AndroidKeyaliasName` / `androidUseCustomKeystore` alanlarına **dokunulmaz**, şifreler depoya girmez), Play Console ekran görüntüleri, içerik derecelendirme anketi, Data safety formu ve gizlilik politikası URL'sinin GitHub Pages'te yayınlanması.
+- **ProjectSettings'teki şifre benzeri alanlar:** `ps4Passcode` Unity'nin her yeni projeye koyduğu sabit varsayılandır (projenin ilk commit'inden beri depoda, Android ile ilgisi yok), `metroCertificatePassword` boştur. Keystore şifreleri ProjectSettings'e yazılmaz. Bu alanlara dokunulmaz; yeni bir şifre alanı dolu görülürse iş durdurulup kullanıcıya sorulur.
 
 ## Kapsam dışı (bu temizlik çalışmasında yapılmayacak)
 - Spawn kuralı (her geçerli hamlede spawn)
