@@ -63,6 +63,7 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `Editor/NexumBuild` | Editör aracı: batch mode Android APK + AAB build'i ve BuildReport ölçümü |
 | `Editor/NexumIconSetup` | Editör aracı: Android ikon slotlarını PlayerSettings API'siyle doldurur |
 | `Editor/NexumSplashSetup` | Editör aracı: açılış ekranına NEXUM logosunu ekler |
+| `Editor/NexumScreenshot` | Editör aracı: Play modunda Game view'ı PNG'ye kaydeder (mağaza görüntüleri) |
 | `Core/AppBootstrap` | Sahneye eklenmeden çalışır: 60 FPS, sahne yüklenince timeScale=1, arka planda PlayerPrefs.Save |
 | `Core/SafeArea` | RectTransform'u Screen.safeArea'ya göre anchor'lar (sahneye Editor'de eklenir) |
 
@@ -112,6 +113,8 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 - **Mağaza görselleri:** `Tools/generate_icons.py` ikonların yanında Play Console görsellerini de üretir. Mağaza ikonu (`Tools/store/icon_store_512.png`) tamamen opak ama **32-bit RGBA** yazılır (Play alfa kanallı PNG istiyor). Öne çıkan görsel (`Tools/store/feature_graphic_1024x500.png`) ikonla aynı dili kullanır; alt başlık `FEATURE` sözlüğünden değiştirilir, içerik kenarlardan en az %6 içeride durur. Bu dosyalar `Assets` dışında olduğu için build'e girmez.
 - **Gizlilik ve veri:** Uygulama **hiçbir veriyi dışarı göndermez**: scriptlerde ağ çağrısı yok, `UnityConnectSettings` içinde analytics/ads/crash reporting/purchasing/performance reporting kapalı, üretilen manifestte tek izin `VIBRATE` (INTERNET izni yok). Tüm veriler `PlayerPrefs` ile cihazda kalır. Politika metni `docs/privacy-policy.html` (TR + EN); **veri toplayan bir özellik eklenirse önce bu dosya güncellenmeli**. Yayın adımları `docs/RELEASE_CHECKLIST.md` içinde.
 - **Açılış ekranı:** Unity Personal lisansında Unity logosu kaldırılamaz; yanına NEXUM logosu (master ikon, 2 sn) `PlayerSettings.SplashScreen` API'siyle eklendi. Süre ve stil varsayılan.
+- **İmzalama:** `androidUseCustomKeystore: 1`, keystore yolu ve alias ProjectSettings'te kayıtlı; **yol bu makineye özeldir**. Keystore dosyası depo dışında, **şifreler ProjectSettings'e yazılmaz** (`keystorePass`/`keyaliasPass` alanları dosyada yok) ve Unity her açılışta yeniden istenir. Bu yüzden **yayın paketi batch mode'da alınmaz**: imzalı AAB Unity Editor'de, `docs/RELEASE_CHECKLIST.md` 1.6'daki adımlarla üretilir. `NexumBuild` ile alınan paketler yalnızca ölçüm içindir.
+- **Ekran görüntüleri:** *NEXUM → Ekran Görüntüsü Al (1080×1920)* (`Ctrl+Shift+S`) Play modunda Game view'ı `Tools/store/screenshots/` altına yazar (klasör git'te yok sayılır). Game view farklı çözünürlükteyse konsola uyarı düşer.
 - **Android yayın ayarları:** IL2CPP, **sadece ARM64** (`AndroidTargetArchitectures: 2`), **Target API 36** (`AndroidTargetSdkVersion: 36`, artık Automatic değil), Minimum API 22, paket adı `com.hekimsefkan.nexum`. Enum değerleri build sırasında çalışma anında doğrulandı (`mimari=ARM64 (2)`, `targetSdk=AndroidApiLevel36 (36)`). ARMv7 kaldırıldığı için APK'dan 13,37 MiB düştü. Keystore ve imza kullanıcıya ait; YAML ile dokunulmaz.
 
 - **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma. Batch mode Unity komutlarının sonuna `| Out-Null` eklenir.
