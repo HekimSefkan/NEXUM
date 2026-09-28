@@ -107,6 +107,42 @@ public class BackButtonTests
         yield return new WaitForSeconds(1f);
     }
 
+    // HB: boş isimle giriş denendiğinde uyarı isim alanına yazılır, e-posta alanı temiz kalır
+    [UnityTest]
+    public IEnumerator BosIsimUyarisiKendiAlaninaYazilir()
+    {
+        MonoBehaviour reg = Object.FindObjectsOfType<MonoBehaviour>(true)
+            .FirstOrDefault(m => m.GetType().Name == "RegistrationManager");
+        Assert.IsNotNull(reg, "RegistrationManager yok");
+
+        object nameWarn = reg.GetType().GetField("nameWarningText", BindingFlags.Public | BindingFlags.Instance)
+            ?.GetValue(reg);
+        object emailWarn = reg.GetType().GetField("emailWarningText", BindingFlags.Public | BindingFlags.Instance)
+            ?.GetValue(reg);
+        Assert.IsNotNull(nameWarn, "nameWarningText sahnede bağlı değil");
+        Assert.IsNotNull(emailWarn, "emailWarningText sahnede bağlı değil");
+
+        // İsim kutusunu boşalt ve girişi dene
+        object nameField = reg.GetType().GetField("nameInputField", BindingFlags.Public | BindingFlags.Instance)
+            .GetValue(reg);
+        nameField.GetType().GetProperty("text").SetValue(nameField, "   ");
+
+        PropertyInfo textProp = nameWarn.GetType().GetProperty("text");
+        textProp.SetValue(nameWarn, "");
+        textProp.SetValue(emailWarn, "");
+
+        reg.GetType().GetMethod("SaveProfileAndLogin", BindingFlags.Public | BindingFlags.Instance)
+            .Invoke(reg, null);
+        yield return null;
+
+        string nameText = (string)textProp.GetValue(nameWarn);
+        string emailText = (string)textProp.GetValue(emailWarn);
+        Debug.Log($"{Tag}: bos isim -> nameWarningText=\"{nameText}\" emailWarningText=\"{emailText}\"");
+
+        Assert.IsNotEmpty(nameText, "İsim uyarısı kendi alanına yazılmadı");
+        Assert.IsEmpty(emailText, "E-posta alanı isim hatasıyla kirlenmemeli");
+    }
+
     [UnityTest]
     public IEnumerator KokteCiftBasisCikisIster()
     {

@@ -19,7 +19,8 @@ public class RegistrationManager : MonoBehaviour
     public GameObject registrationPanel;
     public TMP_InputField nameInputField;
     public TMP_InputField emailInputField; 
-    public TextMeshProUGUI emailWarningText; // YENİ: Hata durumunda kızaracak olan küçük açıklama metni
+    public TextMeshProUGUI emailWarningText; // E-posta hataları burada gösterilir
+    public TextMeshProUGUI nameWarningText;  // İsim ve mentor hataları; isim kutusunun altında durur
     
     [Header("Mentor Seçim Sistemi (Grid)")]
     public MentorData[] mentors; 
@@ -132,10 +133,11 @@ public class RegistrationManager : MonoBehaviour
     private const int MinNameLength = 2;
     private const int MaxNameLength = 20;
 
-    // Hatayı hem yazıyla hem sarsıntıyla hem sesle bildirir (sessiz başarısızlık olmasın)
-    private void ShowFieldError(string message, Transform fieldToShake)
+    // Hatayı hem yazıyla hem sarsıntıyla hem sesle bildirir (sessiz başarısızlık olmasın).
+    // İsim ve mentor hataları nameWarningText'e, e-posta hataları emailWarningText'e yazılır.
+    private void ShowFieldError(TextMeshProUGUI target, string message, Transform fieldToShake)
     {
-        if (emailWarningText != null) emailWarningText.text = "<color=red>" + message + "</color>";
+        if (target != null) target.text = "<color=red>" + message + "</color>";
 
         if (fieldToShake != null)
         {
@@ -149,37 +151,43 @@ public class RegistrationManager : MonoBehaviour
         }
     }
 
+    private void ClearNameWarning()
+    {
+        if (nameWarningText != null) nameWarningText.text = "";
+    }
+
     public void SaveProfileAndLogin()
     {
         string enteredName = nameInputField.text != null ? nameInputField.text.Trim() : "";
         string enteredEmail = emailInputField != null ? emailInputField.text : "";
 
-        // --- İSİM DOĞRULAMA ---
-        // Uyarı metni e-posta alanının yanında durduğu için mesaj hangi alana ait olduğunu söyler
+        // --- İSİM DOĞRULAMA --- (uyarılar isim kutusunun altındaki kendi alanına yazılır)
         if (enteredName.Length == 0)
         {
-            ShowFieldError("İsim: kimyager adını yazmalısın", nameInputField.transform);
+            ShowFieldError(nameWarningText, "Kimyager adını yazmalısın", nameInputField.transform);
             return;
         }
 
         if (enteredName.Length < MinNameLength)
         {
-            ShowFieldError($"İsim: en az {MinNameLength} karakter girmelisin", nameInputField.transform);
+            ShowFieldError(nameWarningText, $"En az {MinNameLength} karakter girmelisin", nameInputField.transform);
             return;
         }
 
         if (enteredName.Length > MaxNameLength)
         {
-            ShowFieldError($"İsim: en fazla {MaxNameLength} karakter olabilir", nameInputField.transform);
+            ShowFieldError(nameWarningText, $"En fazla {MaxNameLength} karakter olabilir", nameInputField.transform);
             return;
         }
 
         // --- MENTOR DOĞRULAMA ---
         if (selectedAvatarIndex == -1)
         {
-            ShowFieldError("Önce bir mentor seç", null);
+            ShowFieldError(nameWarningText, "Önce bir mentor seç", null);
             return;
         }
+
+        ClearNameWarning();
 
         // --- E-POSTA GÜVENLİK DUVARI ---
         // Eğer e-posta kutusu boş DEĞİLSE (yani bir şeyler yazılmışsa) kontrol et
