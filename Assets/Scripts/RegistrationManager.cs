@@ -128,13 +128,58 @@ public class RegistrationManager : MonoBehaviour
         return Regex.IsMatch(email, pattern);
     }
 
+    // İsim kuralı: baştaki/sondaki boşluklar kırpılır, 2-20 karakter
+    private const int MinNameLength = 2;
+    private const int MaxNameLength = 20;
+
+    // Hatayı hem yazıyla hem sarsıntıyla hem sesle bildirir (sessiz başarısızlık olmasın)
+    private void ShowFieldError(string message, Transform fieldToShake)
+    {
+        if (emailWarningText != null) emailWarningText.text = "<color=red>" + message + "</color>";
+
+        if (fieldToShake != null)
+        {
+            fieldToShake.DOKill(true);
+            fieldToShake.DOShakePosition(0.4f, new Vector3(15f, 0, 0), 20);
+        }
+
+        if (AudioManager.Instance != null && AudioManager.Instance.errorClip != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.errorClip);
+        }
+    }
+
     public void SaveProfileAndLogin()
     {
-        string enteredName = nameInputField.text;
+        string enteredName = nameInputField.text != null ? nameInputField.text.Trim() : "";
         string enteredEmail = emailInputField != null ? emailInputField.text : "";
 
-        // İsim veya Avatar eksikse zaten girilmiyor
-        if (string.IsNullOrWhiteSpace(enteredName) || selectedAvatarIndex == -1) return;
+        // --- İSİM DOĞRULAMA ---
+        // Uyarı metni e-posta alanının yanında durduğu için mesaj hangi alana ait olduğunu söyler
+        if (enteredName.Length == 0)
+        {
+            ShowFieldError("İsim: kimyager adını yazmalısın", nameInputField.transform);
+            return;
+        }
+
+        if (enteredName.Length < MinNameLength)
+        {
+            ShowFieldError($"İsim: en az {MinNameLength} karakter girmelisin", nameInputField.transform);
+            return;
+        }
+
+        if (enteredName.Length > MaxNameLength)
+        {
+            ShowFieldError($"İsim: en fazla {MaxNameLength} karakter olabilir", nameInputField.transform);
+            return;
+        }
+
+        // --- MENTOR DOĞRULAMA ---
+        if (selectedAvatarIndex == -1)
+        {
+            ShowFieldError("Önce bir mentor seç", null);
+            return;
+        }
 
         // --- E-POSTA GÜVENLİK DUVARI ---
         // Eğer e-posta kutusu boş DEĞİLSE (yani bir şeyler yazılmışsa) kontrol et
