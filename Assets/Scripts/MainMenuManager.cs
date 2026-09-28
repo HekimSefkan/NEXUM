@@ -13,7 +13,14 @@ public class MainMenuManager : MonoBehaviour
     public GameObject profilePanel;
     public GameObject settingsPanel; 
 
-    private GameObject currentPanel; 
+    private GameObject currentPanel;
+
+    // Panel geçişi (iki DOTween) sürerken true. Geri tuşu bu sırada yok sayılır;
+    // ayrıca hızlı çift dokunuşta iki geçişin çakışıp paneli ölçek 0'da bırakması engellenir.
+    public bool IsSwitching { get; private set; }
+
+    // Geri tuşu için: ana menü kökünde miyiz?
+    public bool IsAtMainMenuRoot { get { return currentPanel == mainMenuPanel; } }
 
     [Header("Profil Butonu Avatarı")]
     public UnityEngine.UI.Image profileButtonAvatarImage; 
@@ -50,16 +57,20 @@ public class MainMenuManager : MonoBehaviour
     private void SwitchPanel(GameObject targetPanel)
     {
         if (currentPanel == targetPanel) return;
+        if (IsSwitching) return;   // geçiş sürerken yeni geçiş başlatma (panel ölçek 0'da kalmasın)
+
+        IsSwitching = true;
 
         currentPanel.transform.DOScale(Vector3.zero, 0.3f).OnComplete(() =>
         {
             currentPanel.SetActive(false);
-            
+
             targetPanel.SetActive(true);
             StartCoroutine(ResetScrollPositionsNextFrame(targetPanel));
             targetPanel.transform.localScale = Vector3.zero;
-            targetPanel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-            
+            targetPanel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack)
+                .OnComplete(() => IsSwitching = false);
+
             currentPanel = targetPanel;
         });
     }
