@@ -3607,38 +3607,38 @@ MonoBehaviour:
     element2: {fileID: 3634079177299486472, guid: 293d81e9e56243149b4c147559fe8972, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     scoreReward: 10
-    scientificHint: "\u0130ki hidrojen atomu tek elektronlar\u0131n\u0131 payla\u015F\u0131p
-      kovalent ba\u011F kurar; evrenin en hafif molek\xFCl\xFC b\xF6yle olu\u015Fur."
+    scientificHint: "\u0130ki hidrojen atomu elektron payla\u015F\u0131p kovalent
+      ba\u011F kurar: evrenin en hafif molek\xFCl\xFC."
   - element1: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     scoreReward: 10
-    scientificHint: "\u0130ki oksijen atomu \xE7ift ba\u011F kurunca soludu\u011Fumuz
-      kararl\u0131 oksijen molek\xFCl\xFC ortaya \xE7\u0131kar."
+    scientificHint: "\u0130ki oksijen atomu \xE7ift ba\u011F kurar; soludu\u011Fumuz
+      kararl\u0131 oksijen molek\xFCl\xFC olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 930ab50179948a04ea8709f405f40427, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
     scoreReward: 10
-    scientificHint: "Karbon yeterli oksijen bulamazsa tek bir oksijene ba\u011Flan\u0131r
-      ve zehirli karbonmonoksit a\xE7\u0131\u011Fa \xE7\u0131kar."
+    scientificHint: "Oksijen yetersizse karbon tek oksijene ba\u011Flan\u0131r; zehirli
+      karbonmonoksit olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
     element2: {fileID: 3634079177299486472, guid: 293d81e9e56243149b4c147559fe8972, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 3a31c3c9228c2c1478ea0d0277983eb5, type: 3}
     scoreReward: 10
-    scientificHint: "Azot ilk hidrojenini ba\u011Flad\u0131\u011F\u0131nda k\u0131sa
-      \xF6m\xFCrl\xFC imidogen olu\u015Fur; amonya\u011Fa giden yol buradan ba\u015Flar."
+    scientificHint: "Azot ilk hidrojenini ba\u011Flay\u0131nca k\u0131sa \xF6m\xFCrl\xFC
+      imidogen olu\u015Fur; amonya\u011F\u0131n ilk ad\u0131m\u0131."
   - element1: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 2f22e3bd2b333854ebc28457db6336a8, type: 3}
     scoreReward: 30
-    scientificHint: "Bir oksijen, iki hidrojenin elektronlar\u0131n\u0131 payla\u015Farak
-      104,5 derecelik a\xE7\u0131yla su molek\xFCl\xFCn\xFC kurar."
+    scientificHint: "Bir oksijen iki hidrojenle 104,5 derecelik a\xE7\u0131 yaparak
+      su molek\xFCl\xFCn\xFC kurar."
   - element1: {fileID: 3634079177299486472, guid: 8ba78bf2d4334b0419a90a5e45fec829, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a036fab5e06679548b170c3394656328, type: 3}
     scoreReward: 30
-    scientificHint: "Sodyum tek de\u011Ferlik elektronunu klora verir; z\u0131t y\xFCkl\xFC
-      iyonlar kenetlenince sofra tuzu olu\u015Fur."
+    scientificHint: "Sodyum de\u011Ferlik elektronunu klora verir; z\u0131t y\xFCkl\xFC
+      iyonlar sofra tuzunu kurar."
   - element1: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 922dddd60ee7f8e4585dfa23774392c1, type: 3}
@@ -3649,8 +3649,8 @@ MonoBehaviour:
     element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a7902d9f2737ff941b1193d6c06d7d48, type: 3}
     scoreReward: 30
-    scientificHint: "Serbest bir oksijen atomu oksijen molek\xFCl\xFCne kat\u0131l\u0131nca
-      bizi mor\xF6tesi \u0131\u015F\u0131nlardan koruyan ozon olu\u015Fur."
+    scientificHint: "Serbest oksijen atomu oksijen molek\xFCl\xFCne kat\u0131l\u0131r;
+      mor\xF6tesi kalkan\u0131m\u0131z ozon olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: dccbb0d8176b4df4e986c630b4b8d5f9, type: 3}
     element2: {fileID: 3634079177299486472, guid: dccbb0d8176b4df4e986c630b4b8d5f9, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 5dbd1bcf30fe19143b69d2cb969a666b, type: 3}
@@ -3685,21 +3685,20 @@ MonoBehaviour:
     element2: {fileID: 3634079177299486472, guid: 922dddd60ee7f8e4585dfa23774392c1, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: bc7ad76736acc79488393748bbaeaa86, type: 3}
     scoreReward: 50
-    scientificHint: "S\xF6nmemi\u015F kire\xE7 havadaki karbondioksiti ba\u011Flay\u0131nca
-      mermerin ve tebe\u015Firin ham maddesi kalsiyum karbonat olu\u015Fur."
+    scientificHint: "S\xF6nmemi\u015F kire\xE7 karbondioksiti ba\u011Flar; mermerin
+      maddesi kalsiyum karbonat olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: f1d2f71ef70e8ea459d7881391d82e03, type: 3}
     scoreReward: 50
-    scientificHint: "Amonyak kataliz\xF6r e\u015Fli\u011Finde y\xFCkseltgenince nitrik
-      asit \xFCretiminin ilk ad\u0131m\u0131 olan azot monoksit a\xE7\u0131\u011Fa
-      \xE7\u0131kar."
+    scientificHint: "Amonyak kataliz\xF6rle y\xFCkseltgenince nitrik asidin ilk ad\u0131m\u0131
+      azot monoksit olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
     element2: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: ddb396e28bed1c74bbcb94793fdac413, type: 3}
     scoreReward: 10
-    scientificHint: "\u0130ki azot atomu \xFC\xE7l\xFC ba\u011F kurar; do\u011Fadaki
-      en sa\u011Flam molek\xFCler ba\u011Flardan biri b\xF6yle olu\u015Fur."
+    scientificHint: "\u0130ki azot atomu \xFC\xE7l\xFC ba\u011F kurar; do\u011Fan\u0131n
+      en sa\u011Flam ba\u011Flar\u0131ndan biri b\xF6yle olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
@@ -3711,27 +3710,25 @@ MonoBehaviour:
     resultPrefab: {fileID: 3634079177299486472, guid: 105024473d022e647849d382200808b5, type: 3}
     scoreReward: 10
     scientificHint: "\u0130ki karbon atomu k\u0131sa \xF6m\xFCrl\xFC dikarbonu kurar;
-      alevin mavi b\xF6lgesini bu t\xFCr yap\u0131lar boyar."
+      alevin mavisini bu yap\u0131lar boyar."
   - element1: {fileID: 3634079177299486472, guid: ddb396e28bed1c74bbcb94793fdac413, type: 3}
     element2: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
     scoreReward: 30
-    scientificHint: "Haber-Bosch y\xF6ntemi: azotun \xFC\xE7l\xFC ba\u011F\u0131
-      demir kataliz\xF6r e\u015Fli\u011Finde y\xFCksek bas\u0131n\xE7 ve s\u0131cakl\u0131kta
-      k\u0131r\u0131l\u0131r, hidrojenle birle\u015Ferek amonyak olu\u015Fur."
+    scientificHint: "Haber-Bosch: azotun \xFC\xE7l\xFC ba\u011F\u0131 demir kataliz\xF6r
+      ve bas\u0131n\xE7la k\u0131r\u0131l\u0131r, amonyak olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
     element2: {fileID: 3634079177299486472, guid: 8ba78bf2d4334b0419a90a5e45fec829, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a036fab5e06679548b170c3394656328, type: 3}
     scoreReward: 30
-    scientificHint: "Klor molek\xFCl\xFC ayr\u0131\u015F\u0131r ve her klor atomu
-      sodyumun tek de\u011Ferlik elektronunu al\u0131r; z\u0131t y\xFCkl\xFC iyonlar
-      kenetlenince sofra tuzu olu\u015Fur."
+    scientificHint: "Klor molek\xFCl\xFC ayr\u0131\u015F\u0131r; her klor atomu bir
+      sodyumun elektronunu al\u0131p tuz kurar."
   - element1: {fileID: 3634079177299486472, guid: 105024473d022e647849d382200808b5, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
     scoreReward: 30
-    scientificHint: "Karars\u0131z dikarbon, oksijen molek\xFCl\xFCyle kar\u015F\u0131la\u015F\u0131nca
-      ba\u011F\u0131 kopar ve iki karbonmonoksite d\xF6n\xFC\u015F\xFCr."
+    scientificHint: "Karars\u0131z dikarbon oksijen molek\xFCl\xFCyle kar\u015F\u0131la\u015F\u0131nca
+      iki karbonmonoksite d\xF6n\xFC\u015F\xFCr."
   hasUsedRevive: 0
   hasWon: 0
   undoCost: 50

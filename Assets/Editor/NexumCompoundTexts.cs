@@ -4,16 +4,17 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Yeni bileşiklerin ansiklopedi metinlerini (ElementData.description) ve
-// tariflerin bilimsel ipuçlarını (MergeRecipe.scientificHint) yazar.
+// Oyun içi kimya metinlerinin tek kaynağı: yeni bileşiklerin ansiklopedi
+// metinleri (ElementData.description) ve TÜM tariflerin bilimsel ipuçları
+// (MergeRecipe.scientificHint).
 //
-// Metinler kimyasal onay bekliyordu; bu yüzden yapısal kurulumdan
-// (NexumNewCompounds) ayrı tutuldu. Metin değişirse aşağıdaki tablolar
-// düzenlenip script yeniden çalıştırılır.
+// UZUNLUK KURALI: ipucu metni ipucu kutusunun %85'ini geçemez (kutu 807×350;
+// pratikte ana metin en fazla 2 satır). Sınır ölçümle korunuyor:
+// Assets/Tests/PlayMode/HintFitTests.cs. Metin değiştirince testi çalıştır.
 //
 // IDEMPOTENT: aynı metin zaten yazılıysa hiçbir şeyi değiştirmez.
 //
-// Menüden: NEXUM -> Yeni Bileşik Metinlerini Yaz
+// Menüden: NEXUM -> Kimya Metinlerini Yaz
 // Batch mode: -executeMethod NexumCompoundTexts.Run
 public static class NexumCompoundTexts
 {
@@ -31,26 +32,57 @@ public static class NexumCompoundTexts
                       "kuyruklu yıldızlarda görülür; kararsızdır, ilk fırsatta oksijene koşar.",
     };
 
-    // anahtar: "Tile_A+Tile_B" (alfabetik sırada)
+    // anahtar: "Tile_A+Tile_B" (ordinal sıraya göre; Key() ile aynı kural)
     private static readonly Dictionary<string, string> Hints = new Dictionary<string, string>
     {
+        // --- temel tarifler
+        ["Tile_H+Tile_H"] =
+            "İki hidrojen atomu elektron paylaşıp kovalent bağ kurar: evrenin en hafif molekülü.",
+        ["Tile_O+Tile_O"] =
+            "İki oksijen atomu çift bağ kurar; soluduğumuz kararlı oksijen molekülü oluşur.",
+        ["Tile_C+Tile_O"] =
+            "Oksijen yetersizse karbon tek oksijene bağlanır; zehirli karbonmonoksit oluşur.",
+        ["Tile_H+Tile_N"] =
+            "Azot ilk hidrojenini bağlayınca kısa ömürlü imidogen oluşur; amonyağın ilk adımı.",
+        ["Tile_H2+Tile_O"] =
+            "Bir oksijen iki hidrojenle 104,5 derecelik açı yaparak su molekülünü kurar.",
+        ["Tile_Cl+Tile_Na"] =
+            "Sodyum değerlik elektronunu klora verir; zıt yüklü iyonlar sofra tuzunu kurar.",
+        ["Tile_CO+Tile_O"] =
+            "Karbonmonoksit bir oksijen daha bağlayarak kararlı ve doğrusal karbondioksite dönüşür.",
+        ["Tile_O+Tile_O2"] =
+            "Serbest oksijen atomu oksijen molekülüne katılır; morötesi kalkanımız ozon oluşur.",
+        ["Tile_Fe+Tile_Fe"] =
+            "İki demir atomu metalik bağla birleşir; pas tepkimesi için gereken demir çiftini hazırlar.",
+        ["Tile_Fe2+Tile_O3"] =
+            "Demir oksijenle yükseltgenince kırmızı-kahverengi pas, yani demir(III) oksit oluşur.",
+        ["Tile_H2+Tile_NH"] =
+            "İmidogen iki hidrojen daha bağlayınca üçgen piramit yapılı amonyak molekülü tamamlanır.",
+        ["Tile_Ca+Tile_O"] =
+            "Kalsiyum oksijenle birleşince inşaatın temel malzemesi sönmemiş kireç elde edilir.",
+        ["Tile_CO2+Tile_H2O"] =
+            "Karbondioksit suda çözününce maden suyuna ekşiliğini veren karbonik asit oluşur.",
+        ["Tile_CO2+Tile_CaO"] =
+            "Sönmemiş kireç karbondioksiti bağlar; mermerin maddesi kalsiyum karbonat oluşur.",
+        ["Tile_NH3+Tile_O2"] =
+            "Amonyak katalizörle yükseltgenince nitrik asidin ilk adımı azot monoksit oluşur.",
+
+        // --- 13. turda eklenen bileşikler
         ["Tile_N+Tile_N"] =
-            "İki azot atomu üçlü bağ kurar; doğadaki en sağlam moleküler bağlardan biri böyle oluşur.",
+            "İki azot atomu üçlü bağ kurar; doğanın en sağlam bağlarından biri böyle oluşur.",
         ["Tile_Cl+Tile_Cl"] =
             "İki klor atomu birer elektron paylaşarak kararlı, sarı-yeşil klor molekülünü oluşturur.",
         ["Tile_C+Tile_C"] =
-            "İki karbon atomu kısa ömürlü dikarbonu kurar; alevin mavi bölgesini bu tür yapılar boyar.",
+            "İki karbon atomu kısa ömürlü dikarbonu kurar; alevin mavisini bu yapılar boyar.",
         ["Tile_H2+Tile_N2"] =
-            "Haber-Bosch yöntemi: azotun üçlü bağı demir katalizör eşliğinde yüksek basınç ve " +
-            "sıcaklıkta kırılır, hidrojenle birleşerek amonyak oluşur.",
+            "Haber-Bosch: azotun üçlü bağı demir katalizör ve basınçla kırılır, amonyak oluşur.",
         ["Tile_Cl2+Tile_Na"] =
-            "Klor molekülü ayrışır ve her klor atomu sodyumun tek değerlik elektronunu alır; " +
-            "zıt yüklü iyonlar kenetlenince sofra tuzu oluşur.",
+            "Klor molekülü ayrışır; her klor atomu bir sodyumun elektronunu alıp tuz kurar.",
         ["Tile_C2+Tile_O2"] =
-            "Kararsız dikarbon, oksijen molekülüyle karşılaşınca bağı kopar ve iki karbonmonoksite dönüşür.",
+            "Kararsız dikarbon oksijen molekülüyle karşılaşınca iki karbonmonoksite dönüşür.",
     };
 
-    [MenuItem("NEXUM/Yeni Bileşik Metinlerini Yaz")]
+    [MenuItem("NEXUM/Kimya Metinlerini Yaz")]
     public static void Run()
     {
         int dataWritten = 0;
@@ -95,6 +127,7 @@ public static class NexumCompoundTexts
         }
 
         List<MergeRecipe> list = new List<MergeRecipe>(gridManager.recipes);
+        HashSet<string> eslesen = new HashSet<string>();
         int written = 0;
 
         for (int i = 0; i < list.Count; i++)
@@ -103,12 +136,24 @@ public static class NexumCompoundTexts
             if (recipe.element1 == null || recipe.element2 == null) continue;
 
             string key = Key(recipe.element1.name, recipe.element2.name);
-            if (!Hints.TryGetValue(key, out string text)) continue;
+            if (!Hints.TryGetValue(key, out string text))
+            {
+                Debug.LogWarning($"{Tag}: tabloda karşılığı olmayan tarif: {key}");
+                continue;
+            }
+
+            eslesen.Add(key);
             if (recipe.scientificHint == text) continue;
 
             recipe.scientificHint = text;
             list[i] = recipe;
             written++;
+        }
+
+        // Tabloda olup sahnede karşılığı olmayan anahtar = yazım hatası
+        foreach (string key in Hints.Keys)
+        {
+            if (!eslesen.Contains(key)) Debug.LogError($"{Tag}: tarifi bulunamayan anahtar: {key}");
         }
 
         if (written > 0)
