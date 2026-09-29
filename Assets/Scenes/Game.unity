@@ -3698,32 +3698,39 @@ MonoBehaviour:
     element2: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: ddb396e28bed1c74bbcb94793fdac413, type: 3}
     scoreReward: 10
-    scientificHint: 
+    scientificHint: "\u0130ki azot atomu \xFC\xE7l\xFC ba\u011F kurar; do\u011Fadaki
+      en sa\u011Flam molek\xFCler ba\u011Flardan biri b\xF6yle olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
     scoreReward: 10
-    scientificHint: 
+    scientificHint: "\u0130ki klor atomu birer elektron payla\u015Farak kararl\u0131,
+      sar\u0131-ye\u015Fil klor molek\xFCl\xFCn\xFC olu\u015Fturur."
   - element1: {fileID: 3634079177299486472, guid: 930ab50179948a04ea8709f405f40427, type: 3}
     element2: {fileID: 3634079177299486472, guid: 930ab50179948a04ea8709f405f40427, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 105024473d022e647849d382200808b5, type: 3}
     scoreReward: 10
-    scientificHint: 
+    scientificHint: "\u0130ki karbon atomu k\u0131sa \xF6m\xFCrl\xFC dikarbonu kurar;
+      alevin mavi b\xF6lgesini bu t\xFCr yap\u0131lar boyar."
   - element1: {fileID: 3634079177299486472, guid: ddb396e28bed1c74bbcb94793fdac413, type: 3}
     element2: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
     scoreReward: 30
-    scientificHint: 
+    scientificHint: "Haber-Bosch y\xF6ntemi: azotun \xFC\xE7l\xFC ba\u011F\u0131
+      y\xFCksek bas\u0131n\xE7ta k\u0131r\u0131l\u0131r ve hidrojenle birle\u015Ferek
+      amonyak \xFCretilir."
   - element1: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
     element2: {fileID: 3634079177299486472, guid: 8ba78bf2d4334b0419a90a5e45fec829, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a036fab5e06679548b170c3394656328, type: 3}
     scoreReward: 30
-    scientificHint: 
+    scientificHint: "Sodyum tek de\u011Ferlik elektronunu klor molek\xFCl\xFCne verir;
+      z\u0131t y\xFCkl\xFC iyonlar kenetlenince sofra tuzu olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 105024473d022e647849d382200808b5, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
     scoreReward: 30
-    scientificHint: 
+    scientificHint: "Karars\u0131z dikarbon, oksijen molek\xFCl\xFCyle kar\u015F\u0131la\u015F\u0131nca
+      ba\u011F\u0131 kopar ve iki karbonmonoksite d\xF6n\xFC\u015F\xFCr."
   hasUsedRevive: 0
   hasWon: 0
   undoCost: 50
