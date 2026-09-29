@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 [System.Serializable]
@@ -48,6 +50,20 @@ public class GridManager : MonoBehaviour
     // taş gelir. Entropi cezasından bağımsızdır ve her modda çalışır.
     private const int MergelessMovesPerSpawn = 2;
     private int movesSinceSpawn = 0;
+
+    // --- Yeni taşın doğuş zamanlaması -----------------------------------
+    // Kayma tween'i 0,2 sn; birleşme ürününün büyümesi 0,3 sn. Yeni taş
+    // bunların ikisi de bitmeden doğarsa oyuncu onu göremeden birleşebiliyor.
+    public const float MoveAnimDuration = 0.2f;
+    public const float MergeAnimDuration = 0.3f;
+    public const float SpawnDelay = MergeAnimDuration;
+
+    private int pendingSpawns = 0;
+    private Vector2 pendingSpawnDirection = Vector2.zero;
+    private Coroutine spawnRoutine;
+
+    /// <summary>Animasyonların bitmesi beklenen, henüz doğmamış taş var mı?</summary>
+    public bool HasPendingSpawn { get { return pendingSpawns > 0; } }
     public bool hasUsedRevive = false; 
 
     // Bölüm kazanıldı mı? Kazanma ekranının tekrar tetiklenmesini engeller.
@@ -129,16 +145,147 @@ public class GridManager : MonoBehaviour
 
     public void SpawnTile()
     {
-        List<Transform> emptyCells = new List<Transform>();
-        foreach (Transform cell in cells) if (cell.childCount == 0) emptyCells.Add(cell);
-        
-        if (emptyCells.Count == 0) return;
+        SpawnTile(Vector2.zero);
+    }
 
-        int randomIndex = Random.Range(0, emptyCells.Count);
+    /// <summary>
+    /// Yeni taşı doğurur. Konum kuralı (sırayla):
+    /// 1) Kaydırma yönünün TERSİNDEKİ kenardaki boş hücreler.
+    /// 2) O kenar doluysa, kaydırma hedefinden en uzak boş hücreler.
+    /// 3) Bu aday küme içinde, komşusuyla anında birleşmeyecek hücreler
+    ///    (hiçbiri yoksa kural esnetilir; tahta dolu olabilir).
+    /// </summary>
+    public void SpawnTile(Vector2 direction)
+    {
+        List<int> emptyIndices = new List<int>();
+        for (int i = 0; i < cells.Count; i++) if (cells[i].childCount == 0) emptyIndices.Add(i);
+
+        if (emptyIndices.Count == 0) return;
+
         GameObject selectedElement = LevelManager.Instance.GetRandomElementForCurrentLevel();
-        GameObject newTile = Instantiate(selectedElement, emptyCells[randomIndex]);
+
+        List<int> candidates = FarthestCells(direction, emptyIndices);
+        List<int> safe = new List<int>();
+        foreach (int index in candidates)
+        {
+            if (!WouldMergeImmediately(index, selectedElement.name)) safe.Add(index);
+        }
+        if (safe.Count > 0) candidates = safe;
+
+        int chosen = candidates[Random.Range(0, candidates.Count)];
+        GameObject newTile = Instantiate(selectedElement, cells[chosen]);
         newTile.transform.localScale = Vector3.zero;
-        newTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+
+        // Belirme animasyonu: birleşme ürününden ayırt edilebilsin diye
+        // hafif taşmalı büyüme + kısa parlama.
+        Sequence appear = DOTween.Sequence();
+        appear.Append(newTile.transform.DOScale(Vector3.one * 1.18f, 0.18f).SetEase(Ease.OutBack));
+        appear.Append(newTile.transform.DOScale(Vector3.one, 0.12f).SetEase(Ease.OutQuad));
+        PlaySpawnFlash(newTile);
+    }
+
+    /// <summary>Kaydırma hedefinden en uzak sıradaki boş hücreler.</summary>
+    private List<int> FarthestCells(Vector2 direction, List<int> emptyIndices)
+    {
+        if (direction == Vector2.zero) return new List<int>(emptyIndices);
+
+        int best = -1;
+        List<int> result = new List<int>();
+        foreach (int index in emptyIndices)
+        {
+            int row = index / 4;
+            int column = index % 4;
+            int distance;
+            if (direction == Vector2.up) distance = row;            // yukarı kaydırıldıysa en alt sıra
+            else if (direction == Vector2.down) distance = 3 - row;  // aşağı kaydırıldıysa en üst sıra
+            else if (direction == Vector2.left) distance = column;   // sola kaydırıldıysa en sağ sütun
+            else distance = 3 - column;                              // sağa kaydırıldıysa en sol sütun
+
+            if (distance > best) { best = distance; result.Clear(); result.Add(index); }
+            else if (distance == best) result.Add(index);
+        }
+        return result;
+    }
+
+    /// <summary>Bu hücreye konacak taş, komşularından biriyle hemen birleşir mi?</summary>
+    private bool WouldMergeImmediately(int index, string tileName)
+    {
+        int row = index / 4;
+        int column = index % 4;
+
+        if (row > 0 && MergesWith(index - 4, tileName)) return true;
+        if (row < 3 && MergesWith(index + 4, tileName)) return true;
+        if (column > 0 && MergesWith(index - 1, tileName)) return true;
+        if (column < 3 && MergesWith(index + 1, tileName)) return true;
+        return false;
+    }
+
+    private bool MergesWith(int neighbourIndex, string tileName)
+    {
+        if (cells[neighbourIndex].childCount == 0) return false;
+        string neighbourName = cells[neighbourIndex].GetChild(0).name;
+        return mergeDictionary.ContainsKey(GetMergeKey(tileName, neighbourName));
+    }
+
+    /// <summary>Taşın üstünde bir kez parlayıp sönen beyaz kopya.</summary>
+    private void PlaySpawnFlash(GameObject tile)
+    {
+        Image source = tile.GetComponent<Image>();
+        if (source == null) return;
+
+        GameObject glow = new GameObject("SpawnGlow", typeof(RectTransform), typeof(Image));
+        RectTransform rect = glow.GetComponent<RectTransform>();
+        rect.SetParent(tile.transform, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+        rect.SetAsFirstSibling();   // sembolün altında kalsın
+
+        Image glowImage = glow.GetComponent<Image>();
+        glowImage.sprite = source.sprite;
+        glowImage.raycastTarget = false;
+        glowImage.color = new Color(1f, 1f, 1f, 0.85f);
+
+        rect.DOScale(1.35f, 0.35f).SetEase(Ease.OutQuad);
+        glowImage.DOFade(0f, 0.35f).SetEase(Ease.OutQuad)
+                 .OnComplete(() => { if (glow != null) Destroy(glow); });
+    }
+
+    // --- Bekleyen doğuşlar ------------------------------------------------
+
+    private void RequestSpawn(Vector2 direction)
+    {
+        pendingSpawns++;
+        pendingSpawnDirection = direction;
+    }
+
+    private IEnumerator ResolveSpawnsAfterAnimations()
+    {
+        yield return new WaitForSeconds(SpawnDelay);
+        spawnRoutine = null;
+        FlushPendingSpawns(true);
+    }
+
+    /// <summary>Bekleyen taşları hemen doğurur (oyuncu beklemeden hamle yaparsa).</summary>
+    private void FlushPendingSpawns(bool checkGameOver)
+    {
+        if (spawnRoutine != null) { StopCoroutine(spawnRoutine); spawnRoutine = null; }
+
+        while (pendingSpawns > 0)
+        {
+            pendingSpawns--;
+            SpawnTile(pendingSpawnDirection);
+        }
+
+        if (checkGameOver) CheckGameOver();
+    }
+
+    /// <summary>Geri alma, henüz doğmamış taşı da iptal eder.</summary>
+    private void CancelPendingSpawns()
+    {
+        if (spawnRoutine != null) { StopCoroutine(spawnRoutine); spawnRoutine = null; }
+        pendingSpawns = 0;
     }
 
     private void SaveCurrentState()
@@ -214,6 +361,10 @@ public class GridManager : MonoBehaviour
                 tile.localPosition = Vector3.zero; // Kutunun tam merkezine oturt (sünmeyi/kaymayı önler)
             }
         }
+
+        // Oyuncu animasyonu beklemeden hamle yaptiysa bekleyen tas once doğar;
+        // böylece hamle her zaman güncel tahta üzerinde hesaplanır.
+        FlushPendingSpawns(false);
 
         SaveCurrentState(); 
 
@@ -331,7 +482,7 @@ public class GridManager : MonoBehaviour
                 Destroy(fx, 1.5f); 
             }
 
-            SpawnTile();
+            RequestSpawn(direction);
             emptyShiftCount = 0;
             movesSinceSpawn = 0;
             UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
@@ -364,7 +515,7 @@ public class GridManager : MonoBehaviour
             movesSinceSpawn++;
             if (movesSinceSpawn >= MergelessMovesPerSpawn)
             {
-                SpawnTile();
+                RequestSpawn(direction);
                 movesSinceSpawn = 0;
             }
 
@@ -389,7 +540,7 @@ public class GridManager : MonoBehaviour
 
                     Handheld.Vibrate();
 
-                    SpawnTile(); 
+                    RequestSpawn(direction); 
                     emptyShiftCount = 0; 
                     movesSinceSpawn = 0; 
                     DOVirtual.DelayedCall(0.3f, () => { UIManager.Instance.UpdatePressureMeter(emptyShiftCount); });
@@ -404,7 +555,16 @@ public class GridManager : MonoBehaviour
             if (historyStack.Count > 0) historyStack.Pop();
         }
 
-        CheckGameOver();
+        if (pendingSpawns > 0)
+        {
+            // Yeni taş, kayma ve birleşme animasyonları bittikten sonra doğar.
+            // Oyun sonu kontrolü de o zaman yapılır (yeni taş tahtayı doldurabilir).
+            spawnRoutine = StartCoroutine(ResolveSpawnsAfterAnimations());
+        }
+        else
+        {
+            CheckGameOver();
+        }
     }
 
     public void CheckGameOver()
@@ -509,6 +669,9 @@ public class GridManager : MonoBehaviour
         }
 
         usedUndos++;
+
+        // Henüz doğmamış taş varsa iptal edilir: anlık görüntü hamle öncesine ait.
+        CancelPendingSpawns();
 
         GridSnapshot lastState = historyStack.Pop();
 

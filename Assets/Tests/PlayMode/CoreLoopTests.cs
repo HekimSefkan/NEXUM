@@ -12,6 +12,9 @@ using UnityEngine.TestTools;
 // (reflection) ile erişilir.
 public class CoreLoopTests
 {
+    // Doğuş animasyon penceresi + pay (GridManager.SpawnDelay = 0,3 sn)
+    private const float SpawnBekleme = 0.4f;
+
     private MonoBehaviour grid;
     private MonoBehaviour levelManager;
     private List<Transform> cells;
@@ -48,6 +51,14 @@ public class CoreLoopTests
     private static object Get(object target, string name)
     {
         return Field(target, name).GetValue(target);
+    }
+
+    private static object GetProp(object target, string name)
+    {
+        PropertyInfo p = target.GetType().GetProperty(name,
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(p, "özellik yok: " + name);
+        return p.GetValue(target);
     }
 
     private void Invoke(string method, params object[] args)
@@ -371,12 +382,14 @@ public class CoreLoopTests
         BirlesmesizTahta(gameMode: 0, entropi: 0);
         int baslangic = TileCount();
 
+        // Yeni taş animasyonlar bittikten sonra doğduğu için her hamleden
+        // sonra doğuş penceresi kadar beklenir.
         Shift("up");                                       // 1. birleşmesiz hamle
-        yield return null;
+        yield return new WaitForSeconds(SpawnBekleme);
         int birHamle = TileCount();
 
         Shift("down");                                     // 2. birleşmesiz hamle
-        yield return null;
+        yield return new WaitForSeconds(SpawnBekleme);
         int ikiHamle = TileCount();
 
         Debug.Log($"NEXUM_SPAWN_TEST melez: baslangic={baslangic} 1.hamle={birHamle} 2.hamle={ikiHamle}");
@@ -392,7 +405,7 @@ public class CoreLoopTests
         BirlesmesizTahta(gameMode: 0, entropi: 4);
         int oncekiNormal = TileCount();
         Shift("up");
-        yield return null;
+        yield return new WaitForSeconds(SpawnBekleme);
         int normalSonra = TileCount();
         int normalEntropi = (int)Get(grid, "emptyShiftCount");
 
@@ -400,7 +413,7 @@ public class CoreLoopTests
         BirlesmesizTahta(gameMode: 2, entropi: 4);
         int oncekiSerbest = TileCount();
         Shift("up");
-        yield return null;
+        yield return new WaitForSeconds(SpawnBekleme);
         int serbestSonra = TileCount();
         int serbestEntropi = (int)Get(grid, "emptyShiftCount");
 
@@ -411,6 +424,105 @@ public class CoreLoopTests
         Assert.AreEqual(0, normalEntropi, "ceza sonrası entropi sıfırlanmalı");
         Assert.AreEqual(oncekiSerbest, serbestSonra, "serbest modda ceza taşı gelmemeli");
         Assert.AreEqual(4, serbestEntropi, "serbest modda entropi sayacı işlemez");
+    }
+
+    // Yeni taş, kayma ve birleşme animasyonları bitmeden doğmamalı.
+    [UnityTest]
+    public IEnumerator YeniTasAnimasyonlardanSonraDogar()
+    {
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 5);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        float t0 = Time.time;
+        Shift("left");                                     // H + H -> H2, doğuş istendi
+        int hemen = TileCount();
+        bool bekleyen = (bool)GetProp(grid, "HasPendingSpawn");
+
+        yield return null;
+        int birKare = TileCount();
+
+        yield return new WaitForSeconds(0.35f);
+        int sonra = TileCount();
+        float gecen = Time.time - t0;
+
+        Debug.Log($"NEXUM_SPAWN_ZAMAN: hemen={hemen} birKare={birKare} " +
+                  $"{gecen:F2}sn sonra={sonra} (bekleyen={bekleyen})");
+
+        Assert.AreEqual(1, hemen, "kaydırma biter bitmez yeni taş olmamalı");
+        Assert.IsTrue(bekleyen, "doğuş bekliyor olmalı");
+        Assert.AreEqual(1, birKare, "bir kare sonra da yeni taş olmamalı");
+        Assert.AreEqual(2, sonra, "animasyonlar bitince yeni taş doğmalı");
+    }
+
+    // Yeni taş, kaydırma yönünün tersindeki kenarda doğmalı.
+    [UnityTest]
+    public IEnumerator YeniTasKarsiKenardaDogar()
+    {
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 5);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Shift("left");                                     // sola kaydırıldı
+        yield return new WaitForSeconds(0.4f);
+
+        int yeni = -1;
+        for (int i = 0; i < 16; i++)
+        {
+            if (i == 0) continue;                          // birleşme ürünü
+            if (cells[i].childCount > 0) { yeni = i; break; }
+        }
+
+        Debug.Log($"NEXUM_SPAWN_KONUM: sola kaydırıldı, yeni taş hücre {yeni} (sütun {yeni % 4})");
+        Assert.AreNotEqual(-1, yeni, "yeni taş doğmalı");
+        Assert.AreEqual(3, yeni % 4, "sola kaydırınca yeni taş en sağ sütunda doğmalı");
+    }
+
+    // Oyuncu animasyonu beklemeden hamle yaparsa bekleyen taş önce doğar.
+    [UnityTest]
+    public IEnumerator BekleyenTasSonrakiHamleden0nceDogar()
+    {
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 5);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Shift("left");
+        Assert.IsTrue((bool)GetProp(grid, "HasPendingSpawn"), "doğuş bekliyor olmalı");
+        Assert.AreEqual(1, TileCount());
+
+        Shift("up");                                       // animasyon beklenmeden ikinci hamle
+        int sonra = TileCount();
+        Debug.Log($"NEXUM_SPAWN_ARA: ikinci hamleden hemen sonra tas={sonra}");
+
+        Assert.GreaterOrEqual(sonra, 2, "bekleyen taş ikinci hamleden önce doğmalı");
+        yield return null;
     }
 
     // Hiçbir şeyi değiştirmeyen kaydırma geri alma yığınını şişirmemeli.
