@@ -166,6 +166,31 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
+    // Kaydırma yönüne göre hücrelerin taranma sırası: hedef kenara en yakın
+    // hücreden başlanır, böylece taşlar birbirinin üstüne binmez.
+    // (Kenardaki hücreler zaten ilerleyemeyeceği için listede yok.)
+    private static readonly int[] ScanUp    = { 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    private static readonly int[] ScanDown  = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+    private static readonly int[] ScanLeft  = { 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15 };
+    private static readonly int[] ScanRight = { 14, 13, 12, 10, 9, 8, 6, 5, 4, 2, 1, 0 };
+
+    private static int[] GetScanOrder(Vector2 direction)
+    {
+        if (direction == Vector2.up) return ScanUp;
+        if (direction == Vector2.down) return ScanDown;
+        if (direction == Vector2.left) return ScanLeft;
+        if (direction == Vector2.right) return ScanRight;
+        return null;
+    }
+
+    private static int GetStepOffset(Vector2 direction)
+    {
+        if (direction == Vector2.up) return -4;
+        if (direction == Vector2.down) return 4;
+        if (direction == Vector2.left) return -1;
+        return 1;
+    }
+
     public void Shift(Vector2 direction)
     {
         // ==========================================
@@ -193,222 +218,65 @@ public class GridManager : MonoBehaviour
         
         GameManager gameManager = FindObjectOfType<GameManager>();
 
-        if (direction == Vector2.up)
+        // Dört yön de aynı işi yapıyor; yalnızca hücrelerin taranma sırası, hedef
+        // hücrenin ofseti ve "itilme" animasyonunun ekseni değişiyor.
+        int[] scanOrder = GetScanOrder(direction);
+        int step = GetStepOffset(direction);
+        Vector3 punch = (direction == Vector2.up || direction == Vector2.down)
+            ? new Vector3(0.15f, -0.15f, 0f)
+            : new Vector3(-0.15f, 0.15f, 0f);
+
+        if (scanOrder != null)
         {
-            for (int i = 4; i < 16; i++) 
+            foreach (int i in scanOrder)
             {
-                if (cells[i].childCount > 0)
+                if (cells[i].childCount == 0) continue;
+
+                Transform currentTile = cells[i].GetChild(0);
+                int targetIndex = i + step;
+
+                if (cells[targetIndex].childCount == 0)
                 {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i - 4; 
-
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(0.15f, -0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-                            
-                            // YENİ EKLENEN GÜVENLİK: Çakışmaları önlemek için eski objeleri hücreden kopar
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
+                    currentTile.SetParent(cells[targetIndex]);
+                    currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
+                        currentTile.DOPunchScale(punch, 0.15f, 1, 0.5f);
+                    });
+                    moveHappened = true;
+                    continue;
                 }
+
+                Transform targetTile = cells[targetIndex].GetChild(0);
+                string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
+                if (!mergeDictionary.ContainsKey(mergeKey)) continue;
+
+                MergeRecipe recipe = mergeDictionary[mergeKey];
+
+                // Çakışmaları önlemek için eski objeleri hücreden kopar
+                currentTile.SetParent(null);
+                targetTile.SetParent(null);
+
+                Destroy(currentTile.gameObject);
+                Destroy(targetTile.gameObject);
+
+                GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
+                mergedTile.transform.localScale = Vector3.zero;
+                mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+
+                if (gameManager != null)
+                {
+                    int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
+                    gameManager.AddScore(finalScore);
+                }
+
+                CheckWinCondition(recipe);
+
+                actionHappened = true;
+                currentCombo++;
+                PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
+                lastMergePosition = cells[targetIndex].position;
             }
         }
-        else if (direction == Vector2.down)
-        {
-            for (int i = 11; i >= 0; i--) 
-            {
-                if (cells[i].childCount > 0)
-                {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i + 4; 
 
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(0.15f, -0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-                            
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
-                }
-            }
-        }
-        else if (direction == Vector2.left)
-        {
-            for (int i = 0; i < 16; i++) 
-            {
-                if (i % 4 == 0) continue; 
-                if (cells[i].childCount > 0)
-                {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i - 1; 
-
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(-0.15f, 0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
-                }
-            }
-        }
-        else if (direction == Vector2.right)
-        {
-            for (int i = 15; i >= 0; i--) 
-            {
-                if ((i + 1) % 4 == 0) continue; 
-                if (cells[i].childCount > 0)
-                {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i + 1; 
-
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(-0.15f, 0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
-                }
-            }
-        }
-        
         if (actionHappened)
         {
             if (AudioManager.Instance != null)
