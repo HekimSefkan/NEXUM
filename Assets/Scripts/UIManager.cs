@@ -265,6 +265,8 @@ public class UIManager : MonoBehaviour
 
     public void TogglePause(bool isPaused)
     {
+        PlayButtonSound();   // PausePanel'deki "Devam Et" butonunun OnClick'inde ses yok
+
         if (isPaused)
         {
             Time.timeScale = 0f;
@@ -311,10 +313,23 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void RestartGame() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
-    public void GoToMainMenu() { SceneManager.LoadScene("MainMenu"); }
+    // Sahne yükleyen üç metotta da ses koddan çalınır: PausePanel'deki "Ana Menü" ve
+    // GameOverPanel'deki "Yeniden Başlat" butonlarının OnClick'inde ses bağlı değil.
+    public void RestartGame()
+    {
+        PlayButtonSound();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void GoToMainMenu()
+    {
+        PlayButtonSound();
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void NextLevel()
     {
+        PlayButtonSound();
         int nextLevel = PlayerPrefs.GetInt("SelectedLevel", 0) + 1;
         if(nextLevel >= LevelManager.Instance.levels.Count) SceneManager.LoadScene("MainMenu");
         else { PlayerPrefs.SetInt("SelectedLevel", nextLevel); SceneManager.LoadScene("Game"); }
@@ -410,9 +425,28 @@ public class UIManager : MonoBehaviour
         GridManager.Instance.enabled = true;
     }
 
+    // Kombo yazısı birleşmenin olduğu yerde doğunca grid'in üst sırasının üstüne biniyordu.
+    // Artık grid ile skor göstergesi arasındaki boş banda sabitleniyor (referans birimi,
+    // kanvas merkezine göre): grid üstü 290, ScoreButton altı 411 -> bant 121 birim.
+    // Yazı 45 birim yüksekliğinde ve 45 birim yükseldiği için 328 merkezde iki yana
+    // 15'er birim pay kalır. Yatayda birleşmenin sütunu korunur, ekran dışına taşmaz.
+    private const float ComboAnchorY = 328f;
+    private const float ComboFloatY = 45f;
+    private const float ComboHalfWidth = 150f;
+
     public void ShowComboText(int comboCount, Vector3 spawnPosition)
     {
         if (comboTextPrefab == null || canvasTransform == null) return;
+
+        float scale = 1f;
+        Canvas parentCanvas = canvasTransform.GetComponentInParent<Canvas>();
+        if (parentCanvas != null) scale = parentCanvas.scaleFactor;
+
+        // Overlay canvas'ta dünya koordinatı = ekran pikseli
+        float posY = Screen.height * 0.5f + ComboAnchorY * scale;
+        float margin = ComboHalfWidth * scale;
+        float posX = Mathf.Clamp(spawnPosition.x, margin, Screen.width - margin);
+        spawnPosition = new Vector3(posX, posY, 0f);
 
         GameObject floatingObj = Instantiate(comboTextPrefab, spawnPosition, Quaternion.identity, canvasTransform);
         TextMeshProUGUI tmpText = floatingObj.GetComponent<TextMeshProUGUI>();
@@ -445,13 +479,23 @@ public class UIManager : MonoBehaviour
         floatingObj.transform.DOScale(Vector3.one * 1.2f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
 
         Sequence seq = DOTween.Sequence();
-        seq.Append(floatingObj.transform.DOMoveY(150f * (canvasTransform.GetComponentInParent<Canvas>()?.scaleFactor ?? 1f), 1.5f).SetRelative().SetEase(Ease.OutQuad)); 
+        seq.Append(floatingObj.transform.DOMoveY(ComboFloatY * scale, 1.5f).SetRelative().SetEase(Ease.OutQuad));
         seq.Join(tmpText.DOFade(0, 1.5f).SetEase(Ease.InExpo)); 
         seq.SetUpdate(true).OnComplete(() => Destroy(floatingObj)); 
     }
 
+    // Buton sesi tek kaynaktan çalar. Bazı butonlarda ses OnClick listesinde bağlı,
+    // bazılarında yok; sesi ilgili metotların içine de koyduğumuz için aynı karede
+    // iki kez çalma riski doğuyor. Kare koruması bunu engeller (çift ses olmaz),
+    // sahne OnClick listelerine dokunmak gerekmez.
+    private int lastButtonSoundFrame = -1;
+
     public void PlayButtonSound()
     {
+        if (lastButtonSoundFrame == Time.frameCount) return;
+        lastButtonSoundFrame = Time.frameCount;
+
+        // AudioManager.PlaySFX zaten "SfxOn" ayarına bakıyor; kapalıyken ses çıkmaz
         if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonSound();
     }
 }

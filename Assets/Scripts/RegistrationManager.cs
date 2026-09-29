@@ -19,7 +19,8 @@ public class RegistrationManager : MonoBehaviour
     public GameObject registrationPanel;
     public TMP_InputField nameInputField;
     public TMP_InputField emailInputField; 
-    public TextMeshProUGUI emailWarningText; // YENİ: Hata durumunda kızaracak olan küçük açıklama metni
+    public TextMeshProUGUI emailWarningText; // E-posta hataları burada gösterilir
+    public TextMeshProUGUI nameWarningText;  // İsim ve mentor hataları; isim kutusunun altında durur
     
     [Header("Mentor Seçim Sistemi (Grid)")]
     public MentorData[] mentors; 
@@ -128,13 +129,65 @@ public class RegistrationManager : MonoBehaviour
         return Regex.IsMatch(email, pattern);
     }
 
+    // İsim kuralı: baştaki/sondaki boşluklar kırpılır, 2-20 karakter
+    private const int MinNameLength = 2;
+    private const int MaxNameLength = 20;
+
+    // Hatayı hem yazıyla hem sarsıntıyla hem sesle bildirir (sessiz başarısızlık olmasın).
+    // İsim ve mentor hataları nameWarningText'e, e-posta hataları emailWarningText'e yazılır.
+    private void ShowFieldError(TextMeshProUGUI target, string message, Transform fieldToShake)
+    {
+        if (target != null) target.text = "<color=red>" + message + "</color>";
+
+        if (fieldToShake != null)
+        {
+            fieldToShake.DOKill(true);
+            fieldToShake.DOShakePosition(0.4f, new Vector3(15f, 0, 0), 20);
+        }
+
+        if (AudioManager.Instance != null && AudioManager.Instance.errorClip != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.errorClip);
+        }
+    }
+
+    private void ClearNameWarning()
+    {
+        if (nameWarningText != null) nameWarningText.text = "";
+    }
+
     public void SaveProfileAndLogin()
     {
-        string enteredName = nameInputField.text;
+        string enteredName = nameInputField.text != null ? nameInputField.text.Trim() : "";
         string enteredEmail = emailInputField != null ? emailInputField.text : "";
 
-        // İsim veya Avatar eksikse zaten girilmiyor
-        if (string.IsNullOrWhiteSpace(enteredName) || selectedAvatarIndex == -1) return;
+        // --- İSİM DOĞRULAMA --- (uyarılar isim kutusunun altındaki kendi alanına yazılır)
+        if (enteredName.Length == 0)
+        {
+            ShowFieldError(nameWarningText, "Kimyager adını yazmalısın", nameInputField.transform);
+            return;
+        }
+
+        if (enteredName.Length < MinNameLength)
+        {
+            ShowFieldError(nameWarningText, $"En az {MinNameLength} karakter girmelisin", nameInputField.transform);
+            return;
+        }
+
+        if (enteredName.Length > MaxNameLength)
+        {
+            ShowFieldError(nameWarningText, $"En fazla {MaxNameLength} karakter olabilir", nameInputField.transform);
+            return;
+        }
+
+        // --- MENTOR DOĞRULAMA ---
+        if (selectedAvatarIndex == -1)
+        {
+            ShowFieldError(nameWarningText, "Önce bir mentor seç", null);
+            return;
+        }
+
+        ClearNameWarning();
 
         // --- E-POSTA GÜVENLİK DUVARI ---
         // Eğer e-posta kutusu boş DEĞİLSE (yani bir şeyler yazılmışsa) kontrol et
