@@ -116,6 +116,28 @@ public class CoreLoopTests
             : null;
     }
 
+    private int TileCount()
+    {
+        int n = 0;
+        foreach (Transform cell in cells) if (cell.childCount > 0) n++;
+        return n;
+    }
+
+    /// <summary>Birleşmesiz hamle için hazırlık: sayaçları sıfırla, iki taş koy.</summary>
+    private void BirlesmesizTahta(int gameMode, int entropi)
+    {
+        Field(grid, "currentGameMode").SetValue(grid, gameMode);
+        Field(grid, "emptyShiftCount").SetValue(grid, entropi);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetBoard(new[]
+        {
+            "",   "",   "", "",
+            "",   "",   "", "",
+            "",   "",   "", "",
+            "H",  "Fe", "", ""
+        });
+    }
+
     private void Shift(string direction)
     {
         Vector2 v = direction == "up" ? Vector2.up
@@ -292,6 +314,55 @@ public class CoreLoopTests
 
         Assert.AreEqual("Tile_O", TileName(0), "O yerinde kalmalı");
         Assert.AreEqual("Tile_H2", TileName(1), "H2 aynı hamlede O ile birleşmemeli");
+    }
+
+    // Melez spawn: birleşme olmayan her 2 hamlede bir yeni taş gelir.
+    [UnityTest]
+    public IEnumerator MelezSpawnIkiBosHamledeBirTasEkler()
+    {
+        BirlesmesizTahta(gameMode: 0, entropi: 0);
+        int baslangic = TileCount();
+
+        Shift("up");                                       // 1. birleşmesiz hamle
+        yield return null;
+        int birHamle = TileCount();
+
+        Shift("down");                                     // 2. birleşmesiz hamle
+        yield return null;
+        int ikiHamle = TileCount();
+
+        Debug.Log($"NEXUM_SPAWN_TEST melez: baslangic={baslangic} 1.hamle={birHamle} 2.hamle={ikiHamle}");
+        Assert.AreEqual(baslangic, birHamle, "ilk birleşmesiz hamlede taş gelmemeli");
+        Assert.AreEqual(baslangic + 1, ikiHamle, "ikinci birleşmesiz hamlede taş gelmeli");
+    }
+
+    // Serbest modda (mod 2) spawn kuralı aynıdır ama entropi ceza taşı gelmez.
+    [UnityTest]
+    public IEnumerator SerbestModdaEntropiCezasiYok()
+    {
+        // Normal mod: entropi 4 iken bir birleşmesiz hamle ceza taşını getirir
+        BirlesmesizTahta(gameMode: 0, entropi: 4);
+        int oncekiNormal = TileCount();
+        Shift("up");
+        yield return null;
+        int normalSonra = TileCount();
+        int normalEntropi = (int)Get(grid, "emptyShiftCount");
+
+        // Serbest mod: aynı durumda ceza taşı gelmez, entropi de artmaz
+        BirlesmesizTahta(gameMode: 2, entropi: 4);
+        int oncekiSerbest = TileCount();
+        Shift("up");
+        yield return null;
+        int serbestSonra = TileCount();
+        int serbestEntropi = (int)Get(grid, "emptyShiftCount");
+
+        Debug.Log($"NEXUM_SPAWN_TEST ceza: normal {oncekiNormal}->{normalSonra} (entropi {normalEntropi}) | " +
+                  $"serbest {oncekiSerbest}->{serbestSonra} (entropi {serbestEntropi})");
+
+        Assert.AreEqual(oncekiNormal + 1, normalSonra, "normal modda entropi cezası taş eklemeli");
+        Assert.AreEqual(0, normalEntropi, "ceza sonrası entropi sıfırlanmalı");
+        Assert.AreEqual(oncekiSerbest, serbestSonra, "serbest modda ceza taşı gelmemeli");
+        Assert.AreEqual(4, serbestEntropi, "serbest modda entropi sayacı işlemez");
     }
 
     // Hiçbir şeyi değiştirmeyen kaydırma geri alma yığınını şişirmemeli.

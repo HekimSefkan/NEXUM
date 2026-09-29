@@ -23,6 +23,7 @@ public class GridSnapshot
     // döngüsüyle sayaçlar şişiyordu.
     public int[] savedGoalAmounts;      // bölümün hedef sayaçları
     public int savedEmptyShiftCount;    // entropi (basınç) sayacı
+    public int savedMovesSinceSpawn;    // melez spawn sayacı
     public int savedTotalSynthesis;     // profildeki toplam sentez
 }
 
@@ -42,6 +43,11 @@ public class GridManager : MonoBehaviour
     private Dictionary<string, MergeRecipe> mergeDictionary = new Dictionary<string, MergeRecipe>();
     private List<Transform> cells = new List<Transform>();
     private int emptyShiftCount = 0; 
+
+    // Melez spawn: birleşme olmayan her MergelessMovesPerSpawn hamlede bir yeni
+    // taş gelir. Entropi cezasından bağımsızdır ve her modda çalışır.
+    private const int MergelessMovesPerSpawn = 2;
+    private int movesSinceSpawn = 0;
     public bool hasUsedRevive = false; 
 
     // Bölüm kazanıldı mı? Kazanma ekranının tekrar tetiklenmesini engeller.
@@ -141,6 +147,7 @@ public class GridManager : MonoBehaviour
         GameManager gm = FindObjectOfType<GameManager>();
         snapshot.savedScore = gm != null ? gm.currentScore : 0; 
         snapshot.savedEmptyShiftCount = emptyShiftCount;
+        snapshot.savedMovesSinceSpawn = movesSinceSpawn;
         snapshot.savedTotalSynthesis = PlayerPrefs.GetInt("TotalSynthesis", 0);
 
         var savedGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
@@ -326,6 +333,7 @@ public class GridManager : MonoBehaviour
 
             SpawnTile();
             emptyShiftCount = 0;
+            movesSinceSpawn = 0;
             UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
             
             if (currentCombo > 0)
@@ -350,6 +358,18 @@ public class GridManager : MonoBehaviour
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.shiftClip, 0.5f);
             }
 
+            // Melez spawn: birleşme olmasa da her 2 hamlede bir yeni taş gelir.
+            // Her modda geçerlidir; tahtanın hiç dolmadan sonsuza kadar
+            // kaydırılabilmesini engeller.
+            movesSinceSpawn++;
+            if (movesSinceSpawn >= MergelessMovesPerSpawn)
+            {
+                SpawnTile();
+                movesSinceSpawn = 0;
+            }
+
+            // Entropi (basınç) cezası yalnızca Normal ve Sınav modunda çalışır.
+            // Serbest modda (currentGameMode == 2) tahta yine dolar ama ceza taşı gelmez.
             if (currentGameMode != 2) 
             {
                 emptyShiftCount++;
@@ -371,6 +391,7 @@ public class GridManager : MonoBehaviour
 
                     SpawnTile(); 
                     emptyShiftCount = 0; 
+                    movesSinceSpawn = 0; 
                     DOVirtual.DelayedCall(0.3f, () => { UIManager.Instance.UpdatePressureMeter(emptyShiftCount); });
                     Debug.Log("Laboratuvarda entropi patlaması! Ceza elementi eklendi.");
                 }
@@ -510,6 +531,7 @@ public class GridManager : MonoBehaviour
         }
 
         emptyShiftCount = lastState.savedEmptyShiftCount;
+        movesSinceSpawn = lastState.savedMovesSinceSpawn;
         UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
 
         PlayerPrefs.SetInt("TotalSynthesis", lastState.savedTotalSynthesis);
