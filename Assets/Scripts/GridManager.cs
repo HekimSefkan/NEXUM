@@ -24,7 +24,8 @@ public class GridSnapshot
     // eski hâline döndürmeli; aksi hâlde hedef üret -> geri al -> yeniden üret
     // döngüsüyle sayaçlar şişiyordu.
     public int[] savedGoalAmounts;      // bölümün hedef sayaçları
-    public int savedEmptyShiftCount;    // entropi (basınç) sayacı
+    public int savedCatalystCharge;     // katalizör şarjı
+    public int savedFreeJokerCharges;   // bedava Joker hakkı
     public int savedMovesSinceSpawn;    // melez spawn sayacı
     public int savedTotalSynthesis;     // profildeki toplam sentez
 }
@@ -44,7 +45,15 @@ public class GridManager : MonoBehaviour
     
     private Dictionary<string, MergeRecipe> mergeDictionary = new Dictionary<string, MergeRecipe>();
     private List<Transform> cells = new List<Transform>();
-    private int emptyShiftCount = 0; 
+    // --- Katalizör şarjı --------------------------------------------------
+    // Gösterge artık ceza değil ÖDÜL biriktirir: her sentez şarjı doldurur,
+    // dolunca oyuncuya bedava bir Joker (parçalama) hakkı verilir.
+    // Melez spawn kuralı geldikten sonra entropi ceza taşına gerek kalmadı.
+    public const int CatalystChargeLimit = 5;
+    private int catalystCharge = 0;
+
+    /// <summary>Bedava (puan harcamayan) Joker hakkı.</summary>
+    public int freeJokerCharges = 0;
 
     // Melez spawn: birleşme olmayan her MergelessMovesPerSpawn hamlede bir yeni
     // taş gelir. Entropi cezasından bağımsızdır ve her modda çalışır.
@@ -120,6 +129,10 @@ public class GridManager : MonoBehaviour
         {
             SpawnTile();
         }
+
+        catalystCharge = 0;
+        freeJokerCharges = 0;
+        if (UIManager.Instance != null) UIManager.Instance.UpdateCatalystMeter(0, 0);
     }
 
     private void BuildDictionary()
@@ -254,6 +267,35 @@ public class GridManager : MonoBehaviour
 
     // --- Bekleyen doğuşlar ------------------------------------------------
 
+    /// <summary>Sentez başına şarjı doldurur; dolunca bedava Joker hakkı verir.</summary>
+    private void AddCatalystCharge(int syntheses)
+    {
+        if (syntheses <= 0) return;
+
+        catalystCharge += syntheses;
+        bool rewarded = false;
+
+        while (catalystCharge >= CatalystChargeLimit)
+        {
+            catalystCharge -= CatalystChargeLimit;
+            freeJokerCharges++;
+            rewarded = true;
+        }
+
+        UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
+        if (rewarded) UIManager.Instance.ShowCatalystReady(freeJokerCharges);
+    }
+
+    /// <summary>Bedava Joker hakkı varsa birini harcar.</summary>
+    public bool TryConsumeFreeJoker()
+    {
+        if (freeJokerCharges <= 0) return false;
+
+        freeJokerCharges--;
+        UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
+        return true;
+    }
+
     private void RequestSpawn(Vector2 direction)
     {
         pendingSpawns++;
@@ -293,7 +335,8 @@ public class GridManager : MonoBehaviour
         GridSnapshot snapshot = new GridSnapshot();
         GameManager gm = FindObjectOfType<GameManager>();
         snapshot.savedScore = gm != null ? gm.currentScore : 0; 
-        snapshot.savedEmptyShiftCount = emptyShiftCount;
+        snapshot.savedCatalystCharge = catalystCharge;
+        snapshot.savedFreeJokerCharges = freeJokerCharges;
         snapshot.savedMovesSinceSpawn = movesSinceSpawn;
         snapshot.savedTotalSynthesis = PlayerPrefs.GetInt("TotalSynthesis", 0);
 
@@ -483,9 +526,8 @@ public class GridManager : MonoBehaviour
             }
 
             RequestSpawn(direction);
-            emptyShiftCount = 0;
             movesSinceSpawn = 0;
-            UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
+            AddCatalystCharge(currentCombo);
             
             if (currentCombo > 0)
             {
@@ -519,34 +561,9 @@ public class GridManager : MonoBehaviour
                 movesSinceSpawn = 0;
             }
 
-            // Entropi (basınç) cezası yalnızca Normal ve Sınav modunda çalışır.
-            // Serbest modda (currentGameMode == 2) tahta yine dolar ama ceza taşı gelmez.
-            if (currentGameMode != 2) 
-            {
-                emptyShiftCount++;
-                UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
-                
-                if (emptyShiftCount >= 5)
-                {
-                    if (AudioManager.Instance != null)
-                    {
-                        AudioManager.Instance.PlaySFX(AudioManager.Instance.errorClip);
-                    }
-
-                    if (Camera.main != null)
-                    {
-                        Camera.main.transform.DOShakePosition(0.3f, 0.4f, 15, 90f);
-                    }
-
-                    Handheld.Vibrate();
-
-                    RequestSpawn(direction); 
-                    emptyShiftCount = 0; 
-                    movesSinceSpawn = 0; 
-                    DOVirtual.DelayedCall(0.3f, () => { UIManager.Instance.UpdatePressureMeter(emptyShiftCount); });
-                    Debug.Log("Laboratuvarda entropi patlaması! Ceza elementi eklendi.");
-                }
-            }
+            // Entropi ceza taşı kaldırıldı: melez spawn kuralı zaten birleşmesiz
+            // hamlelerde tahtayı dolduruyor, ikinci bir ceza katmanına gerek yok.
+            // Şarj yalnızca sentezle dolar; birleşmesiz hamle onu sıfırlamaz.
         }
         else
         {
@@ -694,9 +711,10 @@ public class GridManager : MonoBehaviour
             UIManager.Instance.UpdateGoalUI();
         }
 
-        emptyShiftCount = lastState.savedEmptyShiftCount;
+        catalystCharge = lastState.savedCatalystCharge;
+        freeJokerCharges = lastState.savedFreeJokerCharges;
         movesSinceSpawn = lastState.savedMovesSinceSpawn;
-        UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
+        UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
 
         PlayerPrefs.SetInt("TotalSynthesis", lastState.savedTotalSynthesis);
 

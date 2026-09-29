@@ -58,6 +58,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Sistem Basıncı (Entropi) UI")]
     public UnityEngine.UI.Image pressureLiquidFill; 
+    public TextMeshProUGUI catalystLabelText;   // göstergenin ne işe yaradığını söyleyen başlık
     private float[] pressureSteps = { 0f, 0.340f, 0.500f, 0.618f, 0.745f, 1f };
     
     [Header("Deney Föyü (Tutorial) Sistemi")]
@@ -357,36 +358,63 @@ public class UIManager : MonoBehaviour
         if (GridManager.Instance != null) GridManager.Instance.StopHintHighlight();
     }
 
-    // YENİ GÜNCELLENEN: Basınç artınca kırmızı tehlike ışığı yanar
-    public void UpdatePressureMeter(int currentStep)
+    // Katalizör şarjı: her sentezde dolar, dolunca bedava Joker hakkı verir.
+    // (Eskiden entropi cezasını gösteriyordu; ceza sistemi kaldırıldı.)
+    public void UpdateCatalystMeter(int charge, int freeJokers)
     {
-        if (pressureLiquidFill == null) return;
-        if (currentStep >= 0 && currentStep < pressureSteps.Length)
+        int limit = GridManager.CatalystChargeLimit;
+        int step = Mathf.Clamp(charge, 0, pressureSteps.Length - 1);
+
+        if (pressureLiquidFill != null)
         {
-            float targetFill = pressureSteps[currentStep];
-            pressureLiquidFill.DOFillAmount(targetFill, 0.25f);
-            
-            // Eğer sayaç 4'teyse (Kritik sınır), kırmızı ışığı yanıp söndür
-            if (currentStep == 4)
+            pressureLiquidFill.DOFillAmount(pressureSteps[step], 0.25f);
+        }
+
+        if (catalystLabelText != null)
+        {
+            catalystLabelText.text = freeJokers > 0
+                ? $"<color=#2ECC71>KATALİZÖR HAZIR ×{freeJokers} — BEDAVA PARÇALAMA</color>"
+                : $"KATALİZÖR ŞARJI {charge}/{limit}";
+        }
+
+        // Bedava hak varken gösterge yeşil parlar, yoksa söner
+        if (dangerGlowImage != null)
+        {
+            DOTween.Kill("CatalystReady");
+            if (freeJokers > 0)
             {
-                pressureLiquidFill.transform.parent.DOShakePosition(0.4f, 12f);
-                factTextUI.text = "<color=red>UYARI: Laboratuvar entropisi kritik seviyede! Bir sentez yapmalısın!</color>";
-                
-                if(dangerGlowImage != null)
-                {
-                    dangerGlowImage.DOFade(0.35f, 0.6f).SetLoops(-1, LoopType.Yoyo).SetId("DangerAlarm").SetLink(gameObject);
-                }
+                dangerGlowImage.color = new Color(0.18f, 0.8f, 0.44f, dangerGlowImage.color.a);
+                dangerGlowImage.DOFade(0.35f, 0.8f).SetLoops(-1, LoopType.Yoyo)
+                    .SetId("CatalystReady").SetLink(gameObject);
             }
-            else 
+            else
             {
-                // Sayaç düştüyse alarmı kapat
-                if(dangerGlowImage != null)
-                {
-                    DOTween.Kill("DangerAlarm"); 
-                    dangerGlowImage.DOFade(0f, 0.3f); 
-                }
+                dangerGlowImage.DOFade(0f, 0.3f);
             }
         }
+    }
+
+    // Şarj dolduğunda: görsel + sesli geri bildirim
+    public void ShowCatalystReady(int freeJokers)
+    {
+        if (pressureLiquidFill != null && pressureLiquidFill.transform.parent != null)
+        {
+            Transform meter = pressureLiquidFill.transform.parent;
+            meter.DOKill(true);
+            meter.DOPunchScale(Vector3.one * 0.12f, 0.45f, 8, 0.6f);
+        }
+
+        if (factTextUI != null)
+        {
+            factTextUI.text = "<color=#2ECC71>KATALİZÖR HAZIR! Joker'i bir kez bedava kullanabilirsin.</color>";
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.comboClip);
+        }
+
+        Handheld.Vibrate();
     }
 
     private void ShowTutorialPanel(int levelIndex)
