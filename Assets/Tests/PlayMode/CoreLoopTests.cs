@@ -109,6 +109,13 @@ public class CoreLoopTests
         }
     }
 
+    private string TileName(int index)
+    {
+        return cells[index].childCount > 0
+            ? cells[index].GetChild(0).name.Replace("(Clone)", "")
+            : null;
+    }
+
     private void Shift(string direction)
     {
         Vector2 v = direction == "up" ? Vector2.up
@@ -227,6 +234,64 @@ public class CoreLoopTests
         Assert.AreEqual(oncekiHedef, hedef, "hedef sayacı geri alınmalı");
         Assert.AreEqual(oncekiEntropi, entropi, "entropi sayacı geri alınmalı");
         Assert.AreEqual(oncekiSentez, sentez, "toplam sentez geri alınmalı");
+    }
+
+    // Taşlar bir hücre değil, duvara ya da önlerindeki engele kadar kaymalı.
+    [UnityTest]
+    public IEnumerator KaymaEngeleKadarGider()
+    {
+        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+
+        // 1) Boş satırda taş duvara kadar gider (3 hücre)
+        SetBoard(new[]
+        {
+            "", "", "", "H",
+            "", "", "", "",
+            "", "", "", "",
+            "", "", "", ""
+        });
+        Shift("left");
+        yield return null;
+        Debug.Log($"NEXUM_SLIDE_TEST duvar: [0]={TileName(0)} [3]={TileName(3)}");
+        Assert.AreEqual("Tile_H", TileName(0), "taş duvara kadar kaymalı");
+
+        // 2) Birleşemeyen bir taşın önünde durur (Fe + H tarifi yok)
+        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        SetBoard(new[]
+        {
+            "Fe", "", "", "H",
+            "",   "", "", "",
+            "",   "", "", "",
+            "",   "", "", ""
+        });
+        Shift("left");
+        yield return null;
+        Debug.Log($"NEXUM_SLIDE_TEST engel: [0]={TileName(0)} [1]={TileName(1)}");
+        Assert.AreEqual("Tile_Fe", TileName(0), "engel yerinde kalmalı");
+        Assert.AreEqual("Tile_H", TileName(1), "taş engelin önünde durmalı");
+    }
+
+    // Aynı hamlede üretilen bileşik ikinci kez birleşmemeli (2048 kuralı).
+    [UnityTest]
+    public IEnumerator UretilenBilesikAyniHamledeTekrarBirlesmez()
+    {
+        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2O", 5);
+
+        // O, H, H -> H+H birleşip H2 olur; H2 + O aynı hamlede birleşmemeli
+        SetBoard(new[]
+        {
+            "O", "H", "H", "",
+            "",  "",  "",  "",
+            "",  "",  "",  "",
+            "",  "",  "",  ""
+        });
+        Shift("left");
+        yield return null;
+        Debug.Log($"NEXUM_SLIDE_TEST kilit: [0]={TileName(0)} [1]={TileName(1)}");
+
+        Assert.AreEqual("Tile_O", TileName(0), "O yerinde kalmalı");
+        Assert.AreEqual("Tile_H2", TileName(1), "H2 aynı hamlede O ile birleşmemeli");
     }
 
     // Hiçbir şeyi değiştirmeyen kaydırma geri alma yığınını şişirmemeli.

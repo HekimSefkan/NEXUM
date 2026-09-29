@@ -228,52 +228,86 @@ public class GridManager : MonoBehaviour
 
         if (scanOrder != null)
         {
-            foreach (int i in scanOrder)
+            // Taşlar duvara (ya da önlerindeki engele) kadar kayar: tek hücrelik
+            // tarama, hiçbir taş ilerlemeyene kadar tekrarlanır.
+            // Bir hamlede üretilen bileşik aynı hamlede yeniden birleşmez.
+            HashSet<Transform> mergedThisShift = new HashSet<Transform>();
+            HashSet<Transform> movedTiles = new HashSet<Transform>();
+            bool passMovedSomething;
+            int safety = 0;
+
+            do
             {
-                if (cells[i].childCount == 0) continue;
+                passMovedSomething = false;
 
-                Transform currentTile = cells[i].GetChild(0);
-                int targetIndex = i + step;
-
-                if (cells[targetIndex].childCount == 0)
+                foreach (int i in scanOrder)
                 {
-                    currentTile.SetParent(cells[targetIndex]);
-                    currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                        currentTile.DOPunchScale(punch, 0.15f, 1, 0.5f);
-                    });
-                    moveHappened = true;
-                    continue;
+                    if (cells[i].childCount == 0) continue;
+
+                    Transform currentTile = cells[i].GetChild(0);
+                    int targetIndex = i + step;
+
+                    if (cells[targetIndex].childCount == 0)
+                    {
+                        currentTile.SetParent(cells[targetIndex]);
+                        movedTiles.Add(currentTile);
+                        moveHappened = true;
+                        passMovedSomething = true;
+                        continue;
+                    }
+
+                    Transform targetTile = cells[targetIndex].GetChild(0);
+
+                    // Bu hamlede üretilmiş bir bileşik ikinci kez birleşemez
+                    if (mergedThisShift.Contains(currentTile) || mergedThisShift.Contains(targetTile)) continue;
+
+                    string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
+                    if (!mergeDictionary.ContainsKey(mergeKey)) continue;
+
+                    MergeRecipe recipe = mergeDictionary[mergeKey];
+
+                    // Çakışmaları önlemek için eski objeleri hücreden kopar
+                    currentTile.SetParent(null);
+                    targetTile.SetParent(null);
+                    movedTiles.Remove(currentTile);
+                    movedTiles.Remove(targetTile);
+
+                    Destroy(currentTile.gameObject);
+                    Destroy(targetTile.gameObject);
+
+                    GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
+                    mergedTile.transform.localScale = Vector3.zero;
+                    mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+                    mergedThisShift.Add(mergedTile.transform);
+
+                    if (gameManager != null)
+                    {
+                        int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
+                        gameManager.AddScore(finalScore);
+                    }
+
+                    CheckWinCondition(recipe);
+
+                    actionHappened = true;
+                    currentCombo++;
+                    PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
+                    lastMergePosition = cells[targetIndex].position;
+                    passMovedSomething = true;
                 }
 
-                Transform targetTile = cells[targetIndex].GetChild(0);
-                string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-                if (!mergeDictionary.ContainsKey(mergeKey)) continue;
+                safety++;
+            }
+            while (passMovedSomething && safety < 24);
 
-                MergeRecipe recipe = mergeDictionary[mergeKey];
-
-                // Çakışmaları önlemek için eski objeleri hücreden kopar
-                currentTile.SetParent(null);
-                targetTile.SetParent(null);
-
-                Destroy(currentTile.gameObject);
-                Destroy(targetTile.gameObject);
-
-                GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                mergedTile.transform.localScale = Vector3.zero;
-                mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-
-                if (gameManager != null)
-                {
-                    int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                    gameManager.AddScore(finalScore);
-                }
-
-                CheckWinCondition(recipe);
-
-                actionHappened = true;
-                currentCombo++;
-                PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                lastMergePosition = cells[targetIndex].position;
+            // Kayan taşların animasyonu bir kez oynatılır: taş kaç hücre
+            // ilerlediyse o mesafeyi tek seferde kat eder.
+            foreach (Transform moved in movedTiles)
+            {
+                if (moved == null) continue;
+                Transform tile = moved;
+                tile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
+                    tile.DOPunchScale(punch, 0.15f, 1, 0.5f);
+                });
             }
         }
 
