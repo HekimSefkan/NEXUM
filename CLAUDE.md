@@ -73,13 +73,21 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dışı oyun mantığı / yayın) **`docs/STATUS.md`** içindedir. Yeni bir oturuma bu dosyayla başlanır; ara verilip dönüldüğünde önce orası okunur ve tur sonunda güncellenir.
 
 ## Kesin kurallar
-- **Oyun mantığına DOKUNMA:** GridManager'daki kaydırma / birleşme / spawn / undo / entropi / kazanma-kaybetme akışı; LevelManager'daki level verileri ve spawn ağırlıkları; tarif tabloları; GameManager'daki skor ve Joker kuralları; quiz / revive mantığı.
-- Bir düzeltme bu alanlara dokunmayı gerektiriyorsa **uygulamadan önce kullanıcıya sor**.
+- **Oyun hissini değiştiren değişiklikler önce onaylanır.** GridManager, LevelManager ve diğer oyun mantığı artık **kapsam içindedir**; ama spawn kuralı, kayma davranışı, denge, tarif tabloları ve puanlama gibi oyunun hissini değiştiren her şey için önce **analiz + seçenekler** sunulur, kullanıcı seçer, sonra uygulanır. Hata düzeltmesi (sayaç şişmesi, çift tetikleme gibi) bu onaydan muaf değildir ama seçenek listesi kısa tutulabilir.
+- **Sahne yapısı değişiklikleri Editor scriptiyle yapılır.** Obje/bileşen ekleme, batch mode'da çalışan **idempotent UIBuilder scriptleriyle** (Assets/Editor) yapılır; script iki kez çalıştırıldığında aynı sonucu vermeli. **Elle YAML'a obje veya bileşen bloğu eklemek hâlâ yasaktır**; mevcut alanların değerini değiştirmek serbesttir. Bu altyapı **Faz 0 / Adım 5**'te kurulacak; o zamana kadar yapı değişiklikleri kullanıcının Editor işi olarak yazılır.
+- **Her adım kabul kriterini ölçümle gösterir.** "Muhtemelen düzeldi" kabul edilmez: düzeltmenin çalıştığı PlayMode ölçümü, validator çıktısı veya test sonucuyla kanıtlanır. Kanıtlanamıyorsa nedeni açıkça yazılır.
 - `.unity`, `.prefab` ve `.asset` dosyalarını (ProjectSettings dahil) düzenlemeden önce **Unity Editor'ün kapalı olduğunu kullanıcıya sorarak teyit et**.
 - **Hiçbir dosyayı silme**; silinmesi gerekenleri listele.
 - Dosya taşırken `.meta` dosyasını da birlikte taşı (GUID korunmalı).
 - Her adımı **ayrı commit** olarak kaydet.
-- Çalışma branch'i: `tech-cleanup`.
+
+### Adım şablonu (her iş için standart)
+1. `main`'den dal aç (`git switch -c <konu>`).
+2. **Başlangıç durumu:** validator + PlayMode testleri.
+3. Uygula (her alt adım ayrı commit).
+4. **4 canvas boyutunda kontrol:** 1080×1920, ~1080×2114, ~1080×2300, 1440×1920 — taşma ve çakışma.
+5. Validator + PlayMode testleri yeniden; ikisi de temiz olmalı.
+6. Push + PR. **Görsel etkisi olmayan adımlar** (belge, ayar, ölçüm aracı) kurallara uyuyorsa kendin birleştirilir; **ekranı veya oyun hissini etkileyen adımlarda** kullanıcı cihazda test edip karar verir.
 
 ## Alınan kararlar
 - **CanvasScaler:** İki sahnede de Scale With Screen Size, 1080×1920, **Screen Match Mode = Expand** (`m_ScreenMatchMode: 1`). 1080×1920 tasarım alanı her ekranda tamamen görünür; fazla alan uzun eksene eklenir. Yeni UI bu varsayıma göre kurulmalı: canvas genişliği hiçbir zaman 1080'in, yüksekliği 1920'nin altına düşmez.
@@ -152,17 +160,18 @@ Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dı�
 
 ## YAML düzenleme kuralları
 - Düzenlemeden önce Unity Editor'ün **kapalı** olduğunu kullanıcıya sorarak teyit et.
-- Sadece ilgili alanların **değerlerini** değiştir. Blok ekleme / silme yok; `fileID` ve `guid` değerlerine dokunma.
-- Obje silme YAML ile yapılmaz; Editor'de kullanıcı yapar.
+- Sadece ilgili alanların **değerlerini** değiştir. Elle blok ekleme / silme yok; `fileID` ve `guid` değerlerine dokunma. (Mevcut bir bileşene tek satırlık referans alanı yazmak, hedef obje zaten sahnedeyse serbesttir.)
+- Obje ve bileşen ekleme/silme YAML ile yapılmaz: **Faz 0 / Adım 5'ten itibaren idempotent UIBuilder Editor scriptiyle**, o zamana kadar kullanıcının Editor işi olarak.
 - Satır sonlarını ve girintiyi koru. Depoda her şey LF; çalışma kopyasında `core.autocrlf=true` yüzünden dosyalar CRLF olabilir (dal değiştirdikten sonra sahneler de CRLF olur). Düzenleme araçları satır sonunu satır satır korumalı, karşılaştırma yaparken `
 ` kırpmalı.
 - Satır numarası + beklenen eski içerik doğrulamasıyla düzenle; eşleşmezse hiçbir şey yazma.
 - Her düzenlemeden sonra `git diff` ile yalnızca hedeflenen satırların değiştiğini doğrula; beklenmeyen satır varsa geri al ve kullanıcıya bildir.
 - Float değerleri Unity biçiminde yaz (float32'nin en kısa geri-dönüşümlü gösterimi, örn. `0.41666666`).
 
-## Kapsam (5. turda güncellendi)
-- **Kapsam içi:** quiz / ikinci şans akışı ve ansiklopedi veri alanları (ElementData'nın görünen metinleri). Bunlar dışında GridManager ve LevelManager'a dokunulmaz.
-- ElementData'da **puan, silme maliyeti ve GridManager birleşme tablosu** hâlâ kapsam dışıdır.
+## Kapsam (12. turda güncellendi — ürün dönemi)
+- **Her şey kapsam içidir:** GridManager, LevelManager, tarif tabloları, spawn ağırlıkları, puanlama, ElementData alanları ve sahne yapısı.
+- **Kapsam kuralı yerine onay kuralı:** oyunun hissini değiştiren değişiklikler önce analiz + seçenek olarak sunulur, kullanıcı onaylar, sonra uygulanır (bkz. Kesin kurallar).
+- Değişmeyenler: keystore / imza / şifreler (dokunulmaz), Unity Editor kapalıyken çalışma, dosya silmeme, `.meta` ile taşıma.
 
 ## Bilinen durumlar (sonraki turlarda ele alınacak)
 - **Arka plan ve avatar çözünürlüğü:** Bazı görsellerin kaynağı ekrandaki kullanımın 1,5 katından küçük (avatarlar 1024 kaynak / 724 birim kullanım, `arkaplan` 941×1672, `grid.png` 783, `gamepanel` 1536). Import ayarıyla çözülmez, daha büyük kaynak görsel gerekir; validator bu durumda bilerek uyarmaz.
@@ -171,13 +180,15 @@ Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dı�
 - **Yayın öncesi kalanlar:** release keystore ve imza (kullanıcıya ait; `ProjectSettings` içindeki `AndroidKeystoreName` / `AndroidKeyaliasName` / `androidUseCustomKeystore` alanlarına **dokunulmaz**, şifreler depoya girmez), Play Console ekran görüntüleri, içerik derecelendirme anketi, Data safety formu ve gizlilik politikası URL'sinin GitHub Pages'te yayınlanması.
 - **ProjectSettings'teki şifre benzeri alanlar:** `ps4Passcode` Unity'nin her yeni projeye koyduğu sabit varsayılandır (projenin ilk commit'inden beri depoda, Android ile ilgisi yok), `metroCertificatePassword` boştur. Keystore şifreleri ProjectSettings'e yazılmaz. Bu alanlara dokunulmaz; yeni bir şifre alanı dolu görülürse iş durdurulup kullanıcıya sorulur.
 
-## Kapsam dışı (bu temizlik çalışmasında yapılmayacak)
-- Spawn kuralı (her geçerli hamlede spawn)
-- Taşların duvara kadar kayması
-- Aynı element tarifleri (C+C, N+N, Na+Na, Cl+Cl, Ca+Ca)
-- Kazanma ekranının tekrar tetiklenmesi
-- Undo sayaçları (hedef sayacı, skor, entropi geri alma, boş hamle snapshot'ları)
+## Açık oyun mantığı konuları (artık kapsam içi, sırayla ele alınacak)
+Bunlar önceki dönemde "kapsam dışı" idi; ürün döneminde her biri analiz + onay akışıyla ele alınır. Güncel liste ve ayrıntılar `docs/STATUS.md` içindedir.
+- Spawn kuralı (birleşmesiz hamlede taş gelmemesi, serbest modda entropinin kapalı olması)
+- Taşların duvara kadar kaymaması (bir hamlede tek hücre ilerleme)
+- Aynı element tarifleri (C+C, N+N, Na+Na, Cl+Cl, Ca+Ca yok)
+- Undo'nun hedef sayaçlarını, skoru ve entropiyi geri almaması; boş hamlede snapshot alınması
+- Kazanma ekranının aynı hamlede birden fazla tetiklenebilmesi
 - Joker / revive silme hatası (DOKill ile iptal olan Destroy)
 - Entropi uyarısının yanlış metne yazılması
-- TotalAccidents / flashcard / mentor ipucu özellikleri
+- `TotalScore` ölü PlayerPrefs anahtarı
+- TotalAccidents / flashcard / mentor ipucu özelliklerinin anlamı
 - `Shift()` refactor'ü
