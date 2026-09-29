@@ -458,6 +458,7 @@ public class GridManager : MonoBehaviour
         if (isWin)
         {
             hasWon = true;
+            TotalScoreService.AddLevelScore(FindObjectOfType<GameManager>());
             UIManager.Instance.ShowWinScreen();
         }
     }

@@ -79,6 +79,23 @@ public class CoreLoopTests
         return null;
     }
 
+    /// <summary>İki taşın tarifindeki puan ödülü.</summary>
+    private int RecipeScore(string a, string b)
+    {
+        var recipes = (IList)Get(grid, "recipes");
+        foreach (object r in recipes)
+        {
+            var e1 = (GameObject)r.GetType().GetField("element1").GetValue(r);
+            var e2 = (GameObject)r.GetType().GetField("element2").GetValue(r);
+            if (e1 == null || e2 == null) continue;
+            bool duz = e1.name == a && e2.name == b;
+            bool ters = e1.name == b && e2.name == a;
+            if (duz || ters) return (int)r.GetType().GetField("scoreReward").GetValue(r);
+        }
+        Assert.Fail($"tarif yok: {a} + {b}");
+        return 0;
+    }
+
     private GameObject BasicElement(string name)
     {
         var basics = (GameObject[])Get(grid, "basicElements");
@@ -256,6 +273,37 @@ public class CoreLoopTests
         Assert.AreEqual(oncekiHedef, hedef, "hedef sayacı geri alınmalı");
         Assert.AreEqual(oncekiEntropi, entropi, "entropi sayacı geri alınmalı");
         Assert.AreEqual(oncekiSentez, sentez, "toplam sentez geri alınmalı");
+    }
+
+    // Bölüm kazanılınca o bölümün skoru toplam skora bir kez eklenmeli.
+    [UnityTest]
+    public IEnumerator KazaninceToplamSkorBirikir()
+    {
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "GameManager");
+        Assert.IsNotNull(gm, "GameManager yok");
+
+        PlayerPrefs.SetInt("TotalScore", 100);
+        Field(grid, "currentGameMode").SetValue(grid, 0);   // Normal mod: puan x1
+        Field(gm, "currentScore").SetValue(gm, 0);
+        SetSingleGoal("Tile_H2", 1);
+
+        int odul = RecipeScore("Tile_H", "Tile_H");
+
+        // İki H2 üretilir ama kazanma (ve toplama ekleme) yalnızca ilkinde olur
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+        Shift("left");
+        yield return null;
+
+        int toplam = PlayerPrefs.GetInt("TotalScore", 0);
+        Debug.Log($"NEXUM_TOTALSCORE_TEST: toplam={toplam} (beklenen {100 + odul})");
+        Assert.AreEqual(100 + odul, toplam, "kazanma anindaki skor toplama bir kez eklenmeli");
     }
 
     // Taşlar bir hücre değil, duvara ya da önlerindeki engele kadar kaymalı.
