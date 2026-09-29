@@ -17,6 +17,13 @@ public class GridSnapshot
 {
     public GameObject[] savedTiles = new GameObject[16]; 
     public int savedScore; 
+
+    // Geri alma yalnızca taşları değil, hamleyle birlikte değişen sayaçları da
+    // eski hâline döndürmeli; aksi hâlde hedef üret -> geri al -> yeniden üret
+    // döngüsüyle sayaçlar şişiyordu.
+    public int[] savedGoalAmounts;      // bölümün hedef sayaçları
+    public int savedEmptyShiftCount;    // entropi (basınç) sayacı
+    public int savedTotalSynthesis;     // profildeki toplam sentez
 }
 
 public class GridManager : MonoBehaviour
@@ -133,6 +140,12 @@ public class GridManager : MonoBehaviour
         GridSnapshot snapshot = new GridSnapshot();
         GameManager gm = FindObjectOfType<GameManager>();
         snapshot.savedScore = gm != null ? gm.currentScore : 0; 
+        snapshot.savedEmptyShiftCount = emptyShiftCount;
+        snapshot.savedTotalSynthesis = PlayerPrefs.GetInt("TotalSynthesis", 0);
+
+        var savedGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
+        snapshot.savedGoalAmounts = new int[savedGoals.Count];
+        for (int g = 0; g < savedGoals.Count; g++) snapshot.savedGoalAmounts[g] = savedGoals[g].currentAmount;
 
         for (int i = 0; i < 16; i++)
         {
@@ -461,7 +474,13 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-        
+        else
+        {
+            // Hiçbir şey değişmedi: bu hamle için alınan anlık görüntü geri alınır,
+            // yoksa geçersiz hamleler geri alma yığınını şişiriyor.
+            if (historyStack.Count > 0) historyStack.Pop();
+        }
+
         CheckGameOver();
     }
 
@@ -565,10 +584,33 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        if (gm != null) gm.SubtractScore(undoCost); 
         usedUndos++;
 
         GridSnapshot lastState = historyStack.Pop();
+
+        // Önce hamle öncesi skora dönülür, sonra geri alma bedeli düşülür.
+        // Bedel, hamle öncesi skoru eksiye düşürmez (buton kontrolü ekrandaki skora bakar).
+        if (gm != null)
+        {
+            gm.currentScore = lastState.savedScore;
+            gm.SubtractScore(Mathf.Min(undoCost, Mathf.Max(0, gm.currentScore)));
+        }
+
+        // Hedef sayaçları, entropi ve toplam sentez de hamle öncesine döner
+        var goals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
+        if (lastState.savedGoalAmounts != null)
+        {
+            for (int g = 0; g < goals.Count && g < lastState.savedGoalAmounts.Length; g++)
+            {
+                goals[g].currentAmount = lastState.savedGoalAmounts[g];
+            }
+            UIManager.Instance.UpdateGoalUI();
+        }
+
+        emptyShiftCount = lastState.savedEmptyShiftCount;
+        UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
+
+        PlayerPrefs.SetInt("TotalSynthesis", lastState.savedTotalSynthesis);
 
         foreach (Transform cell in cells)
         {

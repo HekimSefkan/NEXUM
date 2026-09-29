@@ -174,4 +174,83 @@ public class CoreLoopTests
         Assert.AreEqual(1, amount, "aynı kaydırmadaki ikinci birleşme hedefi bir daha artırmamalı");
         yield return null;
     }
+
+    // Geri alma, taşların yanında skoru, hedef sayacını, entropiyi ve toplam
+    // sentezi de hamle öncesine döndürmeli.
+    [UnityTest]
+    public IEnumerator GeriAlmaTumSayaclariGeriAlir()
+    {
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "GameManager");
+        Assert.IsNotNull(gm, "GameManager yok");
+
+        SetSingleGoal("Tile_H2", 5);                       // kazanma tetiklenmesin
+        Field(grid, "currentUndoLimit").SetValue(grid, 5);
+        Field(grid, "usedUndos").SetValue(grid, 0);
+        Field(grid, "emptyShiftCount").SetValue(grid, 3);  // entropi de geri alınmalı
+        Field(gm, "currentScore").SetValue(gm, 300);
+        PlayerPrefs.SetInt("TotalSynthesis", 40);
+
+        int oncekiSkor = (int)Get(gm, "currentScore");
+        int oncekiHedef = GoalAmount(0);
+        int oncekiEntropi = (int)Get(grid, "emptyShiftCount");
+        int oncekiSentez = PlayerPrefs.GetInt("TotalSynthesis", 0);
+        int undoCost = (int)Get(grid, "undoCost");
+
+        string[] layout =
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        };
+        SetBoard(layout);
+
+        Shift("left");                                     // H + H -> H2 (birleşme)
+        yield return null;
+
+        int sonraSkor = (int)Get(gm, "currentScore");
+        Assert.AreNotEqual(oncekiSkor, sonraSkor, "birleşme skoru artırmalıydı");
+        Assert.AreEqual(oncekiHedef + 1, GoalAmount(0), "birleşme hedefi artırmalıydı");
+
+        Invoke("ExecuteUndo");
+        yield return null;
+
+        int skor = (int)Get(gm, "currentScore");
+        int hedef = GoalAmount(0);
+        int entropi = (int)Get(grid, "emptyShiftCount");
+        int sentez = PlayerPrefs.GetInt("TotalSynthesis", 0);
+        Debug.Log($"NEXUM_UNDO_TEST: skor={skor} (beklenen {oncekiSkor - undoCost}) " +
+                  $"hedef={hedef}/{oncekiHedef} entropi={entropi}/{oncekiEntropi} sentez={sentez}/{oncekiSentez}");
+
+        Assert.AreEqual(oncekiSkor - undoCost, skor, "skor hamle öncesine dönüp bedel düşülmeli");
+        Assert.AreEqual(oncekiHedef, hedef, "hedef sayacı geri alınmalı");
+        Assert.AreEqual(oncekiEntropi, entropi, "entropi sayacı geri alınmalı");
+        Assert.AreEqual(oncekiSentez, sentez, "toplam sentez geri alınmalı");
+    }
+
+    // Hiçbir şeyi değiştirmeyen kaydırma geri alma yığınını şişirmemeli.
+    [UnityTest]
+    public IEnumerator GecersizHamleSnapshotBirakmaz()
+    {
+        string[] layout =
+        {
+            "H", "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        };
+        SetBoard(layout);
+
+        var history = (System.Collections.ICollection)Get(grid, "historyStack");
+        Shift("left");                                     // sola dayalı tek taş: değişiklik yok
+        yield return null;
+        int sonra = history.Count;
+
+        Shift("left");
+        yield return null;
+        Debug.Log($"NEXUM_UNDO_SNAPSHOT: yigin={history.Count} (ilk gecersiz hamleden sonra {sonra})");
+
+        Assert.AreEqual(sonra, history.Count, "geçersiz hamle yığına snapshot eklememeli");
+    }
 }
