@@ -19,7 +19,9 @@ import sys
 from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SCENE = os.path.join(ROOT, "Assets", "Scenes", "Game.unity")
+# Karsilastirma icin baska bir sahne dosyasi verilebilir (ornegin depodan
+# cikarilmis eski surum): NEXUM_SCENE=<yol> python Tools/sim_core_loop.py
+SCENE = os.environ.get("NEXUM_SCENE") or os.path.join(ROOT, "Assets", "Scenes", "Game.unity")
 
 GRID = 4
 CELLS = GRID * GRID
@@ -79,6 +81,7 @@ class Game:
         self.cells = [None] * CELLS
         self.produced = defaultdict(int)
         self.empty_shifts = 0
+        self.moves_since_spawn = 0
         self.moves = 0
         self.score = 0
         for _ in range(level["start"]):
@@ -203,20 +206,27 @@ class Game:
         if merged > 0:
             self.spawn()
             self.empty_shifts = 0
+            self.moves_since_spawn = 0
+        elif self.spawn_mode == "any_move":
+            self.spawn()
+            self.empty_shifts = 0
+            self.moves_since_spawn = 0
         else:
-            if self.spawn_mode == "any_move":
-                self.spawn()
-                self.empty_shifts = 0
-            elif self.spawn_mode == "hybrid":
+            # Melez kural: birleşmesiz her 2 hamlede bir taş (oyundaki
+            # MergelessMovesPerSpawn). Entropi cezası bundan bağımsız çalışır.
+            if self.spawn_mode == "hybrid":
+                self.moves_since_spawn += 1
+                if self.moves_since_spawn >= 2:
+                    self.spawn()
+                    self.moves_since_spawn = 0
+
+            # Entropi cezası yalnızca entropy_limit verilmişse (serbest modda None)
+            if self.entropy_limit:
                 self.empty_shifts += 1
-                if self.empty_shifts >= 2:
+                if self.empty_shifts >= self.entropy_limit:
                     self.spawn()
                     self.empty_shifts = 0
-            else:  # merge_only (mevcut)
-                self.empty_shifts += 1
-                if self.entropy_limit and self.empty_shifts >= self.entropy_limit:
-                    self.spawn()
-                    self.empty_shifts = 0
+                    self.moves_since_spawn = 0
         return True
 
 
@@ -259,7 +269,45 @@ def evaluate(game, wanted):
     return score
 
 
-def play_game(level, recipes, rng, spawn_mode, slide_mode, max_moves=400):
+DIRECTIONS = ("up", "down", "left", "right")
+
+
+def search(game, wanted, depth):
+    """En iyi yönü ve değerini döndürür.
+
+    Derinlik > 1 iken ileriye bakarken spawn YOK sayılır (spawn rastgeledir;
+    her dalda örneklemek ölçümü gürültülendirirdi). Bu yüzden derin bot
+    gerçekte olduğundan biraz iyimser bir tahta görür — mutlak oran değil,
+    botlar arası FARK anlamlıdır.
+    """
+    best_dir, best_val = None, None
+    for d in DIRECTIONS:
+        snapshot = game.cells[:]
+        produced = dict(game.produced)
+
+        changed, merged, gained = game.shift(d)
+        if changed:
+            for k, v in gained.items():
+                game.produced[k] += v
+
+            if depth <= 1:
+                value = evaluate(game, wanted) + merged * 25
+            else:
+                _, child = search(game, wanted, depth - 1)
+                # Bu hamlenin birleşme primi, alt dalın değerine eklenir
+                value = (child if child is not None else evaluate(game, wanted)) + merged * 25
+
+            if best_val is None or value > best_val:
+                best_dir, best_val = d, value
+
+        game.cells = snapshot
+        game.produced = defaultdict(int, produced)
+
+    return best_dir, best_val
+
+
+def play_game(level, recipes, rng, spawn_mode, slide_mode,
+              max_moves=400, entropy_limit=5, depth=1):
     rmap = {}
     rmap_by_result = defaultdict(list)
     for a, b, res, _ in recipes:
@@ -267,25 +315,13 @@ def play_game(level, recipes, rng, spawn_mode, slide_mode, max_moves=400):
         rmap.setdefault(key, res)
         rmap_by_result[res].append((a, b, res))
 
-    game = Game(level, rmap, rng, spawn_mode, slide_mode)
+    game = Game(level, rmap, rng, spawn_mode, slide_mode, entropy_limit)
     wanted = needed_chain(level, rmap_by_result)
 
     for _ in range(max_moves):
         if game.goals_met():
             return True, game.moves
-        best, best_score = None, -1e18
-        for d in ("up", "down", "left", "right"):
-            snapshot = game.cells[:]
-            produced = dict(game.produced)
-            changed, merged, gained = game.shift(d)
-            if changed:
-                for k, v in gained.items():
-                    game.produced[k] += v
-                value = evaluate(game, wanted) + merged * 25
-                if value > best_score:
-                    best_score, best = value, d
-            game.cells = snapshot
-            game.produced = defaultdict(int, produced)
+        best, _ = search(game, wanted, depth)
         if best is None:
             return False, game.moves          # hamle yok = oyun sonu
         game.play(best)
@@ -294,10 +330,27 @@ def play_game(level, recipes, rng, spawn_mode, slide_mode, max_moves=400):
     return game.goals_met(), game.moves
 
 
+def run_scenario(levels, recipes, spawn_mode, slide_mode, runs,
+                 entropy_limit=5, depth=1):
+    """Her bölüm için (kazanma yüzdesi, ortalama hamle) listesi."""
+    out = []
+    for li, level in enumerate(levels):
+        rng = random.Random(1234 + li)
+        wins, total_moves = 0, 0
+        for _ in range(runs):
+            won, moves = play_game(level, recipes, rng, spawn_mode, slide_mode,
+                                   entropy_limit=entropy_limit, depth=depth)
+            wins += 1 if won else 0
+            total_moves += moves
+        out.append((wins * 100.0 / runs, total_moves / runs))
+    return out
+
+
 # ---------------------------------------------------------------- çalıştırma
 
 def main():
     runs = int(sys.argv[1]) if len(sys.argv) > 1 else 200
+    depth = int(sys.argv[2]) if len(sys.argv) > 2 else 2
     recipes, levels = read_scene()
 
     print("Tarifler (%d):" % len(recipes))
@@ -305,29 +358,42 @@ def main():
         print("   %-10s + %-10s -> %-12s (%d puan)" % (a, b, res, sc))
     print()
 
-    combos = [
-        ("MEVCUT (tek hücre, yalnız birleşmede spawn)", "merge_only", "one_step"),
-        ("A: her hamlede spawn (tek hücre)", "any_move", "one_step"),
-        ("B: duvara kadar kayma (mevcut spawn)", "merge_only", "full"),
-        ("A+B: her hamlede spawn + duvara kadar kayma", "any_move", "full"),
-        ("C: melez spawn (2 boş hamlede bir) + duvara kadar", "hybrid", "full"),
-    ]
+    header = "  ".join("L%d" % (i + 1) for i in range(len(levels)))
 
-    print("%-52s %s" % ("senaryo", "  ".join("L%d" % (i + 1) for i in range(len(levels)))))
-    for label, spawn_mode, slide_mode in combos:
-        rates, moves_avg = [], []
-        for li, level in enumerate(levels):
-            rng = random.Random(1234 + li)
-            wins, total_moves = 0, 0
-            for _ in range(runs):
-                won, moves = play_game(level, recipes, rng, spawn_mode, slide_mode)
-                wins += 1 if won else 0
-                total_moves += moves
-            rates.append(wins * 100.0 / runs)
-            moves_avg.append(total_moves / runs)
-        print("%-52s %s" % (label, "  ".join("%3.0f%%" % r for r in rates)))
-        print("%-52s %s" % ("   ortalama hamle", "  ".join("%4.0f" % m for m in moves_avg)))
-    print("\nNot: yapay oyuncu sezgiseldir; mutlak kazanma oranı değil, senaryolar arası FARK anlamlıdır.")
+    def satir(label, data, fmt="%3.0f%%", pick=0):
+        print("%-46s %s" % (label, "  ".join(fmt % d[pick] for d in data)))
+
+    # ---------------------------------------------------------- once / sonra
+    print("== CEKIRDEK DONGU: ONCE vs SONRA (derinlik-1 bot, %d oyun) ==" % runs)
+    print("%-46s %s" % ("senaryo", header))
+
+    once = run_scenario(levels, recipes, "merge_only", "one_step", runs, depth=1)
+    sonra = run_scenario(levels, recipes, "hybrid", "full", runs, depth=1)
+    serbest = run_scenario(levels, recipes, "hybrid", "full", runs,
+                           entropy_limit=None, depth=1)
+
+    satir("ONCE  (yalniz birlesmede spawn, tek hucre)", once)
+    satir("   ortalama hamle", once, "%4.0f", 1)
+    satir("SONRA (melez spawn, duvara kadar)", sonra)
+    satir("   ortalama hamle", sonra, "%4.0f", 1)
+    satir("SONRA / serbest mod (entropi cezasi yok)", serbest)
+    satir("   ortalama hamle", serbest, "%4.0f", 1)
+    print()
+
+    # ------------------------------------------------------ bot karsilastirma
+    print("== BOT KARSILASTIRMA (SONRA yapilandirmasi, %d oyun) ==" % runs)
+    print("%-46s %s" % ("bot", header))
+    derin = run_scenario(levels, recipes, "hybrid", "full", runs, depth=depth)
+    satir("derinlik-1 (aclikgozlu)", sonra)
+    satir("derinlik-%d (ileriye bakan)" % depth, derin)
+    print("%-46s %s" % ("   fark (puan)",
+                        "  ".join("%+4.0f" % (d[0] - o[0]) for d, o in zip(derin, sonra))))
+    satir("   ortalama hamle (derinlik-%d)" % depth, derin, "%4.0f", 1)
+    print()
+
+    print("Not: yapay oyuncu sezgiseldir; mutlak kazanma orani degil, "
+          "senaryolar/botlar arasi FARK anlamlidir.")
+    print("Not: derin bot ileriye bakarken spawn'i yok sayar (rastgelelik).")
 
 
 if __name__ == "__main__":
