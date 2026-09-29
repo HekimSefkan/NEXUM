@@ -41,9 +41,11 @@ public static class NexumCompoundTexts
         ["Tile_C+Tile_C"] =
             "İki karbon atomu kısa ömürlü dikarbonu kurar; alevin mavi bölgesini bu tür yapılar boyar.",
         ["Tile_H2+Tile_N2"] =
-            "Haber-Bosch yöntemi: azotun üçlü bağı yüksek basınçta kırılır ve hidrojenle birleşerek amonyak üretilir.",
+            "Haber-Bosch yöntemi: azotun üçlü bağı demir katalizör eşliğinde yüksek basınç ve " +
+            "sıcaklıkta kırılır, hidrojenle birleşerek amonyak oluşur.",
         ["Tile_Cl2+Tile_Na"] =
-            "Sodyum tek değerlik elektronunu klor molekülüne verir; zıt yüklü iyonlar kenetlenince sofra tuzu oluşur.",
+            "Klor molekülü ayrışır ve her klor atomu sodyumun tek değerlik elektronunu alır; " +
+            "zıt yüklü iyonlar kenetlenince sofra tuzu oluşur.",
         ["Tile_C2+Tile_O2"] =
             "Kararsız dikarbon, oksijen molekülüyle karşılaşınca bağı kopar ve iki karbonmonoksite dönüşür.",
     };
