@@ -130,6 +130,16 @@ Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dı�
 - **Ekran görüntüleri:** *NEXUM → Ekran Görüntüsü Al (1080×1920)* (`Ctrl+Shift+S`) Play modunda Game view'ı `Tools/store/screenshots/` altına yazar (klasör git'te yok sayılır). Game view farklı çözünürlükteyse konsola uyarı düşer.
 - **Android yayın ayarları:** IL2CPP, **sadece ARM64** (`AndroidTargetArchitectures: 2`), **Target API 36** (`AndroidTargetSdkVersion: 36`, artık Automatic değil), Minimum API 22, paket adı `com.hekimsefkan.nexum`. Enum değerleri build sırasında çalışma anında doğrulandı (`mimari=ARM64 (2)`, `targetSdk=AndroidApiLevel36 (36)`). ARMv7 kaldırıldığı için APK'dan 13,37 MiB düştü. Keystore ve imza kullanıcıya ait; YAML ile dokunulmaz.
 
+- **Çekirdek döngü (13. turda karara bağlandı ve uygulandı):**
+  - **Kayma:** Taşlar duvara / önlerindeki engele kadar kayar. `Shift()` tek hücrelik taramayı hiçbir taş ilerlemeyene kadar tekrarlar (en fazla 24 tur güvenlik sınırı). **Aynı hamlede üretilen bileşik o hamlede ikinci kez birleşmez** (2048 kuralı; `mergedThisShift` kümesi). Kayan taşın animasyonu tek `DOLocalMove` ile oynatılır (hücre başına ayrı tween yok).
+  - **Spawn (melez):** Birleşme olunca her zaman bir taş gelir. Birleşme olmayan hamlelerde `MergelessMovesPerSpawn = 2` — yani **2 boş hamlede bir taş**. Bu kural **her modda** çalışır. Entropi ceza taşı (5 boş hamle) bundan **bağımsızdır** ve yalnızca Normal + Sınav modunda; **serbest modda (`currentGameMode == 2`) ceza taşı gelmez ve basınç sayacı işlemez**.
+  - **Kazanma:** `GridManager.hasWon` bayrağı. `CheckWinCondition` her birleşmede çalıştığı için kombo sırasında kazanma ekranı tekrar tetikleniyordu. Bayrak sahne örneğinde durur, sahne yeniden yüklenince sıfırlanır.
+  - **Geri alma:** Snapshot artık hedef sayaçlarını, entropiyi (`emptyShiftCount`), melez spawn sayacını (`movesSinceSpawn`) ve `TotalSynthesis`'i de tutar. `ExecuteUndo` önce snapshot skoruna döner, **sonra** `undoCost` düşer (bedel skoru eksiye düşürmez). Hiçbir şeyi değiştirmeyen kaydırmada alınan snapshot geri alınır (yığın şişmesi).
+  - **`Shift()` yapısı:** Dört yön için kopya blok yok; `ScanUp/ScanDown/ScanLeft/ScanRight` tabloları + `GetScanOrder` / `GetStepOffset`. Yeni yön veya farklı grid boyutu gelirse yalnızca bu tablolar değişir.
+- **Tarif tablosu 21 satır (13. tur):** `N+N→N₂`, `Cl+Cl→Cl₂`, `C+C→C₂` (10 puan) ve tüketicileri `N₂+H₂→NH₃` (Haber-Bosch), `Cl₂+Na→NaCl`, `C₂+O₂→CO` (30 puan). **Na₂ ve Ca₂ bilerek eklenmedi.** Kural: **her yeni bileşiğin en az bir tüketici tarifi olmalı** (çıkmaz sokak yok). Yeni bileşik taşları, ElementData asset'leri ve tarif kayıtları elle YAML ile değil `Assets/Editor/NexumNewCompounds.cs` (idempotent) ile kurulur; metinleri `Assets/Editor/NexumCompoundTexts.cs` yazar.
+- **TotalScore:** `Assets/Scripts/Core/TotalScoreService.cs` toplam skorun tek sahibi; bölüm kazanılınca o bölümün skoru eklenir (PlayerPrefs). **Hiçbir ekranda gösterilmiyor** — gösterim kararı Faz 2 profil işinde verilecek. Kalıcı depolama değişirse yalnızca bu sınıfın içi değişir.
+- **Çekirdek döngü regresyon testi:** `Assets/Tests/PlayMode/CoreLoopTests.cs` (kazanma bir kez, geri alma sayaçları, duvara kadar kayma, aynı hamlede tekrar birleşmeme, melez spawn sıklığı, serbest modda ceza yok, TotalScore birikimi). `Assets/Tests/PlayMode/ShiftBehaviorTests.cs` kaydırma davranışının parmak izini loglar: **`Shift()` refactor'lerinde önce/sonra imza birebir aynı kalmalı** (davranış bilerek değişiyorsa commit mesajına yeni imza yazılır).
+- **Ölçüm aracı:** `Tools/sim_core_loop.py` tarifleri, spawn havuzlarını ve hedefleri `Game.unity`'den okur. `python Tools/sim_core_loop.py [oyun_sayisi] [derinlik]`; `NEXUM_SCENE` ortam değişkeniyle başka bir sahne dosyası (ör. depodan çıkarılmış eski sürüm) okunabilir. Derin bot ileriye bakarken spawn'i yok sayar; **mutlak kazanma oranı değil, senaryolar arası fark anlamlıdır**.
 - **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma. Batch mode Unity komutlarının sonuna `| Out-Null` eklenir.
 - **Satır sonları (.gitattributes):** Depo kökündeki `.gitattributes` `* text=auto eol=lf` ile hem depoyu hem çalışma kopyasını LF'e sabitler; `core.autocrlf` ayarı artık sonucu değiştirmez. Unity YAML ve kod uzantıları metin, görsel/font/ses/dll/apk ikili olarak işaretlidir. (Sahne birleştirme için UnityYAMLMerge ayrıca kurulabilir; şu an yapılandırılmadı.)
 - **Ses import kuralı:** 10 sn üstü → Streaming + Vorbis + quality ~0.7 + loadInBackground; 3 sn altı → Decompress On Load + ADPCM + forceToMono; arası → Compressed In Memory + Vorbis. Süre MP3 başlığından tahmin edilmez, Unity'nin `AudioClip.length` değeri esas alınır (validator bunu kontrol eder). Yalnızca mevcut alanların değeri değiştirilir; yeni platform bloğu Editor işidir.
@@ -175,20 +185,17 @@ Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dı�
 
 ## Bilinen durumlar (sonraki turlarda ele alınacak)
 - **Arka plan ve avatar çözünürlüğü:** Bazı görsellerin kaynağı ekrandaki kullanımın 1,5 katından küçük (avatarlar 1024 kaynak / 724 birim kullanım, `arkaplan` 941×1672, `grid.png` 783, `gamepanel` 1536). Import ayarıyla çözülmez, daha büyük kaynak görsel gerekir; validator bu durumda bilerek uyarmaz.
-- **Ölü PlayerPrefs anahtarı:** `TotalScore` yalnızca `RegistrationManager`'da 0'a kuruluyor; hiçbir yerde yazılmıyor ve okunmuyor.
 - **Beher etiketi kabı aşıyor:** `BeakerGoalPrefab`'ın `AmountText` kutusu 120×80 ama TMP iki satır için 91 birim istiyor; etiket `GoalsContainer`'ın 22 birim altına taşıyor. Skor göstergesi yatayda kaydırılarak çakışma giderildi, prefab'a dokunulmadı.
 - **Yayın öncesi kalanlar:** release keystore ve imza (kullanıcıya ait; `ProjectSettings` içindeki `AndroidKeystoreName` / `AndroidKeyaliasName` / `androidUseCustomKeystore` alanlarına **dokunulmaz**, şifreler depoya girmez), Play Console ekran görüntüleri, içerik derecelendirme anketi, Data safety formu ve gizlilik politikası URL'sinin GitHub Pages'te yayınlanması.
 - **ProjectSettings'teki şifre benzeri alanlar:** `ps4Passcode` Unity'nin her yeni projeye koyduğu sabit varsayılandır (projenin ilk commit'inden beri depoda, Android ile ilgisi yok), `metroCertificatePassword` boştur. Keystore şifreleri ProjectSettings'e yazılmaz. Bu alanlara dokunulmaz; yeni bir şifre alanı dolu görülürse iş durdurulup kullanıcıya sorulur.
 
 ## Açık oyun mantığı konuları (artık kapsam içi, sırayla ele alınacak)
 Bunlar önceki dönemde "kapsam dışı" idi; ürün döneminde her biri analiz + onay akışıyla ele alınır. Güncel liste ve ayrıntılar `docs/STATUS.md` içindedir.
-- Spawn kuralı (birleşmesiz hamlede taş gelmemesi, serbest modda entropinin kapalı olması)
-- Taşların duvara kadar kaymaması (bir hamlede tek hücre ilerleme)
-- Aynı element tarifleri (C+C, N+N, Na+Na, Cl+Cl, Ca+Ca yok)
-- Undo'nun hedef sayaçlarını, skoru ve entropiyi geri almaması; boş hamlede snapshot alınması
-- Kazanma ekranının aynı hamlede birden fazla tetiklenebilmesi
+**13. turda kapandı:** spawn kuralı (melez), duvara kadar kayma, aynı element tarifleri (N₂ / Cl₂ / C₂), undo sayaçları, kazanma ekranının tekrar tetiklenmesi, `TotalScore`, `Shift()` refactor'ü.
+
+Açık kalanlar:
 - Joker / revive silme hatası (DOKill ile iptal olan Destroy)
 - Entropi uyarısının yanlış metne yazılması
-- `TotalScore` ölü PlayerPrefs anahtarı
 - TotalAccidents / flashcard / mentor ipucu özelliklerinin anlamı
-- `Shift()` refactor'ü
+- **L4–L7 dengesi** — 13. turda bilerek ele alınmadı. Ölçüm var: Na ağırlığını yarıya indirmek L4'ü %13→%30, L6'yı %11→%20 çıkarıyor; Ca'yı yarıya indirmek L6'yı %11→%20 çıkarırken L5'i %30→%27 düşürüyor (L5/L7 hedeflerinde CaO ve CaCO₃ var). Uygulanmadı, denge turuna bırakıldı.
+- **Na₂ / Ca₂ tarifleri** — bilerek eklenmedi (karar).

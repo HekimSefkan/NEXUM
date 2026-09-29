@@ -1,6 +1,6 @@
 # NEXUM – Durum Notu
 
-**Tarih:** 29 Eylül 2026 · **Son commit:** `eb7060e` (Merge pull request #9 from HekimSefkan/fix-round-11) · **Dal:** `main`
+**Tarih:** 29 Eylül 2026 · **Dal:** `core-loop` (13. tur, PR açık — birleştirilmedi)
 
 Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar ve alınan kararlar için `CLAUDE.md`, yayın adımları için `docs/RELEASE_CHECKLIST.md`.
 
@@ -76,24 +76,28 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 ## 3. Açık maddeler
 
 ### (a) Teknik
-- **`TotalScore` ölü PlayerPrefs anahtarı** — yalnızca `RegistrationManager`'da 0'a kuruluyor, hiçbir yerde yazılmıyor/okunmuyor. Ya kaldırılmalı ya da gerçek bir skor toplamıyla doldurulmalı.
 - **`extractNativeLibs` / custom gradle template** — AAB indirme boyutu için `false` tercih edilir; custom gradle template Unity sürüm yükseltmelerinde elle bakım gerektirdiği için uygulanmadı.
 - **Kaynak çözünürlüğü yetersiz görseller** — avatarlar (1024 kaynak / 724 birim kullanım), `arkaplan` (941×1672), `grid.png` (783), `gamepanel` (1536). Import ayarıyla çözülmez; daha büyük kaynak görsel gerekir. Validator bu durumda bilerek uyarmaz.
 - **Kombo yazısının konumu** — şu an grid ile skor arasındaki sabit bantta (merkez y = 328). Oyun hissi bozuk bulunursa hazır alternatif: `UIManager.ShowComboText` içinde sabit `posY` yerine `spawnPosition.y`'yi `Mathf.Clamp` ile banda sıkıştırmak; yazı birleşmenin yüksekliğinde doğar, yalnızca sınırı aşmaz.
 - **Beher etiketi** — `BeakerGoalPrefab`'ın `AmountText` kutusu 120×80 ama TMP iki satır için 91 birim istiyor; etiket kabın 22 birim altına taşıyor. Skor yatayda kaydırılarak çözüldü, prefab'a dokunulmadı.
 
-### (b) Kapsam dışı bırakılan oyun mantığı
-Bunlar bilerek ertelendi; hepsi `GridManager` / `LevelManager` çekirdeğine dokunmayı gerektiriyor.
-- **Spawn kuralı** — her geçerli hamlede yeni taş düşüyor.
-- **Taşların duvara kadar kaymaması.**
-- **Aynı element tarifleri** — C+C, N+N, Na+Na, Cl+Cl, Ca+Ca tanımsız.
-- **Undo sayaçları** — geri alma hedef sayaçlarını, skoru ve entropiyi geri almıyor; boş hamlede de snapshot alınıyor.
-- **Kazanma ekranının tekrar tetiklenebilmesi.**
+### (b) Oyun mantığı
+
+**13. turda kapandı (dal: `core-loop`, PR açık — cihaz testi bekliyor):**
+- **Kayma** — taşlar duvara / engele kadar kayıyor; aynı hamlede üretilen bileşik ikinci kez birleşmiyor.
+- **Spawn** — melez kural: birleşmesiz her 2 hamlede bir taş, her modda. Entropi ceza taşı yalnızca Normal + Sınav modunda.
+- **Aynı element tarifleri** — N+N→N₂, Cl+Cl→Cl₂, C+C→C₂ ve tüketicileri eklendi (tablo 21 satır). Na₂ / Ca₂ bilerek eklenmedi.
+- **Undo** — skor, hedef sayaçları, entropi, spawn sayacı ve toplam sentez geri alınıyor; geçersiz hamle snapshot bırakmıyor.
+- **Kazanma ekranı** — `hasWon` bayrağıyla bir kez tetikleniyor.
+- **`TotalScore`** — `Core/TotalScoreService.cs` ile canlandırıldı (gösterim Faz 2'ye bırakıldı).
+- **`Shift()` refactor'ü** — dört kopya blok tek döngüde; parmak izi testiyle davranışın aynı kaldığı kanıtlandı.
+
+**Açık kalanlar:**
+- **L4–L7 dengesi** — 13. turda bilerek ele alınmadı. Simülatör ölçümü: Na ağırlığını yarıya indirmek L4 %13→%30, L6 %11→%20; Ca'yı yarıya indirmek L6 %11→%20 ama L5 %30→%27 (L5/L7 hedeflerinde CaO ve CaCO₃ var).
 - **Joker / revive silme hatası** — `DOKill` ile iptal olan `Destroy`.
 - **Entropi uyarısının yanlış metne yazılması.**
-- **İstatistiklerin anlamı** — "TEORİK BAŞARI" yalnızca ikinci şans quizi cevaplanınca değişiyor (pratikte çok seyrek); "LABORATUVAR KAZASI" oyun başına bir artıyor ama oyuncuya ne anlattığı tasarım kararı bekliyor.
-- **İçerik işleri** — `scientificHint` metinleri yazıldı; flashcard ve mentor ipucu özellikleri, ek quiz soruları ve ansiklopedi metinlerinin genişletilmesi açık.
-- **`Shift()` refactor'ü.**
+- **İstatistiklerin anlamı** — "TEORİK BAŞARI" yalnızca ikinci şans quizi cevaplanınca değişiyor; "LABORATUVAR KAZASI" oyuncuya ne anlattığı tasarım kararı bekliyor.
+- **İçerik işleri** — flashcard ve mentor ipucu özellikleri, ek quiz soruları, ansiklopedi metinlerinin genişletilmesi.
 
 ### (c) Yayın
 - **Play Console adımları** — mağaza listesi, içerik derecelendirme anketi, Data safety formu, hedef kitle ve reklam beyanı, gizlilik politikası URL'si. Tüm adımlar `docs/RELEASE_CHECKLIST.md` bölüm 2'de.
@@ -117,6 +121,6 @@ Bunlar bilerek ertelendi; hepsi `GridManager` / `LevelManager` çekirdeğine dok
    & "C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -runTests -projectPath "C:\Projects\NEXUM" -testPlatform PlayMode -testResults "C:\Projects\NEXUM\Logs\tests.xml" -logFile "C:\Projects\NEXUM\Logs\tests.log" | Out-Null
    Set-Location "C:\Projects\NEXUM"; git status --short
    ```
-   Beklenen: `NEXUM_VALIDATION: OK` + 0 uyarı, PlayMode 9/9. PlayMode testi `ProjectSettings.asset` içindeki `runInBackground` değerini 1 yapar; commit etmeden `git restore` ile geri alınır.
+   Beklenen: `NEXUM_VALIDATION: OK` + 0 uyarı, PlayMode 18/18. PlayMode testi `ProjectSettings.asset` içindeki `runInBackground` değerini 1 yapar; commit etmeden `git restore` ile geri alınır.
 4. **Dal ve PR akışı:** `main`'den yeni bir dal aç (`git switch -c <konu>`), her adımı ayrı commit et, push edip PR aç. Cihazda görsel doğrulama gerektiren değişiklikler kullanıcı test etmeden birleştirilmez; belge/ayar değişiklikleri validator + testler temizse birleştirilebilir. `main`'e doğrudan commit, force push ve geçmiş yeniden yazma yok.
 5. **Ölçmeden düzeltme yok:** yerleşim sorunlarında `Assets/Tests/PlayMode/LayoutProbeTests.cs` çalışma zamanı dikdörtgenlerini referans birimiyle loglar; sahnedeki kayıtlı değerler TMP ve layout grupları yüzünden yanıltabilir.
