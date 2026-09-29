@@ -37,6 +37,9 @@ public class GridManager : MonoBehaviour
     private int emptyShiftCount = 0; 
     public bool hasUsedRevive = false; 
 
+    // Bölüm kazanıldı mı? Kazanma ekranının tekrar tetiklenmesini engeller.
+    public bool hasWon = false;
+
     [Header("Tersinir Tepkime (Undo) Ayarları")]
     public int undoCost = 50; 
     public int currentUndoLimit = 0; 
@@ -488,6 +491,11 @@ public class GridManager : MonoBehaviour
 
     private void CheckWinCondition(MergeRecipe recipe)
     {
+        // Kazanma ekranı bir kez açılır. Tek bir kaydırmada birden fazla birleşme
+        // olabildiği için (kombo) bu kontrol olmadan aynı hamlede tekrar tetikleniyordu.
+        // Bayrak sahne örneğinde durur; sahne yeniden yüklenince kendiliğinden sıfırlanır.
+        if (hasWon) return;
+
         var currentLevel = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex];
         
         foreach (var goal in currentLevel.levelGoals)
@@ -505,7 +513,11 @@ public class GridManager : MonoBehaviour
             if (goal.currentAmount < goal.targetAmount) isWin = false; 
         }
 
-        if (isWin) UIManager.Instance.ShowWinScreen();
+        if (isWin)
+        {
+            hasWon = true;
+            UIManager.Instance.ShowWinScreen();
+        }
     }
 
     public void ApplyReviveBonus()
