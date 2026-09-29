@@ -33,7 +33,8 @@ Assets/
 Tools/               Unity dışı araçlar
   generate_icons.py  Uygulama ikonu + mağaza görselleri üreteci (Python + Pillow)
   store/             Mağaza görselleri; build'e girmez (önizlemeler git'te yok sayılır)
-docs/                GitHub Pages ile yayınlanan belgeler
+docs/                Belgeler (privacy-policy GitHub Pages ile yayınlanır)
+  STATUS.md            Projenin güncel durumu ve açık maddeler — yeni oturumda ilk okunacak
   privacy-policy.html  Gizlilik politikası (TR + EN)
   RELEASE_CHECKLIST.md Yayın kontrol listesi
 NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity dışı)
@@ -67,6 +68,9 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `Core/AppBootstrap` | Sahneye eklenmeden çalışır: 60 FPS, sahne yüklenince timeScale=1, arka planda PlayerPrefs.Save |
 | `Core/SafeArea` | RectTransform'u Screen.safeArea'ya göre anchor'lar (sahneye Editor'de eklenir) |
 | `Core/BackButtonHandler` | Sahneye eklenmez: Android geri tuşunu (Escape) tüm ekranlarda yönetir |
+
+## Durum notu
+Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dışı oyun mantığı / yayın) **`docs/STATUS.md`** içindedir. Yeni bir oturuma bu dosyayla başlanır; ara verilip dönüldüğünde önce orası okunur ve tur sonunda güncellenir.
 
 ## Kesin kurallar
 - **Oyun mantığına DOKUNMA:** GridManager'daki kaydırma / birleşme / spawn / undo / entropi / kazanma-kaybetme akışı; LevelManager'daki level verileri ve spawn ağırlıkları; tarif tabloları; GameManager'daki skor ve Joker kuralları; quiz / revive mantığı.
