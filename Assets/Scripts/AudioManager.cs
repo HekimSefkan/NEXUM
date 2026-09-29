@@ -6,6 +6,9 @@ public class AudioManager : MonoBehaviour
 
     // Sahne yeniden yüklendiğinde oluşan kopya yok edilmez; sahnedeki butonların çağrılarını gerçek Instance'a iletir
     private bool isProxy = false;
+
+    // Buton sesi kare koruması (aynı karede ikinci çağrı yok sayılır)
+    private int lastButtonSoundFrame = -1;
     public bool IsProxy => isProxy;
 
     [Header("Ses Kaynakları (Audio Sources)")]
@@ -106,6 +109,12 @@ public class AudioManager : MonoBehaviour
             if (Instance != null && Instance != this) Instance.PlayButtonSound();
             return;
         }
+
+        // Aynı karede ikinci çağrı yok sayılır: bir butonun sesi hem sahnedeki
+        // OnClick listesinden hem de koddan gelebiliyor. Koruma burada durur ki
+        // MainMenu sahnesi de kapsansın; UIManager yalnızca Game sahnesinde var.
+        if (lastButtonSoundFrame == Time.frameCount) return;
+        lastButtonSoundFrame = Time.frameCount;
 
         PlaySFX(buttonClip);
     }

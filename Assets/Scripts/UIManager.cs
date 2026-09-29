@@ -488,14 +488,11 @@ public class UIManager : MonoBehaviour
     // bazılarında yok; sesi ilgili metotların içine de koyduğumuz için aynı karede
     // iki kez çalma riski doğuyor. Kare koruması bunu engeller (çift ses olmaz),
     // sahne OnClick listelerine dokunmak gerekmez.
-    private int lastButtonSoundFrame = -1;
 
+    // Kare koruması AudioManager.PlayButtonSound içinde; burada yalnızca iletim var.
+    // AudioManager.PlaySFX zaten "SfxOn" ayarına bakıyor; kapalıyken ses çıkmaz.
     public void PlayButtonSound()
     {
-        if (lastButtonSoundFrame == Time.frameCount) return;
-        lastButtonSoundFrame = Time.frameCount;
-
-        // AudioManager.PlaySFX zaten "SfxOn" ayarına bakıyor; kapalıyken ses çıkmaz
         if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonSound();
     }
 }

@@ -57,6 +57,10 @@ public class EncyclopediaManager : MonoBehaviour
     // Herhangi bir element kartına tıklanınca bu fonksiyon çalışır
     public void OpenDetailPanel(ElementData clickedElement)
     {
+        // Kartlar çalışma zamanında üretildiği için sahnedeki OnClick listesinde
+        // ses yok; diğer butonlarla tutarlı olsun diye koddan çalınır.
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonSound();
+
         // Seçilen elementin verilerini Pop-up paneline aktar
         detailNameText.text = clickedElement.elementName + " (" + clickedElement.symbol + ")";
         // Satır formülü değil sentez tarifini gösteriyor; formül zaten başlıkta.
@@ -73,6 +77,7 @@ public class EncyclopediaManager : MonoBehaviour
     // Paneli Kapatmak için kullanılacak fonksiyon
     public void CloseDetailPanel()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonSound();
         detailPanel.SetActive(false);
     }
 }
