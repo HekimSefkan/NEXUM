@@ -291,16 +291,13 @@ public class UIManager : MonoBehaviour
     // Bayrak sahne örneğinde durur; yeniden başlatınca (sahne yüklenince) sıfırlanır.
     private bool accidentCounted = false;
 
-    // Serbest modda matris kilitlenince oyun bitmez: aynı panel "temizle ve devam et"
-    // olarak kullanılır. Panel objesi ortak olduğu için yeni sahne objesi gerekmez.
-    private bool freeModeCleanupOpen = false;
-    public bool IsFreeModeCleanupOpen { get { return freeModeCleanupOpen; } }
-
     public void ShowGameOver()
     {
+        // Serbest modda kaybetme yok: modal açılmaz, matris kendiliğinden
+        // yeniden düzenlenir ve oyuncuya kısa bir bildirim gösterilir.
         if (GridManager.Instance != null && GridManager.Instance.IsFreeMode)
         {
-            ShowFreeModeCleanup();
+            GridManager.Instance.ReshuffleMatrix();
             return;
         }
 
@@ -317,34 +314,35 @@ public class UIManager : MonoBehaviour
         reviveButton.SetActive(!GridManager.Instance.hasUsedRevive);
     }
 
-    /// <summary>Serbest mod: kayıp yok, laboratuvar kazası sayılmaz, quiz yok.</summary>
-    public void ShowFreeModeCleanup()
+    /// <summary>
+    /// Kombo yazısıyla aynı bantta, ekranın ortasında kısa bir sistem bildirimi.
+    /// Kombo prefab'ı yeniden kullanılır; yeni sahne/prefab objesi gerekmez.
+    /// </summary>
+    public void ShowSystemMessage(string message, float duration = 1.5f)
     {
-        freeModeCleanupOpen = true;
+        if (comboTextPrefab == null || canvasTransform == null) return;
 
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.errorClip);
+        float scale = 1f;
+        Canvas parentCanvas = canvasTransform.GetComponentInParent<Canvas>();
+        if (parentCanvas != null) scale = parentCanvas.scaleFactor;
 
-        gameOverPanel.SetActive(true);
-        reviveButton.SetActive(false);
+        Vector3 position = new Vector3(Screen.width * 0.5f,
+                                       Screen.height * 0.5f + ComboAnchorY * scale, 0f);
 
-        SetGameOverTexts("MATRİS DOLDU", "MATRİSİ TEMİZLE");
-    }
+        GameObject floatingObj = Instantiate(comboTextPrefab, position, Quaternion.identity, canvasTransform);
+        TextMeshProUGUI tmpText = floatingObj.GetComponent<TextMeshProUGUI>();
+        if (tmpText == null) { Destroy(floatingObj); return; }
 
-    private void SetGameOverTexts(string title, string restartLabel)
-    {
-        Transform t = gameOverPanel.transform.Find("GameOverText");
-        if (t != null)
-        {
-            TextMeshProUGUI tmp = t.GetComponent<TextMeshProUGUI>();
-            if (tmp != null) tmp.text = title;
-        }
+        tmpText.text = message;
+        tmpText.color = new Color(0.56f, 0.85f, 1f);   // #8FD8FF, HUD vurgu rengi
 
-        Transform r = gameOverPanel.transform.Find("RestratButton/Text (TMP)");
-        if (r != null)
-        {
-            TextMeshProUGUI tmp = r.GetComponent<TextMeshProUGUI>();
-            if (tmp != null) tmp.text = restartLabel;
-        }
+        floatingObj.transform.localScale = Vector3.zero;
+        floatingObj.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack).SetUpdate(true);
+
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(duration * 0.55f);
+        seq.Append(tmpText.DOFade(0f, duration * 0.45f).SetEase(Ease.InQuad));
+        seq.SetUpdate(true).OnComplete(() => Destroy(floatingObj));
     }
 
     public void ShowWinScreen()
@@ -369,16 +367,6 @@ public class UIManager : MonoBehaviour
     public void RestartGame()
     {
         PlayButtonSound();
-
-        // Serbest modda bu buton sahneyi yeniden yüklemez; matrisi temizleyip devam eder
-        if (freeModeCleanupOpen)
-        {
-            freeModeCleanupOpen = false;
-            gameOverPanel.SetActive(false);
-            if (GridManager.Instance != null) GridManager.Instance.ClearMatrixAndContinue();
-            return;
-        }
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -520,7 +508,9 @@ public class UIManager : MonoBehaviour
     // 15'er birim pay kalır. Yatayda birleşmenin sütunu korunur, ekran dışına taşmaz.
     private const float ComboAnchorY = 328f;
     private const float ComboFloatY = 45f;
-    private const float ComboHalfWidth = 150f;
+    // Kombo/sistem yazısının kutusu 700 birim geniş (ComboTextPrefab);
+    // ekran kenarına taşmaması için yarı genişliği kadar içeride tutulur.
+    private const float ComboHalfWidth = 350f;
 
     public void ShowComboText(int comboCount, Vector3 spawnPosition)
     {

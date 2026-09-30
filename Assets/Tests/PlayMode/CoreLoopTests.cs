@@ -607,43 +607,55 @@ public class CoreLoopTests
         SetBoard(layout);
     }
 
-    // Serbest modda matris kilitlenince oyun bitmez; "matrisi temizle" akışı açılır.
+    // Serbest modda matris kilitlenince oyun bitmez ve MODAL AÇILMAZ:
+    // tahta kendiliğinden yeniden düzenlenir.
     [UnityTest]
-    public IEnumerator SerbestModdaOyunBitmez()
+    public IEnumerator SerbestModdaMatrisKendiliginenYenidenDuzenlenir()
     {
         MonoBehaviour ui = UI();
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "GameManager");
+        Assert.IsNotNull(gm, "GameManager yok");
+
         Field(grid, "currentGameMode").SetValue(grid, 2);
+        Field(grid, "catalystCharge").SetValue(grid, 3);
+        Field(gm, "currentScore").SetValue(gm, 777);
         PlayerPrefs.SetInt("TotalAccidents", 5);
 
         KilitliTahta();
         Assert.AreEqual(16, TileCount(), "tahta dolu olmalı");
 
+        GameObject panel = (GameObject)Get(ui, "gameOverPanel");
+
         Invoke("CheckGameOver");
         yield return null;
 
-        bool temizlemeAcik = (bool)GetProp(ui, "IsFreeModeCleanupOpen");
+        bool modalAcik = panel.activeSelf;
+        bool duzenleniyor = (bool)GetProp(grid, "IsReshuffling");
         int kaza = PlayerPrefs.GetInt("TotalAccidents", 0);
-        GameObject panel = (GameObject)Get(ui, "gameOverPanel");
-        GameObject revive = (GameObject)Get(ui, "reviveButton");
 
-        Debug.Log($"NEXUM_SERBEST_BITMEZ: temizlemeAcik={temizlemeAcik} panel={panel.activeSelf} " +
-                  $"revive={revive.activeSelf} kaza={kaza}");
-
-        Assert.IsTrue(temizlemeAcik, "serbest modda temizleme akışı açılmalı");
-        Assert.IsTrue(panel.activeSelf, "panel açılmalı");
-        Assert.IsFalse(revive.activeSelf, "serbest modda quiz/revive olmamalı");
+        Debug.Log($"NEXUM_SERBEST_YENIDEN: modal={modalAcik} duzenleniyor={duzenleniyor} kaza={kaza}");
+        Assert.IsFalse(modalAcik, "serbest modda modal açılmamalı");
+        Assert.IsTrue(duzenleniyor, "yeniden düzenleme başlamalı");
         Assert.AreEqual(5, kaza, "serbest modda laboratuvar kazası sayılmamalı");
 
-        // "MATRİSİ TEMİZLE" -> tahta temizlenir, oyun devam eder
-        ui.GetType().GetMethod("RestartGame", BindingFlags.Public | BindingFlags.Instance)
-          .Invoke(ui, null);
-        yield return null;
+        // Sönme + yeni taşlar
+        yield return new WaitForSeconds(0.7f);
 
         int baslangic = StartingTileCount();
+        int skor = (int)Get(gm, "currentScore");
+        int sarj = (int)Get(grid, "catalystCharge");
+        var history = (System.Collections.ICollection)Get(grid, "historyStack");
 
-        Debug.Log($"NEXUM_SERBEST_TEMIZLE: panel={panel.activeSelf} tas={TileCount()} (beklenen {baslangic})");
-        Assert.IsFalse(panel.activeSelf, "temizlemeden sonra panel kapanmalı");
+        Debug.Log($"NEXUM_SERBEST_YENIDEN_SONUC: modal={panel.activeSelf} tas={TileCount()} " +
+                  $"(beklenen {baslangic}) skor={skor} sarj={sarj} yigin={history.Count}");
+
+        Assert.IsFalse(panel.activeSelf, "hiç modal açılmamalı");
         Assert.AreEqual(baslangic, TileCount(), "tahta başlangıç taş sayısına dönmeli");
+        Assert.AreEqual(777, skor, "skor korunmalı");
+        Assert.AreEqual(3, sarj, "katalizör şarjı korunmalı");
+        Assert.AreEqual(0, history.Count, "geri alma yığını temizlenmeli");
+        Assert.IsFalse((bool)GetProp(grid, "IsReshuffling"), "düzenleme bitmiş olmalı");
     }
 
     private int StartingTileCount()

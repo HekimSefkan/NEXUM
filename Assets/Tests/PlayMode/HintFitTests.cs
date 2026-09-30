@@ -108,6 +108,55 @@ public class HintFitTests
         yield return null;
     }
 
+    // Sistem bildirimleri (kombo prefab'ı kutusunda) de %85 sınırına uymalı.
+    [UnityTest]
+    public IEnumerator SistemBildirimleriKutuyaSigiyor()
+    {
+        MonoBehaviour ui = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "UIManager");
+        Assert.IsNotNull(ui, "UIManager yok");
+
+        GameObject prefab = (GameObject)ui.GetType()
+            .GetField("comboTextPrefab", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            .GetValue(ui);
+        Assert.IsNotNull(prefab, "comboTextPrefab atanmamış");
+
+        GameObject ornek = Object.Instantiate(prefab, hintText.transform.parent);
+        TextMeshProUGUI tmp = ornek.GetComponent<TextMeshProUGUI>();
+        Assert.IsNotNull(tmp, "kombo prefab'ında TMP yok");
+
+        RectTransform box = tmp.rectTransform;
+        float boxHeight = box.rect.height;
+        float boxWidth = box.rect.width;
+        float limit = boxHeight * MaxFillRatio;
+
+        string[] mesajlar =
+        {
+            "MATRİS YENİDEN DÜZENLENDİ",
+            "ZİNCİRLEME REAKSİYON!",
+            "BAŞARILI SENTEZ!",
+            "ÇİFTE BAĞ!",
+        };
+
+        List<string> asanlar = new List<string>();
+        foreach (string mesaj in mesajlar)
+        {
+            tmp.text = mesaj;
+            tmp.ForceMeshUpdate();
+            float yukseklik = tmp.GetPreferredValues(mesaj, boxWidth, 0f).y;
+            float doluluk = yukseklik / boxHeight * 100f;
+            Debug.Log($"{Tag}_BILDIRIM: {mesaj,-28} {yukseklik,3:F0}/{boxHeight:F0} birim  %{doluluk:F0}");
+            if (yukseklik > limit) asanlar.Add($"{mesaj} %{doluluk:F0}");
+        }
+
+        Debug.Log($"{Tag}_BILDIRIM_SONUC: kutu {boxWidth:F0}x{boxHeight:F0}, " +
+                  $"sınır %{MaxFillRatio * 100:F0} ({limit:F0} birim), aşan {asanlar.Count}/{mesajlar.Length}");
+
+        Object.DestroyImmediate(ornek);
+        Assert.IsEmpty(asanlar, "sistem bildirimi %85 sınırını aşıyor: " + string.Join(" | ", asanlar));
+        yield return null;
+    }
+
     private static string Kisa(string tileName)
     {
         return tileName.Replace("Tile_", "");

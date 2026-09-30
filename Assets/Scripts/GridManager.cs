@@ -588,13 +588,35 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Serbest mod: matris kilitlenince oyun bitmez, tahta temizlenip devam edilir.
+    /// Serbest mod: matris kilitlenince oyun BİTMEZ, modal da açılmaz. Tahta
+    /// kendiliğinden yeniden düzenlenir: eski taşlar sönerek kaybolur, yeni taşlar
+    /// kendi beliriş animasyonuyla gelir ve kısa bir bildirim gösterilir.
     /// Skor ve katalizör şarjı korunur; geri alma yığını temizlenir (eski tahta yok).
     /// </summary>
-    public void ClearMatrixAndContinue()
-    {
-        CancelPendingSpawns();
+    public bool IsReshuffling { get; private set; }
 
+    public const float ReshuffleFadeDuration = 0.35f;
+
+    public void ReshuffleMatrix()
+    {
+        if (IsReshuffling) return;
+        StartCoroutine(ReshuffleRoutine());
+    }
+
+    private IEnumerator ReshuffleRoutine()
+    {
+        IsReshuffling = true;
+        CancelPendingSpawns();
+        historyStack.Clear();
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.shiftClip, 0.6f);
+        }
+
+        UIManager.Instance.ShowSystemMessage("MATRİS YENİDEN DÜZENLENDİ");
+
+        // Eski taşlar sönerek kaybolur (ani sıçrama olmasın)
         foreach (Transform cell in cells)
         {
             for (int i = cell.childCount - 1; i >= 0; i--)
@@ -602,14 +624,19 @@ public class GridManager : MonoBehaviour
                 Transform tile = cell.GetChild(i);
                 tile.DOKill();
                 tile.SetParent(null);
-                Destroy(tile.gameObject);
+
+                GameObject go = tile.gameObject;
+                tile.DOScale(Vector3.zero, ReshuffleFadeDuration).SetEase(Ease.InBack)
+                    .OnComplete(() => { if (go != null) Destroy(go); });
             }
         }
 
-        historyStack.Clear();
+        yield return new WaitForSeconds(ReshuffleFadeDuration);
 
         int startCount = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].startingTileCount;
         for (int i = 0; i < startCount; i++) SpawnTile();
+
+        IsReshuffling = false;
     }
 
     public void CheckGameOver()
