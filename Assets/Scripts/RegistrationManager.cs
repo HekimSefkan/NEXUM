@@ -75,6 +75,8 @@ public class RegistrationManager : MonoBehaviour
 
     public void SelectAvatar(int index)
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonSound();
+
         selectedAvatarIndex = index;
         
         for (int i = 0; i < highlightRings.Length; i++)

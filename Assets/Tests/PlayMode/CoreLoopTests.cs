@@ -12,6 +12,9 @@ using UnityEngine.TestTools;
 // (reflection) ile erişilir.
 public class CoreLoopTests
 {
+    // Doğuş animasyon penceresi + pay (GridManager.SpawnDelay = 0,3 sn)
+    private const float SpawnBekleme = 0.4f;
+
     private MonoBehaviour grid;
     private MonoBehaviour levelManager;
     private List<Transform> cells;
@@ -48,6 +51,22 @@ public class CoreLoopTests
     private static object Get(object target, string name)
     {
         return Field(target, name).GetValue(target);
+    }
+
+    private static object GetProp(object target, string name)
+    {
+        PropertyInfo p = target.GetType().GetProperty(name,
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(p, "özellik yok: " + name);
+        return p.GetValue(target);
+    }
+
+    private object Invoke2(string method, params object[] args)
+    {
+        MethodInfo m = grid.GetType().GetMethod(method,
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(m, "metot yok: " + method);
+        return m.Invoke(grid, args);
     }
 
     private void Invoke(string method, params object[] args)
@@ -141,10 +160,10 @@ public class CoreLoopTests
     }
 
     /// <summary>Birleşmesiz hamle için hazırlık: sayaçları sıfırla, iki taş koy.</summary>
-    private void BirlesmesizTahta(int gameMode, int entropi)
+    private void BirlesmesizTahta(int gameMode)
     {
         Field(grid, "currentGameMode").SetValue(grid, gameMode);
-        Field(grid, "emptyShiftCount").SetValue(grid, entropi);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
         Field(grid, "movesSinceSpawn").SetValue(grid, 0);
         SetBoard(new[]
         {
@@ -221,8 +240,8 @@ public class CoreLoopTests
         yield return null;
     }
 
-    // Geri alma, taşların yanında skoru, hedef sayacını, entropiyi ve toplam
-    // sentezi de hamle öncesine döndürmeli.
+    // Geri alma, taşların yanında skoru, hedef sayacını, katalizör şarjını ve
+    // toplam sentezi de hamle öncesine döndürmeli.
     [UnityTest]
     public IEnumerator GeriAlmaTumSayaclariGeriAlir()
     {
@@ -233,13 +252,13 @@ public class CoreLoopTests
         SetSingleGoal("Tile_H2", 5);                       // kazanma tetiklenmesin
         Field(grid, "currentUndoLimit").SetValue(grid, 5);
         Field(grid, "usedUndos").SetValue(grid, 0);
-        Field(grid, "emptyShiftCount").SetValue(grid, 3);  // entropi de geri alınmalı
+        Field(grid, "catalystCharge").SetValue(grid, 3);   // şarj da geri alınmalı
         Field(gm, "currentScore").SetValue(gm, 300);
         PlayerPrefs.SetInt("TotalSynthesis", 40);
 
         int oncekiSkor = (int)Get(gm, "currentScore");
         int oncekiHedef = GoalAmount(0);
-        int oncekiEntropi = (int)Get(grid, "emptyShiftCount");
+        int oncekiSarj = (int)Get(grid, "catalystCharge");
         int oncekiSentez = PlayerPrefs.GetInt("TotalSynthesis", 0);
         int undoCost = (int)Get(grid, "undoCost");
 
@@ -264,14 +283,14 @@ public class CoreLoopTests
 
         int skor = (int)Get(gm, "currentScore");
         int hedef = GoalAmount(0);
-        int entropi = (int)Get(grid, "emptyShiftCount");
+        int sarj = (int)Get(grid, "catalystCharge");
         int sentez = PlayerPrefs.GetInt("TotalSynthesis", 0);
         Debug.Log($"NEXUM_UNDO_TEST: skor={skor} (beklenen {oncekiSkor - undoCost}) " +
-                  $"hedef={hedef}/{oncekiHedef} entropi={entropi}/{oncekiEntropi} sentez={sentez}/{oncekiSentez}");
+                  $"hedef={hedef}/{oncekiHedef} sarj={sarj}/{oncekiSarj} sentez={sentez}/{oncekiSentez}");
 
         Assert.AreEqual(oncekiSkor - undoCost, skor, "skor hamle öncesine dönüp bedel düşülmeli");
         Assert.AreEqual(oncekiHedef, hedef, "hedef sayacı geri alınmalı");
-        Assert.AreEqual(oncekiEntropi, entropi, "entropi sayacı geri alınmalı");
+        Assert.AreEqual(oncekiSarj, sarj, "katalizör şarjı geri alınmalı");
         Assert.AreEqual(oncekiSentez, sentez, "toplam sentez geri alınmalı");
     }
 
@@ -310,7 +329,7 @@ public class CoreLoopTests
     [UnityTest]
     public IEnumerator KaymaEngeleKadarGider()
     {
-        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
 
         // 1) Boş satırda taş duvara kadar gider (3 hücre)
         SetBoard(new[]
@@ -326,7 +345,7 @@ public class CoreLoopTests
         Assert.AreEqual("Tile_H", TileName(0), "taş duvara kadar kaymalı");
 
         // 2) Birleşemeyen bir taşın önünde durur (Fe + H tarifi yok)
-        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
         SetBoard(new[]
         {
             "Fe", "", "", "H",
@@ -345,7 +364,7 @@ public class CoreLoopTests
     [UnityTest]
     public IEnumerator UretilenBilesikAyniHamledeTekrarBirlesmez()
     {
-        Field(grid, "emptyShiftCount").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
         SetSingleGoal("Tile_H2O", 5);
 
         // O, H, H -> H+H birleşip H2 olur; H2 + O aynı hamlede birleşmemeli
@@ -368,15 +387,17 @@ public class CoreLoopTests
     [UnityTest]
     public IEnumerator MelezSpawnIkiBosHamledeBirTasEkler()
     {
-        BirlesmesizTahta(gameMode: 0, entropi: 0);
+        BirlesmesizTahta(gameMode: 0);
         int baslangic = TileCount();
 
+        // Yeni taş animasyonlar bittikten sonra doğduğu için her hamleden
+        // sonra doğuş penceresi kadar beklenir.
         Shift("up");                                       // 1. birleşmesiz hamle
-        yield return null;
+        yield return new WaitForSeconds(SpawnBekleme);
         int birHamle = TileCount();
 
         Shift("down");                                     // 2. birleşmesiz hamle
-        yield return null;
+        yield return new WaitForSeconds(SpawnBekleme);
         int ikiHamle = TileCount();
 
         Debug.Log($"NEXUM_SPAWN_TEST melez: baslangic={baslangic} 1.hamle={birHamle} 2.hamle={ikiHamle}");
@@ -384,33 +405,323 @@ public class CoreLoopTests
         Assert.AreEqual(baslangic + 1, ikiHamle, "ikinci birleşmesiz hamlede taş gelmeli");
     }
 
-    // Serbest modda (mod 2) spawn kuralı aynıdır ama entropi ceza taşı gelmez.
+    // Katalizör şarjı sentezle dolar, birleşmesiz hamle onu sıfırlamaz;
+    // dolunca bedava Joker hakkı verir ve şarj başa döner.
     [UnityTest]
-    public IEnumerator SerbestModdaEntropiCezasiYok()
+    public IEnumerator KatalizorSarjiSentezleDolar()
     {
-        // Normal mod: entropi 4 iken bir birleşmesiz hamle ceza taşını getirir
-        BirlesmesizTahta(gameMode: 0, entropi: 4);
-        int oncekiNormal = TileCount();
-        Shift("up");
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
+        Field(grid, "freeJokerCharges").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 99);                      // kazanma tetiklenmesin
+
+        int limit = (int)grid.GetType().GetField("CatalystChargeLimit",
+            BindingFlags.Public | BindingFlags.Static).GetValue(null);
+
+        // Tek kaydırmada 2 sentez -> şarj 2
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+        Shift("left");
+        yield return new WaitForSeconds(SpawnBekleme);
+        int ikiSentez = (int)Get(grid, "catalystCharge");
+
+        // Birleşmesiz hamle şarjı sıfırlamamalı (tek taş kayar, birleşme yok)
+        SetBoard(new[]
+        {
+            "",  "", "", "Fe",
+            "",  "", "", "",
+            "",  "", "", "",
+            "",  "", "", ""
+        });
+        Shift("left");
+        yield return new WaitForSeconds(SpawnBekleme);
+        int bosHamleSonrasi = (int)Get(grid, "catalystCharge");
+
+        // Şarjı sınırın bir altına kur, tek sentez daha yap -> ödül
+        Field(grid, "catalystCharge").SetValue(grid, limit - 1);
+        Field(grid, "freeJokerCharges").SetValue(grid, 0);
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+        Shift("left");
+        yield return new WaitForSeconds(SpawnBekleme);
+
+        int sarj = (int)Get(grid, "catalystCharge");
+        int bedava = (int)Get(grid, "freeJokerCharges");
+        Debug.Log($"NEXUM_KATALIZOR: 2 sentez -> {ikiSentez}, bos hamle sonrasi {bosHamleSonrasi}, " +
+                  $"sinir {limit} asilinca sarj={sarj} bedavaJoker={bedava}");
+
+        Assert.AreEqual(2, ikiSentez, "tek kaydırmadaki iki sentez şarjı 2 artırmalı");
+        Assert.AreEqual(2, bosHamleSonrasi, "birleşmesiz hamle şarjı sıfırlamamalı");
+        Assert.AreEqual(1, bedava, "şarj dolunca bedava Joker hakkı verilmeli");
+        Assert.AreEqual(0, sarj, "ödülden sonra şarj başa dönmeli");
+    }
+
+    // Bedava Joker hakkı bir kez harcanır.
+    [UnityTest]
+    public IEnumerator BedavaJokerBirKezHarcanir()
+    {
+        Field(grid, "freeJokerCharges").SetValue(grid, 2);
+
+        bool ilk = (bool)Invoke2("TryConsumeFreeJoker");
+        bool ikinci = (bool)Invoke2("TryConsumeFreeJoker");
+        bool ucuncu = (bool)Invoke2("TryConsumeFreeJoker");
+        int kalan = (int)Get(grid, "freeJokerCharges");
+
+        Debug.Log($"NEXUM_KATALIZOR_JOKER: {ilk}/{ikinci}/{ucuncu} kalan={kalan}");
+        Assert.IsTrue(ilk, "ilk kullanım bedava olmalı");
+        Assert.IsTrue(ikinci, "ikinci kullanım bedava olmalı");
+        Assert.IsFalse(ucuncu, "hak bitince bedava olmamalı");
+        Assert.AreEqual(0, kalan);
         yield return null;
-        int normalSonra = TileCount();
-        int normalEntropi = (int)Get(grid, "emptyShiftCount");
+    }
 
-        // Serbest mod: aynı durumda ceza taşı gelmez, entropi de artmaz
-        BirlesmesizTahta(gameMode: 2, entropi: 4);
-        int oncekiSerbest = TileCount();
-        Shift("up");
+    // Yeni taş, kayma ve birleşme animasyonları bitmeden doğmamalı.
+    [UnityTest]
+    public IEnumerator YeniTasAnimasyonlardanSonraDogar()
+    {
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 5);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        float t0 = Time.time;
+        Shift("left");                                     // H + H -> H2, doğuş istendi
+        int hemen = TileCount();
+        bool bekleyen = (bool)GetProp(grid, "HasPendingSpawn");
+
         yield return null;
-        int serbestSonra = TileCount();
-        int serbestEntropi = (int)Get(grid, "emptyShiftCount");
+        int birKare = TileCount();
 
-        Debug.Log($"NEXUM_SPAWN_TEST ceza: normal {oncekiNormal}->{normalSonra} (entropi {normalEntropi}) | " +
-                  $"serbest {oncekiSerbest}->{serbestSonra} (entropi {serbestEntropi})");
+        yield return new WaitForSeconds(0.35f);
+        int sonra = TileCount();
+        float gecen = Time.time - t0;
 
-        Assert.AreEqual(oncekiNormal + 1, normalSonra, "normal modda entropi cezası taş eklemeli");
-        Assert.AreEqual(0, normalEntropi, "ceza sonrası entropi sıfırlanmalı");
-        Assert.AreEqual(oncekiSerbest, serbestSonra, "serbest modda ceza taşı gelmemeli");
-        Assert.AreEqual(4, serbestEntropi, "serbest modda entropi sayacı işlemez");
+        Debug.Log($"NEXUM_SPAWN_ZAMAN: hemen={hemen} birKare={birKare} " +
+                  $"{gecen:F2}sn sonra={sonra} (bekleyen={bekleyen})");
+
+        Assert.AreEqual(1, hemen, "kaydırma biter bitmez yeni taş olmamalı");
+        Assert.IsTrue(bekleyen, "doğuş bekliyor olmalı");
+        Assert.AreEqual(1, birKare, "bir kare sonra da yeni taş olmamalı");
+        Assert.AreEqual(2, sonra, "animasyonlar bitince yeni taş doğmalı");
+    }
+
+    // Yeni taş, kaydırma yönünün tersindeki kenarda doğmalı.
+    [UnityTest]
+    public IEnumerator YeniTasKarsiKenardaDogar()
+    {
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 5);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Shift("left");                                     // sola kaydırıldı
+        yield return new WaitForSeconds(0.4f);
+
+        int yeni = -1;
+        for (int i = 0; i < 16; i++)
+        {
+            if (i == 0) continue;                          // birleşme ürünü
+            if (cells[i].childCount > 0) { yeni = i; break; }
+        }
+
+        Debug.Log($"NEXUM_SPAWN_KONUM: sola kaydırıldı, yeni taş hücre {yeni} (sütun {yeni % 4})");
+        Assert.AreNotEqual(-1, yeni, "yeni taş doğmalı");
+        Assert.AreEqual(3, yeni % 4, "sola kaydırınca yeni taş en sağ sütunda doğmalı");
+    }
+
+    // Oyuncu animasyonu beklemeden hamle yaparsa bekleyen taş önce doğar.
+    [UnityTest]
+    public IEnumerator BekleyenTasSonrakiHamleden0nceDogar()
+    {
+        Field(grid, "currentGameMode").SetValue(grid, 0);
+        Field(grid, "catalystCharge").SetValue(grid, 0);
+        Field(grid, "movesSinceSpawn").SetValue(grid, 0);
+        SetSingleGoal("Tile_H2", 5);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Shift("left");
+        Assert.IsTrue((bool)GetProp(grid, "HasPendingSpawn"), "doğuş bekliyor olmalı");
+        Assert.AreEqual(1, TileCount());
+
+        Shift("up");                                       // animasyon beklenmeden ikinci hamle
+        int sonra = TileCount();
+        Debug.Log($"NEXUM_SPAWN_ARA: ikinci hamleden hemen sonra tas={sonra}");
+
+        Assert.GreaterOrEqual(sonra, 2, "bekleyen taş ikinci hamleden önce doğmalı");
+        yield return null;
+    }
+
+    // ---- Serbest mod ----------------------------------------------------
+
+    private MonoBehaviour UI()
+    {
+        MonoBehaviour ui = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "UIManager");
+        Assert.IsNotNull(ui, "UIManager yok");
+        return ui;
+    }
+
+    /// <summary>Hiçbir komşusu birleşmeyen dolu tahta (Na / Fe dama deseni).</summary>
+    private void KilitliTahta()
+    {
+        string[] layout = new string[16];
+        for (int i = 0; i < 16; i++)
+        {
+            int row = i / 4, col = i % 4;
+            layout[i] = ((row + col) % 2 == 0) ? "Na" : "Fe";
+        }
+        SetBoard(layout);
+    }
+
+    // Serbest modda matris kilitlenince oyun bitmez ve MODAL AÇILMAZ:
+    // tahta kendiliğinden yeniden düzenlenir.
+    [UnityTest]
+    public IEnumerator SerbestModdaMatrisKendiliginenYenidenDuzenlenir()
+    {
+        MonoBehaviour ui = UI();
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "GameManager");
+        Assert.IsNotNull(gm, "GameManager yok");
+
+        Field(grid, "currentGameMode").SetValue(grid, 2);
+        Field(grid, "catalystCharge").SetValue(grid, 3);
+        Field(gm, "currentScore").SetValue(gm, 777);
+        PlayerPrefs.SetInt("TotalAccidents", 5);
+
+        KilitliTahta();
+        Assert.AreEqual(16, TileCount(), "tahta dolu olmalı");
+
+        GameObject panel = (GameObject)Get(ui, "gameOverPanel");
+
+        Invoke("CheckGameOver");
+        yield return null;
+
+        bool modalAcik = panel.activeSelf;
+        bool duzenleniyor = (bool)GetProp(grid, "IsReshuffling");
+        int kaza = PlayerPrefs.GetInt("TotalAccidents", 0);
+
+        Debug.Log($"NEXUM_SERBEST_YENIDEN: modal={modalAcik} duzenleniyor={duzenleniyor} kaza={kaza}");
+        Assert.IsFalse(modalAcik, "serbest modda modal açılmamalı");
+        Assert.IsTrue(duzenleniyor, "yeniden düzenleme başlamalı");
+        Assert.AreEqual(5, kaza, "serbest modda laboratuvar kazası sayılmamalı");
+
+        // Sönme + yeni taşlar
+        yield return new WaitForSeconds(0.7f);
+
+        int baslangic = StartingTileCount();
+        int skor = (int)Get(gm, "currentScore");
+        int sarj = (int)Get(grid, "catalystCharge");
+        var history = (System.Collections.ICollection)Get(grid, "historyStack");
+
+        Debug.Log($"NEXUM_SERBEST_YENIDEN_SONUC: modal={panel.activeSelf} tas={TileCount()} " +
+                  $"(beklenen {baslangic}) skor={skor} sarj={sarj} yigin={history.Count}");
+
+        Assert.IsFalse(panel.activeSelf, "hiç modal açılmamalı");
+        Assert.AreEqual(baslangic, TileCount(), "tahta başlangıç taş sayısına dönmeli");
+        Assert.AreEqual(777, skor, "skor korunmalı");
+        Assert.AreEqual(3, sarj, "katalizör şarjı korunmalı");
+        Assert.AreEqual(0, history.Count, "geri alma yığını temizlenmeli");
+        Assert.IsFalse((bool)GetProp(grid, "IsReshuffling"), "düzenleme bitmiş olmalı");
+    }
+
+    private int StartingTileCount()
+    {
+        var levels = (IList)Get(levelManager, "levels");
+        int index = (int)Get(levelManager, "currentLevelIndex");
+        return (int)Get(levels[index], "startingTileCount");
+    }
+
+    // Serbest modda ipucu bedava ve sınırsız.
+    [UnityTest]
+    public IEnumerator SerbestModdaIpucuBedava()
+    {
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "GameManager");
+        Assert.IsNotNull(gm, "GameManager yok");
+
+        Field(grid, "currentGameMode").SetValue(grid, 2);
+        Field(grid, "usedHints").SetValue(grid, 0);
+        Field(gm, "currentScore").SetValue(gm, 500);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Invoke("RequestHint");
+        yield return null;
+
+        int skor = (int)Get(gm, "currentScore");
+        int kullanilan = (int)Get(grid, "usedHints");
+        Debug.Log($"NEXUM_SERBEST_IPUCU: skor={skor} (beklenen 500) kullanilanIpucu={kullanilan}");
+
+        Assert.AreEqual(500, skor, "serbest modda ipucu puan harcamamalı");
+        Assert.AreEqual(0, kullanilan, "serbest modda ipucu hakkı tükenmemeli");
+    }
+
+    // Serbest modda kazanma ekranı açılmaz.
+    [UnityTest]
+    public IEnumerator SerbestModdaKazanmaYok()
+    {
+        MonoBehaviour ui = UI();
+        Field(grid, "currentGameMode").SetValue(grid, 2);
+        Field(grid, "hasWon").SetValue(grid, false);
+        SetSingleGoal("Tile_H2", 1);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Shift("left");
+        yield return new WaitForSeconds(SpawnBekleme);
+
+        bool hasWon = (bool)Get(grid, "hasWon");
+        GameObject win = (GameObject)Get(ui, "winPanel");
+        Debug.Log($"NEXUM_SERBEST_KAZANMA: hasWon={hasWon} winPanel={win.activeSelf}");
+
+        Assert.IsFalse(hasWon, "serbest modda kazanma bayrağı kurulmamalı");
+        Assert.IsFalse(win.activeSelf, "serbest modda kazanma ekranı açılmamalı");
     }
 
     // Hiçbir şeyi değiştirmeyen kaydırma geri alma yığınını şişirmemeli.
