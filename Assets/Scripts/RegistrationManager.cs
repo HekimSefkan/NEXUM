@@ -47,7 +47,7 @@ public class RegistrationManager : MonoBehaviour
 
     void Start()
     {
-        if (PlayerPrefs.HasKey("PlayerName"))
+        if (SaveService.HasProfile)
         {
             if(registrationPanel != null) registrationPanel.SetActive(false);
             if(idCardPanel != null) idCardPanel.SetActive(false);
@@ -220,18 +220,14 @@ public class RegistrationManager : MonoBehaviour
         }
         // -------------------------------
 
-        PlayerPrefs.SetString("PlayerName", enteredName);
-        PlayerPrefs.SetInt("PlayerAvatarIndex", selectedAvatarIndex);
-        if (!string.IsNullOrWhiteSpace(enteredEmail)) PlayerPrefs.SetString("PlayerEmail", enteredEmail);
+        SaveService.Data.playerName = enteredName;
+        SaveService.Data.avatarIndex = selectedAvatarIndex;
+        if (!string.IsNullOrWhiteSpace(enteredEmail)) SaveService.Data.playerEmail = enteredEmail;
 
-        if (!PlayerPrefs.HasKey("TotalScore")) PlayerPrefs.SetInt("TotalScore", 0);
-        if (!PlayerPrefs.HasKey("MaxLevelUnlocked")) PlayerPrefs.SetInt("MaxLevelUnlocked", 1);
-        if (!PlayerPrefs.HasKey("TotalSynthesis")) PlayerPrefs.SetInt("TotalSynthesis", 0);
-        if (!PlayerPrefs.HasKey("TotalAccidents")) PlayerPrefs.SetInt("TotalAccidents", 0);
-        if (!PlayerPrefs.HasKey("QuizAttempts")) PlayerPrefs.SetInt("QuizAttempts", 0);
-        if (!PlayerPrefs.HasKey("QuizCorrect")) PlayerPrefs.SetInt("QuizCorrect", 0);
+        // Sayaçların varsayılanı zaten 0; yalnızca ilk bölüm açık olsun
+        if (SaveService.Data.maxLevelUnlocked < 1) SaveService.Data.maxLevelUnlocked = 1;
 
-        PlayerPrefs.Save();
+        SaveService.SaveNow();
 
         StartCoroutine(ShowIDCardRoutine(enteredName, enteredEmail, selectedAvatarIndex));
     }

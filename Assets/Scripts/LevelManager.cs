@@ -54,7 +54,7 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        currentLevelIndex = PlayerPrefs.GetInt("SelectedLevel", 0); 
+        currentLevelIndex = SaveService.Data.selectedLevel; 
     }
 
     void Start()

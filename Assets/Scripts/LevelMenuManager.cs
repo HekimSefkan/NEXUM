@@ -26,7 +26,7 @@ public class LevelMenuManager : MonoBehaviour
     public void UpdateLevelButtons()
     {
         // Cihazdan açık olan en yüksek bölümün indeksini çek
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 0);
+        int unlockedLevel = SaveService.Data.unlockedLevel;
 
         for (int i = 0; i < levelButtons.Length; i++)
         {
@@ -59,7 +59,7 @@ public class LevelMenuManager : MonoBehaviour
     public void SelectLevelAndPlay(int levelIndex)
     {
         // Tıklanan bölümdeki kilit açılmamışsa ekstra güvenlik önlemi
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 0);
+        int unlockedLevel = SaveService.Data.unlockedLevel;
         if (levelIndex > unlockedLevel) 
         {
             // İstersen buraya AudioManager ile "Hata/Kilitli" sesi ekleyebilirsin
@@ -67,7 +67,8 @@ public class LevelMenuManager : MonoBehaviour
             return;
         }
 
-        PlayerPrefs.SetInt("SelectedLevel", levelIndex);
+        SaveService.Data.selectedLevel = levelIndex;
+        SaveService.SaveNow();
         SceneManager.LoadScene("Game");
     }
 }

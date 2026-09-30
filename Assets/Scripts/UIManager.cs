@@ -109,7 +109,7 @@ public class UIManager : MonoBehaviour
         InitGoalsUI(); 
 
         int currentLevel = LevelManager.Instance.currentLevelIndex;
-        int isTutorialRead = PlayerPrefs.GetInt("TutorialRead_Level_" + currentLevel, 0);
+        int isTutorialRead = SaveService.IsTutorialRead(currentLevel) ? 1 : 0;
 
         if (isTutorialRead == 0)
         {
@@ -128,9 +128,9 @@ public class UIManager : MonoBehaviour
         goalTexts.Clear();
 
         // Serbest modda bölüm hedefi yok; beher paneli hiç gösterilmez.
-        // Ayar doğrudan PlayerPrefs'ten okunur: GridManager.Start ile UIManager.Start
+        // Ayar doğrudan kayıttan okunur: GridManager.Start ile UIManager.Start
         // arasındaki sıra garanti değil.
-        bool freeMode = PlayerPrefs.GetInt("SelectedGameMode", 0) == 2;
+        bool freeMode = SaveService.Data.gameMode == 2;
         goalsContainer.gameObject.SetActive(!freeMode);
         if (freeMode) return;
 
@@ -243,16 +243,16 @@ public class UIManager : MonoBehaviour
             questionTextUI.rectTransform.sizeDelta = new Vector2(quizQuestionSize.x, 700f);
         }
 
-        int totalAttempts = PlayerPrefs.GetInt("QuizAttempts", 0) + 1;
-        PlayerPrefs.SetInt("QuizAttempts", totalAttempts);
+        int totalAttempts = SaveService.Data.quizAttempts + 1;
+        SaveService.Data.quizAttempts = totalAttempts;
 
         if (selectedIndex == currentCorrectIndex)
         {
             if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.quizCorrectClip);
             
-            int totalCorrect = PlayerPrefs.GetInt("QuizCorrect", 0) + 1;
-            PlayerPrefs.SetInt("QuizCorrect", totalCorrect);
-            PlayerPrefs.Save();
+            int totalCorrect = SaveService.Data.quizCorrect + 1;
+            SaveService.Data.quizCorrect = totalCorrect;
+            SaveService.SaveNow();
 
             questionTextUI.text = "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun...";
             yield return new WaitForSeconds(2f); 
@@ -262,7 +262,7 @@ public class UIManager : MonoBehaviour
         else
         {
             if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.quizWrongClip);
-            PlayerPrefs.Save(); 
+            SaveService.SaveNow(); 
             
             questionTextUI.text = "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi.";
             yield return new WaitForSeconds(2f); 
@@ -306,8 +306,8 @@ public class UIManager : MonoBehaviour
         if (!accidentCounted)
         {
             accidentCounted = true;
-            PlayerPrefs.SetInt("TotalAccidents", PlayerPrefs.GetInt("TotalAccidents", 0) + 1);
-            PlayerPrefs.Save();
+            SaveService.Data.totalAccidents++;
+            SaveService.SaveNow();
         }
 
         gameOverPanel.SetActive(true);
@@ -353,12 +353,12 @@ public class UIManager : MonoBehaviour
         winPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
 
         int currentLevelIndex = LevelManager.Instance.currentLevelIndex;
-        int highestUnlocked = PlayerPrefs.GetInt("UnlockedLevel", 0); 
+        int highestUnlocked = SaveService.Data.unlockedLevel; 
         if (currentLevelIndex >= highestUnlocked)
         {
-            PlayerPrefs.SetInt("UnlockedLevel", currentLevelIndex + 1);
-            PlayerPrefs.SetInt("MaxLevelUnlocked", currentLevelIndex + 2); 
-            PlayerPrefs.Save(); 
+            SaveService.Data.unlockedLevel = currentLevelIndex + 1;
+            SaveService.Data.maxLevelUnlocked = currentLevelIndex + 2;
+            SaveService.SaveNow(); 
         }
     }
 
@@ -379,9 +379,9 @@ public class UIManager : MonoBehaviour
     public void NextLevel()
     {
         PlayButtonSound();
-        int nextLevel = PlayerPrefs.GetInt("SelectedLevel", 0) + 1;
+        int nextLevel = SaveService.Data.selectedLevel + 1;
         if(nextLevel >= LevelManager.Instance.levels.Count) SceneManager.LoadScene("MainMenu");
-        else { PlayerPrefs.SetInt("SelectedLevel", nextLevel); SceneManager.LoadScene("Game"); }
+        else { SaveService.Data.selectedLevel = nextLevel; SaveService.SaveNow(); SceneManager.LoadScene("Game"); }
     }
 
     public void ShowHypothesisPanel() { hypothesisPanel.SetActive(true); }
@@ -395,7 +395,7 @@ public class UIManager : MonoBehaviour
 
         if (assistantAvatarImage != null && avatarSprites != null && avatarSprites.Length > 0)
         {
-            int avatarIndex = PlayerPrefs.GetInt("PlayerAvatarIndex", 0);
+            int avatarIndex = SaveService.Data.avatarIndex;
             if (avatarIndex < avatarSprites.Length) assistantAvatarImage.sprite = avatarSprites[avatarIndex];
         }
     }
@@ -495,8 +495,8 @@ public class UIManager : MonoBehaviour
     public void StartExperiment()
     {
         int currentLevel = LevelManager.Instance.currentLevelIndex;
-        PlayerPrefs.SetInt("TutorialRead_Level_" + currentLevel, 1);
-        PlayerPrefs.Save();
+        SaveService.SetTutorialRead(currentLevel);
+        SaveService.Flush();
         tutorialPanel.SetActive(false);
         GridManager.Instance.enabled = true;
     }

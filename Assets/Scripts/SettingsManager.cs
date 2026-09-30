@@ -23,21 +23,18 @@ public class SettingsManager : MonoBehaviour
 
     void Start()
     {
-        int currentMode = PlayerPrefs.GetInt("SelectedGameMode", 0);
+        int currentMode = SaveService.Data.gameMode;
         UpdateModeUI(currentMode);
 
-        if(!PlayerPrefs.HasKey("MusicOn")) PlayerPrefs.SetInt("MusicOn", 1);
-        if(!PlayerPrefs.HasKey("SfxOn")) PlayerPrefs.SetInt("SfxOn", 1);
-        if(!PlayerPrefs.HasKey("FlashcardsOn")) PlayerPrefs.SetInt("FlashcardsOn", 1);
-        if(!PlayerPrefs.HasKey("MentorHintsOn")) PlayerPrefs.SetInt("MentorHintsOn", 1);
+        // Varsayilanlar SaveData alan tanimlarinda (hepsi 1); ayrica kurmaya gerek yok.
 
         UpdateAllTogglesUI();
     }
 
     public void SelectGameMode(int modeIndex)
     {
-        PlayerPrefs.SetInt("SelectedGameMode", modeIndex);
-        PlayerPrefs.Save();
+        SaveService.Data.gameMode = modeIndex;
+        SaveService.SaveNow();
         UpdateModeUI(modeIndex);
     }
 
@@ -50,9 +47,9 @@ public class SettingsManager : MonoBehaviour
 
     public void ToggleMusic()
     {
-        int state = PlayerPrefs.GetInt("MusicOn") == 1 ? 0 : 1;
-        PlayerPrefs.SetInt("MusicOn", state);
-        PlayerPrefs.Save();
+        int state = SaveService.Data.musicOn == 1 ? 0 : 1;
+        SaveService.Data.musicOn = state;
+        SaveService.SaveNow();
         UpdateAllTogglesUI();
         
         // YENİ: Düğmeye basıldığı saniye AudioManager'a müziği susturması/açması için haber ver
@@ -64,39 +61,39 @@ public class SettingsManager : MonoBehaviour
 
     public void ToggleSfx()
     {
-        int state = PlayerPrefs.GetInt("SfxOn") == 1 ? 0 : 1;
-        PlayerPrefs.SetInt("SfxOn", state);
-        PlayerPrefs.Save();
+        int state = SaveService.Data.sfxOn == 1 ? 0 : 1;
+        SaveService.Data.sfxOn = state;
+        SaveService.SaveNow();
         UpdateAllTogglesUI();
     }
 
     public void ToggleFlashcards()
     {
-        int state = PlayerPrefs.GetInt("FlashcardsOn") == 1 ? 0 : 1;
-        PlayerPrefs.SetInt("FlashcardsOn", state);
-        PlayerPrefs.Save();
+        int state = SaveService.Data.flashcardsOn == 1 ? 0 : 1;
+        SaveService.Data.flashcardsOn = state;
+        SaveService.SaveNow();
         UpdateAllTogglesUI();
     }
 
     public void ToggleMentorHints()
     {
-        int state = PlayerPrefs.GetInt("MentorHintsOn") == 1 ? 0 : 1;
-        PlayerPrefs.SetInt("MentorHintsOn", state);
-        PlayerPrefs.Save();
+        int state = SaveService.Data.mentorHintsOn == 1 ? 0 : 1;
+        SaveService.Data.mentorHintsOn = state;
+        SaveService.SaveNow();
         UpdateAllTogglesUI();
     }
 
     private void UpdateAllTogglesUI()
     {
-        musicToggleImg.sprite = PlayerPrefs.GetInt("MusicOn") == 1 ? toggleOnSprite : toggleOffSprite;
-        sfxToggleImg.sprite = PlayerPrefs.GetInt("SfxOn") == 1 ? toggleOnSprite : toggleOffSprite;
-        flashcardsToggleImg.sprite = PlayerPrefs.GetInt("FlashcardsOn") == 1 ? toggleOnSprite : toggleOffSprite;
-        mentorHintsToggleImg.sprite = PlayerPrefs.GetInt("MentorHintsOn") == 1 ? toggleOnSprite : toggleOffSprite;
+        musicToggleImg.sprite = SaveService.Data.musicOn == 1 ? toggleOnSprite : toggleOffSprite;
+        sfxToggleImg.sprite = SaveService.Data.sfxOn == 1 ? toggleOnSprite : toggleOffSprite;
+        flashcardsToggleImg.sprite = SaveService.Data.flashcardsOn == 1 ? toggleOnSprite : toggleOffSprite;
+        mentorHintsToggleImg.sprite = SaveService.Data.mentorHintsOn == 1 ? toggleOnSprite : toggleOffSprite;
     }
 
     public void ResetProgress()
     {
-        PlayerPrefs.DeleteAll();
+        SaveService.ResetAll();
         Start();
         
         // YENİ: Sıfırlamadan sonra seslerin durumunu da fabrika ayarlarına çek

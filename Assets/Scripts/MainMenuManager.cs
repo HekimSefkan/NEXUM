@@ -46,7 +46,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (profileButtonAvatarImage != null && avatarSprites != null && avatarSprites.Length > 0)
         {
-            int avatarIndex = PlayerPrefs.GetInt("PlayerAvatarIndex", -1); 
+            int avatarIndex = SaveService.HasProfile ? SaveService.Data.avatarIndex : -1; 
             if (avatarIndex >= 0 && avatarIndex < avatarSprites.Length)
             {
                 profileButtonAvatarImage.sprite = avatarSprites[avatarIndex];
@@ -110,7 +110,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadLevel(int levelIndex)
     {
-        PlayerPrefs.SetInt("SelectedLevel", levelIndex);
+        SaveService.Data.selectedLevel = levelIndex;
+        SaveService.SaveNow();
         SceneManager.LoadScene("Game"); 
     }
 }

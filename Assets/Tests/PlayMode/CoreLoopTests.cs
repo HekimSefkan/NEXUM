@@ -22,8 +22,8 @@ public class CoreLoopTests
     [UnitySetUp]
     public IEnumerator SetUp()
     {
-        PlayerPrefs.SetInt("SelectedLevel", 0);
-        PlayerPrefs.SetInt("TutorialRead_Level_0", 1);
+        SaveService.Data.selectedLevel = 0;
+        SaveService.SetTutorialRead(0);
 
         SceneManager.LoadScene("Game");
         yield return null;
@@ -254,12 +254,12 @@ public class CoreLoopTests
         Field(grid, "usedUndos").SetValue(grid, 0);
         Field(grid, "catalystCharge").SetValue(grid, 3);   // şarj da geri alınmalı
         Field(gm, "currentScore").SetValue(gm, 300);
-        PlayerPrefs.SetInt("TotalSynthesis", 40);
+        SaveService.Data.totalSynthesis = 40;
 
         int oncekiSkor = (int)Get(gm, "currentScore");
         int oncekiHedef = GoalAmount(0);
         int oncekiSarj = (int)Get(grid, "catalystCharge");
-        int oncekiSentez = PlayerPrefs.GetInt("TotalSynthesis", 0);
+        int oncekiSentez = SaveService.Data.totalSynthesis;
         int undoCost = (int)Get(grid, "undoCost");
 
         string[] layout =
@@ -284,7 +284,7 @@ public class CoreLoopTests
         int skor = (int)Get(gm, "currentScore");
         int hedef = GoalAmount(0);
         int sarj = (int)Get(grid, "catalystCharge");
-        int sentez = PlayerPrefs.GetInt("TotalSynthesis", 0);
+        int sentez = SaveService.Data.totalSynthesis;
         Debug.Log($"NEXUM_UNDO_TEST: skor={skor} (beklenen {oncekiSkor - undoCost}) " +
                   $"hedef={hedef}/{oncekiHedef} sarj={sarj}/{oncekiSarj} sentez={sentez}/{oncekiSentez}");
 
@@ -302,7 +302,7 @@ public class CoreLoopTests
             .FirstOrDefault(m => m.GetType().Name == "GameManager");
         Assert.IsNotNull(gm, "GameManager yok");
 
-        PlayerPrefs.SetInt("TotalScore", 100);
+        SaveService.Data.totalScore = 100;
         Field(grid, "currentGameMode").SetValue(grid, 0);   // Normal mod: puan x1
         Field(gm, "currentScore").SetValue(gm, 0);
         SetSingleGoal("Tile_H2", 1);
@@ -320,7 +320,7 @@ public class CoreLoopTests
         Shift("left");
         yield return null;
 
-        int toplam = PlayerPrefs.GetInt("TotalScore", 0);
+        int toplam = SaveService.Data.totalScore;
         Debug.Log($"NEXUM_TOTALSCORE_TEST: toplam={toplam} (beklenen {100 + odul})");
         Assert.AreEqual(100 + odul, toplam, "kazanma anindaki skor toplama bir kez eklenmeli");
     }
@@ -620,7 +620,7 @@ public class CoreLoopTests
         Field(grid, "currentGameMode").SetValue(grid, 2);
         Field(grid, "catalystCharge").SetValue(grid, 3);
         Field(gm, "currentScore").SetValue(gm, 777);
-        PlayerPrefs.SetInt("TotalAccidents", 5);
+        SaveService.Data.totalAccidents = 5;
 
         KilitliTahta();
         Assert.AreEqual(16, TileCount(), "tahta dolu olmalı");
@@ -632,7 +632,7 @@ public class CoreLoopTests
 
         bool modalAcik = panel.activeSelf;
         bool duzenleniyor = (bool)GetProp(grid, "IsReshuffling");
-        int kaza = PlayerPrefs.GetInt("TotalAccidents", 0);
+        int kaza = SaveService.Data.totalAccidents;
 
         Debug.Log($"NEXUM_SERBEST_YENIDEN: modal={modalAcik} duzenleniyor={duzenleniyor} kaza={kaza}");
         Assert.IsFalse(modalAcik, "serbest modda modal açılmamalı");
