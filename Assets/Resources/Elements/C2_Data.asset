@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: C2_Data
+  m_EditorClassIdentifier: 
+  elementName: Dikarbon
+  symbol: C<sub>2</sub>
+  elementIcon: {fileID: 0}
+  synthesisScore: 30
+  jokerCost: 60
+  recipe: C + C
+  description: "\u0130ki karbonun k\u0131sa \xF6m\xFCrl\xFC bulu\u015Fmas\u0131.
+    Mum alevinin mavi b\xF6lgesinde ve kuyruklu y\u0131ld\u0131zlarda g\xF6r\xFCl\xFCr;
+    karars\u0131zd\u0131r, ilk f\u0131rsatta oksijene ko\u015Far."

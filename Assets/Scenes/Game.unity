@@ -3607,78 +3607,131 @@ MonoBehaviour:
     element2: {fileID: 3634079177299486472, guid: 293d81e9e56243149b4c147559fe8972, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     scoreReward: 10
-    scientificHint: "\u0130ki hidrojen atomu tek elektronlar\u0131n\u0131 payla\u015F\u0131p kovalent ba\u011F kurar; evrenin en hafif molek\xFCl\xFC b\xF6yle olu\u015Fur."
+    scientificHint: "\u0130ki hidrojen atomu elektron payla\u015F\u0131p kovalent
+      ba\u011F kurar: evrenin en hafif molek\xFCl\xFC."
   - element1: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     scoreReward: 10
-    scientificHint: "\u0130ki oksijen atomu \xE7ift ba\u011F kurunca soludu\u011Fumuz kararl\u0131 oksijen molek\xFCl\xFC ortaya \xE7\u0131kar."
+    scientificHint: "\u0130ki oksijen atomu \xE7ift ba\u011F kurar; soludu\u011Fumuz
+      kararl\u0131 oksijen molek\xFCl\xFC olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 930ab50179948a04ea8709f405f40427, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
     scoreReward: 10
-    scientificHint: "Karbon yeterli oksijen bulamazsa tek bir oksijene ba\u011Flan\u0131r ve zehirli karbonmonoksit a\xE7\u0131\u011Fa \xE7\u0131kar."
+    scientificHint: "Oksijen yetersizse karbon tek oksijene ba\u011Flan\u0131r; zehirli
+      karbonmonoksit olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
     element2: {fileID: 3634079177299486472, guid: 293d81e9e56243149b4c147559fe8972, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 3a31c3c9228c2c1478ea0d0277983eb5, type: 3}
     scoreReward: 10
-    scientificHint: "Azot ilk hidrojenini ba\u011Flad\u0131\u011F\u0131nda k\u0131sa \xF6m\xFCrl\xFC imidogen olu\u015Fur; amonya\u011Fa giden yol buradan ba\u015Flar."
+    scientificHint: "Azot ilk hidrojenini ba\u011Flay\u0131nca k\u0131sa \xF6m\xFCrl\xFC
+      imidogen olu\u015Fur; amonya\u011F\u0131n ilk ad\u0131m\u0131."
   - element1: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 2f22e3bd2b333854ebc28457db6336a8, type: 3}
     scoreReward: 30
-    scientificHint: "Bir oksijen, iki hidrojenin elektronlar\u0131n\u0131 payla\u015Farak 104,5 derecelik a\xE7\u0131yla su molek\xFCl\xFCn\xFC kurar."
+    scientificHint: "Bir oksijen iki hidrojenle 104,5 derecelik a\xE7\u0131 yaparak
+      su molek\xFCl\xFCn\xFC kurar."
   - element1: {fileID: 3634079177299486472, guid: 8ba78bf2d4334b0419a90a5e45fec829, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a036fab5e06679548b170c3394656328, type: 3}
     scoreReward: 30
-    scientificHint: "Sodyum tek de\u011Ferlik elektronunu klora verir; z\u0131t y\xFCkl\xFC iyonlar kenetlenince sofra tuzu olu\u015Fur."
+    scientificHint: "Sodyum de\u011Ferlik elektronunu klora verir; z\u0131t y\xFCkl\xFC
+      iyonlar sofra tuzunu kurar."
   - element1: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 922dddd60ee7f8e4585dfa23774392c1, type: 3}
     scoreReward: 30
-    scientificHint: "Karbonmonoksit bir oksijen daha ba\u011Flayarak kararl\u0131 ve do\u011Frusal karbondioksite d\xF6n\xFC\u015F\xFCr."
+    scientificHint: "Karbonmonoksit bir oksijen daha ba\u011Flayarak kararl\u0131
+      ve do\u011Frusal karbondioksite d\xF6n\xFC\u015F\xFCr."
   - element1: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a7902d9f2737ff941b1193d6c06d7d48, type: 3}
     scoreReward: 30
-    scientificHint: "Serbest bir oksijen atomu oksijen molek\xFCl\xFCne kat\u0131l\u0131nca bizi mor\xF6tesi \u0131\u015F\u0131nlardan koruyan ozon olu\u015Fur."
+    scientificHint: "Serbest oksijen atomu oksijen molek\xFCl\xFCne kat\u0131l\u0131r;
+      mor\xF6tesi kalkan\u0131m\u0131z ozon olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: dccbb0d8176b4df4e986c630b4b8d5f9, type: 3}
     element2: {fileID: 3634079177299486472, guid: dccbb0d8176b4df4e986c630b4b8d5f9, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 5dbd1bcf30fe19143b69d2cb969a666b, type: 3}
     scoreReward: 30
-    scientificHint: "\u0130ki demir atomu metalik ba\u011Fla birle\u015Fir; pas tepkimesi i\xE7in gereken demir \xE7iftini haz\u0131rlar."
+    scientificHint: "\u0130ki demir atomu metalik ba\u011Fla birle\u015Fir; pas tepkimesi
+      i\xE7in gereken demir \xE7iftini haz\u0131rlar."
   - element1: {fileID: 3634079177299486472, guid: 5dbd1bcf30fe19143b69d2cb969a666b, type: 3}
     element2: {fileID: 3634079177299486472, guid: a7902d9f2737ff941b1193d6c06d7d48, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 48c17db311fb2bf44a949bc76021cae9, type: 3}
     scoreReward: 30
-    scientificHint: "Demir oksijenle y\xFCkseltgenince k\u0131rm\u0131z\u0131-kahverengi pas, yani demir(III) oksit olu\u015Fur."
+    scientificHint: "Demir oksijenle y\xFCkseltgenince k\u0131rm\u0131z\u0131-kahverengi
+      pas, yani demir(III) oksit olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 3a31c3c9228c2c1478ea0d0277983eb5, type: 3}
     element2: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
     scoreReward: 30
-    scientificHint: "\u0130midogen iki hidrojen daha ba\u011Flay\u0131nca \xFC\xE7gen piramit yap\u0131l\u0131 amonyak molek\xFCl\xFC tamamlan\u0131r."
+    scientificHint: "\u0130midogen iki hidrojen daha ba\u011Flay\u0131nca \xFC\xE7gen
+      piramit yap\u0131l\u0131 amonyak molek\xFCl\xFC tamamlan\u0131r."
   - element1: {fileID: 3634079177299486472, guid: f76af75b4b333584384ebbff7325e064, type: 3}
     element2: {fileID: 3634079177299486472, guid: 1e729ce8f726e3f429fe863283cdc9a4, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 068e4008702a6ac40a29df96d54ff9c6, type: 3}
     scoreReward: 30
-    scientificHint: "Kalsiyum oksijenle birle\u015Fince in\u015Faat\u0131n temel malzemesi s\xF6nmemi\u015F kire\xE7 elde edilir."
+    scientificHint: "Kalsiyum oksijenle birle\u015Fince in\u015Faat\u0131n temel
+      malzemesi s\xF6nmemi\u015F kire\xE7 elde edilir."
   - element1: {fileID: 3634079177299486472, guid: 2f22e3bd2b333854ebc28457db6336a8, type: 3}
     element2: {fileID: 3634079177299486472, guid: 922dddd60ee7f8e4585dfa23774392c1, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 6ba05932073334e45a4ae497421cbbca, type: 3}
     scoreReward: 50
-    scientificHint: "Karbondioksit suda \xE7\xF6z\xFCn\xFCnce maden suyuna ek\u015Fili\u011Fini veren karbonik asit olu\u015Fur."
+    scientificHint: "Karbondioksit suda \xE7\xF6z\xFCn\xFCnce maden suyuna ek\u015Fili\u011Fini
+      veren karbonik asit olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 068e4008702a6ac40a29df96d54ff9c6, type: 3}
     element2: {fileID: 3634079177299486472, guid: 922dddd60ee7f8e4585dfa23774392c1, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: bc7ad76736acc79488393748bbaeaa86, type: 3}
     scoreReward: 50
-    scientificHint: "S\xF6nmemi\u015F kire\xE7 havadaki karbondioksiti ba\u011Flay\u0131nca mermerin ve tebe\u015Firin ham maddesi kalsiyum karbonat olu\u015Fur."
+    scientificHint: "S\xF6nmemi\u015F kire\xE7 karbondioksiti ba\u011Flar; mermerin
+      maddesi kalsiyum karbonat olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
     element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: f1d2f71ef70e8ea459d7881391d82e03, type: 3}
     scoreReward: 50
-    scientificHint: "Amonyak kataliz\xF6r e\u015Fli\u011Finde y\xFCkseltgenince nitrik asit \xFCretiminin ilk ad\u0131m\u0131 olan azot monoksit a\xE7\u0131\u011Fa \xE7\u0131kar."
+    scientificHint: "Amonyak kataliz\xF6rle y\xFCkseltgenince nitrik asidin ilk ad\u0131m\u0131
+      azot monoksit olu\u015Fur."
+  - element1: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
+    element2: {fileID: 3634079177299486472, guid: 4c02afbfa76bca6418de11ca336bc0de, type: 3}
+    resultPrefab: {fileID: 3634079177299486472, guid: ddb396e28bed1c74bbcb94793fdac413, type: 3}
+    scoreReward: 10
+    scientificHint: "\u0130ki azot atomu \xFC\xE7l\xFC ba\u011F kurar; do\u011Fan\u0131n
+      en sa\u011Flam ba\u011Flar\u0131ndan biri b\xF6yle olu\u015Fur."
+  - element1: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
+    element2: {fileID: 3634079177299486472, guid: 9bc756b9524afec44ae66bd1fa8a4950, type: 3}
+    resultPrefab: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
+    scoreReward: 10
+    scientificHint: "\u0130ki klor atomu birer elektron payla\u015Farak kararl\u0131,
+      sar\u0131-ye\u015Fil klor molek\xFCl\xFCn\xFC olu\u015Fturur."
+  - element1: {fileID: 3634079177299486472, guid: 930ab50179948a04ea8709f405f40427, type: 3}
+    element2: {fileID: 3634079177299486472, guid: 930ab50179948a04ea8709f405f40427, type: 3}
+    resultPrefab: {fileID: 3634079177299486472, guid: 105024473d022e647849d382200808b5, type: 3}
+    scoreReward: 10
+    scientificHint: "\u0130ki karbon atomu k\u0131sa \xF6m\xFCrl\xFC dikarbonu kurar;
+      alevin mavisini bu yap\u0131lar boyar."
+  - element1: {fileID: 3634079177299486472, guid: ddb396e28bed1c74bbcb94793fdac413, type: 3}
+    element2: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
+    resultPrefab: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
+    scoreReward: 30
+    scientificHint: "Haber-Bosch: azotun \xFC\xE7l\xFC ba\u011F\u0131n\u0131 demir
+      kataliz\xF6r ve bas\u0131n\xE7 k\u0131rar; amonyak olu\u015Fur."
+  - element1: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
+    element2: {fileID: 3634079177299486472, guid: 8ba78bf2d4334b0419a90a5e45fec829, type: 3}
+    resultPrefab: {fileID: 3634079177299486472, guid: a036fab5e06679548b170c3394656328, type: 3}
+    scoreReward: 30
+    scientificHint: "Klor molek\xFCl\xFC ayr\u0131\u015F\u0131r; her klor atomu bir
+      sodyumun elektronunu al\u0131p tuz kurar."
+  - element1: {fileID: 3634079177299486472, guid: 105024473d022e647849d382200808b5, type: 3}
+    element2: {fileID: 3634079177299486472, guid: 9e9fad5dd871e7f46b908c59c8c609eb, type: 3}
+    resultPrefab: {fileID: 3634079177299486472, guid: e7fc6bb432dbbc3428f6e5d217832055, type: 3}
+    scoreReward: 30
+    scientificHint: "Karars\u0131z dikarbon oksijen molek\xFCl\xFCyle kar\u015F\u0131la\u015F\u0131nca
+      iki karbonmonoksite d\xF6n\xFC\u015F\xFCr."
+  freeJokerCharges: 0
   hasUsedRevive: 0
+  hasWon: 0
   undoCost: 50
   currentUndoLimit: 0
   usedUndos: 0
@@ -3800,6 +3853,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: efe48211a70f6034eb898466f22ea067, type: 3}
   - {fileID: 21300000, guid: 52276e988a726464bae5dd0db3967f7a, type: 3}
   pressureLiquidFill: {fileID: 1507296264}
+  catalystLabelText: {fileID: 760521338}
   tutorialPanel: {fileID: 560538552}
   tutorialTitleText: {fileID: 1974708782}
   tutorialContentText: {fileID: 1159170969}
@@ -3837,7 +3891,9 @@ MonoBehaviour:
       kovalent ba\u011F yapmas\u0131yla olu\u015Fur. Oksijen, kararl\u0131 yap\u0131ya
       ula\u015Fmak i\xE7in 2 elektrona ihtiya\xE7 duyar ve bunu Hidrojenlerle payla\u015Farak
       \xE7\xF6zer. \\n\\n<b>Laboratuvar G\xF6revi:</b> Matristeki Hidrojen ve Oksijen
-      elementlerini yan yana kayd\u0131rarak ilk su molek\xFCl\xFCn\xFC sentezle!"
+      elementlerini yan yana kayd\u0131rarak ilk su molek\xFCl\xFCn\xFC sentezle!\n\nTa\u015Flar
+      duvara kadar kayar ve birle\u015Fme olmayan her 2 hamlede matrise yeni bir
+      element d\xFC\u015Fer."
     tutorialLargeSprite1: {fileID: 21300000, guid: adb3438ae09365a4bb0f0cd62ced123f, type: 3}
     tutorialLargeSprite2: {fileID: 21300000, guid: 7af5e9bb4d1bc6f498cd552a53912a5d, type: 3}
   - levelName: Level 2
@@ -4600,6 +4656,140 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &760521335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 760521336}
+  - component: {fileID: 760521337}
+  - component: {fileID: 760521338}
+  m_Layer: 0
+  m_Name: MeterLabel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &760521336
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760521335}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 814193092}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 52}
+  m_SizeDelta: {x: 600, y: 44}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &760521337
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760521335}
+  m_CullTransparentMesh: 1
+--- !u!114 &760521338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760521335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "KATAL\u0130Z\xD6R \u015EARJI 0/5"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 0.56078434, g: 0.84705883, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: 0
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 28
+  m_fontSizeBase: 28
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &772697259
 GameObject:
   m_ObjectHideFlags: 0
@@ -4912,6 +5102,7 @@ RectTransform:
   - {fileID: 425999924}
   - {fileID: 1507296263}
   - {fileID: 2044883450}
+  - {fileID: 760521336}
   m_Father: {fileID: 666539227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.41666666}

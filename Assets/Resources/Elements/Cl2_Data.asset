@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a2a2797c156642a20d781c8592167, type: 3}
+  m_Name: Cl2_Data
+  m_EditorClassIdentifier: 
+  elementName: "Klor Gaz\u0131"
+  symbol: Cl<sub>2</sub>
+  elementIcon: {fileID: 0}
+  synthesisScore: 30
+  jokerCost: 60
+  recipe: Cl + Cl
+  description: "Sar\u0131-ye\u015Fil, keskin kokulu ve zehirli bir gaz. Suyu dezenfekte
+    eder; sodyumla bulu\u015Funca uslan\u0131p sofra tuzuna d\xF6n\xFC\u015F\xFCr."

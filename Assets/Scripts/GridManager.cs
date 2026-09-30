@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 [System.Serializable]
@@ -17,6 +19,15 @@ public class GridSnapshot
 {
     public GameObject[] savedTiles = new GameObject[16]; 
     public int savedScore; 
+
+    // Geri alma yalnızca taşları değil, hamleyle birlikte değişen sayaçları da
+    // eski hâline döndürmeli; aksi hâlde hedef üret -> geri al -> yeniden üret
+    // döngüsüyle sayaçlar şişiyordu.
+    public int[] savedGoalAmounts;      // bölümün hedef sayaçları
+    public int savedCatalystCharge;     // katalizör şarjı
+    public int savedFreeJokerCharges;   // bedava Joker hakkı
+    public int savedMovesSinceSpawn;    // melez spawn sayacı
+    public int savedTotalSynthesis;     // profildeki toplam sentez
 }
 
 public class GridManager : MonoBehaviour
@@ -34,8 +45,38 @@ public class GridManager : MonoBehaviour
     
     private Dictionary<string, MergeRecipe> mergeDictionary = new Dictionary<string, MergeRecipe>();
     private List<Transform> cells = new List<Transform>();
-    private int emptyShiftCount = 0; 
+    // --- Katalizör şarjı --------------------------------------------------
+    // Gösterge artık ceza değil ÖDÜL biriktirir: her sentez şarjı doldurur,
+    // dolunca oyuncuya bedava bir Joker (parçalama) hakkı verilir.
+    // Melez spawn kuralı geldikten sonra entropi ceza taşına gerek kalmadı.
+    public const int CatalystChargeLimit = 5;
+    private int catalystCharge = 0;
+
+    /// <summary>Bedava (puan harcamayan) Joker hakkı.</summary>
+    public int freeJokerCharges = 0;
+
+    // Melez spawn: birleşme olmayan her MergelessMovesPerSpawn hamlede bir yeni
+    // taş gelir. Entropi cezasından bağımsızdır ve her modda çalışır.
+    private const int MergelessMovesPerSpawn = 2;
+    private int movesSinceSpawn = 0;
+
+    // --- Yeni taşın doğuş zamanlaması -----------------------------------
+    // Kayma tween'i 0,2 sn; birleşme ürününün büyümesi 0,3 sn. Yeni taş
+    // bunların ikisi de bitmeden doğarsa oyuncu onu göremeden birleşebiliyor.
+    public const float MoveAnimDuration = 0.2f;
+    public const float MergeAnimDuration = 0.3f;
+    public const float SpawnDelay = MergeAnimDuration;
+
+    private int pendingSpawns = 0;
+    private Vector2 pendingSpawnDirection = Vector2.zero;
+    private Coroutine spawnRoutine;
+
+    /// <summary>Animasyonların bitmesi beklenen, henüz doğmamış taş var mı?</summary>
+    public bool HasPendingSpawn { get { return pendingSpawns > 0; } }
     public bool hasUsedRevive = false; 
+
+    // Bölüm kazanıldı mı? Kazanma ekranının tekrar tetiklenmesini engeller.
+    public bool hasWon = false;
 
     [Header("Tersinir Tepkime (Undo) Ayarları")]
     public int undoCost = 50; 
@@ -54,6 +95,9 @@ public class GridManager : MonoBehaviour
 
     [Header("Görsel Efektler")]
     public GameObject mergeParticlePrefab; 
+
+    /// <summary>Serbest mod: hedefsiz, kaybetmesiz keşif alanı.</summary>
+    public bool IsFreeMode { get { return currentGameMode == 2; } }
 
     public int GetCurrentHintCost()
     {
@@ -88,6 +132,10 @@ public class GridManager : MonoBehaviour
         {
             SpawnTile();
         }
+
+        catalystCharge = 0;
+        freeJokerCharges = 0;
+        if (UIManager.Instance != null) UIManager.Instance.UpdateCatalystMeter(0, 0);
     }
 
     private void BuildDictionary()
@@ -113,16 +161,176 @@ public class GridManager : MonoBehaviour
 
     public void SpawnTile()
     {
-        List<Transform> emptyCells = new List<Transform>();
-        foreach (Transform cell in cells) if (cell.childCount == 0) emptyCells.Add(cell);
-        
-        if (emptyCells.Count == 0) return;
+        SpawnTile(Vector2.zero);
+    }
 
-        int randomIndex = Random.Range(0, emptyCells.Count);
+    /// <summary>
+    /// Yeni taşı doğurur. Konum kuralı (sırayla):
+    /// 1) Kaydırma yönünün TERSİNDEKİ kenardaki boş hücreler.
+    /// 2) O kenar doluysa, kaydırma hedefinden en uzak boş hücreler.
+    /// 3) Bu aday küme içinde, komşusuyla anında birleşmeyecek hücreler
+    ///    (hiçbiri yoksa kural esnetilir; tahta dolu olabilir).
+    /// </summary>
+    public void SpawnTile(Vector2 direction)
+    {
+        List<int> emptyIndices = new List<int>();
+        for (int i = 0; i < cells.Count; i++) if (cells[i].childCount == 0) emptyIndices.Add(i);
+
+        if (emptyIndices.Count == 0) return;
+
         GameObject selectedElement = LevelManager.Instance.GetRandomElementForCurrentLevel();
-        GameObject newTile = Instantiate(selectedElement, emptyCells[randomIndex]);
+
+        List<int> candidates = FarthestCells(direction, emptyIndices);
+        List<int> safe = new List<int>();
+        foreach (int index in candidates)
+        {
+            if (!WouldMergeImmediately(index, selectedElement.name)) safe.Add(index);
+        }
+        if (safe.Count > 0) candidates = safe;
+
+        int chosen = candidates[Random.Range(0, candidates.Count)];
+        GameObject newTile = Instantiate(selectedElement, cells[chosen]);
         newTile.transform.localScale = Vector3.zero;
-        newTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+
+        // Belirme animasyonu: birleşme ürününden ayırt edilebilsin diye
+        // hafif taşmalı büyüme + kısa parlama.
+        Sequence appear = DOTween.Sequence();
+        appear.Append(newTile.transform.DOScale(Vector3.one * 1.18f, 0.18f).SetEase(Ease.OutBack));
+        appear.Append(newTile.transform.DOScale(Vector3.one, 0.12f).SetEase(Ease.OutQuad));
+        PlaySpawnFlash(newTile);
+    }
+
+    /// <summary>Kaydırma hedefinden en uzak sıradaki boş hücreler.</summary>
+    private List<int> FarthestCells(Vector2 direction, List<int> emptyIndices)
+    {
+        if (direction == Vector2.zero) return new List<int>(emptyIndices);
+
+        int best = -1;
+        List<int> result = new List<int>();
+        foreach (int index in emptyIndices)
+        {
+            int row = index / 4;
+            int column = index % 4;
+            int distance;
+            if (direction == Vector2.up) distance = row;            // yukarı kaydırıldıysa en alt sıra
+            else if (direction == Vector2.down) distance = 3 - row;  // aşağı kaydırıldıysa en üst sıra
+            else if (direction == Vector2.left) distance = column;   // sola kaydırıldıysa en sağ sütun
+            else distance = 3 - column;                              // sağa kaydırıldıysa en sol sütun
+
+            if (distance > best) { best = distance; result.Clear(); result.Add(index); }
+            else if (distance == best) result.Add(index);
+        }
+        return result;
+    }
+
+    /// <summary>Bu hücreye konacak taş, komşularından biriyle hemen birleşir mi?</summary>
+    private bool WouldMergeImmediately(int index, string tileName)
+    {
+        int row = index / 4;
+        int column = index % 4;
+
+        if (row > 0 && MergesWith(index - 4, tileName)) return true;
+        if (row < 3 && MergesWith(index + 4, tileName)) return true;
+        if (column > 0 && MergesWith(index - 1, tileName)) return true;
+        if (column < 3 && MergesWith(index + 1, tileName)) return true;
+        return false;
+    }
+
+    private bool MergesWith(int neighbourIndex, string tileName)
+    {
+        if (cells[neighbourIndex].childCount == 0) return false;
+        string neighbourName = cells[neighbourIndex].GetChild(0).name;
+        return mergeDictionary.ContainsKey(GetMergeKey(tileName, neighbourName));
+    }
+
+    /// <summary>Taşın üstünde bir kez parlayıp sönen beyaz kopya.</summary>
+    private void PlaySpawnFlash(GameObject tile)
+    {
+        Image source = tile.GetComponent<Image>();
+        if (source == null) return;
+
+        GameObject glow = new GameObject("SpawnGlow", typeof(RectTransform), typeof(Image));
+        RectTransform rect = glow.GetComponent<RectTransform>();
+        rect.SetParent(tile.transform, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+        rect.SetAsFirstSibling();   // sembolün altında kalsın
+
+        Image glowImage = glow.GetComponent<Image>();
+        glowImage.sprite = source.sprite;
+        glowImage.raycastTarget = false;
+        glowImage.color = new Color(1f, 1f, 1f, 0.85f);
+
+        rect.DOScale(1.35f, 0.35f).SetEase(Ease.OutQuad);
+        glowImage.DOFade(0f, 0.35f).SetEase(Ease.OutQuad)
+                 .OnComplete(() => { if (glow != null) Destroy(glow); });
+    }
+
+    // --- Bekleyen doğuşlar ------------------------------------------------
+
+    /// <summary>Sentez başına şarjı doldurur; dolunca bedava Joker hakkı verir.</summary>
+    private void AddCatalystCharge(int syntheses)
+    {
+        if (syntheses <= 0) return;
+
+        catalystCharge += syntheses;
+        bool rewarded = false;
+
+        while (catalystCharge >= CatalystChargeLimit)
+        {
+            catalystCharge -= CatalystChargeLimit;
+            freeJokerCharges++;
+            rewarded = true;
+        }
+
+        UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
+        if (rewarded) UIManager.Instance.ShowCatalystReady(freeJokerCharges);
+    }
+
+    /// <summary>Bedava Joker hakkı varsa birini harcar.</summary>
+    public bool TryConsumeFreeJoker()
+    {
+        if (freeJokerCharges <= 0) return false;
+
+        freeJokerCharges--;
+        UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
+        return true;
+    }
+
+    private void RequestSpawn(Vector2 direction)
+    {
+        pendingSpawns++;
+        pendingSpawnDirection = direction;
+    }
+
+    private IEnumerator ResolveSpawnsAfterAnimations()
+    {
+        yield return new WaitForSeconds(SpawnDelay);
+        spawnRoutine = null;
+        FlushPendingSpawns(true);
+    }
+
+    /// <summary>Bekleyen taşları hemen doğurur (oyuncu beklemeden hamle yaparsa).</summary>
+    private void FlushPendingSpawns(bool checkGameOver)
+    {
+        if (spawnRoutine != null) { StopCoroutine(spawnRoutine); spawnRoutine = null; }
+
+        while (pendingSpawns > 0)
+        {
+            pendingSpawns--;
+            SpawnTile(pendingSpawnDirection);
+        }
+
+        if (checkGameOver) CheckGameOver();
+    }
+
+    /// <summary>Geri alma, henüz doğmamış taşı da iptal eder.</summary>
+    private void CancelPendingSpawns()
+    {
+        if (spawnRoutine != null) { StopCoroutine(spawnRoutine); spawnRoutine = null; }
+        pendingSpawns = 0;
     }
 
     private void SaveCurrentState()
@@ -130,6 +338,14 @@ public class GridManager : MonoBehaviour
         GridSnapshot snapshot = new GridSnapshot();
         GameManager gm = FindObjectOfType<GameManager>();
         snapshot.savedScore = gm != null ? gm.currentScore : 0; 
+        snapshot.savedCatalystCharge = catalystCharge;
+        snapshot.savedFreeJokerCharges = freeJokerCharges;
+        snapshot.savedMovesSinceSpawn = movesSinceSpawn;
+        snapshot.savedTotalSynthesis = PlayerPrefs.GetInt("TotalSynthesis", 0);
+
+        var savedGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
+        snapshot.savedGoalAmounts = new int[savedGoals.Count];
+        for (int g = 0; g < savedGoals.Count; g++) snapshot.savedGoalAmounts[g] = savedGoals[g].currentAmount;
 
         for (int i = 0; i < 16; i++)
         {
@@ -150,6 +366,31 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
+    // Kaydırma yönüne göre hücrelerin taranma sırası: hedef kenara en yakın
+    // hücreden başlanır, böylece taşlar birbirinin üstüne binmez.
+    // (Kenardaki hücreler zaten ilerleyemeyeceği için listede yok.)
+    private static readonly int[] ScanUp    = { 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    private static readonly int[] ScanDown  = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+    private static readonly int[] ScanLeft  = { 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15 };
+    private static readonly int[] ScanRight = { 14, 13, 12, 10, 9, 8, 6, 5, 4, 2, 1, 0 };
+
+    private static int[] GetScanOrder(Vector2 direction)
+    {
+        if (direction == Vector2.up) return ScanUp;
+        if (direction == Vector2.down) return ScanDown;
+        if (direction == Vector2.left) return ScanLeft;
+        if (direction == Vector2.right) return ScanRight;
+        return null;
+    }
+
+    private static int GetStepOffset(Vector2 direction)
+    {
+        if (direction == Vector2.up) return -4;
+        if (direction == Vector2.down) return 4;
+        if (direction == Vector2.left) return -1;
+        return 1;
+    }
+
     public void Shift(Vector2 direction)
     {
         // ==========================================
@@ -167,6 +408,10 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        // Oyuncu animasyonu beklemeden hamle yaptiysa bekleyen tas once doğar;
+        // böylece hamle her zaman güncel tahta üzerinde hesaplanır.
+        FlushPendingSpawns(false);
+
         SaveCurrentState(); 
 
         bool actionHappened = false;
@@ -177,222 +422,99 @@ public class GridManager : MonoBehaviour
         
         GameManager gameManager = FindObjectOfType<GameManager>();
 
-        if (direction == Vector2.up)
+        // Dört yön de aynı işi yapıyor; yalnızca hücrelerin taranma sırası, hedef
+        // hücrenin ofseti ve "itilme" animasyonunun ekseni değişiyor.
+        int[] scanOrder = GetScanOrder(direction);
+        int step = GetStepOffset(direction);
+        Vector3 punch = (direction == Vector2.up || direction == Vector2.down)
+            ? new Vector3(0.15f, -0.15f, 0f)
+            : new Vector3(-0.15f, 0.15f, 0f);
+
+        if (scanOrder != null)
         {
-            for (int i = 4; i < 16; i++) 
+            // Taşlar duvara (ya da önlerindeki engele) kadar kayar: tek hücrelik
+            // tarama, hiçbir taş ilerlemeyene kadar tekrarlanır.
+            // Bir hamlede üretilen bileşik aynı hamlede yeniden birleşmez.
+            HashSet<Transform> mergedThisShift = new HashSet<Transform>();
+            HashSet<Transform> movedTiles = new HashSet<Transform>();
+            bool passMovedSomething;
+            int safety = 0;
+
+            do
             {
-                if (cells[i].childCount > 0)
+                passMovedSomething = false;
+
+                foreach (int i in scanOrder)
                 {
+                    if (cells[i].childCount == 0) continue;
+
                     Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i - 4; 
+                    int targetIndex = i + step;
 
                     if (cells[targetIndex].childCount == 0)
                     {
                         currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(0.15f, -0.15f, 0), 0.15f, 1, 0.5f);
-                        });
+                        movedTiles.Add(currentTile);
                         moveHappened = true;
+                        passMovedSomething = true;
+                        continue;
                     }
-                    else
+
+                    Transform targetTile = cells[targetIndex].GetChild(0);
+
+                    // Bu hamlede üretilmiş bir bileşik ikinci kez birleşemez
+                    if (mergedThisShift.Contains(currentTile) || mergedThisShift.Contains(targetTile)) continue;
+
+                    string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
+                    if (!mergeDictionary.ContainsKey(mergeKey)) continue;
+
+                    MergeRecipe recipe = mergeDictionary[mergeKey];
+
+                    // Çakışmaları önlemek için eski objeleri hücreden kopar
+                    currentTile.SetParent(null);
+                    targetTile.SetParent(null);
+                    movedTiles.Remove(currentTile);
+                    movedTiles.Remove(targetTile);
+
+                    Destroy(currentTile.gameObject);
+                    Destroy(targetTile.gameObject);
+
+                    GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
+                    mergedTile.transform.localScale = Vector3.zero;
+                    mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+                    mergedThisShift.Add(mergedTile.transform);
+
+                    if (gameManager != null)
                     {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-                            
-                            // YENİ EKLENEN GÜVENLİK: Çakışmaları önlemek için eski objeleri hücreden kopar
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
+                        int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
+                        gameManager.AddScore(finalScore);
                     }
+
+                    CheckWinCondition(recipe);
+
+                    actionHappened = true;
+                    currentCombo++;
+                    PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
+                    lastMergePosition = cells[targetIndex].position;
+                    passMovedSomething = true;
                 }
+
+                safety++;
             }
-        }
-        else if (direction == Vector2.down)
-        {
-            for (int i = 11; i >= 0; i--) 
+            while (passMovedSomething && safety < 24);
+
+            // Kayan taşların animasyonu bir kez oynatılır: taş kaç hücre
+            // ilerlediyse o mesafeyi tek seferde kat eder.
+            foreach (Transform moved in movedTiles)
             {
-                if (cells[i].childCount > 0)
-                {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i + 4; 
-
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(0.15f, -0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-                            
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
-                }
+                if (moved == null) continue;
+                Transform tile = moved;
+                tile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
+                    tile.DOPunchScale(punch, 0.15f, 1, 0.5f);
+                });
             }
         }
-        else if (direction == Vector2.left)
-        {
-            for (int i = 0; i < 16; i++) 
-            {
-                if (i % 4 == 0) continue; 
-                if (cells[i].childCount > 0)
-                {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i - 1; 
 
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(-0.15f, 0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
-                }
-            }
-        }
-        else if (direction == Vector2.right)
-        {
-            for (int i = 15; i >= 0; i--) 
-            {
-                if ((i + 1) % 4 == 0) continue; 
-                if (cells[i].childCount > 0)
-                {
-                    Transform currentTile = cells[i].GetChild(0);
-                    int targetIndex = i + 1; 
-
-                    if (cells[targetIndex].childCount == 0)
-                    {
-                        currentTile.SetParent(cells[targetIndex]);
-                        currentTile.DOLocalMove(Vector3.zero, 0.2f).OnComplete(() => {
-                            currentTile.DOPunchScale(new Vector3(-0.15f, 0.15f, 0), 0.15f, 1, 0.5f);
-                        });
-                        moveHappened = true;
-                    }
-                    else
-                    {
-                        Transform targetTile = cells[targetIndex].GetChild(0);
-                        string mergeKey = GetMergeKey(currentTile.name, targetTile.name);
-
-                        if (mergeDictionary.ContainsKey(mergeKey))
-                        {
-                            MergeRecipe recipe = mergeDictionary[mergeKey];
-
-                            currentTile.SetParent(null);
-                            targetTile.SetParent(null);
-
-                            Destroy(currentTile.gameObject);
-                            Destroy(targetTile.gameObject);
-                            
-                            GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
-                            mergedTile.transform.localScale = Vector3.zero;
-                            mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
-                            
-                            if (gameManager != null) 
-                            {
-                                int finalScore = (currentGameMode == 1) ? (recipe.scoreReward * 2) : recipe.scoreReward;
-                                gameManager.AddScore(finalScore);
-                            }
-                            
-                            CheckWinCondition(recipe); 
-                            
-                            actionHappened = true; 
-                            currentCombo++; 
-                            PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
-                            lastMergePosition = cells[targetIndex].position; 
-                        }
-                    }
-                }
-            }
-        }
-        
         if (actionHappened)
         {
             if (AudioManager.Instance != null)
@@ -406,9 +528,9 @@ public class GridManager : MonoBehaviour
                 Destroy(fx, 1.5f); 
             }
 
-            SpawnTile();
-            emptyShiftCount = 0;
-            UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
+            RequestSpawn(direction);
+            movesSinceSpawn = 0;
+            AddCatalystCharge(currentCombo);
             
             if (currentCombo > 0)
             {
@@ -432,34 +554,89 @@ public class GridManager : MonoBehaviour
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.shiftClip, 0.5f);
             }
 
-            if (currentGameMode != 2) 
+            // Melez spawn: birleşme olmasa da her 2 hamlede bir yeni taş gelir.
+            // Her modda geçerlidir; tahtanın hiç dolmadan sonsuza kadar
+            // kaydırılabilmesini engeller.
+            movesSinceSpawn++;
+            if (movesSinceSpawn >= MergelessMovesPerSpawn)
             {
-                emptyShiftCount++;
-                UIManager.Instance.UpdatePressureMeter(emptyShiftCount);
-                
-                if (emptyShiftCount >= 5)
-                {
-                    if (AudioManager.Instance != null)
-                    {
-                        AudioManager.Instance.PlaySFX(AudioManager.Instance.errorClip);
-                    }
+                RequestSpawn(direction);
+                movesSinceSpawn = 0;
+            }
 
-                    if (Camera.main != null)
-                    {
-                        Camera.main.transform.DOShakePosition(0.3f, 0.4f, 15, 90f);
-                    }
+            // Entropi ceza taşı kaldırıldı: melez spawn kuralı zaten birleşmesiz
+            // hamlelerde tahtayı dolduruyor, ikinci bir ceza katmanına gerek yok.
+            // Şarj yalnızca sentezle dolar; birleşmesiz hamle onu sıfırlamaz.
+        }
+        else
+        {
+            // Hiçbir şey değişmedi: bu hamle için alınan anlık görüntü geri alınır,
+            // yoksa geçersiz hamleler geri alma yığınını şişiriyor.
+            if (historyStack.Count > 0) historyStack.Pop();
+        }
 
-                    Handheld.Vibrate();
+        if (pendingSpawns > 0)
+        {
+            // Yeni taş, kayma ve birleşme animasyonları bittikten sonra doğar.
+            // Oyun sonu kontrolü de o zaman yapılır (yeni taş tahtayı doldurabilir).
+            spawnRoutine = StartCoroutine(ResolveSpawnsAfterAnimations());
+        }
+        else
+        {
+            CheckGameOver();
+        }
+    }
 
-                    SpawnTile(); 
-                    emptyShiftCount = 0; 
-                    DOVirtual.DelayedCall(0.3f, () => { UIManager.Instance.UpdatePressureMeter(emptyShiftCount); });
-                    Debug.Log("Laboratuvarda entropi patlaması! Ceza elementi eklendi.");
-                }
+    /// <summary>
+    /// Serbest mod: matris kilitlenince oyun BİTMEZ, modal da açılmaz. Tahta
+    /// kendiliğinden yeniden düzenlenir: eski taşlar sönerek kaybolur, yeni taşlar
+    /// kendi beliriş animasyonuyla gelir ve kısa bir bildirim gösterilir.
+    /// Skor ve katalizör şarjı korunur; geri alma yığını temizlenir (eski tahta yok).
+    /// </summary>
+    public bool IsReshuffling { get; private set; }
+
+    public const float ReshuffleFadeDuration = 0.35f;
+
+    public void ReshuffleMatrix()
+    {
+        if (IsReshuffling) return;
+        StartCoroutine(ReshuffleRoutine());
+    }
+
+    private IEnumerator ReshuffleRoutine()
+    {
+        IsReshuffling = true;
+        CancelPendingSpawns();
+        historyStack.Clear();
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.shiftClip, 0.6f);
+        }
+
+        UIManager.Instance.ShowSystemMessage("MATRİS YENİDEN DÜZENLENDİ");
+
+        // Eski taşlar sönerek kaybolur (ani sıçrama olmasın)
+        foreach (Transform cell in cells)
+        {
+            for (int i = cell.childCount - 1; i >= 0; i--)
+            {
+                Transform tile = cell.GetChild(i);
+                tile.DOKill();
+                tile.SetParent(null);
+
+                GameObject go = tile.gameObject;
+                tile.DOScale(Vector3.zero, ReshuffleFadeDuration).SetEase(Ease.InBack)
+                    .OnComplete(() => { if (go != null) Destroy(go); });
             }
         }
-        
-        CheckGameOver();
+
+        yield return new WaitForSeconds(ReshuffleFadeDuration);
+
+        int startCount = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].startingTileCount;
+        for (int i = 0; i < startCount; i++) SpawnTile();
+
+        IsReshuffling = false;
     }
 
     public void CheckGameOver()
@@ -488,6 +665,14 @@ public class GridManager : MonoBehaviour
 
     private void CheckWinCondition(MergeRecipe recipe)
     {
+        // Kazanma ekranı bir kez açılır. Tek bir kaydırmada birden fazla birleşme
+        // olabildiği için (kombo) bu kontrol olmadan aynı hamlede tekrar tetikleniyordu.
+        // Bayrak sahne örneğinde durur; sahne yeniden yüklenince kendiliğinden sıfırlanır.
+        if (hasWon) return;
+
+        // Serbest modda bölüm hedefi ve kazanma ekranı yoktur.
+        if (IsFreeMode) return;
+
         var currentLevel = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex];
         
         foreach (var goal in currentLevel.levelGoals)
@@ -505,7 +690,12 @@ public class GridManager : MonoBehaviour
             if (goal.currentAmount < goal.targetAmount) isWin = false; 
         }
 
-        if (isWin) UIManager.Instance.ShowWinScreen();
+        if (isWin)
+        {
+            hasWon = true;
+            TotalScoreService.AddLevelScore(FindObjectOfType<GameManager>());
+            UIManager.Instance.ShowWinScreen();
+        }
     }
 
     public void ApplyReviveBonus()
@@ -553,10 +743,38 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        if (gm != null) gm.SubtractScore(undoCost); 
         usedUndos++;
 
+        // Henüz doğmamış taş varsa iptal edilir: anlık görüntü hamle öncesine ait.
+        CancelPendingSpawns();
+
         GridSnapshot lastState = historyStack.Pop();
+
+        // Önce hamle öncesi skora dönülür, sonra geri alma bedeli düşülür.
+        // Bedel, hamle öncesi skoru eksiye düşürmez (buton kontrolü ekrandaki skora bakar).
+        if (gm != null)
+        {
+            gm.currentScore = lastState.savedScore;
+            gm.SubtractScore(Mathf.Min(undoCost, Mathf.Max(0, gm.currentScore)));
+        }
+
+        // Hedef sayaçları, entropi ve toplam sentez de hamle öncesine döner
+        var goals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
+        if (lastState.savedGoalAmounts != null)
+        {
+            for (int g = 0; g < goals.Count && g < lastState.savedGoalAmounts.Length; g++)
+            {
+                goals[g].currentAmount = lastState.savedGoalAmounts[g];
+            }
+            UIManager.Instance.UpdateGoalUI();
+        }
+
+        catalystCharge = lastState.savedCatalystCharge;
+        freeJokerCharges = lastState.savedFreeJokerCharges;
+        movesSinceSpawn = lastState.savedMovesSinceSpawn;
+        UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
+
+        PlayerPrefs.SetInt("TotalSynthesis", lastState.savedTotalSynthesis);
 
         foreach (Transform cell in cells)
         {
@@ -584,20 +802,26 @@ public class GridManager : MonoBehaviour
             return; 
         }
         
-        if (usedHints >= maxHints)
+        // Serbest modda ipucu bedava ve sınırsızdır; hak/bütçe kontrolü atlanır.
+        if (!IsFreeMode)
         {
-            UIManager.Instance.ShowHintMessage("Bu laboratuvar seansındaki tüm asistan haklarını (3/3) tükettin Baş Kimyager! Artık kendi kimya bilgine güvenmelisin.");
-            return;
+            if (usedHints >= maxHints)
+            {
+                UIManager.Instance.ShowHintMessage("Bu laboratuvar seansındaki tüm asistan haklarını (3/3) tükettin Baş Kimyager! Artık kendi kimya bilgine güvenmelisin.");
+                return;
+            }
+
+            GameManager budget = FindObjectOfType<GameManager>();
+            int currentCost = GetCurrentHintCost();
+
+            if (budget != null && budget.currentScore < currentCost)
+            {
+                UIManager.Instance.ShowHintMessage($"Laboratuvar bütçemiz yetersiz! Asistanın {usedHints + 1}. ipucunu verebilmesi için <color=red>{currentCost} puana</color> ihtiyacın var.");
+                return;
+            }
         }
 
         GameManager gm = FindObjectOfType<GameManager>();
-        int currentCost = GetCurrentHintCost(); 
-        
-        if (gm != null && gm.currentScore < currentCost)
-        {
-            UIManager.Instance.ShowHintMessage($"Laboratuvar bütçemiz yetersiz! Asistanın {usedHints + 1}. ipucunu verebilmesi için <color=red>{currentCost} puana</color> ihtiyacın var.");
-            return;
-        }
 
         var currentGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
         Transform fallbackT1 = null; Transform fallbackT2 = null;
@@ -647,10 +871,13 @@ public class GridManager : MonoBehaviour
 
     private void ActivateHint(Transform t1, Transform t2, string hintMsg, GameManager gm)
     {
-        int currentCost = GetCurrentHintCost(); 
-        if (gm != null) gm.SubtractScore(currentCost); 
-
-        usedHints++; 
+        // Serbest modda ipucu bedava; hak da tükenmez
+        if (!IsFreeMode)
+        {
+            int currentCost = GetCurrentHintCost();
+            if (gm != null) gm.SubtractScore(currentCost);
+            usedHints++;
+        }
 
         activeHintTile1 = t1;
         activeHintTile2 = t2;
@@ -660,10 +887,17 @@ public class GridManager : MonoBehaviour
 
         string coreMsg = string.IsNullOrEmpty(hintMsg) ? "Bu iki elementi birleştirmek harika bir fikir olabilir!" : hintMsg;
         
-        int remainingHints = maxHints - usedHints;
-        string nextCostText = (remainingHints > 0) ? GetCurrentHintCost().ToString() : "-";
-        
-        string infoFooter = $"\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {remainingHints} | Sonraki Bedel: {nextCostText} Puan</color></size>";
+        string infoFooter;
+        if (IsFreeMode)
+        {
+            infoFooter = "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>";
+        }
+        else
+        {
+            int remainingHints = maxHints - usedHints;
+            string nextCostText = (remainingHints > 0) ? GetCurrentHintCost().ToString() : "-";
+            infoFooter = $"\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {remainingHints} | Sonraki Bedel: {nextCostText} Puan</color></size>";
+        }
         
         UIManager.Instance.ShowHintMessage(coreMsg + infoFooter);
     }

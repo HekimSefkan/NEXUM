@@ -34,12 +34,16 @@ public class TileInteraction : MonoBehaviour, IPointerDownHandler
                 return;
             }
 
-            int cost = myElementData.jokerCost;
+            // Katalizör şarjı dolduysa bu parçalama bedava
+            bool free = GridManager.Instance != null && GridManager.Instance.TryConsumeFreeJoker();
+            int cost = free ? 0 : myElementData.jokerCost;
 
             // Paramız yetiyorsa taşı parçala
-            if (manager.SpendScore(cost))
+            if (free || manager.SpendScore(cost))
             {
-                Debug.Log($"{myElementData.elementName} parçalandı! -{cost} Puan.");
+                Debug.Log(free
+                    ? $"{myElementData.elementName} katalizörle bedava parçalandı!"
+                    : $"{myElementData.elementName} parçalandı! -{cost} Puan.");
 
                 transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack).OnComplete(() =>
                 {
