@@ -24,6 +24,10 @@ public class HintFitTests
     // Kutunun en fazla bu kadarı doldurulabilir (çeviri + büyük yazı payı).
     private const float MaxFillRatio = 0.85f;
 
+    // İki dilli ölçüm için yapı hazır: Faz 6'da çeviriler bitince buraya
+    // Loc.Language.English eklemek yeterli; testin gövdesi değişmez.
+    private static readonly Loc.Language[] Diller = { Loc.Language.Turkish };
+
     // GridManager.ActivateHint ile aynı alt bilgi satırı (en kötü durum:
     // iki haneli bedel, kalan hak gösteriliyor).
     private const string InfoFooter =
@@ -58,6 +62,7 @@ public class HintFitTests
     [UnityTest]
     public IEnumerator IpuclariGuvenlikPayiIcindeKaliyor()
     {
+        Loc.Language onceki = Loc.Current;
         var recipes = (IList)grid.GetType()
             .GetField("recipes", BindingFlags.Public | BindingFlags.Instance).GetValue(grid);
 
@@ -71,6 +76,9 @@ public class HintFitTests
         List<string> asanlar = new List<string>();
         List<string> tablo = new List<string>();
 
+        foreach (Loc.Language dil in Diller)
+        {
+        Loc.SetLanguage(dil);
         foreach (object r in recipes)
         {
             var e1 = (GameObject)r.GetType().GetField("element1").GetValue(r);
@@ -89,13 +97,16 @@ public class HintFitTests
             float yukseklik = hintText.GetPreferredValues(hintText.text, boxWidth, 0f).y;
             float doluluk = yukseklik / boxHeight * 100f;
 
-            tablo.Add($"{ad,-14} {core.Length,3} krk  {yukseklik,3:F0}/{boxHeight:F0} birim  %{doluluk:F0}");
+            tablo.Add($"[{dil}] {ad,-14} {core.Length,3} krk  {yukseklik,3:F0}/{boxHeight:F0} birim  %{doluluk:F0}");
 
             if (yukseklik > limit)
             {
-                asanlar.Add($"{ad} %{doluluk:F0} ({yukseklik:F0} > {limit:F0})");
+                asanlar.Add($"[{dil}] {ad} %{doluluk:F0} ({yukseklik:F0} > {limit:F0})");
             }
         }
+
+        }
+        Loc.SetLanguage(onceki);
 
         tablo.Sort();
         foreach (string s in tablo) Debug.Log($"{Tag}_SATIR: {s}");

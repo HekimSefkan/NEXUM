@@ -1,0 +1,17 @@
+{
+    "name": "Nexum.Localization",
+    "rootNamespace": "",
+    "references": [
+        "Nexum.Save",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -43,7 +43,7 @@ public class ProfileManager : MonoBehaviour
     public void LoadProfileData()
     {
         // 1. Temel Verileri Çek
-        string playerName = SaveService.HasProfile ? SaveService.Data.playerName : "Baş Kimyager";
+        string playerName = SaveService.HasProfile ? SaveService.Data.playerName : Loc.Get(CodeStrings.ProfileDefaultName);
         string playerEmail = SaveService.Data.playerEmail; // E-postayı çek
         int maxLevel = Mathf.Max(1, SaveService.Data.maxLevelUnlocked);
         int avatarIndex = SaveService.Data.avatarIndex;
@@ -77,7 +77,7 @@ public class ProfileManager : MonoBehaviour
         // E-Posta Kontrolü ve UI Güncellemesi
         if (string.IsNullOrEmpty(playerEmail))
         {
-            if (profileEmailText != null) profileEmailText.text = "E-posta bağlanmadı";
+            if (profileEmailText != null) profileEmailText.text = Loc.Get(CodeStrings.ProfileNoEmail);
             if (addEmailButtonObj != null) addEmailButtonObj.SetActive(true); // Ekle butonunu göster
         }
         else
@@ -130,7 +130,7 @@ public class ProfileManager : MonoBehaviour
         // Güvenlik: Geçersiz format engellemesi
         if (!IsValidEmail(newEmail))
         {
-            if (emailWarningText != null) emailWarningText.text = "<color=red>Kabul edilmeyen E-Posta formatı!</color>";
+            if (emailWarningText != null) emailWarningText.text = Loc.Get(CodeStrings.ProfileInvalidEmail);
             if (emailInputField != null) emailInputField.transform.DOKill(true);
             if (emailInputField != null) emailInputField.transform.DOShakePosition(0.4f, new Vector3(15f, 0, 0), 20);
             return;

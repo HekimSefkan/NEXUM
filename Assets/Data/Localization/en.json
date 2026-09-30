@@ -1,0 +1,462 @@
+{
+    "language": "en",
+    "translated": false,
+    "entries": [
+        {
+            "key": "back.press_again",
+            "value": "Çıkmak için tekrar basın"
+        },
+        {
+            "key": "catalyst.charge_label",
+            "value": "KATALİZÖR ŞARJI {0}/{1}"
+        },
+        {
+            "key": "catalyst.ready_label",
+            "value": "<color=#2ECC71>KATALİZÖR HAZIR ×{0} — BEDAVA PARÇALAMA</color>"
+        },
+        {
+            "key": "catalyst.ready_message",
+            "value": "<color=#2ECC71>KATALİZÖR HAZIR! Joker'i bir kez bedava kullanabilirsin.</color>"
+        },
+        {
+            "key": "combo.chain",
+            "value": "ZİNCİRLEME REAKSİYON!"
+        },
+        {
+            "key": "combo.double",
+            "value": "ÇİFTE BAĞ!"
+        },
+        {
+            "key": "combo.single",
+            "value": "SUCCESSFUL SYNTHESIS!"
+        },
+        {
+            "key": "game.cancelbutton.text_tmp",
+            "value": "VAZGEÇ"
+        },
+        {
+            "key": "game.cancelbutton.text_tmp_2",
+            "value": "VAZGEÇ"
+        },
+        {
+            "key": "game.closehintbutton.text_tmp",
+            "value": "ANLADIM"
+        },
+        {
+            "key": "game.confirmbutton.text_tmp",
+            "value": "UYGULA"
+        },
+        {
+            "key": "game.confirmbutton.text_tmp_2",
+            "value": "UYGULA"
+        },
+        {
+            "key": "game.containerbox.subtitletext",
+            "value": "BİLİYOR MUYDUN?"
+        },
+        {
+            "key": "game.containerbox.titletext",
+            "value": "LABORATUVAR MOLASI"
+        },
+        {
+            "key": "game.gameoverpanel.gameovertext",
+            "value": "\t   MATRİS KİLİTLENDİ!\n\t\t      \n\t        OYUN BİTTİ!"
+        },
+        {
+            "key": "game.hypothesispanel.infotext",
+            "value": "Uyarı: Bir elementi veya bileşiği matristen silerek parçalamak, maddenin iç yapısını değiştirmediği için bir Fiziksel Değişim simülasyonudur. Bu işlemi onaylıyor musun?"
+        },
+        {
+            "key": "game.hypothesispanel.titletext",
+            "value": "HİPOTEZ DOĞRULAMA"
+        },
+        {
+            "key": "game.jokerbutton.text_tmp",
+            "value": "PARÇALA"
+        },
+        {
+            "key": "game.levelcompletepanel.titletext",
+            "value": "TEBRİKLER!"
+        },
+        {
+            "key": "game.mainmenubutton.text_tmp",
+            "value": "ANA MENÜ"
+        },
+        {
+            "key": "game.mainmenubutton.text_tmp_2",
+            "value": "ANA MENÜ"
+        },
+        {
+            "key": "game.mainmenubutton.text_tmp_3",
+            "value": "ANA MENÜ"
+        },
+        {
+            "key": "game.nextlevelbutton.text_tmp",
+            "value": "SONRAKİ BÖLÜM"
+        },
+        {
+            "key": "game.pausebutton.text_tmp",
+            "value": "||"
+        },
+        {
+            "key": "game.restratbutton.text_tmp",
+            "value": "YENİDEN BAŞLA"
+        },
+        {
+            "key": "game.resumebutton.text_tmp",
+            "value": "DEVAM ET"
+        },
+        {
+            "key": "game.revivebutton.text_tmp",
+            "value": "İKİNCİ ŞANS (Soru Çöz)"
+        },
+        {
+            "key": "game.startexperimentbutton.text_tmp",
+            "value": "DENEYİ BAŞLAT"
+        },
+        {
+            "key": "game.undobutton.text_tmp",
+            "value": "GERİ AL"
+        },
+        {
+            "key": "game.undopanel.titletext",
+            "value": "TERSİNİR TEPKİME ONAYI"
+        },
+        {
+            "key": "hint.exam_mode",
+            "value": "<color=red>SINAV MODU AKTİF!</color>\nSınav modunda laboratuvar asistanından yardım alamazsın. Kendi bilgine güvenmelisin Baş Kimyager!"
+        },
+        {
+            "key": "hint.footer",
+            "value": "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>"
+        },
+        {
+            "key": "hint.footer_free",
+            "value": "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>"
+        },
+        {
+            "key": "hint.generic",
+            "value": "Bu iki elementi birleştirmek harika bir fikir olabilir!"
+        },
+        {
+            "key": "hint.limit_reached",
+            "value": "Bu laboratuvar seansındaki tüm asistan haklarını (3/3) tükettin Baş Kimyager! Artık kendi kimya bilgine güvenmelisin."
+        },
+        {
+            "key": "hint.no_budget",
+            "value": "Laboratuvar bütçemiz yetersiz! Asistanın {0}. ipucunu verebilmesi için <color=red>{1} puana</color> ihtiyacın var."
+        },
+        {
+            "key": "hint.no_merge",
+            "value": "Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin."
+        },
+        {
+            "key": "mainmenu.addemailbutton.text_tmp",
+            "value": "Ekle"
+        },
+        {
+            "key": "mainmenu.btn_atom.text_tmp",
+            "value": "<b>ATOM SİSTEMİ</b>"
+        },
+        {
+            "key": "mainmenu.btn_deney.text_tmp",
+            "value": "<b> DENEY MEKANİĞİ</b>"
+        },
+        {
+            "key": "mainmenu.btn_enerji.text_tmp",
+            "value": "<b>ENERJİ DENGESİ</b>"
+        },
+        {
+            "key": "mainmenu.btn_kurtarma.text_tmp",
+            "value": "<b>KURTARMA SINAVI</b>"
+        },
+        {
+            "key": "mainmenu.btn_mod.text_tmp",
+            "value": "<b>OYUN MODLARI</b>"
+        },
+        {
+            "key": "mainmenu.btn_tersinir.text_tmp",
+            "value": "<b>TERSİNİR TEPKİME</b>"
+        },
+        {
+            "key": "mainmenu.button.text_tmp",
+            "value": "X"
+        },
+        {
+            "key": "mainmenu.cancelbutton.text_tmp",
+            "value": "VAZGEÇ"
+        },
+        {
+            "key": "mainmenu.cardcontent.audiotitle",
+            "value": "SES AYARLARI"
+        },
+        {
+            "key": "mainmenu.cardcontent.gamemodetext",
+            "value": "OYUN MODU"
+        },
+        {
+            "key": "mainmenu.cardcontent.learningtitle",
+            "value": "ÖĞRENME TERCİHLERİ"
+        },
+        {
+            "key": "mainmenu.cardcontent.text_tmp",
+            "value": "AYARLARI"
+        },
+        {
+            "key": "mainmenu.confirmbutton.text_tmp",
+            "value": "KAYDET"
+        },
+        {
+            "key": "mainmenu.detailsbutton.text_tmp",
+            "value": "<color=#48CAE4>Ayrıntıları Gör >"
+        },
+        {
+            "key": "mainmenu.exammodebtn.text_tmp",
+            "value": "SINAV MOD"
+        },
+        {
+            "key": "mainmenu.flashcardsrow.flashcardstext",
+            "value": "Bilgi Kartları"
+        },
+        {
+            "key": "mainmenu.freemodebtn.text_tmp",
+            "value": "SERBEST MOD"
+        },
+        {
+            "key": "mainmenu.herocard.profilementortext",
+            "value": "Mentor: Marie Curie"
+        },
+        {
+            "key": "mainmenu.herocard.profileunvantext",
+            "value": "<color=#2ECC71>Baş Kimyager Adayı</color>"
+        },
+        {
+            "key": "mainmenu.hintsrow.flashcardstext",
+            "value": "Mentor İpuçları"
+        },
+        {
+            "key": "mainmenu.howtoplaypanel.text_tmp",
+            "value": "\"Maddelerin gizli dünyasını keşfet, elementleri birleştir ve kendi kimyasal yolculuğunu oluştur.\""
+        },
+        {
+            "key": "mainmenu.level1.text_tmp",
+            "value": "H<sub>2</sub>O"
+        },
+        {
+            "key": "mainmenu.level2.text_tmp",
+            "value": "NaCl"
+        },
+        {
+            "key": "mainmenu.level3.text_tmp",
+            "value": "CO<sub>2</sub>"
+        },
+        {
+            "key": "mainmenu.level4.text_tmp",
+            "value": "F<sub>2</sub>CO<sub>3</sub>\nNH<sub>3</sub>\n"
+        },
+        {
+            "key": "mainmenu.level5.text_tmp",
+            "value": "CaO\nCO<sub>2</sub>\n"
+        },
+        {
+            "key": "mainmenu.level6.text_tmp",
+            "value": "H<sub>2</sub>CO<sub>3</sub>\n"
+        },
+        {
+            "key": "mainmenu.level7.text_tmp",
+            "value": "CaCO<sub>3</sub>\nH<sub>2</sub>CO<sub>3</sub>\n\n\n"
+        },
+        {
+            "key": "mainmenu.levelselectionpanel.text_tmp",
+            "value": "<size=120%><b>ATOMİK YOLCULUK</b></size>\\n<size=80%>Hedef: Temel bileşik sentezlerini öğren</size>"
+        },
+        {
+            "key": "mainmenu.musicrow.musictext",
+            "value": "Müzik"
+        },
+        {
+            "key": "mainmenu.normalmodebtn.text_tmp",
+            "value": "NORMAL MOD"
+        },
+        {
+            "key": "mainmenu.registrationpanel.text_tmp",
+            "value": "<size=120%>Kimya Akademisi</size>\\n<size=50%>Laboratuvar kimliğini oluştur.</size>"
+        },
+        {
+            "key": "mainmenu.resetprogressbutton.text_tmp",
+            "value": "İLERLEMEYİ SIFIRLA"
+        },
+        {
+            "key": "mainmenu.sfxrow.musictext",
+            "value": "Efektler"
+        },
+        {
+            "key": "mainmenu.singinbutton.text_tmp",
+            "value": "LABORATUVARA GİR"
+        },
+        {
+            "key": "mainmenu.statcard_bilesik.text_tmp",
+            "value": "AÇILAN BÖLÜM"
+        },
+        {
+            "key": "mainmenu.statcard_kaza.titletext",
+            "value": "LABORATUVAR KAZASI"
+        },
+        {
+            "key": "mainmenu.statcard_sentez.text_tmp",
+            "value": "TOPLAM SENTEZ"
+        },
+        {
+            "key": "mainmenu.statcard_teori.text_tmp",
+            "value": "QUİZ BAŞARISI"
+        },
+        {
+            "key": "mainmenu.statssection.statsheadertext",
+            "value": "LABORATUVAR İSTATİSTİKLERİ"
+        },
+        {
+            "key": "profile.default_name",
+            "value": "Baş Kimyager"
+        },
+        {
+            "key": "profile.invalid_email",
+            "value": "<color=red>Kabul edilmeyen E-Posta formatı!</color>"
+        },
+        {
+            "key": "profile.no_email",
+            "value": "E-posta bağlanmadı"
+        },
+        {
+            "key": "quiz.correct",
+            "value": "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun!"
+        },
+        {
+            "key": "quiz.wrong",
+            "value": "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi."
+        },
+        {
+            "key": "registration.anonymous",
+            "value": "Gözlemci Kaydı (İsimsiz Ağ)"
+        },
+        {
+            "key": "registration.email_optional",
+            "value": "<color=#ADB5BD>Laboratuvar Kaydı (İsteğe Bağlı) - İlerlemeni farklı cihazlarda taşı</color>"
+        },
+        {
+            "key": "registration.invalid_email",
+            "value": "<color=red>Kabul edilmeyen E-Posta formatı!</color>"
+        },
+        {
+            "key": "registration.mentor_required",
+            "value": "Önce bir mentor seç"
+        },
+        {
+            "key": "registration.name_required",
+            "value": "Kimyager adını yazmalısın"
+        },
+        {
+            "key": "registration.no_mentor_chosen",
+            "value": "<color=#ADB5BD>Mentor seçilmedi...</color>"
+        },
+        {
+            "key": "system.matrix_reshuffled",
+            "value": "MATRİS YENİDEN DÜZENLENDİ"
+        },
+        {
+            "key": "undo.explain",
+            "value": "Kimyada bazı reaksiyonlar geri döndürülebilir. Bu işlem matrisi bir önceki hamleye geri alır.\n\nBedeli: <color={0}>{1} Puan</color>\nKalan Hakkın: <color={2}>{3}</color>"
+        }
+    ],
+    "untranslated": [
+        "back.press_again",
+        "catalyst.charge_label",
+        "catalyst.ready_label",
+        "catalyst.ready_message",
+        "combo.chain",
+        "combo.double",
+        "game.cancelbutton.text_tmp",
+        "game.cancelbutton.text_tmp_2",
+        "game.closehintbutton.text_tmp",
+        "game.confirmbutton.text_tmp",
+        "game.confirmbutton.text_tmp_2",
+        "game.containerbox.subtitletext",
+        "game.containerbox.titletext",
+        "game.gameoverpanel.gameovertext",
+        "game.hypothesispanel.infotext",
+        "game.hypothesispanel.titletext",
+        "game.jokerbutton.text_tmp",
+        "game.levelcompletepanel.titletext",
+        "game.mainmenubutton.text_tmp",
+        "game.mainmenubutton.text_tmp_2",
+        "game.mainmenubutton.text_tmp_3",
+        "game.nextlevelbutton.text_tmp",
+        "game.pausebutton.text_tmp",
+        "game.restratbutton.text_tmp",
+        "game.resumebutton.text_tmp",
+        "game.revivebutton.text_tmp",
+        "game.startexperimentbutton.text_tmp",
+        "game.undobutton.text_tmp",
+        "game.undopanel.titletext",
+        "hint.exam_mode",
+        "hint.footer",
+        "hint.footer_free",
+        "hint.generic",
+        "hint.limit_reached",
+        "hint.no_budget",
+        "hint.no_merge",
+        "mainmenu.addemailbutton.text_tmp",
+        "mainmenu.btn_atom.text_tmp",
+        "mainmenu.btn_deney.text_tmp",
+        "mainmenu.btn_enerji.text_tmp",
+        "mainmenu.btn_kurtarma.text_tmp",
+        "mainmenu.btn_mod.text_tmp",
+        "mainmenu.btn_tersinir.text_tmp",
+        "mainmenu.button.text_tmp",
+        "mainmenu.cancelbutton.text_tmp",
+        "mainmenu.cardcontent.audiotitle",
+        "mainmenu.cardcontent.gamemodetext",
+        "mainmenu.cardcontent.learningtitle",
+        "mainmenu.cardcontent.text_tmp",
+        "mainmenu.confirmbutton.text_tmp",
+        "mainmenu.detailsbutton.text_tmp",
+        "mainmenu.exammodebtn.text_tmp",
+        "mainmenu.flashcardsrow.flashcardstext",
+        "mainmenu.freemodebtn.text_tmp",
+        "mainmenu.herocard.profilementortext",
+        "mainmenu.herocard.profileunvantext",
+        "mainmenu.hintsrow.flashcardstext",
+        "mainmenu.howtoplaypanel.text_tmp",
+        "mainmenu.level1.text_tmp",
+        "mainmenu.level2.text_tmp",
+        "mainmenu.level3.text_tmp",
+        "mainmenu.level4.text_tmp",
+        "mainmenu.level5.text_tmp",
+        "mainmenu.level6.text_tmp",
+        "mainmenu.level7.text_tmp",
+        "mainmenu.levelselectionpanel.text_tmp",
+        "mainmenu.musicrow.musictext",
+        "mainmenu.normalmodebtn.text_tmp",
+        "mainmenu.registrationpanel.text_tmp",
+        "mainmenu.resetprogressbutton.text_tmp",
+        "mainmenu.sfxrow.musictext",
+        "mainmenu.singinbutton.text_tmp",
+        "mainmenu.statcard_bilesik.text_tmp",
+        "mainmenu.statcard_kaza.titletext",
+        "mainmenu.statcard_sentez.text_tmp",
+        "mainmenu.statcard_teori.text_tmp",
+        "mainmenu.statssection.statsheadertext",
+        "profile.default_name",
+        "profile.invalid_email",
+        "profile.no_email",
+        "quiz.correct",
+        "quiz.wrong",
+        "registration.anonymous",
+        "registration.email_optional",
+        "registration.invalid_email",
+        "registration.mentor_required",
+        "registration.name_required",
+        "registration.no_mentor_chosen",
+        "system.matrix_reshuffled",
+        "undo.explain"
+    ]
+}

@@ -615,7 +615,7 @@ public class GridManager : MonoBehaviour
             AudioManager.Instance.PlaySFX(AudioManager.Instance.shiftClip, 0.6f);
         }
 
-        UIManager.Instance.ShowSystemMessage("MATRİS YENİDEN DÜZENLENDİ");
+        UIManager.Instance.ShowSystemMessage(Loc.Get(CodeStrings.SystemMatrixReshuffled));
 
         // Eski taşlar sönerek kaybolur (ani sıçrama olmasın)
         foreach (Transform cell in cells)
@@ -801,7 +801,7 @@ public class GridManager : MonoBehaviour
     {
         if (currentGameMode == 1)
         {
-            UIManager.Instance.ShowHintMessage("<color=red>SINAV MODU AKTİF!</color>\nSınav modunda laboratuvar asistanından yardım alamazsın. Kendi bilgine güvenmelisin Baş Kimyager!");
+            UIManager.Instance.ShowHintMessage(Loc.Get(CodeStrings.HintExamMode));
             return; 
         }
         
@@ -810,7 +810,7 @@ public class GridManager : MonoBehaviour
         {
             if (usedHints >= maxHints)
             {
-                UIManager.Instance.ShowHintMessage("Bu laboratuvar seansındaki tüm asistan haklarını (3/3) tükettin Baş Kimyager! Artık kendi kimya bilgine güvenmelisin.");
+                UIManager.Instance.ShowHintMessage(Loc.Get(CodeStrings.HintLimitReached));
                 return;
             }
 
@@ -819,7 +819,7 @@ public class GridManager : MonoBehaviour
 
             if (budget != null && budget.currentScore < currentCost)
             {
-                UIManager.Instance.ShowHintMessage($"Laboratuvar bütçemiz yetersiz! Asistanın {usedHints + 1}. ipucunu verebilmesi için <color=red>{currentCost} puana</color> ihtiyacın var.");
+                UIManager.Instance.ShowHintMessage(Loc.Format(CodeStrings.HintNoBudget, usedHints + 1, currentCost));
                 return;
             }
         }
@@ -869,7 +869,7 @@ public class GridManager : MonoBehaviour
         }
 
         if (foundNormalMatch) ActivateHint(fallbackT1, fallbackT2, fallbackHint, gm);
-        else UIManager.Instance.ShowHintMessage("Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin.");
+        else UIManager.Instance.ShowHintMessage(Loc.Get(CodeStrings.HintNoMerge));
     }
 
     private void ActivateHint(Transform t1, Transform t2, string hintMsg, GameManager gm)
@@ -888,18 +888,18 @@ public class GridManager : MonoBehaviour
         t1.DOScale(Vector3.one * 1.15f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
         t2.DOScale(Vector3.one * 1.15f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
 
-        string coreMsg = string.IsNullOrEmpty(hintMsg) ? "Bu iki elementi birleştirmek harika bir fikir olabilir!" : hintMsg;
+        string coreMsg = string.IsNullOrEmpty(hintMsg) ? Loc.Get(CodeStrings.HintGeneric) : hintMsg;
         
         string infoFooter;
         if (IsFreeMode)
         {
-            infoFooter = "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>";
+            infoFooter = Loc.Get(CodeStrings.HintFooterFree);
         }
         else
         {
             int remainingHints = maxHints - usedHints;
             string nextCostText = (remainingHints > 0) ? GetCurrentHintCost().ToString() : "-";
-            infoFooter = $"\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {remainingHints} | Sonraki Bedel: {nextCostText} Puan</color></size>";
+            infoFooter = Loc.Format(CodeStrings.HintFooter, remainingHints, nextCostText);
         }
         
         UIManager.Instance.ShowHintMessage(coreMsg + infoFooter);
