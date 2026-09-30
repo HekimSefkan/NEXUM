@@ -112,6 +112,7 @@ public static class NexumValidation
         }
 
         CheckProjectSettings(problems);
+        CheckSaveServiceOwnership(problems);
         CheckElementData(warnings);
         CheckAudioImport(warnings);
         CheckResourcesFolder(warnings);
@@ -675,6 +676,41 @@ public static class NexumValidation
             path = t.name + "/" + path;
         }
         return path;
+    }
+
+    // Kalıcı veri tek kapıdan geçer: PlayerPrefs yalnızca SaveService.cs içinde
+    // kullanılabilir. Başka yerde doğrudan çağrı varsa şema ve göç garantisi
+    // bozulur; bu yüzden FAIL.
+    private static void CheckSaveServiceOwnership(List<string> problems)
+    {
+        // Parçalı yazılıyor ki bu dosyanın kendisi kurala takılmasın
+        string Needle = "Player" + "Prefs.";
+
+        foreach (string file in Directory.GetFiles("Assets", "*.cs", SearchOption.AllDirectories))
+        {
+            string normalized = file.Replace("\\\\", "/");
+            if (normalized.EndsWith("SaveService.cs")) continue;
+            if (normalized.StartsWith("Assets/Plugins/")) continue;
+            if (normalized.StartsWith("Assets/TextMesh Pro/")) continue;
+
+            // İstisnalar: bu kuralın kendi kaynağı ve göç testi (eski anahtarları
+            // bilerek yazıp okuması gerekiyor).
+            if (normalized.EndsWith("NexumValidation.cs")) continue;
+            if (normalized.EndsWith("SaveServiceTests.cs")) continue;
+
+            string[] lines = File.ReadAllLines(file);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int at = lines[i].IndexOf(Needle);
+                if (at < 0) continue;
+
+                // Yorum satırındaki geçişler sorun değil
+                int comment = lines[i].IndexOf("//");
+                if (comment >= 0 && comment < at) continue;
+
+                problems.Add($"{normalized}:{i + 1} SaveService dışında PlayerPrefs kullanımı");
+            }
+        }
     }
 }
 #endif

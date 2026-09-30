@@ -15,7 +15,7 @@ public static class AppBootstrap
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        // Uygulama arka plana alınınca veya kapanınca PlayerPrefs'i diske yazan gizli, kalıcı obje
+        // Uygulama arka plana alınınca veya kapanınca kaydı diske yazan gizli, kalıcı obje
         var lifecycle = new GameObject("AppLifecycle");
         lifecycle.hideFlags = HideFlags.HideAndDontSave;
         Object.DontDestroyOnLoad(lifecycle);
@@ -31,12 +31,12 @@ public static class AppBootstrap
     {
         private void OnApplicationPause(bool paused)
         {
-            if (paused) PlayerPrefs.Save();
+            if (paused) SaveService.Flush();
         }
 
         private void OnApplicationQuit()
         {
-            PlayerPrefs.Save();
+            SaveService.Flush();
 #if UNITY_EDITOR
             // HideAndDontSave objeleri Editor'de Play modundan çıkınca kendiliğinden silinmez
             Destroy(gameObject);

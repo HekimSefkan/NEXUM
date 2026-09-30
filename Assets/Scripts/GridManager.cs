@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour
         historyStack.Clear(); 
         usedHints = 0; 
         
-        currentGameMode = PlayerPrefs.GetInt("SelectedGameMode", 0);
+        currentGameMode = SaveService.Data.gameMode;
 
         for (int i = 0; i < startCount; i++)
         {
@@ -341,7 +341,7 @@ public class GridManager : MonoBehaviour
         snapshot.savedCatalystCharge = catalystCharge;
         snapshot.savedFreeJokerCharges = freeJokerCharges;
         snapshot.savedMovesSinceSpawn = movesSinceSpawn;
-        snapshot.savedTotalSynthesis = PlayerPrefs.GetInt("TotalSynthesis", 0);
+        snapshot.savedTotalSynthesis = SaveService.Data.totalSynthesis;
 
         var savedGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
         snapshot.savedGoalAmounts = new int[savedGoals.Count];
@@ -494,7 +494,8 @@ public class GridManager : MonoBehaviour
 
                     actionHappened = true;
                     currentCombo++;
-                    PlayerPrefs.SetInt("TotalSynthesis", PlayerPrefs.GetInt("TotalSynthesis", 0) + 1);
+                    SaveService.Data.totalSynthesis++;
+                    SaveService.MarkDirty();
                     lastMergePosition = cells[targetIndex].position;
                     passMovedSomething = true;
                 }
@@ -660,7 +661,7 @@ public class GridManager : MonoBehaviour
             }
         }
         UIManager.Instance.ShowGameOver(); 
-        PlayerPrefs.Save();
+        SaveService.Flush();
     }
 
     private void CheckWinCondition(MergeRecipe recipe)
@@ -693,7 +694,8 @@ public class GridManager : MonoBehaviour
         if (isWin)
         {
             hasWon = true;
-            TotalScoreService.AddLevelScore(FindObjectOfType<GameManager>());
+            GameManager scorer = FindObjectOfType<GameManager>();
+            if (scorer != null) SaveService.AddLevelScore(scorer.currentScore);
             UIManager.Instance.ShowWinScreen();
         }
     }
@@ -774,7 +776,8 @@ public class GridManager : MonoBehaviour
         movesSinceSpawn = lastState.savedMovesSinceSpawn;
         UIManager.Instance.UpdateCatalystMeter(catalystCharge, freeJokerCharges);
 
-        PlayerPrefs.SetInt("TotalSynthesis", lastState.savedTotalSynthesis);
+        SaveService.Data.totalSynthesis = lastState.savedTotalSynthesis;
+        SaveService.MarkDirty();
 
         foreach (Transform cell in cells)
         {

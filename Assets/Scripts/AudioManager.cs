@@ -79,7 +79,7 @@ public class AudioManager : MonoBehaviour
 
         if (bgmSource != null)
         {
-            int musicOn = PlayerPrefs.GetInt("MusicOn", 1);
+            int musicOn = SaveService.Data.musicOn;
             bgmSource.mute = (musicOn == 0); // 0 ise sessize al
         }
     }
@@ -93,7 +93,7 @@ public class AudioManager : MonoBehaviour
         }
 
         // YENİ: Efekt çalmadan önce hafızaya bak. Kapalıysa (0), hiç çalmadan geri dön!
-        int sfxOn = PlayerPrefs.GetInt("SfxOn", 1);
+        int sfxOn = SaveService.Data.sfxOn;
         if (sfxOn == 0) return; 
 
         if (clip != null && sfxSource != null)

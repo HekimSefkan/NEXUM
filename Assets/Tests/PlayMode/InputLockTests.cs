@@ -30,22 +30,18 @@ public class InputLockTests
     private MonoBehaviour gridManager;
     private MethodInfo isInputBlocked;
 
-    private readonly Dictionary<string, int> savedPrefs = new Dictionary<string, int>();
+    private int savedSelectedLevel;
+    private bool savedTutorialRead;
     private readonly List<GameObject> openedByTest = new List<GameObject>();
-
-    private void SavePref(string key)
-    {
-        savedPrefs[key] = PlayerPrefs.GetInt(key, -1);
-    }
 
     [UnitySetUp]
     public IEnumerator SetUp()
     {
         // Tutorial panelini atla; eski değerler TearDown'da geri yazılır
-        SavePref("SelectedLevel");
-        SavePref("TutorialRead_Level_0");
-        PlayerPrefs.SetInt("SelectedLevel", 0);
-        PlayerPrefs.SetInt("TutorialRead_Level_0", 1);
+        savedSelectedLevel = SaveService.Data.selectedLevel;
+        savedTutorialRead = SaveService.IsTutorialRead(0);
+        SaveService.Data.selectedLevel = 0;
+        SaveService.SetTutorialRead(0);
 
         SceneManager.LoadScene("Game");
         yield return null;
@@ -73,12 +69,9 @@ public class InputLockTests
         }
         openedByTest.Clear();
 
-        foreach (KeyValuePair<string, int> pair in savedPrefs)
-        {
-            if (pair.Value < 0) PlayerPrefs.DeleteKey(pair.Key);
-            else PlayerPrefs.SetInt(pair.Key, pair.Value);
-        }
-        PlayerPrefs.Save();
+        SaveService.Data.selectedLevel = savedSelectedLevel;
+        if (!savedTutorialRead) SaveService.Data.tutorialReadLevels.Remove(0);
+        SaveService.SaveNow();
     }
 
     private bool Blocked()
