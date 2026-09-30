@@ -3715,8 +3715,8 @@ MonoBehaviour:
     element2: {fileID: 3634079177299486472, guid: 4dcb710113819344b9277f5edf060320, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: 8823def86a3430d43864edc08ab875ed, type: 3}
     scoreReward: 30
-    scientificHint: "Haber-Bosch: azotun \xFC\xE7l\xFC ba\u011F\u0131 demir kataliz\xF6r
-      ve bas\u0131n\xE7la k\u0131r\u0131l\u0131r, amonyak olu\u015Fur."
+    scientificHint: "Haber-Bosch: azotun \xFC\xE7l\xFC ba\u011F\u0131n\u0131 demir
+      kataliz\xF6r ve bas\u0131n\xE7 k\u0131rar; amonyak olu\u015Fur."
   - element1: {fileID: 3634079177299486472, guid: c6a3893becf50e34494d2775d94d049a, type: 3}
     element2: {fileID: 3634079177299486472, guid: 8ba78bf2d4334b0419a90a5e45fec829, type: 3}
     resultPrefab: {fileID: 3634079177299486472, guid: a036fab5e06679548b170c3394656328, type: 3}
@@ -3891,7 +3891,9 @@ MonoBehaviour:
       kovalent ba\u011F yapmas\u0131yla olu\u015Fur. Oksijen, kararl\u0131 yap\u0131ya
       ula\u015Fmak i\xE7in 2 elektrona ihtiya\xE7 duyar ve bunu Hidrojenlerle payla\u015Farak
       \xE7\xF6zer. \\n\\n<b>Laboratuvar G\xF6revi:</b> Matristeki Hidrojen ve Oksijen
-      elementlerini yan yana kayd\u0131rarak ilk su molek\xFCl\xFCn\xFC sentezle!"
+      elementlerini yan yana kayd\u0131rarak ilk su molek\xFCl\xFCn\xFC sentezle!\n\nTa\u015Flar
+      duvara kadar kayar ve birle\u015Fme olmayan her 2 hamlede matrise yeni bir
+      element d\xFC\u015Fer."
     tutorialLargeSprite1: {fileID: 21300000, guid: adb3438ae09365a4bb0f0cd62ced123f, type: 3}
     tutorialLargeSprite2: {fileID: 21300000, guid: 7af5e9bb4d1bc6f498cd552a53912a5d, type: 3}
   - levelName: Level 2

@@ -18722,18 +18722,17 @@ MonoBehaviour:
   guideCategories:
   - title: "ATOM S\u0130STEM\u0130 VE SENTEZ"
     description: "Elementleri parma\u011F\u0131nla (veya y\xF6n tu\u015Flar\u0131yla)
-      kayd\u0131rarak laboratuvar matrisinde hareket ettir. Uyumlu atomlar\u0131
-      \xE7arp\u0131\u015Ft\u0131rarak kimyasal ba\u011Flar kur ve yeni bile\u015Fikler
-      sentezle (\xD6rn: H + H = H<sub>2). Her b\xF6l\xFCm\xFCn ba\u015F\u0131nda
-      sana verilen 'Deney F\xF6y\xFC'n\xFC okumay\u0131 unutma; ana hedefin, sol
-      \xFCstte senden istenen molek\xFClleri \xFCretmektir."
-  - title: "ENTROP\u0130 VE BASIN\xC7 (CEZA S\u0130STEM\u0130)"
-    description: "Termodinami\u011Fin ikinci yasas\u0131 laboratuvar\u0131m\u0131zda
-      da ge\xE7erli! Matriste hi\xE7bir birle\u015Fme (sentez) olmadan yapt\u0131\u011F\u0131n
-      her kayd\u0131rma hamlesi sistem bas\u0131nc\u0131n\u0131 art\u0131r\u0131r.
-      \xDCst \xFCste 5 bo\u015F hamle yaparsan Entropi Patlamas\u0131 ya\u015Fan\u0131r
-      ve sahana istenmeyen, rastgele bir ceza elementi f\u0131rlat\u0131l\u0131r.
-      Kombolar yaparak (\xFCst \xFCste sentez) bas\u0131nc\u0131 s\u0131f\u0131rla!"
+      kayd\u0131r. Ta\u015Flar duvara ya da \xF6nlerindeki engele kadar kayar. Uyumlu
+      atomlar \xE7arp\u0131\u015F\u0131nca kimyasal ba\u011F kurup yeni bile\u015Fik
+      olur (\xD6rn: H + H = H<sub>2</sub>). Bir hamlede \xFCretilen bile\u015Fik,
+      o hamlede ikinci kez birle\u015Fmez. Hedefin sol \xFCstte istenen molek\xFClleri
+      \xFCretmek."
+  - title: "MATR\u0130S\u0130N DOLMASI VE YEN\u0130 ELEMENTLER"
+    description: "Her sentezden sonra matrise yeni bir element d\xFC\u015Fer. Sentez
+      yapamad\u0131\u011F\u0131n hamlelerde de bo\u015F durmaz: birle\u015Fmesiz
+      her 2 hamlede bir yeni element gelir. Yeni element, kayd\u0131rd\u0131\u011F\u0131n
+      y\xF6n\xFCn TERS\u0130NDEK\u0130 kenarda kendi beliri\u015F animasyonuyla do\u011Far.
+      Matris dolar ve yapacak hamle kalmazsa laboratuvar kilitlenir."
   - title: "MENTOR DESTE\u011E\u0130 VE \u0130PU\xC7LARI"
     description: "Deney t\u0131kand\u0131\u011F\u0131nda yaln\u0131z de\u011Filsin.
       Se\xE7ti\u011Fin efsanevi Mentor, biriken sentez puanlar\u0131n kar\u015F\u0131l\u0131\u011F\u0131nda
@@ -18741,12 +18740,12 @@ MonoBehaviour:
       Ancak unutma: Asistan yard\u0131m\u0131 s\u0131n\u0131rl\u0131d\u0131r ve e\u011Fer
       \"S\u0131nav Modu\"ndaysan t\xFCm ba\u011Flant\u0131lar kesilir, kendi bilgine
       g\xFCvenmek zorundas\u0131n."
-  - title: "TERS\u0130N\u0130R TEPK\u0130ME VE JOKER"
-    description: "Kimyada baz\u0131 reaksiyonlar geri d\xF6nd\xFCr\xFClebilir. \xD6l\xFCmc\xFCl
-      bir hata m\u0131 yapt\u0131n? Puanlar\u0131n\u0131 kullanarak zaman\u0131 bir
-      hamle geriye alabilirsin. Matris \xE7ok mu doldu? Joker (Hipotez) modunu a\xE7\u0131p,
-      lazer sistemini kullanarak puan kar\u015F\u0131l\u0131\u011F\u0131nda istedi\u011Fin
-      bir elementi matristen tamamen silebilirsin."
+  - title: "TERS\u0130N\u0130R TEPK\u0130ME, JOKER VE KATAL\u0130Z\xD6R"
+    description: "Puanlar\u0131n\u0131 kullanarak son hamleni geri alabilirsin. Matris
+      t\u0131kand\u0131ysa Joker (Hipotez) modunu a\xE7\u0131p puan kar\u015F\u0131l\u0131\u011F\u0131nda
+      istedi\u011Fin elementi silebilirsin. Grid'in alt\u0131ndaki KATAL\u0130Z\xD6R
+      \u015EARJI her sentezde dolar; be\u015Fe ula\u015F\u0131nca bir kez Joker'i
+      BEDAVA kullanma hakk\u0131 kazan\u0131rs\u0131n."
   - title: "TEOR\u0130K B\u0130LG\u0130 VE KURTARMA"
     description: "E\u011Fer matris tamamen dolar ve hareket edecek yer kalmazsa laboratuvar
       kilitlenir. Ancak her \u015Fey bitmi\u015F de\u011Fil! Kar\u015F\u0131na \xE7\u0131kacak
@@ -18755,9 +18754,9 @@ MonoBehaviour:
   - title: "OYUN MODLARI VE KAR\u0130YER"
     description: "Ayarlar panelinden laboratuvar ko\u015Fullar\u0131n\u0131 de\u011Fi\u015Ftirebilirsin.
       'Normal Mod' dengeli bir deneyim sunar. 'S\u0131nav Modu' asistan\u0131 kapat\u0131r
-      ama 2 kat puan verir. 'Serbest Mod' ise entropi cezas\u0131n\u0131 kald\u0131rarak
-      stressiz bir ke\u015Fif ortam\u0131 sa\u011Flar. Ba\u015Far\u0131lar\u0131n,
-      kimlik kart\u0131na ve akademik karnene kal\u0131c\u0131 olarak i\u015Flenir."
+      ama 2 kat puan verir. 'Serbest Mod' hedefsiz bir ke\u015Fif alan\u0131d\u0131r:
+      kaybetme yok, ipu\xE7lar\u0131 bedava, istedi\u011Fin bile\u015Fi\u011Fi denemekte
+      \xF6zg\xFCrs\xFCn."
   guidePopupPanel: {fileID: 1055433218}
   popupTitleText: {fileID: 312435941}
   popupDescText: {fileID: 687425070}

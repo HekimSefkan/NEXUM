@@ -75,7 +75,7 @@ public static class NexumCompoundTexts
         ["Tile_C+Tile_C"] =
             "İki karbon atomu kısa ömürlü dikarbonu kurar; alevin mavisini bu yapılar boyar.",
         ["Tile_H2+Tile_N2"] =
-            "Haber-Bosch: azotun üçlü bağı demir katalizör ve basınçla kırılır, amonyak oluşur.",
+            "Haber-Bosch: azotun üçlü bağını demir katalizör ve basınç kırar; amonyak oluşur.",
         ["Tile_Cl2+Tile_Na"] =
             "Klor molekülü ayrışır; her klor atomu bir sodyumun elektronunu alıp tuz kurar.",
         ["Tile_C2+Tile_O2"] =
