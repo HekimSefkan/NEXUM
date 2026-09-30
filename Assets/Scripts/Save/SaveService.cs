@@ -37,6 +37,7 @@ public class SaveData
     public int quizAttempts;
 
     // --- Ayarlar ----------------------------------------------------------
+    public int language = -1;         // -1 = henüz seçilmedi (cihaz dilinden türetilir)
     public int musicOn = 1;
     public int sfxOn = 1;
     public int mentorHintsOn = 1;
@@ -198,6 +199,7 @@ public static class SaveService
         repaired += ClampMin(ref d.totalAccidents, 0, "totalAccidents");
         repaired += ClampMin(ref d.quizCorrect, 0, "quizCorrect");
         repaired += ClampMin(ref d.quizAttempts, 0, "quizAttempts");
+        repaired += ClampRange(ref d.language, -1, 1, "language");
         repaired += ClampRange(ref d.musicOn, 0, 1, "musicOn");
         repaired += ClampRange(ref d.sfxOn, 0, 1, "sfxOn");
         repaired += ClampRange(ref d.mentorHintsOn, 0, 1, "mentorHintsOn");

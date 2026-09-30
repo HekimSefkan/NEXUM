@@ -60,7 +60,7 @@ public class RegistrationManager : MonoBehaviour
             if(mentorDetailPanel != null) mentorDetailPanel.SetActive(false);
             
             ResetHighlightRings();
-            if(selectedMentorText != null) selectedMentorText.text = "<color=#ADB5BD>Mentor seçilmedi...</color>";
+            if(selectedMentorText != null) selectedMentorText.text = Loc.Get(CodeStrings.RegNoMentorChosen);
             if(detailsButton != null) detailsButton.interactable = false; 
         }
     }
@@ -166,7 +166,7 @@ public class RegistrationManager : MonoBehaviour
         // --- İSİM DOĞRULAMA --- (uyarılar isim kutusunun altındaki kendi alanına yazılır)
         if (enteredName.Length == 0)
         {
-            ShowFieldError(nameWarningText, "Kimyager adını yazmalısın", nameInputField.transform);
+            ShowFieldError(nameWarningText, Loc.Get(CodeStrings.RegNameRequired), nameInputField.transform);
             return;
         }
 
@@ -185,7 +185,7 @@ public class RegistrationManager : MonoBehaviour
         // --- MENTOR DOĞRULAMA ---
         if (selectedAvatarIndex == -1)
         {
-            ShowFieldError(nameWarningText, "Önce bir mentor seç", null);
+            ShowFieldError(nameWarningText, Loc.Get(CodeStrings.RegMentorRequired), null);
             return;
         }
 
@@ -201,7 +201,7 @@ public class RegistrationManager : MonoBehaviour
                 if (emailWarningText != null)
                 {
                     // Uyarı metnini kırmızıya çevir ve hatayı söyle
-                    emailWarningText.text = "<color=red>Kabul edilmeyen E-Posta formatı!</color>";
+                    emailWarningText.text = Loc.Get(CodeStrings.RegInvalidEmail);
                     
                     // Giriş kutusunu oyuncuyu uyarmak için hafifçe titret
                     emailInputField.transform.DOKill(true);
@@ -216,7 +216,7 @@ public class RegistrationManager : MonoBehaviour
         // Eğer e-posta doğruysa (veya hiç girilmediyse) uyarı metnini eski gri haline döndür
         if (emailWarningText != null)
         {
-            emailWarningText.text = "<color=#ADB5BD>Laboratuvar Kaydı (İsteğe Bağlı) - İlerlemeni farklı cihazlarda taşı</color>";
+            emailWarningText.text = Loc.Get(CodeStrings.RegEmailOptional);
         }
         // -------------------------------
 
@@ -243,7 +243,7 @@ public class RegistrationManager : MonoBehaviour
             if (!string.IsNullOrWhiteSpace(playerEmail))
                 idCardEmailText.text = playerEmail;
             else
-                idCardEmailText.text = "Gözlemci Kaydı (İsimsiz Ağ)";
+                idCardEmailText.text = Loc.Get(CodeStrings.RegAnonymous);
         }
         
         if (idCardAvatarImage != null && avatarSprites.Length > mentorIndex)

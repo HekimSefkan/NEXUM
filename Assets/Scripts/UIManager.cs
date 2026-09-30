@@ -192,9 +192,7 @@ public class UIManager : MonoBehaviour
         string costColor = (currentScore >= cost) ? "green" : "red";
         string limitColor = (remaining > 0) ? "green" : "red";
 
-        undoInfoText.text = $"Kimyada bazı reaksiyonlar geri döndürülebilir. Bu işlem matrisi bir önceki hamleye geri alır.\n\n" +
-                            $"Bedeli: <color={costColor}>{cost} Puan</color>\n" +
-                            $"Kalan Hakkın: <color={limitColor}>{remaining}</color>";
+        undoInfoText.text = Loc.Format(CodeStrings.UndoExplain, costColor, cost, limitColor, remaining);
 
         undoPanel.SetActive(true); 
     }
@@ -254,7 +252,7 @@ public class UIManager : MonoBehaviour
             SaveService.Data.quizCorrect = totalCorrect;
             SaveService.SaveNow();
 
-            questionTextUI.text = "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun...";
+            questionTextUI.text = Loc.Get(CodeStrings.QuizCorrect);
             yield return new WaitForSeconds(2f); 
             quizPanel.SetActive(false); 
             GridManager.Instance.ApplyReviveBonus(); 
@@ -264,7 +262,7 @@ public class UIManager : MonoBehaviour
             if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.quizWrongClip);
             SaveService.SaveNow(); 
             
-            questionTextUI.text = "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi.";
+            questionTextUI.text = Loc.Get(CodeStrings.QuizWrong);
             yield return new WaitForSeconds(2f); 
             quizPanel.SetActive(false);
             ShowGameOver(); 
@@ -421,8 +419,8 @@ public class UIManager : MonoBehaviour
         if (catalystLabelText != null)
         {
             catalystLabelText.text = freeJokers > 0
-                ? $"<color=#2ECC71>KATALİZÖR HAZIR ×{freeJokers} — BEDAVA PARÇALAMA</color>"
-                : $"KATALİZÖR ŞARJI {charge}/{limit}";
+                ? Loc.Format(CodeStrings.CatalystReadyLabel, freeJokers)
+                : Loc.Format(CodeStrings.CatalystChargeLabel, charge, limit);
         }
 
         // Bedava hak varken gösterge yeşil parlar, yoksa söner
@@ -454,7 +452,7 @@ public class UIManager : MonoBehaviour
 
         if (factTextUI != null)
         {
-            factTextUI.text = "<color=#2ECC71>KATALİZÖR HAZIR! Joker'i bir kez bedava kullanabilirsin.</color>";
+            factTextUI.text = Loc.Get(CodeStrings.CatalystReadyMessage);
         }
 
         if (AudioManager.Instance != null)
@@ -536,17 +534,17 @@ public class UIManager : MonoBehaviour
 
         if (comboCount == 1)
         {
-            comboMessage = "BAŞARILI SENTEZ!";
+            comboMessage = Loc.Get(CodeStrings.Combo1);
             comboColor = new Color(0.2f, 0.8f, 0.2f); 
         }
         else if (comboCount == 2)
         {
-            comboMessage = "ÇİFTE BAĞ!";
+            comboMessage = Loc.Get(CodeStrings.Combo2);
             comboColor = new Color(1f, 0.6f, 0f); 
         }
         else if (comboCount >= 3)
         {
-            comboMessage = "ZİNCİRLEME REAKSİYON!";
+            comboMessage = Loc.Get(CodeStrings.Combo3);
             comboColor = new Color(1f, 0.2f, 0.2f); 
         }
 

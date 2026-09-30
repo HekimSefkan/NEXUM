@@ -1,0 +1,358 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b03af0835ad2cf49be5ad4233d274ec, type: 3}
+  m_Name: LocalizationTable
+  m_EditorClassIdentifier: 
+  entries:
+  - key: back.press_again
+    turkish: "\xC7\u0131kmak i\xE7in tekrar bas\u0131n"
+    english: "\xC7\u0131kmak i\xE7in tekrar bas\u0131n"
+  - key: catalyst.charge_label
+    turkish: "KATAL\u0130Z\xD6R \u015EARJI {0}/{1}"
+    english: "KATAL\u0130Z\xD6R \u015EARJI {0}/{1}"
+  - key: catalyst.ready_label
+    turkish: "<color=#2ECC71>KATAL\u0130Z\xD6R HAZIR \xD7{0} \u2014 BEDAVA PAR\xC7ALAMA</color>"
+    english: "<color=#2ECC71>KATAL\u0130Z\xD6R HAZIR \xD7{0} \u2014 BEDAVA PAR\xC7ALAMA</color>"
+  - key: catalyst.ready_message
+    turkish: "<color=#2ECC71>KATAL\u0130Z\xD6R HAZIR! Joker'i bir kez bedava kullanabilirsin.</color>"
+    english: "<color=#2ECC71>KATAL\u0130Z\xD6R HAZIR! Joker'i bir kez bedava kullanabilirsin.</color>"
+  - key: combo.chain
+    turkish: "Z\u0130NC\u0130RLEME REAKS\u0130YON!"
+    english: "Z\u0130NC\u0130RLEME REAKS\u0130YON!"
+  - key: combo.double
+    turkish: "\xC7\u0130FTE BA\u011E!"
+    english: "\xC7\u0130FTE BA\u011E!"
+  - key: combo.single
+    turkish: "BA\u015EARILI SENTEZ!"
+    english: SUCCESSFUL SYNTHESIS!
+  - key: game.cancelbutton.text_tmp
+    turkish: "VAZGE\xC7"
+    english: "VAZGE\xC7"
+  - key: game.cancelbutton.text_tmp_2
+    turkish: "VAZGE\xC7"
+    english: "VAZGE\xC7"
+  - key: game.closehintbutton.text_tmp
+    turkish: ANLADIM
+    english: ANLADIM
+  - key: game.confirmbutton.text_tmp
+    turkish: UYGULA
+    english: UYGULA
+  - key: game.confirmbutton.text_tmp_2
+    turkish: UYGULA
+    english: UYGULA
+  - key: game.containerbox.subtitletext
+    turkish: "B\u0130L\u0130YOR MUYDUN?"
+    english: "B\u0130L\u0130YOR MUYDUN?"
+  - key: game.containerbox.titletext
+    turkish: LABORATUVAR MOLASI
+    english: LABORATUVAR MOLASI
+  - key: game.gameoverpanel.gameovertext
+    turkish: "\t   MATR\u0130S K\u0130L\u0130TLEND\u0130!\n\t\t      \n\t       
+      OYUN B\u0130TT\u0130!"
+    english: "\t   MATR\u0130S K\u0130L\u0130TLEND\u0130!\n\t\t      \n\t       
+      OYUN B\u0130TT\u0130!"
+  - key: game.hypothesispanel.infotext
+    turkish: "Uyar\u0131: Bir elementi veya bile\u015Fi\u011Fi matristen silerek
+      par\xE7alamak, maddenin i\xE7 yap\u0131s\u0131n\u0131 de\u011Fi\u015Ftirmedi\u011Fi
+      i\xE7in bir Fiziksel De\u011Fi\u015Fim sim\xFClasyonudur. Bu i\u015Flemi onayl\u0131yor
+      musun?"
+    english: "Uyar\u0131: Bir elementi veya bile\u015Fi\u011Fi matristen silerek
+      par\xE7alamak, maddenin i\xE7 yap\u0131s\u0131n\u0131 de\u011Fi\u015Ftirmedi\u011Fi
+      i\xE7in bir Fiziksel De\u011Fi\u015Fim sim\xFClasyonudur. Bu i\u015Flemi onayl\u0131yor
+      musun?"
+  - key: game.hypothesispanel.titletext
+    turkish: "H\u0130POTEZ DO\u011ERULAMA"
+    english: "H\u0130POTEZ DO\u011ERULAMA"
+  - key: game.jokerbutton.text_tmp
+    turkish: "PAR\xC7ALA"
+    english: "PAR\xC7ALA"
+  - key: game.levelcompletepanel.titletext
+    turkish: "TEBR\u0130KLER!"
+    english: "TEBR\u0130KLER!"
+  - key: game.mainmenubutton.text_tmp
+    turkish: "ANA MEN\xDC"
+    english: "ANA MEN\xDC"
+  - key: game.mainmenubutton.text_tmp_2
+    turkish: "ANA MEN\xDC"
+    english: "ANA MEN\xDC"
+  - key: game.mainmenubutton.text_tmp_3
+    turkish: "ANA MEN\xDC"
+    english: "ANA MEN\xDC"
+  - key: game.nextlevelbutton.text_tmp
+    turkish: "SONRAK\u0130 B\xD6L\xDCM"
+    english: "SONRAK\u0130 B\xD6L\xDCM"
+  - key: game.pausebutton.text_tmp
+    turkish: '||'
+    english: '||'
+  - key: game.restratbutton.text_tmp
+    turkish: "YEN\u0130DEN BA\u015ELA"
+    english: "YEN\u0130DEN BA\u015ELA"
+  - key: game.resumebutton.text_tmp
+    turkish: DEVAM ET
+    english: DEVAM ET
+  - key: game.revivebutton.text_tmp
+    turkish: "\u0130K\u0130NC\u0130 \u015EANS (Soru \xC7\xF6z)"
+    english: "\u0130K\u0130NC\u0130 \u015EANS (Soru \xC7\xF6z)"
+  - key: game.startexperimentbutton.text_tmp
+    turkish: "DENEY\u0130 BA\u015ELAT"
+    english: "DENEY\u0130 BA\u015ELAT"
+  - key: game.undobutton.text_tmp
+    turkish: "GER\u0130 AL"
+    english: "GER\u0130 AL"
+  - key: game.undopanel.titletext
+    turkish: "TERS\u0130N\u0130R TEPK\u0130ME ONAYI"
+    english: "TERS\u0130N\u0130R TEPK\u0130ME ONAYI"
+  - key: hint.exam_mode
+    turkish: "<color=red>SINAV MODU AKT\u0130F!</color>\nS\u0131nav modunda laboratuvar
+      asistan\u0131ndan yard\u0131m alamazs\u0131n. Kendi bilgine g\xFCvenmelisin
+      Ba\u015F Kimyager!"
+    english: "<color=red>SINAV MODU AKT\u0130F!</color>\nS\u0131nav modunda laboratuvar
+      asistan\u0131ndan yard\u0131m alamazs\u0131n. Kendi bilgine g\xFCvenmelisin
+      Ba\u015F Kimyager!"
+  - key: hint.footer
+    turkish: "\n\n<size=80%><color=#F1C40F>Kalan \u0130pucu Hakk\u0131n: {0} | Sonraki
+      Bedel: {1} Puan</color></size>"
+    english: "\n\n<size=80%><color=#F1C40F>Kalan \u0130pucu Hakk\u0131n: {0} | Sonraki
+      Bedel: {1} Puan</color></size>"
+  - key: hint.footer_free
+    turkish: "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipu\xE7lar\u0131 bedava ve
+      s\u0131n\u0131rs\u0131z</color></size>"
+    english: "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipu\xE7lar\u0131 bedava ve
+      s\u0131n\u0131rs\u0131z</color></size>"
+  - key: hint.generic
+    turkish: "Bu iki elementi birle\u015Ftirmek harika bir fikir olabilir!"
+    english: "Bu iki elementi birle\u015Ftirmek harika bir fikir olabilir!"
+  - key: hint.limit_reached
+    turkish: "Bu laboratuvar seans\u0131ndaki t\xFCm asistan haklar\u0131n\u0131
+      (3/3) t\xFCkettin Ba\u015F Kimyager! Art\u0131k kendi kimya bilgine g\xFCvenmelisin."
+    english: "Bu laboratuvar seans\u0131ndaki t\xFCm asistan haklar\u0131n\u0131
+      (3/3) t\xFCkettin Ba\u015F Kimyager! Art\u0131k kendi kimya bilgine g\xFCvenmelisin."
+  - key: hint.no_budget
+    turkish: "Laboratuvar b\xFCt\xE7emiz yetersiz! Asistan\u0131n {0}. ipucunu verebilmesi
+      i\xE7in <color=red>{1} puana</color> ihtiyac\u0131n var."
+    english: "Laboratuvar b\xFCt\xE7emiz yetersiz! Asistan\u0131n {0}. ipucunu verebilmesi
+      i\xE7in <color=red>{1} puana</color> ihtiyac\u0131n var."
+  - key: hint.no_merge
+    turkish: "\u015Eu an matriste yap\u0131labilecek hi\xE7bir kimyasal sentez g\xF6remiyorum!
+      Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
+    english: "\u015Eu an matriste yap\u0131labilecek hi\xE7bir kimyasal sentez g\xF6remiyorum!
+      Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
+  - key: mainmenu.addemailbutton.text_tmp
+    turkish: Ekle
+    english: Ekle
+  - key: mainmenu.btn_atom.text_tmp
+    turkish: "<b>ATOM S\u0130STEM\u0130</b>"
+    english: "<b>ATOM S\u0130STEM\u0130</b>"
+  - key: mainmenu.btn_deney.text_tmp
+    turkish: "<b> DENEY MEKAN\u0130\u011E\u0130</b>"
+    english: "<b> DENEY MEKAN\u0130\u011E\u0130</b>"
+  - key: mainmenu.btn_enerji.text_tmp
+    turkish: "<b>ENERJ\u0130 DENGES\u0130</b>"
+    english: "<b>ENERJ\u0130 DENGES\u0130</b>"
+  - key: mainmenu.btn_kurtarma.text_tmp
+    turkish: <b>KURTARMA SINAVI</b>
+    english: <b>KURTARMA SINAVI</b>
+  - key: mainmenu.btn_mod.text_tmp
+    turkish: <b>OYUN MODLARI</b>
+    english: <b>OYUN MODLARI</b>
+  - key: mainmenu.btn_tersinir.text_tmp
+    turkish: "<b>TERS\u0130N\u0130R TEPK\u0130ME</b>"
+    english: "<b>TERS\u0130N\u0130R TEPK\u0130ME</b>"
+  - key: mainmenu.button.text_tmp
+    turkish: X
+    english: X
+  - key: mainmenu.cancelbutton.text_tmp
+    turkish: "VAZGE\xC7"
+    english: "VAZGE\xC7"
+  - key: mainmenu.cardcontent.audiotitle
+    turkish: SES AYARLARI
+    english: SES AYARLARI
+  - key: mainmenu.cardcontent.gamemodetext
+    turkish: OYUN MODU
+    english: OYUN MODU
+  - key: mainmenu.cardcontent.learningtitle
+    turkish: "\xD6\u011ERENME TERC\u0130HLER\u0130"
+    english: "\xD6\u011ERENME TERC\u0130HLER\u0130"
+  - key: mainmenu.cardcontent.text_tmp
+    turkish: AYARLARI
+    english: AYARLARI
+  - key: mainmenu.confirmbutton.text_tmp
+    turkish: KAYDET
+    english: KAYDET
+  - key: mainmenu.detailsbutton.text_tmp
+    turkish: "<color=#48CAE4>Ayr\u0131nt\u0131lar\u0131 G\xF6r >"
+    english: "<color=#48CAE4>Ayr\u0131nt\u0131lar\u0131 G\xF6r >"
+  - key: mainmenu.exammodebtn.text_tmp
+    turkish: SINAV MOD
+    english: SINAV MOD
+  - key: mainmenu.flashcardsrow.flashcardstext
+    turkish: "Bilgi Kartlar\u0131"
+    english: "Bilgi Kartlar\u0131"
+  - key: mainmenu.freemodebtn.text_tmp
+    turkish: SERBEST MOD
+    english: SERBEST MOD
+  - key: mainmenu.herocard.profilementortext
+    turkish: 'Mentor: Marie Curie'
+    english: 'Mentor: Marie Curie'
+  - key: mainmenu.herocard.profileunvantext
+    turkish: "<color=#2ECC71>Ba\u015F Kimyager Aday\u0131</color>"
+    english: "<color=#2ECC71>Ba\u015F Kimyager Aday\u0131</color>"
+  - key: mainmenu.hintsrow.flashcardstext
+    turkish: "Mentor \u0130pu\xE7lar\u0131"
+    english: "Mentor \u0130pu\xE7lar\u0131"
+  - key: mainmenu.howtoplaypanel.text_tmp
+    turkish: "\"Maddelerin gizli d\xFCnyas\u0131n\u0131 ke\u015Ffet, elementleri
+      birle\u015Ftir ve kendi kimyasal yolculu\u011Funu olu\u015Ftur.\""
+    english: "\"Maddelerin gizli d\xFCnyas\u0131n\u0131 ke\u015Ffet, elementleri
+      birle\u015Ftir ve kendi kimyasal yolculu\u011Funu olu\u015Ftur.\""
+  - key: mainmenu.level1.text_tmp
+    turkish: H<sub>2</sub>O
+    english: H<sub>2</sub>O
+  - key: mainmenu.level2.text_tmp
+    turkish: NaCl
+    english: NaCl
+  - key: mainmenu.level3.text_tmp
+    turkish: CO<sub>2</sub>
+    english: CO<sub>2</sub>
+  - key: mainmenu.level4.text_tmp
+    turkish: 'F<sub>2</sub>CO<sub>3</sub>
+
+      NH<sub>3</sub>
+
+'
+    english: 'F<sub>2</sub>CO<sub>3</sub>
+
+      NH<sub>3</sub>
+
+'
+  - key: mainmenu.level5.text_tmp
+    turkish: 'CaO
+
+      CO<sub>2</sub>
+
+'
+    english: 'CaO
+
+      CO<sub>2</sub>
+
+'
+  - key: mainmenu.level6.text_tmp
+    turkish: 'H<sub>2</sub>CO<sub>3</sub>
+
+'
+    english: 'H<sub>2</sub>CO<sub>3</sub>
+
+'
+  - key: mainmenu.level7.text_tmp
+    turkish: 'CaCO<sub>3</sub>
+
+      H<sub>2</sub>CO<sub>3</sub>
+
+
+
+'
+    english: 'CaCO<sub>3</sub>
+
+      H<sub>2</sub>CO<sub>3</sub>
+
+
+
+'
+  - key: mainmenu.levelselectionpanel.text_tmp
+    turkish: "<size=120%><b>ATOM\u0130K YOLCULUK</b></size>\\n<size=80%>Hedef: Temel
+      bile\u015Fik sentezlerini \xF6\u011Fren</size>"
+    english: "<size=120%><b>ATOM\u0130K YOLCULUK</b></size>\\n<size=80%>Hedef: Temel
+      bile\u015Fik sentezlerini \xF6\u011Fren</size>"
+  - key: mainmenu.musicrow.musictext
+    turkish: "M\xFCzik"
+    english: "M\xFCzik"
+  - key: mainmenu.normalmodebtn.text_tmp
+    turkish: NORMAL MOD
+    english: NORMAL MOD
+  - key: mainmenu.registrationpanel.text_tmp
+    turkish: "<size=120%>Kimya Akademisi</size>\\n<size=50%>Laboratuvar kimli\u011Fini
+      olu\u015Ftur.</size>"
+    english: "<size=120%>Kimya Akademisi</size>\\n<size=50%>Laboratuvar kimli\u011Fini
+      olu\u015Ftur.</size>"
+  - key: mainmenu.resetprogressbutton.text_tmp
+    turkish: "\u0130LERLEMEY\u0130 SIFIRLA"
+    english: "\u0130LERLEMEY\u0130 SIFIRLA"
+  - key: mainmenu.sfxrow.musictext
+    turkish: Efektler
+    english: Efektler
+  - key: mainmenu.singinbutton.text_tmp
+    turkish: "LABORATUVARA G\u0130R"
+    english: "LABORATUVARA G\u0130R"
+  - key: mainmenu.statcard_bilesik.text_tmp
+    turkish: "A\xC7ILAN B\xD6L\xDCM"
+    english: "A\xC7ILAN B\xD6L\xDCM"
+  - key: mainmenu.statcard_kaza.titletext
+    turkish: LABORATUVAR KAZASI
+    english: LABORATUVAR KAZASI
+  - key: mainmenu.statcard_sentez.text_tmp
+    turkish: TOPLAM SENTEZ
+    english: TOPLAM SENTEZ
+  - key: mainmenu.statcard_teori.text_tmp
+    turkish: "QU\u0130Z BA\u015EARISI"
+    english: "QU\u0130Z BA\u015EARISI"
+  - key: mainmenu.statssection.statsheadertext
+    turkish: "LABORATUVAR \u0130STAT\u0130ST\u0130KLER\u0130"
+    english: "LABORATUVAR \u0130STAT\u0130ST\u0130KLER\u0130"
+  - key: profile.default_name
+    turkish: "Ba\u015F Kimyager"
+    english: "Ba\u015F Kimyager"
+  - key: profile.invalid_email
+    turkish: "<color=red>Kabul edilmeyen E-Posta format\u0131!</color>"
+    english: "<color=red>Kabul edilmeyen E-Posta format\u0131!</color>"
+  - key: profile.no_email
+    turkish: "E-posta ba\u011Flanmad\u0131"
+    english: "E-posta ba\u011Flanmad\u0131"
+  - key: quiz.correct
+    turkish: "<color=green>TEBR\u0130KLER! DO\u011ERU CEVAP.</color>\nMatris temizleniyor,
+      laboratuvara geri d\xF6n\xFCyorsun!"
+    english: "<color=green>TEBR\u0130KLER! DO\u011ERU CEVAP.</color>\nMatris temizleniyor,
+      laboratuvara geri d\xF6n\xFCyorsun!"
+  - key: quiz.wrong
+    turkish: "<color=red>MAALESEF YANLI\u015E CEVAP!</color>\nLaboratuvar tamamen
+      kilitlendi."
+    english: "<color=red>MAALESEF YANLI\u015E CEVAP!</color>\nLaboratuvar tamamen
+      kilitlendi."
+  - key: registration.anonymous
+    turkish: "G\xF6zlemci Kayd\u0131 (\u0130simsiz A\u011F)"
+    english: "G\xF6zlemci Kayd\u0131 (\u0130simsiz A\u011F)"
+  - key: registration.email_optional
+    turkish: "<color=#ADB5BD>Laboratuvar Kayd\u0131 (\u0130ste\u011Fe Ba\u011Fl\u0131)
+      - \u0130lerlemeni farkl\u0131 cihazlarda ta\u015F\u0131</color>"
+    english: "<color=#ADB5BD>Laboratuvar Kayd\u0131 (\u0130ste\u011Fe Ba\u011Fl\u0131)
+      - \u0130lerlemeni farkl\u0131 cihazlarda ta\u015F\u0131</color>"
+  - key: registration.invalid_email
+    turkish: "<color=red>Kabul edilmeyen E-Posta format\u0131!</color>"
+    english: "<color=red>Kabul edilmeyen E-Posta format\u0131!</color>"
+  - key: registration.mentor_required
+    turkish: "\xD6nce bir mentor se\xE7"
+    english: "\xD6nce bir mentor se\xE7"
+  - key: registration.name_required
+    turkish: "Kimyager ad\u0131n\u0131 yazmal\u0131s\u0131n"
+    english: "Kimyager ad\u0131n\u0131 yazmal\u0131s\u0131n"
+  - key: registration.no_mentor_chosen
+    turkish: "<color=#ADB5BD>Mentor se\xE7ilmedi...</color>"
+    english: "<color=#ADB5BD>Mentor se\xE7ilmedi...</color>"
+  - key: system.matrix_reshuffled
+    turkish: "MATR\u0130S YEN\u0130DEN D\xDCZENLEND\u0130"
+    english: "MATR\u0130S YEN\u0130DEN D\xDCZENLEND\u0130"
+  - key: undo.explain
+    turkish: "Kimyada baz\u0131 reaksiyonlar geri d\xF6nd\xFCr\xFClebilir. Bu i\u015Flem
+      matrisi bir \xF6nceki hamleye geri al\u0131r.\n\nBedeli: <color={0}>{1} Puan</color>\nKalan
+      Hakk\u0131n: <color={2}>{3}</color>"
+    english: "Kimyada baz\u0131 reaksiyonlar geri d\xF6nd\xFCr\xFClebilir. Bu i\u015Flem
+      matrisi bir \xF6nceki hamleye geri al\u0131r.\n\nBedeli: <color={0}>{1} Puan</color>\nKalan
+      Hakk\u0131n: <color={2}>{3}</color>"
