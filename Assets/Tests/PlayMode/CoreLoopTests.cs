@@ -431,7 +431,14 @@ public class CoreLoopTests
         yield return new WaitForSeconds(SpawnBekleme);
         int ikiSentez = (int)Get(grid, "catalystCharge");
 
-        // Birleşmesiz hamle şarjı sıfırlamamalı
+        // Birleşmesiz hamle şarjı sıfırlamamalı (tek taş kayar, birleşme yok)
+        SetBoard(new[]
+        {
+            "",  "", "", "Fe",
+            "",  "", "", "",
+            "",  "", "", "",
+            "",  "", "", ""
+        });
         Shift("left");
         yield return new WaitForSeconds(SpawnBekleme);
         int bosHamleSonrasi = (int)Get(grid, "catalystCharge");
@@ -576,6 +583,133 @@ public class CoreLoopTests
 
         Assert.GreaterOrEqual(sonra, 2, "bekleyen taş ikinci hamleden önce doğmalı");
         yield return null;
+    }
+
+    // ---- Serbest mod ----------------------------------------------------
+
+    private MonoBehaviour UI()
+    {
+        MonoBehaviour ui = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "UIManager");
+        Assert.IsNotNull(ui, "UIManager yok");
+        return ui;
+    }
+
+    /// <summary>Hiçbir komşusu birleşmeyen dolu tahta (Na / Fe dama deseni).</summary>
+    private void KilitliTahta()
+    {
+        string[] layout = new string[16];
+        for (int i = 0; i < 16; i++)
+        {
+            int row = i / 4, col = i % 4;
+            layout[i] = ((row + col) % 2 == 0) ? "Na" : "Fe";
+        }
+        SetBoard(layout);
+    }
+
+    // Serbest modda matris kilitlenince oyun bitmez; "matrisi temizle" akışı açılır.
+    [UnityTest]
+    public IEnumerator SerbestModdaOyunBitmez()
+    {
+        MonoBehaviour ui = UI();
+        Field(grid, "currentGameMode").SetValue(grid, 2);
+        PlayerPrefs.SetInt("TotalAccidents", 5);
+
+        KilitliTahta();
+        Assert.AreEqual(16, TileCount(), "tahta dolu olmalı");
+
+        Invoke("CheckGameOver");
+        yield return null;
+
+        bool temizlemeAcik = (bool)GetProp(ui, "IsFreeModeCleanupOpen");
+        int kaza = PlayerPrefs.GetInt("TotalAccidents", 0);
+        GameObject panel = (GameObject)Get(ui, "gameOverPanel");
+        GameObject revive = (GameObject)Get(ui, "reviveButton");
+
+        Debug.Log($"NEXUM_SERBEST_BITMEZ: temizlemeAcik={temizlemeAcik} panel={panel.activeSelf} " +
+                  $"revive={revive.activeSelf} kaza={kaza}");
+
+        Assert.IsTrue(temizlemeAcik, "serbest modda temizleme akışı açılmalı");
+        Assert.IsTrue(panel.activeSelf, "panel açılmalı");
+        Assert.IsFalse(revive.activeSelf, "serbest modda quiz/revive olmamalı");
+        Assert.AreEqual(5, kaza, "serbest modda laboratuvar kazası sayılmamalı");
+
+        // "MATRİSİ TEMİZLE" -> tahta temizlenir, oyun devam eder
+        ui.GetType().GetMethod("RestartGame", BindingFlags.Public | BindingFlags.Instance)
+          .Invoke(ui, null);
+        yield return null;
+
+        int baslangic = StartingTileCount();
+
+        Debug.Log($"NEXUM_SERBEST_TEMIZLE: panel={panel.activeSelf} tas={TileCount()} (beklenen {baslangic})");
+        Assert.IsFalse(panel.activeSelf, "temizlemeden sonra panel kapanmalı");
+        Assert.AreEqual(baslangic, TileCount(), "tahta başlangıç taş sayısına dönmeli");
+    }
+
+    private int StartingTileCount()
+    {
+        var levels = (IList)Get(levelManager, "levels");
+        int index = (int)Get(levelManager, "currentLevelIndex");
+        return (int)Get(levels[index], "startingTileCount");
+    }
+
+    // Serbest modda ipucu bedava ve sınırsız.
+    [UnityTest]
+    public IEnumerator SerbestModdaIpucuBedava()
+    {
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+            .FirstOrDefault(m => m.GetType().Name == "GameManager");
+        Assert.IsNotNull(gm, "GameManager yok");
+
+        Field(grid, "currentGameMode").SetValue(grid, 2);
+        Field(grid, "usedHints").SetValue(grid, 0);
+        Field(gm, "currentScore").SetValue(gm, 500);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Invoke("RequestHint");
+        yield return null;
+
+        int skor = (int)Get(gm, "currentScore");
+        int kullanilan = (int)Get(grid, "usedHints");
+        Debug.Log($"NEXUM_SERBEST_IPUCU: skor={skor} (beklenen 500) kullanilanIpucu={kullanilan}");
+
+        Assert.AreEqual(500, skor, "serbest modda ipucu puan harcamamalı");
+        Assert.AreEqual(0, kullanilan, "serbest modda ipucu hakkı tükenmemeli");
+    }
+
+    // Serbest modda kazanma ekranı açılmaz.
+    [UnityTest]
+    public IEnumerator SerbestModdaKazanmaYok()
+    {
+        MonoBehaviour ui = UI();
+        Field(grid, "currentGameMode").SetValue(grid, 2);
+        Field(grid, "hasWon").SetValue(grid, false);
+        SetSingleGoal("Tile_H2", 1);
+
+        SetBoard(new[]
+        {
+            "H", "H", "", "",
+            "",  "",  "", "",
+            "",  "",  "", "",
+            "",  "",  "", ""
+        });
+
+        Shift("left");
+        yield return new WaitForSeconds(SpawnBekleme);
+
+        bool hasWon = (bool)Get(grid, "hasWon");
+        GameObject win = (GameObject)Get(ui, "winPanel");
+        Debug.Log($"NEXUM_SERBEST_KAZANMA: hasWon={hasWon} winPanel={win.activeSelf}");
+
+        Assert.IsFalse(hasWon, "serbest modda kazanma bayrağı kurulmamalı");
+        Assert.IsFalse(win.activeSelf, "serbest modda kazanma ekranı açılmamalı");
     }
 
     // Hiçbir şeyi değiştirmeyen kaydırma geri alma yığınını şişirmemeli.

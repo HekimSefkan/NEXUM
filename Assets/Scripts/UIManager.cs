@@ -127,6 +127,13 @@ public class UIManager : MonoBehaviour
         goalFills.Clear();
         goalTexts.Clear();
 
+        // Serbest modda bölüm hedefi yok; beher paneli hiç gösterilmez.
+        // Ayar doğrudan PlayerPrefs'ten okunur: GridManager.Start ile UIManager.Start
+        // arasındaki sıra garanti değil.
+        bool freeMode = PlayerPrefs.GetInt("SelectedGameMode", 0) == 2;
+        goalsContainer.gameObject.SetActive(!freeMode);
+        if (freeMode) return;
+
         var currentGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
 
         foreach(var goal in currentGoals)
@@ -156,6 +163,8 @@ public class UIManager : MonoBehaviour
 
     public void UpdateGoalUI()
     {
+        if (goalFills.Count == 0) return;   // serbest modda beher yok
+
         var currentGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
 
         for(int i = 0; i < currentGoals.Count; i++)
@@ -282,8 +291,19 @@ public class UIManager : MonoBehaviour
     // Bayrak sahne örneğinde durur; yeniden başlatınca (sahne yüklenince) sıfırlanır.
     private bool accidentCounted = false;
 
+    // Serbest modda matris kilitlenince oyun bitmez: aynı panel "temizle ve devam et"
+    // olarak kullanılır. Panel objesi ortak olduğu için yeni sahne objesi gerekmez.
+    private bool freeModeCleanupOpen = false;
+    public bool IsFreeModeCleanupOpen { get { return freeModeCleanupOpen; } }
+
     public void ShowGameOver()
     {
+        if (GridManager.Instance != null && GridManager.Instance.IsFreeMode)
+        {
+            ShowFreeModeCleanup();
+            return;
+        }
+
         if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.gameOverClip);
 
         if (!accidentCounted)
@@ -295,6 +315,36 @@ public class UIManager : MonoBehaviour
 
         gameOverPanel.SetActive(true);
         reviveButton.SetActive(!GridManager.Instance.hasUsedRevive);
+    }
+
+    /// <summary>Serbest mod: kayıp yok, laboratuvar kazası sayılmaz, quiz yok.</summary>
+    public void ShowFreeModeCleanup()
+    {
+        freeModeCleanupOpen = true;
+
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.errorClip);
+
+        gameOverPanel.SetActive(true);
+        reviveButton.SetActive(false);
+
+        SetGameOverTexts("MATRİS DOLDU", "MATRİSİ TEMİZLE");
+    }
+
+    private void SetGameOverTexts(string title, string restartLabel)
+    {
+        Transform t = gameOverPanel.transform.Find("GameOverText");
+        if (t != null)
+        {
+            TextMeshProUGUI tmp = t.GetComponent<TextMeshProUGUI>();
+            if (tmp != null) tmp.text = title;
+        }
+
+        Transform r = gameOverPanel.transform.Find("RestratButton/Text (TMP)");
+        if (r != null)
+        {
+            TextMeshProUGUI tmp = r.GetComponent<TextMeshProUGUI>();
+            if (tmp != null) tmp.text = restartLabel;
+        }
     }
 
     public void ShowWinScreen()
@@ -319,6 +369,16 @@ public class UIManager : MonoBehaviour
     public void RestartGame()
     {
         PlayButtonSound();
+
+        // Serbest modda bu buton sahneyi yeniden yüklemez; matrisi temizleyip devam eder
+        if (freeModeCleanupOpen)
+        {
+            freeModeCleanupOpen = false;
+            gameOverPanel.SetActive(false);
+            if (GridManager.Instance != null) GridManager.Instance.ClearMatrixAndContinue();
+            return;
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

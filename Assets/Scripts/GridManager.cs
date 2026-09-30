@@ -96,6 +96,9 @@ public class GridManager : MonoBehaviour
     [Header("Görsel Efektler")]
     public GameObject mergeParticlePrefab; 
 
+    /// <summary>Serbest mod: hedefsiz, kaybetmesiz keşif alanı.</summary>
+    public bool IsFreeMode { get { return currentGameMode == 2; } }
+
     public int GetCurrentHintCost()
     {
         return (usedHints + 1) * baseHintCost; 
@@ -584,6 +587,31 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Serbest mod: matris kilitlenince oyun bitmez, tahta temizlenip devam edilir.
+    /// Skor ve katalizör şarjı korunur; geri alma yığını temizlenir (eski tahta yok).
+    /// </summary>
+    public void ClearMatrixAndContinue()
+    {
+        CancelPendingSpawns();
+
+        foreach (Transform cell in cells)
+        {
+            for (int i = cell.childCount - 1; i >= 0; i--)
+            {
+                Transform tile = cell.GetChild(i);
+                tile.DOKill();
+                tile.SetParent(null);
+                Destroy(tile.gameObject);
+            }
+        }
+
+        historyStack.Clear();
+
+        int startCount = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].startingTileCount;
+        for (int i = 0; i < startCount; i++) SpawnTile();
+    }
+
     public void CheckGameOver()
     {
         foreach (Transform cell in cells) if (cell.childCount == 0) return; 
@@ -614,6 +642,9 @@ public class GridManager : MonoBehaviour
         // olabildiği için (kombo) bu kontrol olmadan aynı hamlede tekrar tetikleniyordu.
         // Bayrak sahne örneğinde durur; sahne yeniden yüklenince kendiliğinden sıfırlanır.
         if (hasWon) return;
+
+        // Serbest modda bölüm hedefi ve kazanma ekranı yoktur.
+        if (IsFreeMode) return;
 
         var currentLevel = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex];
         
@@ -744,20 +775,26 @@ public class GridManager : MonoBehaviour
             return; 
         }
         
-        if (usedHints >= maxHints)
+        // Serbest modda ipucu bedava ve sınırsızdır; hak/bütçe kontrolü atlanır.
+        if (!IsFreeMode)
         {
-            UIManager.Instance.ShowHintMessage("Bu laboratuvar seansındaki tüm asistan haklarını (3/3) tükettin Baş Kimyager! Artık kendi kimya bilgine güvenmelisin.");
-            return;
+            if (usedHints >= maxHints)
+            {
+                UIManager.Instance.ShowHintMessage("Bu laboratuvar seansındaki tüm asistan haklarını (3/3) tükettin Baş Kimyager! Artık kendi kimya bilgine güvenmelisin.");
+                return;
+            }
+
+            GameManager budget = FindObjectOfType<GameManager>();
+            int currentCost = GetCurrentHintCost();
+
+            if (budget != null && budget.currentScore < currentCost)
+            {
+                UIManager.Instance.ShowHintMessage($"Laboratuvar bütçemiz yetersiz! Asistanın {usedHints + 1}. ipucunu verebilmesi için <color=red>{currentCost} puana</color> ihtiyacın var.");
+                return;
+            }
         }
 
         GameManager gm = FindObjectOfType<GameManager>();
-        int currentCost = GetCurrentHintCost(); 
-        
-        if (gm != null && gm.currentScore < currentCost)
-        {
-            UIManager.Instance.ShowHintMessage($"Laboratuvar bütçemiz yetersiz! Asistanın {usedHints + 1}. ipucunu verebilmesi için <color=red>{currentCost} puana</color> ihtiyacın var.");
-            return;
-        }
 
         var currentGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
         Transform fallbackT1 = null; Transform fallbackT2 = null;
@@ -807,10 +844,13 @@ public class GridManager : MonoBehaviour
 
     private void ActivateHint(Transform t1, Transform t2, string hintMsg, GameManager gm)
     {
-        int currentCost = GetCurrentHintCost(); 
-        if (gm != null) gm.SubtractScore(currentCost); 
-
-        usedHints++; 
+        // Serbest modda ipucu bedava; hak da tükenmez
+        if (!IsFreeMode)
+        {
+            int currentCost = GetCurrentHintCost();
+            if (gm != null) gm.SubtractScore(currentCost);
+            usedHints++;
+        }
 
         activeHintTile1 = t1;
         activeHintTile2 = t2;
@@ -820,10 +860,17 @@ public class GridManager : MonoBehaviour
 
         string coreMsg = string.IsNullOrEmpty(hintMsg) ? "Bu iki elementi birleştirmek harika bir fikir olabilir!" : hintMsg;
         
-        int remainingHints = maxHints - usedHints;
-        string nextCostText = (remainingHints > 0) ? GetCurrentHintCost().ToString() : "-";
-        
-        string infoFooter = $"\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {remainingHints} | Sonraki Bedel: {nextCostText} Puan</color></size>";
+        string infoFooter;
+        if (IsFreeMode)
+        {
+            infoFooter = "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>";
+        }
+        else
+        {
+            int remainingHints = maxHints - usedHints;
+            string nextCostText = (remainingHints > 0) ? GetCurrentHintCost().ToString() : "-";
+            infoFooter = $"\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {remainingHints} | Sonraki Bedel: {nextCostText} Puan</color></size>";
+        }
         
         UIManager.Instance.ShowHintMessage(coreMsg + infoFooter);
     }
