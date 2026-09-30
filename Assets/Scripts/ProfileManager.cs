@@ -34,7 +34,7 @@ public class ProfileManager : MonoBehaviour
 
     void Start()
     {
-        if (PlayerPrefs.HasKey("PlayerName"))
+        if (SaveService.HasProfile)
         {
             LoadProfileData();
         }
@@ -43,23 +43,23 @@ public class ProfileManager : MonoBehaviour
     public void LoadProfileData()
     {
         // 1. Temel Verileri Çek
-        string playerName = PlayerPrefs.GetString("PlayerName", "Baş Kimyager");
-        string playerEmail = PlayerPrefs.GetString("PlayerEmail", ""); // E-postayı çek
-        int maxLevel = PlayerPrefs.GetInt("MaxLevelUnlocked", 1);
-        int avatarIndex = PlayerPrefs.GetInt("PlayerAvatarIndex", 0);
+        string playerName = SaveService.HasProfile ? SaveService.Data.playerName : Loc.Get(CodeStrings.ProfileDefaultName);
+        string playerEmail = SaveService.Data.playerEmail; // E-postayı çek
+        int maxLevel = Mathf.Max(1, SaveService.Data.maxLevelUnlocked);
+        int avatarIndex = SaveService.Data.avatarIndex;
 
-        int totalSynthesis = PlayerPrefs.GetInt("TotalSynthesis", 0);
-        int totalAccidents = PlayerPrefs.GetInt("TotalAccidents", 0);
-        int quizAttempts = PlayerPrefs.GetInt("QuizAttempts", 0);
-        int quizCorrect = PlayerPrefs.GetInt("QuizCorrect", 0);
+        int totalSynthesis = SaveService.Data.totalSynthesis;
+        int totalAccidents = SaveService.Data.totalAccidents;
+        int quizAttempts = SaveService.Data.quizAttempts;
+        int quizCorrect = SaveService.Data.quizCorrect;
 
-        if (!PlayerPrefs.HasKey("NexumID"))
+        if (string.IsNullOrEmpty(SaveService.Data.nexumId))
         {
             int randomID = Random.Range(1000, 9999);
-            PlayerPrefs.SetString("NexumID", "NX-" + randomID.ToString());
-            PlayerPrefs.Save();
+            SaveService.Data.nexumId = "NX-" + randomID.ToString();
+            SaveService.SaveNow();
         }
-        string nexumID = PlayerPrefs.GetString("NexumID");
+        string nexumID = SaveService.Data.nexumId;
 
         // Hiç quiz çözülmediyse "%0" yanıltıcı olur; veri yok demek için tire gösterilir
         string quizRatioText = "—";
@@ -77,7 +77,7 @@ public class ProfileManager : MonoBehaviour
         // E-Posta Kontrolü ve UI Güncellemesi
         if (string.IsNullOrEmpty(playerEmail))
         {
-            if (profileEmailText != null) profileEmailText.text = "E-posta bağlanmadı";
+            if (profileEmailText != null) profileEmailText.text = Loc.Get(CodeStrings.ProfileNoEmail);
             if (addEmailButtonObj != null) addEmailButtonObj.SetActive(true); // Ekle butonunu göster
         }
         else
@@ -130,15 +130,15 @@ public class ProfileManager : MonoBehaviour
         // Güvenlik: Geçersiz format engellemesi
         if (!IsValidEmail(newEmail))
         {
-            if (emailWarningText != null) emailWarningText.text = "<color=red>Kabul edilmeyen E-Posta formatı!</color>";
+            if (emailWarningText != null) emailWarningText.text = Loc.Get(CodeStrings.ProfileInvalidEmail);
             if (emailInputField != null) emailInputField.transform.DOKill(true);
             if (emailInputField != null) emailInputField.transform.DOShakePosition(0.4f, new Vector3(15f, 0, 0), 20);
             return;
         }
 
         // Başarılı kayıt işlemi
-        PlayerPrefs.SetString("PlayerEmail", newEmail);
-        PlayerPrefs.Save();
+        SaveService.Data.playerEmail = newEmail;
+        SaveService.SaveNow();
         
         LoadProfileData(); // Ekrandaki yazıyı anında yenile
         CloseEmailPopup(); // Pop-up'ı kapat

@@ -43,10 +43,10 @@ public class BackButtonTests
     {
         // Kayıt ekranı açıkken geri tuşu bilerek yutuluyor (kaydı iptal etmesin diye).
         // Bu testler "kayıtlı oyuncu" durumunu ölçtüğü için kaydı önceden kuruyoruz.
-        hadName = PlayerPrefs.HasKey("PlayerName");
-        savedName = PlayerPrefs.GetString("PlayerName", "");
-        PlayerPrefs.SetString("PlayerName", "Test Kimyager");
-        PlayerPrefs.SetInt("PlayerAvatarIndex", 0);
+        hadName = SaveService.HasProfile;
+        savedName = SaveService.Data.playerName;
+        SaveService.Data.playerName = "Test Kimyager";
+        SaveService.Data.avatarIndex = 0;
 
         System.Type type = System.AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
@@ -69,9 +69,8 @@ public class BackButtonTests
     [TearDown]
     public void TearDown()
     {
-        if (hadName) PlayerPrefs.SetString("PlayerName", savedName);
-        else PlayerPrefs.DeleteKey("PlayerName");
-        PlayerPrefs.Save();
+        SaveService.Data.playerName = hadName ? savedName : "";
+        SaveService.SaveNow();
     }
 
     [UnityTest]

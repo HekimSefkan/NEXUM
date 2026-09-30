@@ -180,7 +180,7 @@ namespace Nexum.Core
 
         private static void ShowExitHint()
         {
-            const string message = "Çıkmak için tekrar basın";
+            string message = Loc.Get(CodeStrings.BackPressAgain);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             // Yeni sahne objesi gerektirmeyen tek geri bildirim yolu: Android'in kendi Toast'ı

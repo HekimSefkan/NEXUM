@@ -121,11 +121,11 @@ public class LayoutProbeTests
     public IEnumerator OyunHudOlc()
     {
         // Level 1 (tek hedef) ve Level 4 (iki hedef)
-        int savedLevel = PlayerPrefs.GetInt("SelectedLevel", 0);
+        int savedLevel = SaveService.Data.selectedLevel;
         foreach (int level in new[] { 0, 3 })
         {
-            PlayerPrefs.SetInt("SelectedLevel", level);
-            PlayerPrefs.SetInt("TutorialRead_Level_" + level, 1);
+            SaveService.Data.selectedLevel = level;
+            SaveService.SetTutorialRead(level);
 
             SceneManager.LoadScene("Game");
             yield return null;
@@ -181,7 +181,7 @@ public class LayoutProbeTests
             }
         }
 
-        PlayerPrefs.SetInt("SelectedLevel", savedLevel);
+        SaveService.Data.selectedLevel = savedLevel;
         Assert.Pass();
     }
 }

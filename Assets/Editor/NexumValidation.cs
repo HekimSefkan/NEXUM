@@ -41,6 +41,7 @@ public static class NexumValidation
     {
         "Elements",               // EncyclopediaManager: Resources.LoadAll<ElementData>("Elements")
         "DOTweenSettings.asset",  // DOTween kendi yükler
+        "Localization",           // Loc: Resources.Load<LocalizationTable>("Localization/LocalizationTable")
     };
 
     // =========================================
@@ -112,6 +113,8 @@ public static class NexumValidation
         }
 
         CheckProjectSettings(problems);
+        CheckSaveServiceOwnership(problems);
+        CheckLocalization(problems, warnings);
         CheckElementData(warnings);
         CheckAudioImport(warnings);
         CheckResourcesFolder(warnings);
@@ -675,6 +678,156 @@ public static class NexumValidation
             path = t.name + "/" + path;
         }
         return path;
+    }
+
+    // Kalıcı veri tek kapıdan geçer: PlayerPrefs yalnızca SaveService.cs içinde
+    // kullanılabilir. Başka yerde doğrudan çağrı varsa şema ve göç garantisi
+    // bozulur; bu yüzden FAIL.
+    private static void CheckSaveServiceOwnership(List<string> problems)
+    {
+        // Parçalı yazılıyor ki bu dosyanın kendisi kurala takılmasın
+        string Needle = "Player" + "Prefs.";
+
+        foreach (string file in Directory.GetFiles("Assets", "*.cs", SearchOption.AllDirectories))
+        {
+            string normalized = file.Replace("\\\\", "/");
+            if (normalized.EndsWith("SaveService.cs")) continue;
+            if (normalized.StartsWith("Assets/Plugins/")) continue;
+            if (normalized.StartsWith("Assets/TextMesh Pro/")) continue;
+
+            // İstisnalar: bu kuralın kendi kaynağı ve göç testi (eski anahtarları
+            // bilerek yazıp okuması gerekiyor).
+            if (normalized.EndsWith("NexumValidation.cs")) continue;
+            if (normalized.EndsWith("SaveServiceTests.cs")) continue;
+
+            string[] lines = File.ReadAllLines(file);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int at = lines[i].IndexOf(Needle);
+                if (at < 0) continue;
+
+                // Yorum satırındaki geçişler sorun değil
+                int comment = lines[i].IndexOf("//");
+                if (comment >= 0 && comment < at) continue;
+
+                problems.Add($"{normalized}:{i + 1} SaveService dışında PlayerPrefs kullanımı");
+            }
+        }
+    }
+
+    // ------------------------------------------------------------- lokalizasyon
+    // 1) Boş ya da sözlükte olmayan anahtar -> FAIL
+    // 2) Kaynak JSON ile derlenmiş asset ayrışmışsa -> FAIL
+    // 3) Kodda sabit yazılmış kullanıcı metni -> WARN
+    private static void CheckLocalization(List<string> problems, List<string> warnings)
+    {
+        LocalizationTable table = AssetDatabase.LoadAssetAtPath<LocalizationTable>(
+            "Assets/Resources/Localization/LocalizationTable.asset");
+        if (table == null)
+        {
+            problems.Add("Sözlük asset'i yok: Assets/Resources/Localization/LocalizationTable.asset " +
+                         "(NEXUM -> Metinleri Sözlüğe Bağla)");
+            return;
+        }
+
+        HashSet<string> keys = new HashSet<string>();
+        foreach (LocalizationTable.Entry e in table.entries)
+        {
+            if (e == null || string.IsNullOrEmpty(e.key)) continue;
+            if (!keys.Add(e.key)) problems.Add($"Sözlükte yinelenen anahtar: {e.key}");
+            if (string.IsNullOrEmpty(e.turkish)) problems.Add($"Sözlükte Türkçe karşılığı boş anahtar: {e.key}");
+        }
+
+        // Sahnelerdeki LocalizedText anahtarları
+        foreach (EditorBuildSettingsScene buildScene in EditorBuildSettings.scenes)
+        {
+            if (!File.Exists(buildScene.path)) continue;
+            Scene scene = EditorSceneManager.OpenScene(buildScene.path, OpenSceneMode.Single);
+            foreach (GameObject root in scene.GetRootGameObjects())
+            {
+                foreach (LocalizedText loc in root.GetComponentsInChildren<LocalizedText>(true))
+                {
+                    if (string.IsNullOrEmpty(loc.key))
+                    {
+                        problems.Add($"{buildScene.path}: {HierarchyPath(loc.transform)} LocalizedText anahtarı boş");
+                    }
+                    else if (!keys.Contains(loc.key))
+                    {
+                        problems.Add($"{buildScene.path}: {HierarchyPath(loc.transform)} sözlükte olmayan anahtar -> {loc.key}");
+                    }
+                }
+            }
+        }
+
+        // Koddan istenen anahtarlar
+        foreach (KeyValuePair<string, string> pair in CodeStrings.All)
+        {
+            if (!keys.Contains(pair.Key)) problems.Add($"Kodun istediği anahtar sözlükte yok -> {pair.Key}");
+        }
+
+        // Kaynak JSON ile derlenmiş asset ayrışmış mı?
+        CheckLocalizationDrift(keys, problems);
+
+        // Kodda sabit yazılmış kullanıcı metni
+        CheckHardcodedText(warnings);
+    }
+
+    private static void CheckLocalizationDrift(HashSet<string> baked, List<string> problems)
+    {
+        const string trPath = "Assets/Data/Localization/tr.json";
+        if (!File.Exists(trPath))
+        {
+            problems.Add($"Kaynak sözlük yok: {trPath}");
+            return;
+        }
+
+        LocFile tr = JsonUtility.FromJson<LocFile>(File.ReadAllText(trPath));
+        if (tr == null || tr.entries == null)
+        {
+            problems.Add($"{trPath} okunamadı");
+            return;
+        }
+
+        foreach (LocFile.Pair p in tr.entries)
+        {
+            if (p == null || string.IsNullOrEmpty(p.key)) continue;
+            if (!baked.Contains(p.key))
+            {
+                problems.Add($"tr.json ile derlenmiş sözlük ayrışmış: {p.key} asset'te yok " +
+                             "(NEXUM -> Metinleri Sözlüğe Bağla)");
+            }
+        }
+
+        if (tr.entries.Count != baked.Count)
+        {
+            problems.Add($"tr.json {tr.entries.Count} anahtar, derlenmiş sözlük {baked.Count} anahtar " +
+                         "(NEXUM -> Metinleri Sözlüğe Bağla)");
+        }
+    }
+
+    // Yeni kodda sabit yazılmış kullanıcı metni: ".text = " atamasında Türkçe harf.
+    private static void CheckHardcodedText(List<string> warnings)
+    {
+        const string trChars = "çğıöşüÇĞİÖŞÜ";
+
+        foreach (string file in Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories))
+        {
+            string normalized = file.Replace("\\", "/");
+            if (normalized.EndsWith("CodeStrings.cs")) continue;
+
+            string[] lines = File.ReadAllLines(file);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (line.TrimStart().StartsWith("//")) continue;
+                if (line.IndexOf(".text = ") < 0) continue;
+                if (line.IndexOf('"') < 0) continue;
+                if (line.IndexOfAny(trChars.ToCharArray()) < 0) continue;
+
+                warnings.Add($"{normalized}:{i + 1} sabit yazılmış kullanıcı metni " +
+                             "(CodeStrings + Loc.Get kullanın)");
+            }
+        }
     }
 }
 #endif

@@ -29,8 +29,8 @@ public class ShiftBehaviorTests
     [UnitySetUp]
     public IEnumerator SetUp()
     {
-        PlayerPrefs.SetInt("SelectedLevel", 0);
-        PlayerPrefs.SetInt("TutorialRead_Level_0", 1);
+        SaveService.Data.selectedLevel = 0;
+        SaveService.SetTutorialRead(0);
 
         SceneManager.LoadScene("Game");
         yield return null;
