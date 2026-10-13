@@ -335,6 +335,10 @@
             "value": "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi."
         },
         {
+            "key": "reaction.equation",
+            "value": "{0} + {1} -> {2}"
+        },
+        {
             "key": "registration.anonymous",
             "value": "Gözlemci Kaydı (İsimsiz Ağ)"
         },
@@ -450,6 +454,7 @@
         "profile.no_email",
         "quiz.correct",
         "quiz.wrong",
+        "reaction.equation",
         "registration.anonymous",
         "registration.email_optional",
         "registration.invalid_email",

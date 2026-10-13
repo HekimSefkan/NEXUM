@@ -24,6 +24,12 @@ public static class CodeStrings
     // --- Sistem bildirimleri ----------------------------------------------
     public const string SystemMatrixReshuffled = "system.matrix_reshuffled";
 
+    // --- Tepkime denklemi -------------------------------------------------
+    // Ok karakteri "→" (U+2192) PROJE FONTLARININ HİÇBİRİNDE YOK ve atlaslar
+    // statik; bu yüzden ASCII "->" kullanılıyor. Kalıp sözlükte olduğu için
+    // ileride ok taşıyan bir font gelirse tek satır değişir.
+    public const string ReactionEquation = "reaction.equation";
+
     // --- Profil -----------------------------------------------------------
     public const string ProfileDefaultName = "profile.default_name";
     public const string ProfileNoEmail = "profile.no_email";
@@ -69,6 +75,7 @@ public static class CodeStrings
         [HintFooter] = "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>",
 
         [SystemMatrixReshuffled] = "MATRİS YENİDEN DÜZENLENDİ",
+        [ReactionEquation] = "{0} + {1} -> {2}",
 
         [ProfileDefaultName] = "Baş Kimyager",
         [ProfileNoEmail] = "E-posta bağlanmadı",

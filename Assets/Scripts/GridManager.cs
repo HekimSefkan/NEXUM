@@ -73,6 +73,17 @@ public class GridManager : MonoBehaviour
 
     /// <summary>Animasyonların bitmesi beklenen, henüz doğmamış taş var mı?</summary>
     public bool HasPendingSpawn { get { return pendingSpawns > 0; } }
+
+    /// <summary>Tahtanın dikdörtgeni (hücrelerin ebeveyni). Denklem gösterimi
+    /// yatayda bunun dışına taşmasın diye kullanılır.</summary>
+    public RectTransform BoardRect
+    {
+        get
+        {
+            if (cells == null || cells.Count == 0 || cells[0] == null) return null;
+            return cells[0].parent as RectTransform;
+        }
+    }
     public bool hasUsedRevive = false; 
 
     // Bölüm kazanıldı mı? Kazanma ekranının tekrar tetiklenmesini engeller.
@@ -412,6 +423,9 @@ public class GridManager : MonoBehaviour
         // böylece hamle her zaman güncel tahta üzerinde hesaplanır.
         FlushPendingSpawns(false);
 
+        // Bu hamlenin denklem gösterimleri birbiriyle çakışmasın
+        if (ReactionEquationDisplay.Instance != null) ReactionEquationDisplay.Instance.BeginShift();
+
         SaveCurrentState(); 
 
         bool actionHappened = false;
@@ -491,6 +505,12 @@ public class GridManager : MonoBehaviour
                     }
 
                     CheckWinCondition(recipe);
+
+                    // Hangi tepkimenin gerçekleştiğini göster: "H2 + O -> H2O"
+                    if (ReactionEquationDisplay.Instance != null)
+                    {
+                        ReactionEquationDisplay.Instance.Show(recipe, cells[targetIndex].position);
+                    }
 
                     actionHappened = true;
                     currentCombo++;
