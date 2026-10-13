@@ -326,6 +326,9 @@ MonoBehaviour:
       kilitlendi."
     english: "<color=red>MAALESEF YANLI\u015E CEVAP!</color>\nLaboratuvar tamamen
       kilitlendi."
+  - key: reaction.equation
+    turkish: '{0} + {1} -> {2}'
+    english: '{0} + {1} -> {2}'
   - key: registration.anonymous
     turkish: "G\xF6zlemci Kayd\u0131 (\u0130simsiz A\u011F)"
     english: "G\xF6zlemci Kayd\u0131 (\u0130simsiz A\u011F)"

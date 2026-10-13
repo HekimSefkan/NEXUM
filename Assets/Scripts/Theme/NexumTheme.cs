@@ -139,6 +139,9 @@ public class NexumTheme : ScriptableObject
         [Tooltip("Uzun: kazanma ekranı, vurgu döngüsü (0.5).")]
         public float durationLong = 0.5f;
 
+        [Tooltip("Sönme: beliriş parlaması, matris yeniden düzenleme, denklem (0.35).")]
+        public float durationFade = 0.35f;
+
         [Tooltip("Belirme / açılma: taşmalı giriş.")]
         public Ease easeAppear = Ease.OutBack;
 

@@ -1,6 +1,42 @@
 {
     "managed": [
         {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation0",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation1",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation2",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation3",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation4",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation5",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation6",
+            "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation7",
+            "builder": "ReactionEquation"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/SettingsPanel/GlassBackground/CardContent",
             "builder": "SettingsCard"
         }
