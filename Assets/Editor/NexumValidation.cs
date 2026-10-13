@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.SceneManagement;
@@ -115,6 +116,7 @@ public static class NexumValidation
         CheckProjectSettings(problems);
         CheckSaveServiceOwnership(problems);
         CheckLocalization(problems, warnings);
+        CheckThemeTokens(warnings);
         CheckElementData(warnings);
         CheckAudioImport(warnings);
         CheckResourcesFolder(warnings);
@@ -828,6 +830,79 @@ public static class NexumValidation
                              "(CodeStrings + Loc.Get kullanın)");
             }
         }
+    }
+
+    // ---------------------------------------------------------- tema tokenlari
+    // UIBuilder ile kurulan (managed.json'da kayitli) objelerde tema disi renk
+    // veya punto kullanilirsa WARN. Elle yapilmis eski objeler KAPSAM DISI:
+    // onlarin tema disi degerleri bilinen bir borc, docs/DESIGN_TOKENS.md
+    // "aykiri degerler" listesinde duruyor ve Faz 6 / Adim 2'de ele alinacak.
+    private static void CheckThemeTokens(List<string> warnings)
+    {
+        NexumTheme theme = AssetDatabase.LoadAssetAtPath<NexumTheme>(NexumTheme.AssetPath);
+        if (theme == null)
+        {
+            warnings.Add($"Tema asset'i yok: {NexumTheme.AssetPath} (NEXUM -> Tema Asset'ini Kur)");
+            return;
+        }
+
+        HashSet<string> managed = LoadManagedPaths();
+        if (managed.Count == 0) return;
+
+        foreach (EditorBuildSettingsScene buildScene in EditorBuildSettings.scenes)
+        {
+            if (!File.Exists(buildScene.path)) continue;
+
+            string sceneName = Path.GetFileNameWithoutExtension(buildScene.path);
+            Scene scene = EditorSceneManager.OpenScene(buildScene.path, OpenSceneMode.Single);
+
+            foreach (GameObject root in scene.GetRootGameObjects())
+            {
+                foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
+                {
+                    string key = sceneName + "::" + HierarchyPath(t);
+                    if (!managed.Contains(key)) continue;
+
+                    foreach (TMP_Text text in t.GetComponents<TMP_Text>())
+                    {
+                        if (!theme.IsThemeFontSize(text.fontSize))
+                        {
+                            warnings.Add($"{key}: tema disi punto {text.fontSize:F0} " +
+                                         "(NexumTheme.typography)");
+                        }
+                        if (!theme.IsThemeColor(text.color))
+                        {
+                            warnings.Add($"{key}: tema disi yazi rengi " +
+                                         $"#{ColorUtility.ToHtmlStringRGB(text.color)} (NexumTheme.palette)");
+                        }
+                    }
+
+                    foreach (Image image in t.GetComponents<Image>())
+                    {
+                        // Sprite'i beyazla tonlamak notrdur, renk sayilmaz
+                        if (image.color == Color.white) continue;
+                        if (image.color.a == 0f) continue;
+                        if (theme.IsThemeColor(image.color)) continue;
+
+                        warnings.Add($"{key}: tema disi gorsel rengi " +
+                                     $"#{ColorUtility.ToHtmlStringRGB(image.color)} (NexumTheme.palette)");
+                    }
+                }
+            }
+        }
+    }
+
+    private static HashSet<string> LoadManagedPaths()
+    {
+        HashSet<string> set = new HashSet<string>();
+        const string registry = "Assets/Editor/UIBuilder/managed.json";
+        if (!File.Exists(registry)) return set;
+
+        foreach (Match m in Regex.Matches(File.ReadAllText(registry), "\"path\": \"([^\"]+)\""))
+        {
+            set.Add(m.Groups[1].Value);
+        }
+        return set;
     }
 }
 #endif

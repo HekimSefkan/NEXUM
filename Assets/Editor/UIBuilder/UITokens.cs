@@ -1,30 +1,73 @@
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Kurucuların kullandığı DEĞERLER. Renk, punto, boşluk ve oran gibi her sayı
-/// buradan gelir; kurucuların içine sabit yazılmaz.
+/// Kurucuların kullandığı DEĞERLER. Renk, punto, boşluk ve süre
+/// <see cref="NexumTheme"/> asset'inden okunur; kurucuların içine sabit sayı
+/// yazılmaz. Bir değeri değiştirmek için asset düzenlenir, kod değişmez.
 ///
-/// Şimdilik düz sabitler. Bir sonraki adımda tema tokenlarına geçilecek:
-/// o zaman bu sınıfın gövdesi bir tema asset'inden okumaya döner, kurucular
-/// hiç değişmez. Bu yüzden isimler renk KODU değil renk ROLÜ anlatıyor
-/// (Accent, OnCard…), ölçüler de piksel değil rol adı taşıyor.
+/// Yalnızca GEOMETRİ sabitleri burada duruyor: bunlar görsel dil değil, belirli
+/// bir sprite'ın (cam kart) ölçüleri — temaya ait değiller.
 /// </summary>
 public static class UITokens
 {
-    // --- Renk rolleri -----------------------------------------------------
-    public static readonly Color Accent = new Color32(0x8F, 0xD8, 0xFF, 0xFF);   // camgöbeği vurgu
-    public static readonly Color Success = new Color32(0x2E, 0xCC, 0x71, 0xFF);
-    public static readonly Color Warning = new Color32(0xF1, 0xC4, 0x0F, 0xFF);
-    public static readonly Color OnCard = Color.white;
+    private static NexumTheme cached;
 
-    // --- Punto rolleri ----------------------------------------------------
-    public const float FontSectionTitle = 50f;
-    public const float FontRowLabel = 36f;
-    public const float FontButton = 28f;
-    public const float FontMeterLabel = 28f;
+    /// <summary>Tema asset'i. Yoksa alan varsayılanlarıyla geçici bir örnek döner.</summary>
+    public static NexumTheme Theme
+    {
+        get
+        {
+            if (cached != null) return cached;
 
-    // --- Cam kart (SettingsPanel_.png) ------------------------------------
-    // Sprite 796x1280; çerçevenin iç kenarları piksel ölçümünden orana çevrildi.
+            cached = AssetDatabase.LoadAssetAtPath<NexumTheme>(NexumTheme.AssetPath);
+            if (cached == null)
+            {
+                Debug.LogWarning($"UITokens: tema asset'i yok ({NexumTheme.AssetPath}); " +
+                                 "varsayılanlar kullanılıyor (NEXUM → Tema Asset'ini Kur)");
+                cached = ScriptableObject.CreateInstance<NexumTheme>();
+            }
+            return cached;
+        }
+    }
+
+    public static void Reload()
+    {
+        cached = null;
+    }
+
+    // --- Renk rolleri (temadan) -------------------------------------------
+    public static Color Primary { get { return Theme.palette.primary; } }
+    public static Color Accent { get { return Theme.palette.primaryBright; } }
+    public static Color Secondary { get { return Theme.palette.secondary; } }
+    public static Color Danger { get { return Theme.palette.danger; } }
+    public static Color Success { get { return Theme.palette.success; } }
+    public static Color Warning { get { return Theme.palette.warning; } }
+    public static Color OnCard { get { return Theme.palette.textPrimary; } }
+    public static Color TextSecondary { get { return Theme.palette.textSecondary; } }
+
+    // --- Punto rolleri (temadan) ------------------------------------------
+    public static float FontSectionTitle { get { return Theme.typography.title.size; } }
+    public static float FontRowLabel { get { return Theme.typography.body.size; } }
+    public static float FontButton { get { return Theme.typography.label.size; } }
+    public static float FontMeterLabel { get { return Theme.typography.label.size; } }
+
+    // --- Boşluk (temadan) -------------------------------------------------
+    public static float SpaceXs { get { return Theme.spacing.xs; } }
+    public static float SpaceSm { get { return Theme.spacing.sm; } }
+    public static float SpaceMd { get { return Theme.spacing.md; } }
+    public static float SpaceLg { get { return Theme.spacing.lg; } }
+    public static float SpaceXl { get { return Theme.spacing.xl; } }
+
+    // --- Süre (temadan) ---------------------------------------------------
+    public static float DurationShort { get { return Theme.motion.durationShort; } }
+    public static float DurationMedium { get { return Theme.motion.durationMedium; } }
+    public static float DurationLong { get { return Theme.motion.durationLong; } }
+
+    // ======================================================================
+    // GEOMETRİ — temaya ait değil: cam kart sprite'ının (SettingsPanel_.png)
+    // kendi ölçüleri. Sprite değişirse burası değişir, tema değişmez.
+    // ======================================================================
     public const float CardSpriteWidth = 796f;
     public const float CardSpriteHeight = 1280f;
     public const float CardAspect = CardSpriteWidth / CardSpriteHeight;
