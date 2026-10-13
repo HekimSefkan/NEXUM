@@ -1,0 +1,8 @@
+{
+    "managed": [
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/SettingsPanel/GlassBackground/CardContent",
+            "builder": "SettingsCard"
+        }
+    ]
+}
