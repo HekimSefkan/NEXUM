@@ -12,7 +12,7 @@
         },
         {
             "key": "catalyst.ready_label",
-            "value": "<color=#2ECC71>KATALİZÖR HAZIR ×{0} — BEDAVA PARÇALAMA</color>"
+            "value": "<color=#2ECC71>BEDAVA PARÇALAMA ×{0}</color>"
         },
         {
             "key": "catalyst.ready_message",
@@ -29,6 +29,14 @@
         {
             "key": "combo.single",
             "value": "SUCCESSFUL SYNTHESIS!"
+        },
+        {
+            "key": "encyclopedia.basic_element",
+            "value": "Temel element"
+        },
+        {
+            "key": "encyclopedia.synthesis",
+            "value": "Sentez: {0}"
         },
         {
             "key": "game.cancelbutton.text_tmp",
@@ -336,7 +344,39 @@
         },
         {
             "key": "reaction.equation",
-            "value": "{0} + {1} -> {2}"
+            "value": "{0} <sprite=\"NexumSymbols\" name=\"arrow\"> {1}"
+        },
+        {
+            "key": "reaction.equation_fallback",
+            "value": "{0} -> {1}"
+        },
+        {
+            "key": "reaction.inputs",
+            "value": "{0} + {1}"
+        },
+        {
+            "key": "recipebook.button",
+            "value": "TARİF DEFTERİ"
+        },
+        {
+            "key": "recipebook.counter",
+            "value": "{0} / {1} tepkime keşfedildi"
+        },
+        {
+            "key": "recipebook.discovered",
+            "value": "YENİ TEPKİME KAYDEDİLDİ"
+        },
+        {
+            "key": "recipebook.locked_symbol",
+            "value": "?"
+        },
+        {
+            "key": "recipebook.ring_value",
+            "value": "{0}/{1}"
+        },
+        {
+            "key": "recipebook.title",
+            "value": "TARİF DEFTERİ"
         },
         {
             "key": "registration.anonymous",
@@ -378,6 +418,8 @@
         "catalyst.ready_message",
         "combo.chain",
         "combo.double",
+        "encyclopedia.basic_element",
+        "encyclopedia.synthesis",
         "game.cancelbutton.text_tmp",
         "game.cancelbutton.text_tmp_2",
         "game.closehintbutton.text_tmp",
@@ -455,6 +497,14 @@
         "quiz.correct",
         "quiz.wrong",
         "reaction.equation",
+        "reaction.equation_fallback",
+        "reaction.inputs",
+        "recipebook.button",
+        "recipebook.counter",
+        "recipebook.discovered",
+        "recipebook.locked_symbol",
+        "recipebook.ring_value",
+        "recipebook.title",
         "registration.anonymous",
         "registration.email_optional",
         "registration.invalid_email",
