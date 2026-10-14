@@ -12,7 +12,7 @@
         },
         {
             "key": "catalyst.ready_label",
-            "value": "<color=#2ECC71>KATALİZÖR HAZIR ×{0} — BEDAVA PARÇALAMA</color>"
+            "value": "<color=#2ECC71>BEDAVA PARÇALAMA ×{0}</color>"
         },
         {
             "key": "catalyst.ready_message",
@@ -355,6 +355,10 @@
             "value": "{0} + {1}"
         },
         {
+            "key": "recipebook.button",
+            "value": "TARİF DEFTERİ"
+        },
+        {
             "key": "recipebook.counter",
             "value": "{0} / {1} tepkime keşfedildi"
         },
@@ -365,6 +369,10 @@
         {
             "key": "recipebook.locked_symbol",
             "value": "?"
+        },
+        {
+            "key": "recipebook.ring_value",
+            "value": "{0}/{1}"
         },
         {
             "key": "recipebook.title",
@@ -491,9 +499,11 @@
         "reaction.equation",
         "reaction.equation_fallback",
         "reaction.inputs",
+        "recipebook.button",
         "recipebook.counter",
         "recipebook.discovered",
         "recipebook.locked_symbol",
+        "recipebook.ring_value",
         "recipebook.title",
         "registration.anonymous",
         "registration.email_optional",

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,7 +22,13 @@ public class RecipeBookPanel : MonoBehaviour
 
     public ScrollRect scrollRect;
     public TextMeshProUGUI counterText;
+
+    [Tooltip("Dolu kısmı gösteren halka (Filled / Radial360).")]
     public Image progressRing;
+
+    [Tooltip("Halkanın ortasındaki \"7/21\" sayısı.")]
+    public TextMeshProUGUI ringValueText;
+
     public Transform rowContainer;
 
     [Tooltip("Keşfedilen tarife dokununca açılacak ansiklopedi (UIBuilder bağlar).")]
@@ -124,6 +130,7 @@ public class RecipeBookPanel : MonoBehaviour
         int toplam = catalog.entries.Count;
         if (counterText != null) counterText.text = Loc.Format(CodeStrings.RecipeBookCounter, kesfedilen, toplam);
         if (progressRing != null) progressRing.fillAmount = toplam > 0 ? (float)kesfedilen / toplam : 0f;
+        if (ringValueText != null) ringValueText.text = Loc.Format(CodeStrings.RecipeBookRingValue, kesfedilen, toplam);
     }
 
     private void OpenCard(int index)
@@ -152,6 +159,12 @@ public class RecipeBookPanel : MonoBehaviour
         CacheRows();
         if (index < 0 || index >= rowLocks.Count || rowLocks[index] == null) return false;
         return rowLocks[index].activeSelf;
+    }
+
+    /// <summary>Test için: halkanın dolum oranı.</summary>
+    public float RingFill
+    {
+        get { return progressRing != null ? progressRing.fillAmount : -1f; }
     }
 
     /// <summary>Test için: görünen satır sayısı.</summary>

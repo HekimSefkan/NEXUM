@@ -271,6 +271,14 @@ public class UIManager : MonoBehaviour
         foreach (var btn in optionButtonObjects) btn.SetActive(true);
     }
 
+    // Duraklat kartı (gamepanel.png) ekranın tamamını kaplamıyor: ölçümde kart
+    // x -375..375, y -448..734 arasında kalıyor, oysa JokerButton (x 275..525,
+    // y 732..832) ve UndoButton (x 275..525, y 603..703) kartın dışına taşıyor
+    // ve kenarından sızıyor. Kart açıkken bu objeler gizlenir.
+    // Listeyi UIBuilder doldurur (RecipeBookBuilder.BuildPauseEntry).
+    [Tooltip("Duraklat kartı açıkken gizlenecek HUD objeleri (UIBuilder bağlar).")]
+    public GameObject[] hudHiddenWhilePaused;
+
     public void TogglePause(bool isPaused)
     {
         PlayButtonSound();   // PausePanel'deki "Devam Et" butonunun OnClick'inde ses yok
@@ -282,6 +290,19 @@ public class UIManager : MonoBehaviour
             if (allFacts != null && allFacts.Count > 0) factTextUI.text = allFacts[Random.Range(0, allFacts.Count)].factText;
         }
         else { Time.timeScale = 1f; pausePanel.SetActive(false); }
+
+        SetPauseHudVisible(!isPaused);
+    }
+
+    /// <summary>Kartın dışına taşan HUD objelerini gizler/gösterir.</summary>
+    private void SetPauseHudVisible(bool visible)
+    {
+        if (hudHiddenWhilePaused == null) return;
+
+        foreach (GameObject go in hudHiddenWhilePaused)
+        {
+            if (go != null) go.SetActive(visible);
+        }
     }
 
     // Kaza sayacı oyun başına bir kez artar. Oyun sonu ekranı ikinci şans quizi
@@ -319,11 +340,15 @@ public class UIManager : MonoBehaviour
     // boşluk (referans ölçüm: grid alt kenarı -610, PressureMeter üstü -718).
     // Bant tahtaya göre hesaplanır, ekran merkezine göre değil: ikisi de
     // (0.5, 0.41666666) anchor'ında olduğu için uzun ekranlarda birlikte kayar.
-    private const float SystemBandHeight = 108f;
+    // ÖLÇÜM (referans birimi): grid alt kenarı -610, katalizör ETİKETİ
+    // -718..-674, gösterge barı -778..-718. Tahtanın hemen altındaki boşluk
+    // etikete ait; bildirim göstergenin ALTINDAKİ banda konur (-778 ile
+    // güvenli alanın altı arasında).
+    private const float SystemBelowBoard = 240f;    // tahta alt kenarından aşağı
     private const float SystemBoxWidth = 900f;
     private const float SystemBoxHeight = 72f;
     /// <summary>Tahta yoksa (test / tahta kurulmamış) ekran merkezine göre bant.</summary>
-    private const float SystemFallbackY = -664f;
+    private const float SystemFallbackY = -850f;
 
     /// <summary>Tahtanın altındaki kendi bandında kısa bir sistem bildirimi.</summary>
     public void ShowSystemMessage(string message, float duration = 1.5f)
@@ -343,7 +368,7 @@ public class UIManager : MonoBehaviour
             Vector3[] corners = new Vector3[4];
             board.GetWorldCorners(corners);
             position.x = (corners[0].x + corners[2].x) * 0.5f;
-            position.y = corners[0].y - SystemBandHeight * 0.5f * scale;
+            position.y = corners[0].y - SystemBelowBoard * scale;
         }
 
         GameObject floatingObj = Instantiate(comboTextPrefab, position, Quaternion.identity, canvasTransform);
@@ -453,21 +478,61 @@ public class UIManager : MonoBehaviour
                 : Loc.Format(CodeStrings.CatalystChargeLabel, charge, limit);
         }
 
-        // Bedava hak varken gösterge yeşil parlar, yoksa söner
-        if (dangerGlowImage != null)
+        SetCatalystGlow(freeJokers > 0, false);
+    }
+
+    // Katalizör parıltısı: ESKİDEN tam ekran yeşil tint (dangerGlowImage,
+    // 1080x1920) 0 ↔ 0.35 arasında 0.8 sn'de yanıp sönüyordu; tahtayı okumayı
+    // engelliyordu. ARTIK parıltı yalnızca göstergenin kendi üzerinde
+    // (catalystGlowImage, PressureMeter'ın çocuğu): tepe alfa 0.085 (eskinin
+    // dörtte birinden az), nabız periyodu 1.8 sn, ease-in-out.
+    // Şarj dolduğu an iki nabız atılır, sonra sabit düşük parıltıda kalınır.
+    private const float CatalystGlowSteady = 0.05f;
+    private const float CatalystGlowPulse = 0.085f;
+    private const float CatalystPulsePeriod = 1.8f;
+    private const string CatalystTweenId = "CatalystReady";
+
+    [Tooltip("Katalizör göstergesinin yerel parıltısı (UIBuilder bağlar).")]
+    public UnityEngine.UI.Image catalystGlowImage;
+
+    private void SetCatalystGlow(bool ready, bool announce)
+    {
+        // Tam ekran ışık bir daha kullanılmıyor: açık kalmışsa söndürülür.
+        if (dangerGlowImage != null && dangerGlowImage.color.a > 0f)
         {
-            DOTween.Kill("CatalystReady");
-            if (freeJokers > 0)
-            {
-                dangerGlowImage.color = new Color(0.18f, 0.8f, 0.44f, dangerGlowImage.color.a);
-                dangerGlowImage.DOFade(0.35f, 0.8f).SetLoops(-1, LoopType.Yoyo)
-                    .SetId("CatalystReady").SetLink(gameObject);
-            }
-            else
-            {
-                dangerGlowImage.DOFade(0f, 0.3f);
-            }
+            dangerGlowImage.DOKill();
+            dangerGlowImage.DOFade(0f, 0.3f).SetUpdate(true);
         }
+
+        if (catalystGlowImage == null) return;
+
+        DOTween.Kill(CatalystTweenId);
+        catalystGlowImage.DOKill();
+
+        if (!ready)
+        {
+            catalystGlowImage.DOFade(0f, 0.3f).SetUpdate(true).SetLink(gameObject);
+            return;
+        }
+
+        if (!announce)
+        {
+            // Sessiz durum (geri alma, sahne yüklenmesi): doğrudan sabit parıltı
+            catalystGlowImage.DOFade(CatalystGlowSteady, 0.3f)
+                .SetUpdate(true).SetId(CatalystTweenId).SetLink(gameObject);
+            return;
+        }
+
+        // İki nabız, sonra sabit düşük parıltı
+        Sequence seq = DOTween.Sequence();
+        for (int i = 0; i < 2; i++)
+        {
+            seq.Append(catalystGlowImage.DOFade(CatalystGlowPulse, CatalystPulsePeriod * 0.5f)
+                .SetEase(Ease.InOutSine));
+            seq.Append(catalystGlowImage.DOFade(CatalystGlowSteady, CatalystPulsePeriod * 0.5f)
+                .SetEase(Ease.InOutSine));
+        }
+        seq.SetUpdate(true).SetId(CatalystTweenId).SetLink(gameObject);
     }
 
     // Şarj dolduğunda: görsel + sesli geri bildirim
@@ -484,6 +549,8 @@ public class UIManager : MonoBehaviour
         {
             factTextUI.text = Loc.Get(CodeStrings.CatalystReadyMessage);
         }
+
+        SetCatalystGlow(true, true);
 
         if (AudioManager.Instance != null)
         {

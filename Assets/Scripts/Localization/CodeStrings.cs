@@ -37,6 +37,8 @@ public static class CodeStrings
     public const string RecipeBookTitle = "recipebook.title";
     public const string RecipeBookCounter = "recipebook.counter";
     public const string RecipeBookLockedSymbol = "recipebook.locked_symbol";
+    public const string RecipeBookRingValue = "recipebook.ring_value";
+    public const string RecipeBookButtonLabel = "recipebook.button";
 
     // --- Ansiklopedi -------------------------------------------------------
     public const string EncyclopediaSynthesis = "encyclopedia.synthesis";
@@ -95,6 +97,8 @@ public static class CodeStrings
         [RecipeBookTitle] = "TARİF DEFTERİ",
         [RecipeBookCounter] = "{0} / {1} tepkime keşfedildi",
         [RecipeBookLockedSymbol] = "?",
+        [RecipeBookRingValue] = "{0}/{1}",
+        [RecipeBookButtonLabel] = "TARİF DEFTERİ",
 
         [EncyclopediaSynthesis] = "Sentez: {0}",
         [EncyclopediaBasicElement] = "Temel element",
@@ -115,7 +119,7 @@ public static class CodeStrings
         [QuizCorrect] = "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun!",
         [QuizWrong] = "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi.",
 
-        [CatalystReadyLabel] = "<color=#2ECC71>KATALİZÖR HAZIR ×{0} — BEDAVA PARÇALAMA</color>",
+        [CatalystReadyLabel] = "<color=#2ECC71>BEDAVA PARÇALAMA ×{0}</color>",
         [CatalystChargeLabel] = "KATALİZÖR ŞARJI {0}/{1}",
         [CatalystReadyMessage] = "<color=#2ECC71>KATALİZÖR HAZIR! Joker'i bir kez bedava kullanabilirsin.</color>",
 
