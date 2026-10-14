@@ -43,6 +43,8 @@ public static class NexumValidation
         "Elements",               // EncyclopediaManager: Resources.LoadAll<ElementData>("Elements")
         "DOTweenSettings.asset",  // DOTween kendi yükler
         "Localization",           // Loc: Resources.Load<LocalizationTable>("Localization/LocalizationTable")
+        "Sprite Assets",          // TMP: <sprite="NexumSymbols"> aramasi burada bakar
+        "RecipeCatalog.asset",    // RecipeBook / tarif defteri paneli (sahne disindan okunur)
     };
 
     // =========================================
