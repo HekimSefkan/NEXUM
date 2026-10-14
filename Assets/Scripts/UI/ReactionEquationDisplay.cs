@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -102,34 +102,18 @@ public class ReactionEquationDisplay : MonoBehaviour
         seq.OnComplete(() => label.gameObject.SetActive(false));
     }
 
-    /// <summary>"H&lt;sub&gt;2&lt;/sub&gt; + O -&gt; H&lt;sub&gt;2&lt;/sub&gt;O" — girdiler sönük, ürün vurgulu.</summary>
+    /// <summary>
+    /// "H&lt;sub&gt;2&lt;/sub&gt; + O [ok] H&lt;sub&gt;2&lt;/sub&gt;O" — girdiler sönük, ürün vurgulu.
+    /// Metin kalıbı ve ok sprite'ı TEK KAYNAKTAN gelir: <see cref="ReactionText"/>.
+    /// </summary>
     public string BuildEquation(MergeRecipe recipe)
     {
-        string dim = ColorTag(theme != null ? theme.palette.textSecondary : Color.gray);
-        string bright = ColorTag(theme != null ? theme.palette.primary : Color.cyan);
-
-        return Loc.Format(CodeStrings.ReactionEquation,
-            dim + Symbol(recipe.element1) + "</color>",
-            dim + Symbol(recipe.element2) + "</color>",
-            bright + Symbol(recipe.resultPrefab) + "</color>");
-    }
-
-    private static string ColorTag(Color c)
-    {
-        return "<color=#" + ColorUtility.ToHtmlStringRGB(c) + ">";
-    }
-
-    /// <summary>Sembol ElementData'dan gelir; yoksa prefab adına düşülür.</summary>
-    public static string Symbol(GameObject tilePrefab)
-    {
-        if (tilePrefab == null) return "?";
-
-        TileInteraction tile = tilePrefab.GetComponent<TileInteraction>();
-        if (tile != null && tile.myElementData != null && !string.IsNullOrEmpty(tile.myElementData.symbol))
-        {
-            return tile.myElementData.symbol;
-        }
-        return tilePrefab.name.Replace("Tile_", "");
+        return ReactionText.Colored(
+            ReactionText.Symbol(recipe.element1),
+            ReactionText.Symbol(recipe.element2),
+            ReactionText.Symbol(recipe.resultPrefab),
+            theme != null ? theme.palette.textSecondary : Color.gray,
+            theme != null ? theme.palette.primary : Color.cyan);
     }
 
     // ------------------------------------------------------------- yerleşim

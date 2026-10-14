@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI; // Buton tıklamaları için şart
 
@@ -63,10 +63,15 @@ public class EncyclopediaManager : MonoBehaviour
 
         // Seçilen elementin verilerini Pop-up paneline aktar
         detailNameText.text = clickedElement.elementName + " (" + clickedElement.symbol + ")";
-        // Satır formülü değil sentez tarifini gösteriyor; formül zaten başlıkta.
-        // Tarifi olmayan temel elementlerde (H, O, C, N, Na, Cl, Fe, Ca) sabit metin yazılır.
-        string recipeText = string.IsNullOrWhiteSpace(clickedElement.recipe) ? "Temel element" : clickedElement.recipe;
-        detailRecipeText.text = "Sentez: " + recipeText;
+        // Satır formülü değil sentez TEPKİMESİNİ gösteriyor; formül zaten başlıkta.
+        // Kalıp ve ok sprite'ı denklem gösterimiyle AYNI kaynaktan gelir
+        // (ReactionText): "Sentez: H + H [ok] H2". Tarifi olmayan temel
+        // elementlerde (H, O, C, N, Na, Cl, Fe, Ca) sabit metin yazılır.
+        ReactionText.Bind(detailRecipeText);
+        string recipeText = string.IsNullOrWhiteSpace(clickedElement.recipe)
+            ? Loc.Get(CodeStrings.EncyclopediaBasicElement)
+            : ReactionText.Equation(clickedElement.recipe, clickedElement.symbol);
+        detailRecipeText.text = Loc.Format(CodeStrings.EncyclopediaSynthesis, recipeText);
         detailScoreText.text = $"Puan: {clickedElement.synthesisScore} | Silme: {clickedElement.jokerCost}";
         detailDescText.text = clickedElement.description;
 

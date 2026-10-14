@@ -34,6 +34,12 @@ MonoBehaviour:
   - key: combo.single
     turkish: "BA\u015EARILI SENTEZ!"
     english: SUCCESSFUL SYNTHESIS!
+  - key: encyclopedia.basic_element
+    turkish: Temel element
+    english: Temel element
+  - key: encyclopedia.synthesis
+    turkish: 'Sentez: {0}'
+    english: 'Sentez: {0}'
   - key: game.cancelbutton.text_tmp
     turkish: "VAZGE\xC7"
     english: "VAZGE\xC7"
@@ -327,8 +333,26 @@ MonoBehaviour:
     english: "<color=red>MAALESEF YANLI\u015E CEVAP!</color>\nLaboratuvar tamamen
       kilitlendi."
   - key: reaction.equation
-    turkish: '{0} + {1} -> {2}'
-    english: '{0} + {1} -> {2}'
+    turkish: '{0} <sprite="NexumSymbols" name="arrow"> {1}'
+    english: '{0} <sprite="NexumSymbols" name="arrow"> {1}'
+  - key: reaction.equation_fallback
+    turkish: '{0} -> {1}'
+    english: '{0} -> {1}'
+  - key: reaction.inputs
+    turkish: '{0} + {1}'
+    english: '{0} + {1}'
+  - key: recipebook.counter
+    turkish: "{0} / {1} tepkime ke\u015Ffedildi"
+    english: "{0} / {1} tepkime ke\u015Ffedildi"
+  - key: recipebook.discovered
+    turkish: "YEN\u0130 TEPK\u0130ME KAYDED\u0130LD\u0130"
+    english: "YEN\u0130 TEPK\u0130ME KAYDED\u0130LD\u0130"
+  - key: recipebook.locked_symbol
+    turkish: '?'
+    english: '?'
+  - key: recipebook.title
+    turkish: "TAR\u0130F DEFTER\u0130"
+    english: "TAR\u0130F DEFTER\u0130"
   - key: registration.anonymous
     turkish: "G\xF6zlemci Kayd\u0131 (\u0130simsiz A\u011F)"
     english: "G\xF6zlemci Kayd\u0131 (\u0130simsiz A\u011F)"

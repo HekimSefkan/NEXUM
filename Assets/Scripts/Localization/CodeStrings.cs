@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 /// <summary>
 /// Koddan gösterilen kullanıcı metinlerinin anahtarları ve Türkçe kaynak metni.
@@ -26,9 +26,21 @@ public static class CodeStrings
 
     // --- Tepkime denklemi -------------------------------------------------
     // Ok karakteri "→" (U+2192) PROJE FONTLARININ HİÇBİRİNDE YOK ve atlaslar
-    // statik; bu yüzden ASCII "->" kullanılıyor. Kalıp sözlükte olduğu için
-    // ileride ok taşıyan bir font gelirse tek satır değişir.
+    // statik. Bu yüzden ok bir TMP SPRITE olarak gömülü (NexumSymbolSprites).
+    // Sprite yüklenemezse sessizce değil, loglayarak düz metin kalıbına düşülür.
+    public const string ReactionInputs = "reaction.inputs";
     public const string ReactionEquation = "reaction.equation";
+    public const string ReactionEquationFallback = "reaction.equation_fallback";
+
+    // --- Tarif defteri ----------------------------------------------------
+    public const string RecipeDiscovered = "recipebook.discovered";
+    public const string RecipeBookTitle = "recipebook.title";
+    public const string RecipeBookCounter = "recipebook.counter";
+    public const string RecipeBookLockedSymbol = "recipebook.locked_symbol";
+
+    // --- Ansiklopedi -------------------------------------------------------
+    public const string EncyclopediaSynthesis = "encyclopedia.synthesis";
+    public const string EncyclopediaBasicElement = "encyclopedia.basic_element";
 
     // --- Profil -----------------------------------------------------------
     public const string ProfileDefaultName = "profile.default_name";
@@ -75,7 +87,17 @@ public static class CodeStrings
         [HintFooter] = "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>",
 
         [SystemMatrixReshuffled] = "MATRİS YENİDEN DÜZENLENDİ",
-        [ReactionEquation] = "{0} + {1} -> {2}",
+        [ReactionInputs] = "{0} + {1}",
+        [ReactionEquation] = "{0} <sprite=\"NexumSymbols\" name=\"arrow\"> {1}",
+        [ReactionEquationFallback] = "{0} -> {1}",
+
+        [RecipeDiscovered] = "YENİ TEPKİME KAYDEDİLDİ",
+        [RecipeBookTitle] = "TARİF DEFTERİ",
+        [RecipeBookCounter] = "{0} / {1} tepkime keşfedildi",
+        [RecipeBookLockedSymbol] = "?",
+
+        [EncyclopediaSynthesis] = "Sentez: {0}",
+        [EncyclopediaBasicElement] = "Temel element",
 
         [ProfileDefaultName] = "Baş Kimyager",
         [ProfileNoEmail] = "E-posta bağlanmadı",
