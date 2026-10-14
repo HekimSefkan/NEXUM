@@ -1,6 +1,14 @@
 {
     "managed": [
         {
+            "path": "Game::Canvas/PausePanel/ContainerBox/RecipeBookButton",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/PausePanel/ContainerBox/RecipeBookButton/Label",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
             "path": "Game::Canvas/SafeAreaRoot/ReactionEquations",
             "builder": "ReactionEquation"
         },
@@ -35,6 +43,302 @@
         {
             "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation7",
             "builder": "ReactionEquation"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/RecipeBookButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/RecipeBookButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/BackButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/CounterText",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/ProgressRing",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row0",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row0/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row0/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row1",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row1/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row1/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row10",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row10/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row10/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row11",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row11/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row11/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row12",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row12/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row12/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row13",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row13/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row13/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row14",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row14/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row14/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row15",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row15/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row15/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row16",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row16/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row16/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row17",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row17/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row17/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row18",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row18/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row18/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row19",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row19/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row19/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row2",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row2/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row2/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row20",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row20/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row20/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row3",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row3/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row3/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row4",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row4/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row4/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row5",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row5/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row5/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row6",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row6/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row6/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row7",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row7/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row7/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row8",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row8/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row8/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row9",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row9/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Scroll View/Viewport/Content/Row9/LockIcon",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/TitleText",
+            "builder": "RecipeBook"
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/SettingsPanel/GlassBackground/CardContent",

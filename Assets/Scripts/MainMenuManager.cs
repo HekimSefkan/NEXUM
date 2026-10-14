@@ -12,6 +12,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject howToPlayPanel;
     public GameObject profilePanel;
     public GameObject settingsPanel; 
+    public GameObject recipeBookPanel;   // tarif defteri (UIBuilder bağlar)
 
     private GameObject currentPanel;
 
@@ -22,6 +23,9 @@ public class MainMenuManager : MonoBehaviour
     // Geri tuşu için: ana menü kökünde miyiz?
     public bool IsAtMainMenuRoot { get { return currentPanel == mainMenuPanel; } }
 
+    /// <summary>Oyun ekranındaki duraklat menüsünden geliniyorsa defter açılır.</summary>
+    public static bool OpenRecipeBookOnLoad;
+
     [Header("Profil Butonu Avatarı")]
     public UnityEngine.UI.Image profileButtonAvatarImage; 
     public Sprite[] avatarSprites; 
@@ -30,6 +34,7 @@ public class MainMenuManager : MonoBehaviour
     {
         levelSelectionPanel.SetActive(false);
         encyclopediaPanel.SetActive(false);
+        if (recipeBookPanel != null) recipeBookPanel.SetActive(false);
         howToPlayPanel.SetActive(false);
         profilePanel.SetActive(false);
         if(settingsPanel != null) settingsPanel.SetActive(false); 
@@ -39,6 +44,13 @@ public class MainMenuManager : MonoBehaviour
 
         // Oyun başladığında avatarı güncelle
         UpdateProfileAvatar();
+
+        // Duraklat menüsünden "Tarif Defteri" ile gelindiyse paneli aç
+        if (OpenRecipeBookOnLoad)
+        {
+            OpenRecipeBookOnLoad = false;
+            if (recipeBookPanel != null) OpenRecipeBook();
+        }
     }
 
     // YENİ EKLENEN: Avatarı anında güncellemek için dışarıdan çağrılabilir fonksiyon
@@ -105,6 +117,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenHowToPlay() { SwitchPanel(howToPlayPanel); }
     public void OpenProfile() { SwitchPanel(profilePanel); }
     public void OpenSettingsPanel() { SwitchPanel(settingsPanel); }
+    public void OpenRecipeBook() { SwitchPanel(recipeBookPanel); }
     
     public void BackToMainMenu() { SwitchPanel(mainMenuPanel); }
 

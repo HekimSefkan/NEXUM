@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
@@ -312,10 +312,20 @@ public class UIManager : MonoBehaviour
         reviveButton.SetActive(!GridManager.Instance.hasUsedRevive);
     }
 
-    /// <summary>
-    /// Kombo yazısıyla aynı bantta, ekranın ortasında kısa bir sistem bildirimi.
-    /// Kombo prefab'ı yeniden kullanılır; yeni sahne/prefab objesi gerekmez.
-    /// </summary>
+    // Sistem bildirimi (yeni tarif, matris yenilendi) KOMBO BANDINI KULLANAMAZ:
+    // yeni tarif keşfi ile kombo yazısı AYNI karede doğuyor, ikisi de 328
+    // merkezli bantta olsaydı üst üste binerdi. Bu yüzden bildirimin kendi
+    // bandı var: tahtanın ALTI ile katalizör göstergesinin ÜSTÜ arasındaki
+    // boşluk (referans ölçüm: grid alt kenarı -610, PressureMeter üstü -718).
+    // Bant tahtaya göre hesaplanır, ekran merkezine göre değil: ikisi de
+    // (0.5, 0.41666666) anchor'ında olduğu için uzun ekranlarda birlikte kayar.
+    private const float SystemBandHeight = 108f;
+    private const float SystemBoxWidth = 900f;
+    private const float SystemBoxHeight = 72f;
+    /// <summary>Tahta yoksa (test / tahta kurulmamış) ekran merkezine göre bant.</summary>
+    private const float SystemFallbackY = -664f;
+
+    /// <summary>Tahtanın altındaki kendi bandında kısa bir sistem bildirimi.</summary>
     public void ShowSystemMessage(string message, float duration = 1.5f)
     {
         if (comboTextPrefab == null || canvasTransform == null) return;
@@ -325,11 +335,23 @@ public class UIManager : MonoBehaviour
         if (parentCanvas != null) scale = parentCanvas.scaleFactor;
 
         Vector3 position = new Vector3(Screen.width * 0.5f,
-                                       Screen.height * 0.5f + ComboAnchorY * scale, 0f);
+                                       Screen.height * 0.5f + SystemFallbackY * scale, 0f);
+
+        RectTransform board = GridManager.Instance != null ? GridManager.Instance.BoardRect : null;
+        if (board != null)
+        {
+            Vector3[] corners = new Vector3[4];
+            board.GetWorldCorners(corners);
+            position.x = (corners[0].x + corners[2].x) * 0.5f;
+            position.y = corners[0].y - SystemBandHeight * 0.5f * scale;
+        }
 
         GameObject floatingObj = Instantiate(comboTextPrefab, position, Quaternion.identity, canvasTransform);
         TextMeshProUGUI tmpText = floatingObj.GetComponent<TextMeshProUGUI>();
         if (tmpText == null) { Destroy(floatingObj); return; }
+
+        // Kombo kutusu 700x100; bildirim kendi bandına sığmalı (108 birim)
+        tmpText.rectTransform.sizeDelta = new Vector2(SystemBoxWidth, SystemBoxHeight);
 
         tmpText.text = message;
         tmpText.color = new Color(0.56f, 0.85f, 1f);   // #8FD8FF, HUD vurgu rengi
@@ -366,6 +388,14 @@ public class UIManager : MonoBehaviour
     {
         PlayButtonSound();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>Duraklat menüsünden tarif defteri: ana menüye dönüp defteri açar.</summary>
+    public void OpenRecipeBook()
+    {
+        PlayButtonSound();
+        MainMenuManager.OpenRecipeBookOnLoad = true;
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void GoToMainMenu()
