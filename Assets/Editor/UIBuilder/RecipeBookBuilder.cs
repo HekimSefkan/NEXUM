@@ -38,6 +38,39 @@ public static class RecipeBookBuilder
     /// <summary>Satır sonundaki kilit ikonu.</summary>
     private static readonly Vector2 LockSize = new Vector2(44f, 44f);
 
+    // --- paylaşılan varlıklar (yeni görsel üretilmez, mevcutlar paylaşılır)
+    private const string MenuBackgroundPath = "Assets/Art/Figures/arkaplan.png";
+    private const float MenuBackgroundAspect = 0.56279904f;   // 941x1672, MainMenu/Background ile aynı
+    private const string LogoPath = "Assets/Art/Figures/NEXUM_logo.png";
+    private static readonly Vector2 LogoSize = new Vector2(500f, 130f);
+    private static readonly Vector2 LogoPosition = new Vector2(0f, -83.88f);   // Game sahnesindeki logo ile aynı
+
+    private const string RingSpritePath = "Assets/Art/Figures/ring_progress.png";
+    private static readonly Vector2 RingAnchor = new Vector2(0.5f, 0.785f);
+    // 200 birimde ortadaki "21/21" 178 birim istiyordu, delik 144 birimdi.
+    private static readonly Vector2 RingSize = new Vector2(220f, 220f);
+
+    /// <summary>Menü butonlarının ortak ölçüsü (ANSİKLOPEDİ / AYARLAR ile aynı).</summary>
+    private static readonly Vector2 MenuButtonSize = new Vector2(522f, 220f);
+
+    /// <summary>Beş butonun merkez aralığı (mevcut ritim: 265 birim).</summary>
+    private const float MenuButtonSpacing = 265f;
+    private const float EncyclopediaY = -137f;
+
+    // Metinsiz buton çerçevesi. Diğer dört menü butonunun metni GÖRSELİN
+    // İÇİNDE basılı olduğu için birebir aynı sprite kullanılamaz; siluet olarak
+    // en yakın olanı seçildi (köşeleri pahlı dikdörtgen çerçeve, ANSİKLOPEDİ /
+    // AYARLAR ile aynı dil). İç dolgu açık olduğu için metin koyu renkte.
+    private const string MenuButtonFramePath = "Assets/Art/Figures/Nasiloyanir_Buton.png";
+    private static readonly Vector2 MenuButtonLabelSize = new Vector2(430f, 120f);
+
+    /// <summary>Duraklat kartındaki defter girişi (cam alanın altı).</summary>
+    private static readonly Vector2 PauseButtonSize = new Vector2(560f, 64f);
+    private const float PauseButtonY = -265f;
+
+    /// <summary>Katalizör göstergesinin çerçeve görseli (yerel parıltı aynı şekli alır).</summary>
+    private const string MeterFramePath = "Assets/Art/Figures/Entropitup.png";
+
     private static string PanelPath { get { return ParentPath + "/" + PanelName; } }
     private static string ContentPath { get { return PanelPath + "/Scroll View/Viewport/Content"; } }
 
@@ -57,30 +90,65 @@ public static class RecipeBookBuilder
         if (panel == null) { b.End(); return; }
         b.SetStretch(panel, UITokens.Zero, UITokens.One);
 
-        // --- zemin
+        // --- zemin: ANA MENÜ ile aynı arka plan (tek kaynak, yeni görsel yok).
+        // AspectRatioFitter Envelope Parent: dolgu görseli gerilmez, kırpılır
+        // (CLAUDE.md "Arka planlar" kuralı).
         GameObject backdrop = b.Ensure(PanelPath, "Backdrop");
         b.SetStretch(backdrop, UITokens.Zero, UITokens.One);
         b.EnsureComponent<Image>(backdrop, image =>
         {
-            image.color = theme.palette.panelBackground;
+            image.sprite = LoadSprite(MenuBackgroundPath);
+            image.color = Color.white;
+            image.preserveAspect = false;
             image.raycastTarget = true;     // arkadaki panele tıklama geçmesin
+        });
+        b.EnsureComponent<AspectRatioFitter>(backdrop, fitter =>
+        {
+            fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fitter.aspectRatio = MenuBackgroundAspect;
+        });
+
+        // --- logo: Game sahnesindeki NEXUM logosunun aynısı, aynı üst bant
+        GameObject logo = b.Ensure(PanelPath, "Logo");
+        b.SetFixed(logo, new Vector2(0.5f, 1f), LogoSize, LogoPosition);
+        b.EnsureComponent<Image>(logo, image =>
+        {
+            image.sprite = LoadSprite(LogoPath);
+            image.color = Color.white;
+            image.preserveAspect = true;
+            image.raycastTarget = false;
         });
 
         // --- başlık
-        // Başlık bandı geri butonunun SAĞINDAN başlar: ölçümde 0.10 bandı
-        // geri butonuyla (x -470..-350) 3329 birim² çakışıyordu.
+        // Logo eklendikten sonra yeniden ölçüldü: logo y 811..941, geri butonu
+        // y 814..934 (x -470..-350). Başlık ikisinin de ALTINDA kendi bandında.
         GameObject title = b.Ensure(PanelPath, "TitleText");
-        b.SetBand(title, 0.22f, 0.78f, 0.885f, 0.945f);
+        b.SetBand(title, 0.22f, 0.78f, 0.862f, 0.912f);
         b.EnsureComponent<TextMeshProUGUI>(title, tmp => ApplyText(tmp, theme,
             theme.typography.title, theme.palette.primaryBright, TextAlignmentOptions.Center));
         EnsureLocalized(b, title, CodeStrings.RecipeBookTitle);
 
         // --- ilerleme halkası
+        // Eski hâli DOLU daireydi (Cember.png); radyal dolgu halka değil pasta
+        // dilimi çiziyordu. Artık gerçek halka (Tools/generate_ring.py) ve
+        // altında dolmamış kısmı gösteren soluk "track" var.
+        GameObject track = b.Ensure(PanelPath, "ProgressRingTrack");
+        b.SetFixed(track, RingAnchor, RingSize);
+        b.EnsureComponent<Image>(track, image =>
+        {
+            image.sprite = LoadSprite(RingSpritePath);
+            image.color = new Color(theme.palette.textSecondary.r, theme.palette.textSecondary.g,
+                                    theme.palette.textSecondary.b, 0.25f);
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.raycastTarget = false;
+        });
+
         GameObject ring = b.Ensure(PanelPath, "ProgressRing");
-        b.SetFixed(ring, new Vector2(0.5f, 0.845f), new Vector2(96f, 96f));
+        b.SetFixed(ring, RingAnchor, RingSize);
         b.EnsureComponent<Image>(ring, image =>
         {
-            image.sprite = LoadSprite("Assets/Art/Figures/Cember.png");
+            image.sprite = LoadSprite(RingSpritePath);
             image.color = theme.palette.primary;
             image.type = Image.Type.Filled;
             image.fillMethod = Image.FillMethod.Radial360;
@@ -90,15 +158,20 @@ public static class RecipeBookBuilder
             image.raycastTarget = false;
         });
 
+        GameObject ringValue = b.Ensure(PanelPath, "RingValueText");
+        b.SetFixed(ringValue, RingAnchor, new Vector2(RingSize.x * 0.72f, RingSize.y * 0.45f));
+        b.EnsureComponent<TextMeshProUGUI>(ringValue, tmp => ApplyText(tmp, theme,
+            theme.typography.subtitle, theme.palette.primaryBright, TextAlignmentOptions.Center));
+
         // --- sayaç
         GameObject counter = b.Ensure(PanelPath, "CounterText");
-        b.SetBand(counter, 0.10f, 0.90f, 0.760f, 0.808f);
+        b.SetBand(counter, 0.10f, 0.90f, 0.676f, 0.716f);
         b.EnsureComponent<TextMeshProUGUI>(counter, tmp => ApplyText(tmp, theme,
             theme.typography.body, theme.palette.textSecondary, TextAlignmentOptions.Center));
 
         // --- kaydırma
         GameObject scroll = b.Ensure(PanelPath, "Scroll View");
-        b.SetBand(scroll, 0.07f, 0.93f, 0.085f, 0.735f);
+        b.SetBand(scroll, 0.07f, 0.93f, 0.085f, 0.665f);
         b.EnsureComponent<Image>(scroll, image =>
         {
             image.color = theme.palette.cardBackground;
@@ -196,6 +269,7 @@ public static class RecipeBookBuilder
             panelScript.scrollRect = scrollRect;
             panelScript.counterText = counter != null ? counter.GetComponent<TextMeshProUGUI>() : null;
             panelScript.progressRing = ring != null ? ring.GetComponent<Image>() : null;
+            panelScript.ringValueText = ringValue != null ? ringValue.GetComponent<TextMeshProUGUI>() : null;
             panelScript.rowContainer = content != null ? content.transform : null;
             panelScript.encyclopedia = Object.FindObjectOfType<EncyclopediaManager>(true);
         });
@@ -244,25 +318,40 @@ public static class RecipeBookBuilder
     {
         const string menuPath = "Canvas/SafeAreaRoot/MainMenuPanel";
 
+        // Defter girişi dikey yığında ANSİKLOPEDİ ile AYARLAR'ın ARASINA girer.
+        // Diğer dört buton 522x220 ve merkez aralıkları 265 birim; bu ritim
+        // korunur, yalnızca AYARLAR bir sıra aşağı iner.
+        //   Oyna 395 · Nasıl Oynanır 121 · Ansiklopedi -137 · DEFTER -402 · Ayarlar -667
         GameObject entry = b.Ensure(menuPath, "RecipeBookButton");
         if (entry == null) return;
 
-        // Ansiklopedi butonu y = -137; defter girişi onun sağında
-        b.SetFixed(entry, UITokens.Center, new Vector2(150f, 150f), new Vector2(360f, -137f));
+        b.SetFixed(entry, UITokens.Center, MenuButtonSize,
+                   new Vector2(0f, EncyclopediaY - MenuButtonSpacing));
 
+        // Diğer menü butonları metni görselin içinde taşıyor; defter için metinsiz
+        // çerçeve (level_selection_button) + TMP etiketi kullanılır. Yeni görsel
+        // üretilmez. preserveAspect kapalı: kardeşleri de kutularına geriliyor.
         b.EnsureComponent<Image>(entry, image =>
         {
-            image.sprite = LoadSprite("Assets/Art/Figures/SettingsPanel_modsecimkartı.png");
-            image.color = theme.palette.textPrimary;
-            image.preserveAspect = true;
+            image.sprite = LoadSprite(MenuButtonFramePath);
+            image.color = Color.white;
+            image.preserveAspect = false;
         });
         b.EnsureComponent<Button>(entry, button => button.transition = Selectable.Transition.ColorTint);
 
         GameObject label = b.Ensure(menuPath + "/RecipeBookButton", "Label");
-        b.SetStretch(label, UITokens.Zero, UITokens.One);
+        b.SetFixed(label, UITokens.Center, MenuButtonLabelSize);
         b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(tmp, theme,
-            theme.typography.label, theme.palette.textOnLight, TextAlignmentOptions.Center));
-        EnsureLocalized(b, label, CodeStrings.RecipeBookTitle);
+            theme.typography.subtitle, theme.palette.textOnLight, TextAlignmentOptions.Center));
+        EnsureLocalized(b, label, CodeStrings.RecipeBookButtonLabel);
+
+        // AYARLAR bir sıra aşağı: kurucunun kaydında olmadığı için devralınır
+        GameObject settings = b.Ensure(menuPath, "SettingButton", adopt: true);
+        if (settings != null)
+        {
+            b.SetFixed(settings, UITokens.Center, MenuButtonSize,
+                       new Vector2(0f, EncyclopediaY - 2f * MenuButtonSpacing));
+        }
 
         if (dryRun) return;
 
@@ -271,7 +360,21 @@ public static class RecipeBookBuilder
         if (menu != null && entryButton != null) Wire(entryButton, menu, menu.OpenRecipeBook);
     }
 
-    /// <summary>Oyun ekranındaki duraklat menüsünde giriş.</summary>
+    /// <summary>
+    /// Oyun ekranındaki duraklat kartı: defter girişi + kart içi denge.
+    ///
+    /// Kart görseli (gamepanel.png) ALT KENARINDA iki boyalı buton yuvası
+    /// taşıyor; DEVAM ET ve ANA MENÜ bu yuvaların üzerinde duruyor. Üçüncü bir
+    /// yuva yok, bu yüzden defter girişi yuva satırının ALTINA değil, cam
+    /// içerik alanının ALTINA (bilgi metni ile yuva satırı arasına) konur.
+    /// Stil ikisiyle aynı: görselsiz, yalnızca TMP metni.
+    ///
+    /// Ölçüm (ContainerBox yerel, -479..479):
+    ///   başlık 506 -> 425   (eski hâli kutunun 52 birim dışındaydı)
+    ///   alt başlık 441 -> 350
+    ///   bilgi metni 610 -> 480 birim yükseklik, merkez 88 -> 55
+    ///   defter girişi 560x64 @ -265  (bilgi metnine 48, yuva satırına 26 pay)
+    /// </summary>
     private static void BuildPauseEntry(bool dryRun)
     {
         const string gameScene = "Assets/Scenes/Game.unity";
@@ -280,36 +383,126 @@ public static class RecipeBookBuilder
         UIBuilder b = UIBuilder.Begin("RecipeBookPauseEntry", gameScene, dryRun);
         NexumTheme theme = UITokens.Theme;
 
+        // --- kart içi denge (mevcut objeler devralınır)
+        GameObject pauseTitle = b.Ensure(boxPath, "TitleText", adopt: true);
+        if (pauseTitle != null) b.SetFixed(pauseTitle, UITokens.Center, new Vector2(468.8f, 50f), new Vector2(0f, 425f));
+
+        GameObject pauseSubtitle = b.Ensure(boxPath, "SubtitleText", adopt: true);
+        if (pauseSubtitle != null) b.SetFixed(pauseSubtitle, UITokens.Center, new Vector2(474.9f, 45.8f), new Vector2(0f, 350f));
+
+        GameObject pauseFact = b.Ensure(boxPath, "FactText", adopt: true);
+        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(596.7f, 480f), new Vector2(0f, 55f));
+
+        // --- defter girişi
         GameObject entry = b.Ensure(boxPath, "RecipeBookButton");
         if (entry == null) { b.End(); return; }
 
-        // Ölçüm: ContainerBox y -479..479; ResumeButton -378..-323,
-        // MainMenuButton -382..-319. Defter girişi bu satırın ALTINDAKİ
-        // boşluğa oturur (-479..-382 arası 97 birim).
-        b.SetFixed(entry, UITokens.Center, new Vector2(300f, 64f), new Vector2(0f, -430.5f));
+        b.SetFixed(entry, UITokens.Center, PauseButtonSize, new Vector2(0f, PauseButtonY));
 
+        // DEVAM ET / ANA MENÜ ile aynı stil: görsel yok, yalnızca metin
         b.EnsureComponent<Image>(entry, image =>
         {
-            image.sprite = LoadSprite("Assets/Art/Figures/SettingsPanel_modsecimkartı.png");
-            image.color = theme.palette.textPrimary;
-            image.preserveAspect = true;
+            image.sprite = null;
+            image.color = new Color(1f, 1f, 1f, 0f);
+            image.preserveAspect = false;
+            image.raycastTarget = true;
         });
         b.EnsureComponent<Button>(entry, button => button.transition = Selectable.Transition.ColorTint);
 
         GameObject label = b.Ensure(boxPath + "/RecipeBookButton", "Label");
         b.SetStretch(label, UITokens.Zero, UITokens.One);
         b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(tmp, theme,
-            theme.typography.label, theme.palette.textOnLight, TextAlignmentOptions.Center));
-        EnsureLocalized(b, label, CodeStrings.RecipeBookTitle);
+            theme.typography.body, theme.palette.textPrimary, TextAlignmentOptions.Center));
+        EnsureLocalized(b, label, CodeStrings.RecipeBookButtonLabel);
+
+        // --- katalizör göstergesinin YEREL parıltısı
+        // Eski hâli tam ekran yeşil tintti (DangerGlowImage 1080x1920, alfa 0.35).
+        // Artık göstergenin kendi çerçevesi düşük alfada parlıyor.
+        GameObject glow = b.Ensure("Canvas/SafeAreaRoot/PressureMeter", "ReadyGlow");
+        if (glow != null)
+        {
+            b.SetStretch(glow, new Vector2(-0.04f, -0.6f), new Vector2(1.04f, 1.6f));
+            b.EnsureComponent<Image>(glow, image =>
+            {
+                image.sprite = LoadSprite(MeterFramePath);
+                image.color = new Color(theme.palette.success.r, theme.palette.success.g,
+                                        theme.palette.success.b, 0f);
+                image.preserveAspect = true;
+                image.raycastTarget = false;
+            });
+        }
 
         if (!dryRun)
         {
             UIManager ui = Object.FindObjectOfType<UIManager>(true);
             Button entryButton = entry.GetComponent<Button>();
             if (ui != null && entryButton != null) Wire(entryButton, ui, ui.OpenRecipeBook);
+
+            if (ui != null)
+            {
+                SerializedObject so = new SerializedObject(ui);
+                bool changed = false;
+
+                if (glow != null) changed |= SetReference(so, "catalystGlowImage", glow.GetComponent<Image>());
+                changed |= SetHiddenHud(so, b);
+
+                if (changed)
+                {
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    EditorUtility.SetDirty(ui);
+                }
+            }
         }
 
         b.End();
+    }
+
+    /// <summary>Alan zaten doğru nesneye bakıyorsa dokunmaz (idempotans).</summary>
+    private static bool SetReference(SerializedObject so, string field, Object value)
+    {
+        SerializedProperty prop = so.FindProperty(field);
+        if (prop == null || prop.objectReferenceValue == value) return false;
+
+        prop.objectReferenceValue = value;
+        return true;
+    }
+
+    /// <summary>
+    /// Duraklat kartı açıkken gizlenecek HUD objeleri. Kart görseli
+    /// x -375..375 / y -448..734 arasında; JokerButton (y 732..832) ve
+    /// UndoButton (x 275..525) kartın dışına taşıp kenarından sızıyordu.
+    /// </summary>
+    private static bool SetHiddenHud(SerializedObject so, UIBuilder b)
+    {
+        string[] names = { "JokerButton", "UndoButton" };
+
+        SerializedProperty list = so.FindProperty("hudHiddenWhilePaused");
+        if (list == null) return false;
+
+        GameObject[] targets = new GameObject[names.Length];
+        for (int i = 0; i < names.Length; i++)
+        {
+            GameObject go = b.FindObject("Canvas/SafeAreaRoot/" + names[i]);
+            if (go == null) return false;
+            targets[i] = go;
+        }
+
+        bool same = list.arraySize == targets.Length;
+        if (same)
+        {
+            for (int i = 0; i < targets.Length; i++)
+            {
+                if (list.GetArrayElementAtIndex(i).objectReferenceValue != targets[i]) { same = false; break; }
+            }
+        }
+        if (same) return false;
+
+        list.arraySize = targets.Length;
+        for (int i = 0; i < targets.Length; i++)
+        {
+            list.GetArrayElementAtIndex(i).objectReferenceValue = targets[i];
+        }
+        return true;
     }
 
     /// <summary>OnClick'e kalıcı dinleyici ekler (zaten varsa dokunmaz).</summary>

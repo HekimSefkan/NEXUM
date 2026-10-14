@@ -1,11 +1,27 @@
 {
     "managed": [
         {
+            "path": "Game::Canvas/PausePanel/ContainerBox/FactText",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
             "path": "Game::Canvas/PausePanel/ContainerBox/RecipeBookButton",
             "builder": "RecipeBookPauseEntry"
         },
         {
             "path": "Game::Canvas/PausePanel/ContainerBox/RecipeBookButton/Label",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/PausePanel/ContainerBox/SubtitleText",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/PausePanel/ContainerBox/TitleText",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/PressureMeter/ReadyGlow",
             "builder": "RecipeBookPauseEntry"
         },
         {
@@ -53,6 +69,10 @@
             "builder": "RecipeBook"
         },
         {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/SettingButton",
+            "builder": "RecipeBook"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel",
             "builder": "RecipeBook"
         },
@@ -69,7 +89,19 @@
             "builder": "RecipeBook"
         },
         {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Logo",
+            "builder": "RecipeBook"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/ProgressRing",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/ProgressRingTrack",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/RingValueText",
             "builder": "RecipeBook"
         },
         {
