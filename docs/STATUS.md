@@ -1,6 +1,6 @@
 # NEXUM – Durum Notu
 
-**Tarih:** 29 Eylül 2026 · **Dal:** `core-loop` (13. tur, PR açık — birleştirilmedi)
+**Tarih:** 14 Ekim 2026 · **Dal:** `recipe-book` (Faz 1 / Adım 2, PR açık — birleştirilmedi)
 
 Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar ve alınan kararlar için `CLAUDE.md`, yayın adımları için `docs/RELEASE_CHECKLIST.md`.
 
@@ -21,7 +21,7 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - `.gitattributes` ile satır sonları LF'e sabitlendi; `Builds/`, paketler ve ekran görüntüleri git dışında.
 - `AppBootstrap`: 60 FPS, sahne yüklenince `timeScale = 1`, arka plana geçince `PlayerPrefs.Save`.
 - **Doğrulama aracı** `Assets/Editor/NexumValidation.cs`: kopuk referans, null alan, NaN rect, UnityEvent hedefi, bölüm çözülebilirliği, doku/ikon/yayın kontrolleri. Beklenen sonuç: `OK`, 0 uyarı.
-- **PlayMode testleri** (`Assets/Tests/PlayMode`): panel kaydırma, girdi kilidi, geri tuşu, kayıt uyarısı, yerleşim ölçümü — toplam 9 test.
+- **PlayMode testleri** (`Assets/Tests/PlayMode`): panel kaydırma, girdi kilidi, geri tuşu, kayıt uyarısı, yerleşim ölçümü, çekirdek döngü, kayıt göçü, lokalizasyon, tepkime denklemi, ok kalibrasyonu, tarif defteri — toplam **59 test**.
 
 **Doku, ses ve boyut**
 - Doku import kuralı (kullanımın 1,5 katı, çalışma zamanı atamaları dahil) tüm dokulara uygulandı.
@@ -46,6 +46,23 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **Ses:** duraklat menüsündeki "Devam Et" / "Ana Menü" ve "Yeniden Başlat" butonları artık ses veriyor (kare korumasıyla çift ses yok).
 - **Profil istatistikleri:** etiketler veriye uyduruldu, "LABORATUVAR KAZASI" gerçek veri gösteriyor (oyun başına bir kez artar).
 - **Skor × hedef ve kombo yazısı** çakışmaları ölçümle giderildi.
+
+---
+
+## 1b. Ürün dönemi (Faz 0 ve Faz 1)
+
+**Faz 0 — altyapı**
+- **SaveService** (`Assets/Scripts/Save`, `Nexum.Save` asmdef): şemalı, sürümlü tek kayıt katmanı. Eski `PlayerPrefs` anahtarlarından göç, alan bazında onarım, kirli bayrakla yazma. `PlayerPrefs` yalnızca bu dosyada kullanılabilir (validator zorunlu kılar); testler için `ExportRaw` / `ImportRaw` kapısı var. **Güncel sürüm: 2.**
+- **Lokalizasyon** (`Assets/Scripts/Localization`, `Nexum.Localization` asmdef): JSON sözlük (`Assets/Data/Localization/tr.json`, `en.json`) → `LocalizationTable` asset'i; `Loc.Get` / `Loc.Format`, `LocalizedText` bileşeni, dil değişince olay. Sözlükte **100 anahtar**; İngilizce çeviri Faz 6'ya bırakıldı (anahtarlar var, metinler Türkçe tohum).
+- **UIBuilder** (`Assets/Editor/UIBuilder`): sahne yapısı elle YAML ile değil idempotent kurucularla kurulur. Kayıt dosyası `managed.json`, `-dryRun` desteği, oluşturulan/güncellenen/dokunulmayan raporu. Nokta anchor'lı objelerde **`SetFixed(anchor, size, anchoredPosition)`** kullanılır; `SetFixed` + `SetRectPosition` ikilisi dosyayı değiştirmese de her koşuda "güncellendi" raporluyordu.
+- **Tema tokenları:** `NexumTheme` asset'i → `UITokens` → kurucular. Renk/punto/boşluk doğrudan yazılmaz.
+
+**Faz 1 — oyuncunun gördüğü bilgi katmanı**
+- **Tepkime denklemi** (Adım 1): her birleşmede "H₂ + O → H₂O" birleşmenin olduğu hücrenin üstünde. 8 etiketlik havuz, çakışma hâlinde satır kaydırma, kombo bandına girmeme. *(PR #19 — cihazda onaylandı, birleşti.)*
+- **Ok sembolü** (Adım 2): "→" (U+2192) proje fontlarının hiçbirinde yok ve atlaslar statik; ok `Tools/generate_arrow.py` ile çizilip TMP sprite asset'i olarak gömüldü (`Assets/Resources/Sprite Assets/NexumSymbols.asset`). Ölçüm: **punto'nun %40'ı boy, merkez sapması %0,0** (4 canvas boyutu × 2 dil). Sprite yüklenemezse hata loglanıp `->` kalıbına düşülür.
+- **Tek kaynak kuralı:** `ReactionText` — denklem gösterimi, tarif defteri ve ansiklopedi kartı aynı kalıbı ve aynı sprite'ı kullanır. Kalıplar sözlükte (`reaction.inputs`, `reaction.equation`).
+- **Tarif defteri** (Adım 2): 21 tarifin listesi, keşif sayacı, ilerleme halkası; keşfedilmemiş satırlarda `? + ? → ?` + kilit ikonu (`Tools/generate_lock.py`). Erişim ana menüden ve duraklat menüsünden. Keşif ilk birleşmede kaydedilir; mevcut oyunculara **geriye dönük doldurma** üretim grafiğinden türetilir (bir bileşiği tek bir tarif üretiyorsa o tarif zorunludur; birden fazla üretici varsa hiçbiri sayılmaz).
+- **Sistem bildirimi** artık kombo bandını kullanmıyor: yeni tarif keşfi ile kombo yazısı aynı karede doğduğu için bildirim tahtanın altındaki kendi bandına alındı.
 
 ---
 
@@ -121,6 +138,6 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
    & "C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -runTests -projectPath "C:\Projects\NEXUM" -testPlatform PlayMode -testResults "C:\Projects\NEXUM\Logs\tests.xml" -logFile "C:\Projects\NEXUM\Logs\tests.log" | Out-Null
    Set-Location "C:\Projects\NEXUM"; git status --short
    ```
-   Beklenen: `NEXUM_VALIDATION: OK` + 0 uyarı, PlayMode 18/18. PlayMode testi `ProjectSettings.asset` içindeki `runInBackground` değerini 1 yapar; commit etmeden `git restore` ile geri alınır.
+   Beklenen: `NEXUM_VALIDATION: OK` + 0 uyarı, PlayMode 59/59. PlayMode testi `ProjectSettings.asset` içindeki `runInBackground` değerini 1 yapar; commit etmeden `git restore` ile geri alınır.
 4. **Dal ve PR akışı:** `main`'den yeni bir dal aç (`git switch -c <konu>`), her adımı ayrı commit et, push edip PR aç. Cihazda görsel doğrulama gerektiren değişiklikler kullanıcı test etmeden birleştirilmez; belge/ayar değişiklikleri validator + testler temizse birleştirilebilir. `main`'e doğrudan commit, force push ve geçmiş yeniden yazma yok.
 5. **Ölçmeden düzeltme yok:** yerleşim sorunlarında `Assets/Tests/PlayMode/LayoutProbeTests.cs` çalışma zamanı dikdörtgenlerini referans birimiyle loglar; sahnedeki kayıtlı değerler TMP ve layout grupları yüzünden yanıltabilir.
