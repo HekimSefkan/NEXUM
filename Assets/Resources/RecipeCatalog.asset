@@ -1,0 +1,257 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b30463cd56c3ccc41ba359aed53df884, type: 3}
+  m_Name: RecipeCatalog
+  m_EditorClassIdentifier: 
+  entries:
+  - key: Tile_H_Tile_H
+    inputAName: Tile_H
+    inputBName: Tile_H
+    productName: Tile_H2
+    inputASymbol: H
+    inputBSymbol: H
+    productSymbol: H<sub>2</sub>
+    productData: {fileID: 11400000, guid: b466eae93c5844b47a734142d641a8bf, type: 2}
+  - key: Tile_O_Tile_O
+    inputAName: Tile_O
+    inputBName: Tile_O
+    productName: Tile_O2
+    inputASymbol: O
+    inputBSymbol: O
+    productSymbol: O<sub>2</sub>
+    productData: {fileID: 11400000, guid: bd1c5c4d86318304fabece9241eb88c1, type: 2}
+  - key: Tile_C_Tile_O
+    inputAName: Tile_C
+    inputBName: Tile_O
+    productName: Tile_CO
+    inputASymbol: C
+    inputBSymbol: O
+    productSymbol: CO
+    productData: {fileID: 11400000, guid: ccce30102f502ac46a25d3963fa94b9d, type: 2}
+  - key: Tile_H_Tile_N
+    inputAName: Tile_N
+    inputBName: Tile_H
+    productName: Tile_NH
+    inputASymbol: N
+    inputBSymbol: H
+    productSymbol: NH
+    productData: {fileID: 11400000, guid: c14c946652a45e54faae41115592622a, type: 2}
+  - key: Tile_H2_Tile_O
+    inputAName: Tile_H2
+    inputBName: Tile_O
+    productName: Tile_H2O
+    inputASymbol: H<sub>2</sub>
+    inputBSymbol: O
+    productSymbol: H<sub>2</sub>O
+    productData: {fileID: 11400000, guid: 318f890d598aadb42972d85c24f45218, type: 2}
+  - key: Tile_Cl_Tile_Na
+    inputAName: Tile_Na
+    inputBName: Tile_Cl
+    productName: Tile_NaCl
+    inputASymbol: Na
+    inputBSymbol: Cl
+    productSymbol: NaCl
+    productData: {fileID: 11400000, guid: a99661e37dba5a04287a829f24b0ba35, type: 2}
+  - key: Tile_CO_Tile_O
+    inputAName: Tile_CO
+    inputBName: Tile_O
+    productName: Tile_CO2
+    inputASymbol: CO
+    inputBSymbol: O
+    productSymbol: CO<sub>2</sub>
+    productData: {fileID: 11400000, guid: 6dbfbed7ec7b1e649864c72846a3b611, type: 2}
+  - key: Tile_O_Tile_O2
+    inputAName: Tile_O
+    inputBName: Tile_O2
+    productName: Tile_O3
+    inputASymbol: O
+    inputBSymbol: O<sub>2</sub>
+    productSymbol: O<sub>3</sub>
+    productData: {fileID: 11400000, guid: 255868abcf8c5b246b48f52e3166c4fb, type: 2}
+  - key: Tile_Fe_Tile_Fe
+    inputAName: Tile_Fe
+    inputBName: Tile_Fe
+    productName: Tile_Fe2
+    inputASymbol: Fe
+    inputBSymbol: Fe
+    productSymbol: Fe<sub>2</sub>
+    productData: {fileID: 11400000, guid: dbef92b91ac2d1c48abfe888befbbf93, type: 2}
+  - key: Tile_Fe2_Tile_O3
+    inputAName: Tile_Fe2
+    inputBName: Tile_O3
+    productName: Tile_Fe2O3
+    inputASymbol: Fe<sub>2</sub>
+    inputBSymbol: O<sub>3</sub>
+    productSymbol: Fe<sub>2</sub>O<sub>3</sub>
+    productData: {fileID: 11400000, guid: 4a000495baf465941b280d8b8c635dc3, type: 2}
+  - key: Tile_H2_Tile_NH
+    inputAName: Tile_NH
+    inputBName: Tile_H2
+    productName: Tile_NH3
+    inputASymbol: NH
+    inputBSymbol: H<sub>2</sub>
+    productSymbol: NH<sub>3</sub>
+    productData: {fileID: 11400000, guid: 8438e46e31f66dd4780f6fe116d2aeba, type: 2}
+  - key: Tile_Ca_Tile_O
+    inputAName: Tile_Ca
+    inputBName: Tile_O
+    productName: Tile_CaO
+    inputASymbol: Ca
+    inputBSymbol: O
+    productSymbol: CaO
+    productData: {fileID: 11400000, guid: fbf3eb8de6492334abf1db57b1127760, type: 2}
+  - key: Tile_CO2_Tile_H2O
+    inputAName: Tile_H2O
+    inputBName: Tile_CO2
+    productName: Tile_H2CO3
+    inputASymbol: H<sub>2</sub>O
+    inputBSymbol: CO<sub>2</sub>
+    productSymbol: H<sub>2</sub>CO<sub>3</sub>
+    productData: {fileID: 11400000, guid: e26f07a078597974d875606c62475801, type: 2}
+  - key: Tile_CaO_Tile_CO2
+    inputAName: Tile_CaO
+    inputBName: Tile_CO2
+    productName: Tile_CaCO3
+    inputASymbol: CaO
+    inputBSymbol: CO<sub>2</sub>
+    productSymbol: CaCO<sub>3</sub>
+    productData: {fileID: 11400000, guid: 5b55904ab52802847a9dc845beaed124, type: 2}
+  - key: Tile_NH3_Tile_O2
+    inputAName: Tile_NH3
+    inputBName: Tile_O2
+    productName: Tile_NO
+    inputASymbol: NH<sub>3</sub>
+    inputBSymbol: O<sub>2</sub>
+    productSymbol: NO
+    productData: {fileID: 11400000, guid: af3d1684054042843a300f35408469ad, type: 2}
+  - key: Tile_N_Tile_N
+    inputAName: Tile_N
+    inputBName: Tile_N
+    productName: Tile_N2
+    inputASymbol: N
+    inputBSymbol: N
+    productSymbol: N<sub>2</sub>
+    productData: {fileID: 11400000, guid: 39e2c0b195f8f784da8e3b72147f6501, type: 2}
+  - key: Tile_Cl_Tile_Cl
+    inputAName: Tile_Cl
+    inputBName: Tile_Cl
+    productName: Tile_Cl2
+    inputASymbol: Cl
+    inputBSymbol: Cl
+    productSymbol: Cl<sub>2</sub>
+    productData: {fileID: 11400000, guid: 48f8de41383b0e44e9a699bcae5fd72b, type: 2}
+  - key: Tile_C_Tile_C
+    inputAName: Tile_C
+    inputBName: Tile_C
+    productName: Tile_C2
+    inputASymbol: C
+    inputBSymbol: C
+    productSymbol: C<sub>2</sub>
+    productData: {fileID: 11400000, guid: 95ed66a997156e84e872cd2d9beda37e, type: 2}
+  - key: Tile_H2_Tile_N2
+    inputAName: Tile_N2
+    inputBName: Tile_H2
+    productName: Tile_NH3
+    inputASymbol: N<sub>2</sub>
+    inputBSymbol: H<sub>2</sub>
+    productSymbol: NH<sub>3</sub>
+    productData: {fileID: 11400000, guid: 8438e46e31f66dd4780f6fe116d2aeba, type: 2}
+  - key: Tile_Cl2_Tile_Na
+    inputAName: Tile_Cl2
+    inputBName: Tile_Na
+    productName: Tile_NaCl
+    inputASymbol: Cl<sub>2</sub>
+    inputBSymbol: Na
+    productSymbol: NaCl
+    productData: {fileID: 11400000, guid: a99661e37dba5a04287a829f24b0ba35, type: 2}
+  - key: Tile_C2_Tile_O2
+    inputAName: Tile_C2
+    inputBName: Tile_O2
+    productName: Tile_CO
+    inputASymbol: C<sub>2</sub>
+    inputBSymbol: O<sub>2</sub>
+    productSymbol: CO
+    productData: {fileID: 11400000, guid: ccce30102f502ac46a25d3963fa94b9d, type: 2}
+  levels:
+  - levelName: Level 1
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    goals:
+    - Tile_H2O
+  - levelName: Level 2
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    - Tile_Na
+    - Tile_Cl
+    goals:
+    - Tile_NaCl
+  - levelName: Level 3
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    - Tile_Na
+    - Tile_Cl
+    - Tile_C
+    goals:
+    - Tile_CO2
+  - levelName: Level 4
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    - Tile_Na
+    - Tile_Cl
+    - Tile_C
+    - Tile_Fe
+    - Tile_N
+    goals:
+    - Tile_Fe2O3
+    - Tile_NH3
+  - levelName: Level 5
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    - Tile_Na
+    - Tile_Cl
+    - Tile_C
+    - Tile_Fe
+    - Tile_N
+    - Tile_Ca
+    goals:
+    - Tile_CaO
+    - Tile_CO2
+  - levelName: Level 6
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    - Tile_Na
+    - Tile_Cl
+    - Tile_C
+    - Tile_Fe
+    - Tile_N
+    - Tile_Ca
+    goals:
+    - Tile_H2CO3
+  - levelName: Level 7
+    spawnPool:
+    - Tile_H
+    - Tile_O
+    - Tile_Na
+    - Tile_Cl
+    - Tile_C
+    - Tile_Fe
+    - Tile_N
+    - Tile_Ca
+    goals:
+    - Tile_H2CO3
+    - Tile_CaCO3
