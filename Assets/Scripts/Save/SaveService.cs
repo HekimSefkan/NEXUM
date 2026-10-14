@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +28,11 @@ public class SaveData
     public int unlockedLevel;
     public int maxLevelUnlocked;
     public List<int> tutorialReadLevels = new List<int>();   // deney föyü okunmuş bölümler
+
+    // --- Tarif defteri ----------------------------------------------------
+    [Tooltip("Keşfedilen tarifler (RecipeCatalog anahtarı: \"Tile_H_Tile_O\")")]
+    public List<string> discoveredRecipes = new List<string>();
+    public int recipeBackfillDone;   // geriye dönük doldurma bir kez çalışır
 
     // --- İstatistik -------------------------------------------------------
     public int totalScore;
@@ -75,7 +80,7 @@ public class SaveData
 public static class SaveService
 {
     public const string SaveKey = "NEXUM_SAVE";
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
     private const string Tag = "NEXUM_SAVE";
 
     private static SaveData data;
@@ -162,6 +167,32 @@ public static class SaveService
         if (repaired > 0 || upgraded > 0) SaveNow();
     }
 
+    // --------------------------------------------------------- ham erişim (test)
+    // Kalıcı depolama TEK KAPIDAN geçer: PlayerPrefs yalnızca bu dosyada
+    // kullanılır (NexumValidation bunu zorunlu kılar). Göç testlerinin eski
+    // sürüm kaydı yazması ve testin kendi yedeğini alması gerektiği için ham
+    // okuma/yazma da buradan sunulur; oyun kodu bunları ÇAĞIRMAZ.
+
+    /// <summary>Diskteki ham JSON (yedekleme için). Kayıt yoksa boş dizi.</summary>
+    public static string ExportRaw()
+    {
+        return PlayerPrefs.GetString(SaveKey, "");
+    }
+
+    /// <summary>
+    /// Ham JSON'u diske yazar ve bellekteki kaydı boşaltır; boş/null verilirse
+    /// kayıt anahtarı silinir. Bir sonraki <see cref="Data"/> erişimi göçü
+    /// yeniden çalıştırır.
+    /// </summary>
+    public static void ImportRaw(string json)
+    {
+        if (string.IsNullOrEmpty(json)) PlayerPrefs.DeleteKey(SaveKey);
+        else PlayerPrefs.SetString(SaveKey, json);
+
+        PlayerPrefs.Save();
+        Unload();
+    }
+
     /// <summary>Test ve "ilerlemeyi sıfırla" için: bellekteki kaydı unut.</summary>
     public static void Unload()
     {
@@ -189,6 +220,7 @@ public static class SaveService
         if (d.playerEmail == null) { d.playerEmail = ""; Log("playerEmail"); repaired++; }
         if (d.nexumId == null) { d.nexumId = ""; Log("nexumId"); repaired++; }
         if (d.tutorialReadLevels == null) { d.tutorialReadLevels = new List<int>(); Log("tutorialReadLevels"); repaired++; }
+        if (d.discoveredRecipes == null) { d.discoveredRecipes = new List<string>(); Log("discoveredRecipes"); repaired++; }
 
         repaired += ClampMin(ref d.avatarIndex, 0, "avatarIndex");
         repaired += ClampMin(ref d.selectedLevel, 0, "selectedLevel");
@@ -202,6 +234,7 @@ public static class SaveService
         repaired += ClampMin(ref d.quizAttempts, 0, "quizAttempts");
         repaired += ClampRange(ref d.language, -1, 1, "language");
         repaired += ClampRange(ref d.showReactionEquations, 0, 1, "showReactionEquations");
+        repaired += ClampRange(ref d.recipeBackfillDone, 0, 1, "recipeBackfillDone");
         repaired += ClampRange(ref d.musicOn, 0, 1, "musicOn");
         repaired += ClampRange(ref d.sfxOn, 0, 1, "sfxOn");
         repaired += ClampRange(ref d.mentorHintsOn, 0, 1, "mentorHintsOn");
@@ -252,8 +285,16 @@ public static class SaveService
             steps++;
         }
 
-        // Yeni sürüm geldiğinde buraya bir adım eklenecek:
-        // if (d.saveVersion < 2) { ...; d.saveVersion = 2; steps++; }
+        // Sürüm 2: tarif defteri eklendi. Eski kayıtta defter yok; geriye dönük
+        // doldurma RecipeBook.RunBackfillOnce ile yapılır (tarif tablosu bu
+        // assembly'den görünmediği için burada yalnızca bayrak kurulur).
+        if (d.saveVersion < 2)
+        {
+            if (d.discoveredRecipes == null) d.discoveredRecipes = new List<string>();
+            d.recipeBackfillDone = 0;     // ilk fırsatta doldurulsun
+            d.saveVersion = 2;
+            steps++;
+        }
 
         return steps;
     }
