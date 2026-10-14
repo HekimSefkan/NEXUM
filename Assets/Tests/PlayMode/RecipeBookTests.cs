@@ -455,5 +455,88 @@ public class RecipeBookTests
         board.GetWorldCorners(corners);
         Debug.Log($"{Tag}_CAKISMA: tahta alt kenari y={corners[0].y:F0}");
         Assert.Less(bildirim.yMax, corners[0].y + 1f, "bildirim tahtanın altında kalmalı");
+
+        // Tahtanın hemen altı katalizör göstergesine ait: bildirim onunla da
+        // çakışmamalı (ilk turda bu kontrol yoktu ve etiketle 26 birim biniyordu).
+        foreach (string ad in new[] { "PressureMeter", "MeterLabel" })
+        {
+            RectTransform rt = BulRect(ad);
+            Assert.IsNotNull(rt, "obje yok: " + ad);
+
+            Rect kutu = DunyaKutusu(rt);
+            Debug.Log($"{Tag}_CAKISMA: {ad,-14} x {kutu.xMin:F0}..{kutu.xMax:F0} y {kutu.yMin:F0}..{kutu.yMax:F0}");
+            Assert.IsFalse(bildirim.Overlaps(kutu), $"bildirim {ad} ile çakışıyor");
+        }
+    }
+
+    /// <summary>Sahnedeki bir HUD objesinin RectTransform'u.</summary>
+    private static RectTransform BulRect(string ad)
+    {
+        foreach (GameObject kok in SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (kok.name != "Canvas") continue;
+            foreach (RectTransform rt in kok.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (rt.name == ad) return rt;
+            }
+        }
+        return null;
+    }
+
+    private static Rect DunyaKutusu(RectTransform rt)
+    {
+        Vector3[] c = new Vector3[4];
+        rt.GetWorldCorners(c);
+        return new Rect(c[0].x, c[0].y, c[2].x - c[0].x, c[2].y - c[0].y);
+    }
+
+    // İlerleme halkası: 0, 7 ve 21 keşifte dolum oranı doğru olmalı.
+    [UnityTest]
+    public IEnumerator HalkaDolumOraniDogru()
+    {
+        List<object> girdiler = Girdiler();
+        int toplam = girdiler.Count;
+
+        SaveService.Data.recipeBackfillDone = 1;
+        SaveService.Data.discoveredRecipes.Clear();
+        SaveService.SaveNow();
+
+        SceneManager.LoadScene("MainMenu");
+        yield return null;
+        yield return new WaitForSeconds(1f);
+
+        MonoBehaviour menu = Object.FindObjectsOfType<MonoBehaviour>(true)
+            .FirstOrDefault(m => m.GetType().Name == "MainMenuManager");
+        Assert.IsNotNull(menu, "MainMenuManager yok");
+
+        foreach (int kesif in new[] { 0, 7, toplam })
+        {
+            SaveService.Data.discoveredRecipes.Clear();
+            for (int i = 0; i < kesif; i++)
+            {
+                SaveService.Data.discoveredRecipes.Add(Reflect.Get<string>(girdiler[i], "key"));
+            }
+
+            Reflect.Call(menu, "OpenRecipeBook");
+            yield return new WaitForSeconds(0.6f);
+
+            MonoBehaviour panel = Object.FindObjectsOfType<MonoBehaviour>(true)
+                .FirstOrDefault(m => m.GetType().Name == "RecipeBookPanel");
+            Reflect.Call(panel, "Refresh");
+
+            float dolum = Reflect.Get<float>(panel, "RingFill");
+            TextMeshProUGUI halkaSayi = Reflect.Get<TextMeshProUGUI>(panel, "ringValueText");
+            float beklenen = (float)kesif / toplam;
+
+            Debug.Log($"{Tag}_HALKA: {kesif}/{toplam} dolum={dolum:F3} beklenen={beklenen:F3} " +
+                      $"sayi=\"{(halkaSayi != null ? halkaSayi.text : "-")}\"");
+
+            Assert.AreEqual(beklenen, dolum, 0.001f, $"{kesif}/{toplam} dolum oranı yanlış");
+            Assert.IsNotNull(halkaSayi, "ringValueText bağlı değil");
+            Assert.AreEqual($"{kesif}/{toplam}", halkaSayi.text, "halka ortasındaki sayı");
+
+            Reflect.Call(menu, "BackToMainMenu");
+            yield return new WaitForSeconds(0.6f);
+        }
     }
 }

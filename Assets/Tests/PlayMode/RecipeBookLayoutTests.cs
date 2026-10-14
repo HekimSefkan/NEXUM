@@ -25,8 +25,11 @@ public class RecipeBookLayoutTests
     /// <summary>Panelin kendi parçaları (çakışmaması gerekenler).</summary>
     private static readonly string[] PanelParts =
     {
-        "TitleText", "ProgressRing", "CounterText", "Scroll View", "BackButton",
+        "Logo", "TitleText", "ProgressRing", "CounterText", "Scroll View", "BackButton",
     };
+
+    /// <summary>Halkanın üstüne BİLEREK oturanlar: ayrı kontrol edilir.</summary>
+    private static readonly string[] RingStack = { "ProgressRingTrack", "RingValueText" };
 
     private RectTransform safeRoot;
 
@@ -103,6 +106,45 @@ public class RecipeBookLayoutTests
         }
 
         Debug.Log($"{Tag}_SONUC: sorun {hatalar.Count}");
+        foreach (string h in hatalar) Debug.Log($"{Tag}_SORUN: {h}");
+        Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
+    }
+
+    // Halka yığını: track ve ortadaki sayı halkanın sınırları içinde kalır.
+    [UnityTest]
+    public IEnumerator HalkaYiginiHizali()
+    {
+        Transform panel = LayoutCheck.Find(PanelPath);
+        Assert.IsNotNull(panel, "RecipeBookPanel yok");
+
+        RectTransform ring = panel.Find("ProgressRing") as RectTransform;
+        Assert.IsNotNull(ring, "ProgressRing yok");
+
+        List<string> hatalar = new List<string>();
+
+        foreach (Vector2 boyut in LayoutCheck.CanvasSizes)
+        {
+            LayoutCheck.SetCanvasSize(safeRoot, boyut);
+            yield return null;
+            yield return null;
+
+            string ekran = $"{boyut.x:F0}x{boyut.y:F0}";
+            Vector4 halka = LayoutCheck.LocalRect(safeRoot, ring);
+            Debug.Log($"{Tag}_HALKA: {ekran} {LayoutCheck.Describe("ProgressRing", halka)}");
+
+            foreach (string ad in RingStack)
+            {
+                RectTransform rt = panel.Find(ad) as RectTransform;
+                Assert.IsNotNull(rt, "halka parçası yok: " + ad);
+
+                Vector4 r = LayoutCheck.LocalRect(safeRoot, rt);
+                float tasma = LayoutCheck.Overflow(r, halka);
+                Debug.Log($"{Tag}_HALKA: {ekran} {LayoutCheck.Describe(ad, r)} tasma={tasma:F0}");
+                if (tasma > 1f) hatalar.Add($"{ekran}: {ad} halkadan {tasma:F0} birim taştı");
+            }
+        }
+
+        Debug.Log($"{Tag}_HALKA_SONUC: sorun {hatalar.Count}");
         foreach (string h in hatalar) Debug.Log($"{Tag}_SORUN: {h}");
         Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
     }

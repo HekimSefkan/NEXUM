@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -115,15 +115,35 @@ public static class LayoutCheck
     /// TMP metni kutusuna sığıyor mu? preferredHeight satır yüksekliğine dayanır;
     /// Türkçe İ/Ğ gibi harfler çizimde onu aşabildiği için GERÇEK çizim sınırı
     /// (textBounds) da hesaba katılır.
+    ///
+    /// SATIR KAYDIRMA: <c>preferredWidth</c> metnin TEK SATIRA sığdırılmış
+    /// genişliğini verir. Kaydırmalı bir kutuda (ör. duraklat kartındaki bilgi
+    /// metni) bu değer kutu genişliğinin kat kat üstünde çıkar ve rahatça sığan
+    /// metin "kırpık" sayılırdı. Kaydırma açıkken genişlik GERÇEK çizim
+    /// sınırından, yükseklik kutu genişliğiyle hesaplatılan tercih değerinden
+    /// okunur.
     /// </summary>
     public static bool IsClipped(TMP_Text tmp, out string detail)
     {
         tmp.ForceMeshUpdate();
-        Vector2 drawn = tmp.textBounds.size;
-        float needW = Mathf.Max(tmp.preferredWidth, drawn.x);
-        float needH = Mathf.Max(tmp.preferredHeight, drawn.y);
+
         float boxW = tmp.rectTransform.rect.width;
         float boxH = tmp.rectTransform.rect.height;
+        Vector2 drawn = tmp.textBounds.size;
+
+        float needW;
+        float needH;
+
+        if (tmp.enableWordWrapping)
+        {
+            needW = drawn.x;
+            needH = Mathf.Max(tmp.GetPreferredValues(tmp.text, boxW, 0f).y, drawn.y);
+        }
+        else
+        {
+            needW = Mathf.Max(tmp.preferredWidth, drawn.x);
+            needH = Mathf.Max(tmp.preferredHeight, drawn.y);
+        }
 
         bool clipped = needH > boxH + 0.5f || needW > boxW + 0.5f;
         detail = $"TMP {needW:F0}x{needH:F0} kutu {boxW:F0}x{boxH:F0}{(clipped ? " KIRPIK" : "")}";
