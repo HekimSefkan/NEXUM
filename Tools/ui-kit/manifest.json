@@ -1,2721 +1,5 @@
 {
   "varyantlar": {
-    "A": {
-      "ad": "Cizgi",
-      "aciklama": "Ince cizgi agirlikli analitik cihaz paneli: 2 birim kenarlik, pahli koseler, duz koyu zemin, parilti yok denecek kadar az.",
-      "sprites": {
-        "btn_primary_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_primary_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_primary_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_primary_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_secondary_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_secondary_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_secondary_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_secondary_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_ghost_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_ghost_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_ghost_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_ghost_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_destructive_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_destructive_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_destructive_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "btn_destructive_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "chip_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "chip_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "chip_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "chip_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_lg_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_lg_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_lg_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_lg_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_md_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_md_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_md_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_md_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_sm_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_sm_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_sm_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "panel_sm_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "modal_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "modal_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "modal_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "modal_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tab_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tab_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tab_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tab_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "list_row_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "list_row_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "list_row_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "list_row_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_track_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_track_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_track_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_track_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_fill_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_fill_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_fill_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "progress_fill_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "toast_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "toast_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "toast_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "toast_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tooltip_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tooltip_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tooltip_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "tooltip_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "quiz_option_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "quiz_option_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "quiz_option_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "quiz_option_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "badge_frame_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "badge_frame_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "badge_frame_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "badge_frame_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "avatar_frame_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "avatar_frame_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "avatar_frame_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "avatar_frame_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "input_field_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "input_field_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "input_field_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "input_field_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            14,
-            14,
-            14,
-            14
-          ]
-        },
-        "icon_button_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "icon_button_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "icon_button_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "icon_button_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "level_node_locked.png": {
-          "tip": "sabit",
-          "boyut": [
-            140,
-            140
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "level_node_open.png": {
-          "tip": "sabit",
-          "boyut": [
-            140,
-            140
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "level_node_done.png": {
-          "tip": "sabit",
-          "boyut": [
-            140,
-            140
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "ring_progress.png": {
-          "tip": "sabit",
-          "boyut": [
-            256,
-            256
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "lock_overlay.png": {
-          "tip": "sabit",
-          "boyut": [
-            128,
-            128
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "slider_track.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            24
-          ],
-          "border": [
-            11,
-            11,
-            11,
-            11
-          ]
-        },
-        "slider_fill.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            24
-          ],
-          "border": [
-            11,
-            11,
-            11,
-            11
-          ]
-        },
-        "slider_knob.png": {
-          "tip": "sabit",
-          "boyut": [
-            56,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    "B": {
-      "ad": "Cam",
-      "aciklama": "Cam yuzey agirlikli: yuvarlatilmis koseler, yari saydam zemin, ustte ic parilti seridi, disarida yumusak hale.",
-      "sprites": {
-        "btn_primary_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_primary_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_primary_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_primary_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            96
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_secondary_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_secondary_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_secondary_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_secondary_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_ghost_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_ghost_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_ghost_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_ghost_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_destructive_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_destructive_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_destructive_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "btn_destructive_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            280,
-            80
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "chip_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            27,
-            27,
-            27,
-            27
-          ]
-        },
-        "chip_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            27,
-            27,
-            27,
-            27
-          ]
-        },
-        "chip_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            27,
-            27,
-            27,
-            27
-          ]
-        },
-        "chip_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            180,
-            56
-          ],
-          "border": [
-            27,
-            27,
-            27,
-            27
-          ]
-        },
-        "panel_lg_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_lg_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_lg_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_lg_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            300
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_md_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_md_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_md_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_md_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            300,
-            220
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_sm_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_sm_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_sm_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "panel_sm_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            220,
-            150
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "modal_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "modal_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "modal_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "modal_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            360,
-            260
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "tab_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            35,
-            35,
-            35,
-            35
-          ]
-        },
-        "tab_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            35,
-            35,
-            35,
-            35
-          ]
-        },
-        "tab_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            35,
-            35,
-            35,
-            35
-          ]
-        },
-        "tab_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            72
-          ],
-          "border": [
-            35,
-            35,
-            35,
-            35
-          ]
-        },
-        "list_row_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "list_row_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "list_row_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "list_row_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            92
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "progress_track_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_track_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_track_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_track_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_fill_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_fill_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_fill_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "progress_fill_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            36
-          ],
-          "border": [
-            17,
-            17,
-            17,
-            17
-          ]
-        },
-        "toast_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "toast_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "toast_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "toast_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            420,
-            84
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "tooltip_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "tooltip_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "tooltip_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "tooltip_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            120
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "quiz_option_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "quiz_option_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "quiz_option_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "quiz_option_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "badge_frame_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "badge_frame_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "badge_frame_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "badge_frame_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            160,
-            160
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "avatar_frame_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "avatar_frame_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "avatar_frame_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "avatar_frame_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            200,
-            200
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "input_field_normal.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "input_field_pressed.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "input_field_disabled.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "input_field_selected.png": {
-          "tip": "9slice",
-          "boyut": [
-            400,
-            88
-          ],
-          "border": [
-            36,
-            36,
-            36,
-            36
-          ]
-        },
-        "icon_button_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_normal.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "icon_button_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_pressed.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "icon_button_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_disabled.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "icon_button_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            96,
-            96
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_empty_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "star_full_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            72,
-            72
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_off_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "toggle_on_selected.png": {
-          "tip": "sabit",
-          "boyut": [
-            120,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "level_node_locked.png": {
-          "tip": "sabit",
-          "boyut": [
-            140,
-            140
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "level_node_open.png": {
-          "tip": "sabit",
-          "boyut": [
-            140,
-            140
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "level_node_done.png": {
-          "tip": "sabit",
-          "boyut": [
-            140,
-            140
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "ring_progress.png": {
-          "tip": "sabit",
-          "boyut": [
-            256,
-            256
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "lock_overlay.png": {
-          "tip": "sabit",
-          "boyut": [
-            128,
-            128
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        },
-        "slider_track.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            24
-          ],
-          "border": [
-            11,
-            11,
-            11,
-            11
-          ]
-        },
-        "slider_fill.png": {
-          "tip": "9slice",
-          "boyut": [
-            320,
-            24
-          ],
-          "border": [
-            11,
-            11,
-            11,
-            11
-          ]
-        },
-        "slider_knob.png": {
-          "tip": "sabit",
-          "boyut": [
-            56,
-            56
-          ],
-          "border": [
-            0,
-            0,
-            0,
-            0
-          ]
-        }
-      }
-    },
     "C": {
       "ad": "Metal",
       "aciklama": "Metal cerceve agirlikli: kalin pahli bezel, acik-koyu gecisli kenarlik, ice cokmus koyu zemin.",
@@ -4075,5 +1359,708 @@
       }
     }
   },
-  "not": "border = [sol, alt, sag, ust] (Unity spriteBorder sirasi)"
+  "not": "border = [sol, alt, sag, ust] (Unity spriteBorder sirasi)",
+  "taslar": {
+    "aciklama": "Seviye cerceveden okunur: halka sayisi 1/2/3, kenarlik 6/7/9, en ust seviyede kose braketi. Renk tek basina ayirt edici degil.",
+    "seviyeler": {
+      "1": {
+        "rings": 1,
+        "border": 6,
+        "bracket": false,
+        "edge": "textSecondary",
+        "plate": 0.0
+      },
+      "2": {
+        "rings": 2,
+        "border": 7,
+        "bracket": false,
+        "edge": "primary",
+        "plate": 0.1
+      },
+      "3": {
+        "rings": 3,
+        "border": 9,
+        "bracket": true,
+        "edge": "warning",
+        "plate": 0.2
+      }
+    },
+    "sprites": {
+      "tile_L1_normal_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_128.png": {
+        "tip": "sabit",
+        "boyut": [
+          128,
+          128
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  }
 }

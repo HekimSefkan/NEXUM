@@ -123,6 +123,7 @@ VARIANTS = {
         "corner": "chamfer", "corner_size": 10,
         "border": 2, "fill_alpha": 0.92, "glow": 0.0, "glow_radius": 0,
         "inner_line": False, "bezel": 0.0, "ticks": True,
+        "gradient": 0.0, "emboss": 0.0, "emboss_px": 0,
     },
     "B": {
         "ad": "Cam",
@@ -131,6 +132,7 @@ VARIANTS = {
         "corner": "radius", "corner_size": 20,
         "border": 3, "fill_alpha": 0.52, "glow": 1.0, "glow_radius": 11,
         "inner_line": True, "bezel": 0.0, "ticks": False,
+        "gradient": 0.0, "emboss": 0.0, "emboss_px": 0,
     },
     "C": {
         "ad": "Metal",
@@ -139,8 +141,16 @@ VARIANTS = {
         "corner": "chamfer", "corner_size": 14,
         "border": 8, "fill_alpha": 1.0, "glow": 0.18, "glow_radius": 4,
         "inner_line": False, "bezel": 1.0, "ticks": False,
+        # --- 2d-2'de eklenen derinlik: duz dolgu yerine metal plaka
+        "gradient": 0.34,      # zemin ust/alt parlaklik farki (0 = duz dolgu)
+        "emboss": 0.55,        # ic kenarda ust vurgu + alt golge gucu
+        "emboss_px": 2,        # kabartma seridi kalinligi (birim)
     },
 }
+
+# Uretilecek varyant(lar). Varyant C (Metal) secildi; A ve B tarih olarak
+# tabloda kalir ama artik uretilmez.
+ACTIVE_VARIANTS = ["C"]
 
 # Durum -> (zemin rengi rolu, kenarlik rengi rolu, zemin parlaklik carpani, genel alfa)
 STATES = {
@@ -151,13 +161,16 @@ STATES = {
 }
 
 # Rol -> kenarlik rengini degistiren bilesenler
+# Her sey camgobegi olmasin: BIRINCIL eylem camgobegi (primary), IKINCIL
+# eylem ALTIN (warning) — hiyerarsi renkten de okunur. Ucu de paletten.
 ROLE_EDGE = {
     "primary": "primary",
-    "secondary": "secondary",
+    "secondary": "warning",
     "ghost": "textSecondary",
     "destructive": "danger",
     "success": "success",
     "warning": "warning",
+    "info": "secondary",
 }
 
 
@@ -190,14 +203,31 @@ def frame(w, h, variant, state, role="primary", fill_role=None, ghost=False):
         kat.putalpha(g.point(lambda x: int(x * 0.55)))
         img = Image.alpha_composite(img, kat)
 
-    # --- zemin
+    # --- zemin: duz dolgu DEGIL, dikey gradyanli metal plaka.
+    # Gradyan 9-slice'ta merkezle birlikte dikeyde gerilir; dogrusal oldugu
+    # icin gerilince bozulmaz (desen degil, gecis).
     fill_col = PAL[fill_role or st["fill"]]
     fill_col = tuple(min(255, int(c * st["lift"])) for c in fill_col)
     zemin_alpha = 0.0 if ghost else v["fill_alpha"]
     ic = inner_mask(W, H, radius, chamfer, bw)
-    kat = Image.new("RGBA", (W, H), fill_col + (0,))
-    kat.putalpha(ic.point(lambda x: int(x * zemin_alpha)))
-    img = Image.alpha_composite(img, kat)
+
+    if zemin_alpha > 0:
+        g = v.get("gradient", 0.0)
+        if g > 0:
+            ust = mix(fill_col, (255, 255, 255), g * 0.55)
+            alt = mix(fill_col, (0, 0, 0), g * 0.45)
+            if state == "pressed":
+                ust, alt = alt, ust          # basiliyken isik yer degistirir
+            plaka = Image.new("RGBA", (W, H), CLEAR)
+            pd = ImageDraw.Draw(plaka)
+            for yy in range(H):
+                t = yy / max(1, H - 1)
+                pd.line([(0, yy), (W, yy)], fill=mix(ust, alt, t) + (255,))
+        else:
+            plaka = Image.new("RGBA", (W, H), fill_col + (255,))
+
+        plaka.putalpha(ic.point(lambda x: int(x * zemin_alpha)))
+        img = Image.alpha_composite(img, plaka)
 
     # --- kenarlik
     kat = Image.new("RGBA", (W, H), edge_col + (0,))
@@ -208,6 +238,9 @@ def frame(w, h, variant, state, role="primary", fill_role=None, ghost=False):
     if v["bezel"] > 0:
         ust = Image.new("L", (W, H), 0)
         ImageDraw.Draw(ust).rectangle([0, 0, W, H // 2], fill=255)
+        if state == "pressed":
+            # basiliyken isik kaynagi altta kalir
+            ust = Image.eval(ust, lambda x: 255 - x)
         acik = Image.new("RGBA", (W, H), mix(edge_col, (255, 255, 255), 0.55) + (0,))
         acik.putalpha(Image.composite(kenar, Image.new("L", (W, H), 0), ust)
                       .point(lambda x: int(x * 0.75 * v["bezel"])))
@@ -217,6 +250,30 @@ def frame(w, h, variant, state, role="primary", fill_role=None, ghost=False):
         koyu.putalpha(Image.composite(Image.new("L", (W, H), 0), kenar, ust)
                       .point(lambda x: int(x * 0.65 * v["bezel"])))
         img = Image.alpha_composite(img, koyu)
+
+    # --- kabartma: ic kenarin USTUNDE acik, ALTINDA koyu bir serit. Basili
+    # durumda ikisi YER DEGISTIRIR; yani buton gercekten iceri coker,
+    # yalnizca rengi koyulasmaz.
+    if v.get("emboss", 0) > 0 and state != "disabled":
+        ep = max(1, int(v["emboss_px"] * SS))
+        ustSerit = Image.new("L", (W, H), 0)
+        altSerit = Image.new("L", (W, H), 0)
+        ImageDraw.Draw(ustSerit).rectangle([0, bw, W, bw + ep], fill=255)
+        ImageDraw.Draw(altSerit).rectangle([0, H - bw - ep, W, H - bw], fill=255)
+        bos = Image.new("L", (W, H), 0)
+        ustSerit = Image.composite(ustSerit, bos, ic)
+        altSerit = Image.composite(altSerit, bos, ic)
+
+        acikSerit, koyuSerit = (altSerit, ustSerit) if state == "pressed" else (ustSerit, altSerit)
+        guc = v["emboss"]
+
+        kat = Image.new("RGBA", (W, H), (255, 255, 255, 0))
+        kat.putalpha(acikSerit.point(lambda x: int(x * guc * 0.55)))
+        img = Image.alpha_composite(img, kat)
+
+        kat = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        kat.putalpha(koyuSerit.point(lambda x: int(x * guc * 0.70)))
+        img = Image.alpha_composite(img, kat)
 
     # --- ic parilti seridi: UST KENAR SERIDINDE kalir (9-slice'ta yatay gerilir)
     if v["inner_line"] and state != "disabled":
@@ -431,10 +488,142 @@ ICONS = [
 ]
 
 
+# ======================================================================
+# TASLAR — seviye CERCEVEDEN okunur, merkez sakin kalir
+# ======================================================================
+# Kurallar:
+#  - Merkez SAKIN: cok hafif dikey gradyan, desen yok. Formul okunacak.
+#  - Seviye farki CERCEVEDEN: halka sayisi + kenarlik kalinligi + kose
+#    braketi. RENK TEK BASINA AYIRT EDICI DEGIL (renk korlugu): seviye
+#    bicimden de okunur.
+#  - Metal kitiyle ayni kose geometrisi (pah), ayni bezel dili.
+#  - Sabit kare sprite (9-slice degil), uc cozunurlukte.
+
+TILE_SIZES = [128, 192, 256]
+
+# seviye -> (halka sayisi, kenarlik birimi, kose braketi, kenar rengi rolu)
+TILE_LEVELS = {
+    1: dict(rings=1, border=6,  bracket=False, edge="textSecondary", plate=0.00),
+    2: dict(rings=2, border=7,  bracket=False, edge="primary",       plate=0.10),
+    3: dict(rings=3, border=9,  bracket=True,  edge="warning",       plate=0.20),
+}
+
+# durum -> (kenar parlakligi, zemin parlakligi, dis hale, ek halka rengi)
+TILE_STATES = {
+    "normal":     dict(edge=1.00, plate=1.00, halo=0.00, accent=None),
+    "selected":   dict(edge=1.00, plate=1.12, halo=0.85, accent="primaryBright"),
+    "merging":    dict(edge=1.00, plate=1.75, halo=1.00, accent="textPrimary"),
+    "newborn":    dict(edge=0.70, plate=0.80, halo=0.00, accent=None),
+    "discovered": dict(edge=1.00, plate=1.06, halo=0.60, accent="warning"),
+}
+
+
+def tile(size, level, state):
+    """Tek tas sprite'i. Metin YOK — formul TMP etiketi olarak ustune gelir."""
+    cfg = TILE_LEVELS[level]
+    st = TILE_STATES[state]
+
+    S = size * SS
+    chamfer = int(size * 0.14 * SS)          # metal kitiyle ayni pah dili
+    bw = int(cfg["border"] * SS * size / 128.0)
+
+    img = Image.new("RGBA", (S, S), CLEAR)
+    edge_col = PAL[cfg["edge"]]
+    edge_col = tuple(min(255, int(c * st["edge"])) for c in edge_col)
+
+    govde = body_mask(S, S, 0, chamfer)
+
+    # --- dis hale (secili / birlesme / yeni kesif)
+    if st["halo"] > 0:
+        hcol = PAL[st["accent"]] if st["accent"] else edge_col
+        g = glow(govde, int(size * 0.06 * SS), st["halo"])
+        g = Image.composite(Image.new("L", (S, S), 0), g, govde)
+        kat = Image.new("RGBA", (S, S), hcol + (0,))
+        kat.putalpha(g.point(lambda x: int(x * 0.7)))
+        img = Image.alpha_composite(img, kat)
+
+    # --- zemin plakasi: SAKIN, cok hafif dikey gradyan
+    taban = mix(PAL["cardBackground"], PAL["panelBackground"], cfg["plate"])
+    taban = tuple(min(255, int(c * st["plate"])) for c in taban)
+    ust = mix(taban, (255, 255, 255), 0.16)
+    alt = mix(taban, (0, 0, 0), 0.18)
+
+    plaka = Image.new("RGBA", (S, S), CLEAR)
+    pd = ImageDraw.Draw(plaka)
+    for yy in range(S):
+        pd.line([(0, yy), (S, yy)], fill=mix(ust, alt, yy / max(1, S - 1)) + (255,))
+    plaka.putalpha(inner_mask(S, S, 0, chamfer, bw))
+    img = Image.alpha_composite(img, plaka)
+
+    # --- halkalar: seviye SAYIDAN okunur
+    aralik = int(size * 0.022 * SS)
+    for i in range(cfg["rings"]):
+        ofs = i * (bw + aralik)
+        kalin = bw if i == 0 else max(2, bw // 4)
+        hm = ring_mask(S - 2 * ofs, S - 2 * ofs, 0, max(0, chamfer - ofs), kalin)
+        tam = Image.new("L", (S, S), 0)
+        tam.paste(hm, (ofs, ofs))
+        renk = edge_col if i == 0 else mix(edge_col, PAL["textPrimary"], 0.25)
+        kat = Image.new("RGBA", (S, S), renk + (0,))
+        kat.putalpha(tam.point(lambda x: int(x * (1.0 if i == 0 else 0.55))))
+        img = Image.alpha_composite(img, kat)
+
+    # --- bezel: ust acik / alt koyu (metal kitiyle ayni)
+    dis = ring_mask(S, S, 0, chamfer, bw)
+    yari = Image.new("L", (S, S), 0)
+    ImageDraw.Draw(yari).rectangle([0, 0, S, S // 2], fill=255)
+    bos = Image.new("L", (S, S), 0)
+    kat = Image.new("RGBA", (S, S), mix(edge_col, (255, 255, 255), 0.55) + (0,))
+    kat.putalpha(Image.composite(dis, bos, yari).point(lambda x: int(x * 0.7)))
+    img = Image.alpha_composite(img, kat)
+    kat = Image.new("RGBA", (S, S), mix(edge_col, (0, 0, 0), 0.55) + (0,))
+    kat.putalpha(Image.composite(bos, dis, yari).point(lambda x: int(x * 0.6)))
+    img = Image.alpha_composite(img, kat)
+
+    # --- kose braketi: yalnizca en ust seviyede (renksiz ayirt edici)
+    if cfg["bracket"]:
+        d = ImageDraw.Draw(img)
+        uz = int(size * 0.12 * SS)
+        kal = max(2, bw // 2)
+        pay = int(bw * 1.7)
+        bcol = mix(edge_col, PAL["textPrimary"], 0.35) + (235,)
+        for sx, sy in ((1, 1), (-1, 1), (1, -1), (-1, -1)):
+            x = pay if sx > 0 else S - pay
+            y = pay if sy > 0 else S - pay
+            d.line([(x, y), (x + sx * uz, y)], fill=bcol, width=kal)
+            d.line([(x, y), (x, y + sy * uz)], fill=bcol, width=kal)
+
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def uret_taslar(manifest):
+    klasor = os.path.join(OUT, "tiles")
+    os.makedirs(klasor, exist_ok=True)
+    kayit = {}
+
+    for boy in TILE_SIZES:
+        for seviye in TILE_LEVELS:
+            for durum in TILE_STATES:
+                img = tile(boy, seviye, durum)
+                dosya = "tile_L%d_%s_%d.png" % (seviye, durum, boy)
+                img.save(os.path.join(klasor, dosya))
+                kayit[dosya] = {"tip": "sabit", "boyut": [boy, boy], "seviye": seviye,
+                                "durum": durum, "border": [0, 0, 0, 0]}
+
+    manifest["taslar"] = {
+        "aciklama": "Seviye cerceveden okunur: halka sayisi 1/2/3, kenarlik 6/7/9, "
+                    "en ust seviyede kose braketi. Renk tek basina ayirt edici degil.",
+        "seviyeler": {str(k): {kk: vv for kk, vv in v.items()} for k, v in TILE_LEVELS.items()},
+        "sprites": kayit,
+    }
+    print("taslar: %d sprite -> %s" % (len(kayit), klasor))
+
+
 def uret():
     manifest = {"varyantlar": {}, "not": "border = [sol, alt, sag, ust] (Unity spriteBorder sirasi)"}
 
-    for vk, v in VARIANTS.items():
+    for vk in ACTIVE_VARIANTS:
+        v = VARIANTS[vk]
         klasor = os.path.join(OUT, vk)
         os.makedirs(klasor, exist_ok=True)
         kayit = {"ad": v["ad"], "aciklama": v["aciklama"], "sprites": {}}
@@ -495,6 +684,8 @@ def uret():
 
         manifest["varyantlar"][vk] = kayit
         print("%s (%s): %d sprite -> %s" % (vk, v["ad"], len(kayit["sprites"]), klasor))
+
+    uret_taslar(manifest)
 
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "manifest.json"), "w", encoding="utf-8") as f:
