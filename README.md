@@ -1,4 +1,4 @@
-# NEXUM# 🧪 NEXUM: Kimya Akademisi
+# 🧪 NEXUM: Kimya Akademisi
 
 **NEXUM**, kimya bilimi ile bulmaca dinamiklerini bir araya getiren, 7 seviyeli ve 4x4 ızgara (grid) tabanlı bir mobil strateji ve sentez oyunudur. Oyuncular, temel elementleri birleştirerek daha karmaşık bileşikleri sentezler ve akademi basamaklarında yükselirler.
 
