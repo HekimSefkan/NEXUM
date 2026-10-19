@@ -512,6 +512,13 @@ public class GridManager : MonoBehaviour
                         ReactionEquationDisplay.Instance.Show(recipe, cells[targetIndex].position);
                     }
 
+                    // Tarif defteri: bu birleşme ilk kezse keşfedilmiş sayılır
+                    string recipeKey = RecipeCatalog.MakeKey(recipe.element1.name, recipe.element2.name);
+                    if (RecipeBook.Discover(recipeKey))
+                    {
+                        UIManager.Instance.ShowSystemMessage(Loc.Get(CodeStrings.RecipeDiscovered), 1.6f);
+                    }
+
                     actionHappened = true;
                     currentCombo++;
                     SaveService.Data.totalSynthesis++;

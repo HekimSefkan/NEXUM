@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -159,7 +159,9 @@ public class ReactionEquationTests
 
         Assert.AreEqual(1, aktif, "birleşmeden sonra tek denklem görünmeli");
         Assert.IsNotNull(gosterim, "görünen denklem yok");
-        StringAssert.Contains("->", metin, "denklem oku bulunmalı");
+        // Ok ya sprite olarak ya da (sprite yoksa) duz metin olarak gelmeli
+        bool okVarMi = metin.Contains("name=\"arrow\">") || metin.Contains("->");
+        Assert.IsTrue(okVarMi, "denklem oku bulunmalı (sprite ya da düz metin)");
         StringAssert.Contains("H<sub>2</sub>", metin, "ürün sembolü ElementData'dan gelmeli");
 
         yield return new WaitForSeconds(Lifetime);
@@ -260,6 +262,68 @@ public class ReactionEquationTests
         Debug.Log($"{Tag}_SINIR_SONUC: sorun {hatalar.Count}");
         foreach (string h in hatalar) Debug.Log($"{Tag}_SORUN: {h}");
         Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
+    }
+
+    // Ok sprite'ı: yüklenebiliyor mu ve metnin taban hizasında mı?
+    [UnityTest]
+    public IEnumerator OkSpriteHizali()
+    {
+        System.Type tip = System.Type.GetType("ReactionText, Assembly-CSharp");
+        Assert.IsNotNull(tip, "ReactionText tipi yok");
+        bool okVar = (bool)tip.GetProperty("ArrowAvailable",
+            BindingFlags.Public | BindingFlags.Static).GetValue(null);
+
+        Debug.Log($"{Tag}_OK: sprite yuklendi={okVar}");
+        Assert.IsTrue(okVar, "ok sprite'ı yüklenmeli (NEXUM -> Sembol Sprite'larını Kur)");
+
+        TMP_Text olcum = display.GetComponentsInChildren<TMP_Text>(true).First();
+        olcum.gameObject.SetActive(true);
+
+        // Ok ile komşu harfleri aynı satırda ölç
+        olcum.text = "H <sprite=\"NexumSymbols\" name=\"arrow\"> H";
+        olcum.ForceMeshUpdate();
+
+        TMP_TextInfo info = olcum.textInfo;
+        float harfMerkez = 0f, okMerkez = 0f, okYukseklik = 0f;
+        int harfSayisi = 0;
+
+        for (int i = 0; i < info.characterCount; i++)
+        {
+            TMP_CharacterInfo c = info.characterInfo[i];
+            if (!c.isVisible) continue;
+
+            float merkez = (c.topLeft.y + c.bottomLeft.y) * 0.5f;
+            if (c.elementType == TMP_TextElementType.Sprite)
+            {
+                okMerkez = merkez;
+                okYukseklik = c.topLeft.y - c.bottomLeft.y;
+            }
+            else
+            {
+                harfMerkez += merkez;
+                harfSayisi++;
+            }
+        }
+
+        Assert.Greater(harfSayisi, 0, "harf bulunamadı");
+        harfMerkez /= harfSayisi;
+        float fark = okMerkez - harfMerkez;
+        float punto = olcum.fontSize;
+
+        Debug.Log($"{Tag}_OK_HIZA: punto={punto:F0} harf merkezi={harfMerkez:F2} " +
+                  $"ok merkezi={okMerkez:F2} fark={fark:F2} ({fark / punto * 100f:F0}% punto) " +
+                  $"ok yuksekligi={okYukseklik:F2} ({okYukseklik / punto * 100f:F0}% punto)");
+
+        olcum.text = "";
+        olcum.gameObject.SetActive(false);
+
+        // Ok, harflerin optik ortasından punto'nun %10'undan fazla kaymasın
+        Assert.Less(Mathf.Abs(fark), punto * 0.10f,
+            $"ok taban hizasından kaymış: {fark:F2} birim ({fark / punto * 100f:F0}% punto)");
+        // Ok, satırı şişirmeyecek kadar küçük ama görünür olmalı
+        Assert.Greater(okYukseklik, punto * 0.15f, "ok fazla küçük");
+        Assert.Less(okYukseklik, punto * 0.75f, "ok fazla büyük");
+        yield return null;
     }
 
     // Ayardan kapatılınca hiç gösterilmemeli.

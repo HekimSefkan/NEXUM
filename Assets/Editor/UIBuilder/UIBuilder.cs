@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -277,14 +277,46 @@ public class UIBuilder
         SetRect(go, new Vector2(x0, y0), new Vector2(x1, y1), UITokens.Center, Vector2.zero, Vector2.zero);
     }
 
-    /// <summary>Nokta anchor + sabit boyut.</summary>
+    /// <summary>Nokta anchor + sabit boyut (anchor noktasında durur).</summary>
     public void SetFixed(GameObject go, Vector2 anchor, Vector2 size)
+    {
+        SetFixed(go, anchor, size, Vector2.zero);
+    }
+
+    /// <summary>
+    /// Nokta anchor + sabit boyut + konum. Konumu ayrıca <see cref="SetRectPosition"/>
+    /// ile vermek YERİNE bunu kullan: aksi hâlde ilk çağrı konumu sıfırlar,
+    /// ikinci çağrı geri yazar ve kurucu her koşuda "güncellendi" raporlar
+    /// (dosya değişmese bile).
+    /// </summary>
+    public void SetFixed(GameObject go, Vector2 anchor, Vector2 size, Vector2 anchoredPosition)
     {
         if (go == null) return;
         RectTransform rect = go.GetComponent<RectTransform>();
         if (rect == null) return;
 
-        ApplyRect(go, rect, anchor, anchor, UITokens.Center, size, Vector2.zero, true);
+        ApplyRect(go, rect, anchor, anchor, UITokens.Center, size, anchoredPosition, true);
+    }
+
+    /// <summary>Nokta anchor'li objenin konumunu ayarlar (boyuta dokunmaz).</summary>
+    public void SetRectPosition(GameObject go, Vector2 anchoredPosition)
+    {
+        if (go == null) return;
+        RectTransform rect = go.GetComponent<RectTransform>();
+        if (rect == null) return;
+
+        string label = HierarchyPath(rect) + " :: anchoredPosition";
+        if (rect.anchoredPosition == anchoredPosition)
+        {
+            untouched.Add(label);
+            return;
+        }
+
+        updated.Add(label);
+        if (dryRun) return;
+
+        rect.anchoredPosition = anchoredPosition;
+        EditorUtility.SetDirty(rect);
     }
 
     public void SetRect(GameObject go, Vector2 anchorMin, Vector2 anchorMax,
