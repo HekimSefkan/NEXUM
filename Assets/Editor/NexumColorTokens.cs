@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 ///
 /// Eşleme ELLE KÜRE EDİLDİ, en yakın renk hesabıyla değil: `#515961` en yakın
 /// token olarak `panelBackground`a düşüyor ama o bir METİN rengi, zemin değil.
+/// Palette ona uyan bir rol olmadığı için `textMuted` eklendi.
 /// Her satırın gerekçesi tabloda yazılı.
 ///
 /// Yalnızca RENK değişir; konum, boyut, punto ve sprite'a dokunulmaz.
@@ -35,8 +36,15 @@ public static class NexumColorTokens
     {
         new Kural { hex = "F8F9FA", role = "textPrimary",
                     gerekce = "beyaza çok yakın gövde metni (10 bileşen)" },
-        new Kural { hex = "515961", role = "textSecondary",
-                    gerekce = "sönük metin; en yakın token panelBackground ama o zemin rengi" },
+        // DİKKAT — bu kural AÇIK zeminler içindir. #515961 taşıyan 6 bileşen
+        // (HowToPlayPanel kategori butonları) sprite değişiminden sonra KOYU
+        // bir yüzeye geçti; ölçüm:
+        //   eski yüzey #A2E6F6 (açık): textMuted 5.15:1 ✓ · textSecondary 1.50:1 ✗
+        //   yeni yüzey #213B4A (koyu): textMuted 1.65:1 ✗ · textSecondary 5.66:1 ✓
+        // Bu yüzden o altı bileşen textSecondary'de BIRAKILDI. Kural, açık
+        // zeminde #515961 kullanan yeni bir metin çıkarsa devreye girer.
+        new Kural { hex = "515961", role = "textMuted",
+                    gerekce = "açık zeminde sönük metin; palette kendi rolü var" },
         new Kural { hex = "007DD8", role = "primary",
                     gerekce = "camgöbeği-mavi vurgu metni" },
         new Kural { hex = "C4FFB9", role = "success",

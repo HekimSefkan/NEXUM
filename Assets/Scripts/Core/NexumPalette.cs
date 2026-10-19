@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Çalışma zamanı renk paleti — <c>NexumTheme.asset</c>'in koddan erişilebilen
@@ -31,6 +31,7 @@ public static class NexumPalette
     public static readonly Color Warning = Hex(0xFFD700);
     public static readonly Color TextPrimary = Hex(0xFFFFFF);
     public static readonly Color TextSecondary = Hex(0xADB5BD);
+    public static readonly Color TextMuted = Hex(0x515961);
     public static readonly Color TextOnLight = Hex(0x323232);
     public static readonly Color PanelBackground = Hex(0x2E3240);
     public static readonly Color CardBackground = Hex(0x0B2A3D);
@@ -48,6 +49,7 @@ public static class NexumPalette
             case "warning": return Warning;
             case "textPrimary": return TextPrimary;
             case "textSecondary": return TextSecondary;
+            case "textMuted": return TextMuted;
             case "textOnLight": return TextOnLight;
             case "panelBackground": return PanelBackground;
             case "cardBackground": return CardBackground;
@@ -59,6 +61,7 @@ public static class NexumPalette
     public static readonly string[] Roles =
     {
         "primary", "primaryBright", "secondary", "danger", "success", "warning",
-        "textPrimary", "textSecondary", "textOnLight", "panelBackground", "cardBackground",
+        "textPrimary", "textSecondary", "textMuted", "textOnLight",
+        "panelBackground", "cardBackground",
     };
 }

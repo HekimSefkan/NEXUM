@@ -536,3 +536,60 @@ katman — Faz 5'te kademeli ipucu geldiğinde kademe göstergesi aynı yere gir
 
 Dokunma kutusu **144 birime** tamamlanır (görsel 112): y 294..438.
 Ölçüm — hedef çipine 12 birim, tahtaya 36 birim pay, **çakışma yok**.
+
+---
+
+# 10. Atlas kapsamı ve `textMuted` (2d-3a eki)
+
+## 10.1 Ekrandaki her karakter atlasta olmalı
+
+Statik atlasta karşılığı olmayan bir karakter TMP'de sessizce **dinamik
+fallback**'e düşer; ekranda kutu ya da başka bir fontun harfi çıkar. Nadir
+görülen bir ekranda bu cihaz testinde fark edilmez.
+
+**Tek toplama noktası:** `Assets/Editor/NexumTextSources.cs` — sözlük (iki dil,
+tüm değerler), `ElementData` (ad, sembol, tarif, açıklama), `ChemistryFact`,
+`ChemistryQuiz` (soru + şıklar), bölüm adları, `scientificHint`, sahnelerde ve
+prefab'larda yazılı metinler. Zengin metin etiketleri ayıklanır; kontrol ve
+sıfır genişlikli karakterler glif sayılmaz.
+
+Atlas üreteci hedef kümeyi **taban + toplanan** olarak kurar, yani yeni bir
+metin eklendiğinde atlas kendiliğinden kapsar.
+
+**Test:** `AtlasCoversAllDisplayedTextTests` kümeyi her koşuda yeniden
+hesaplar; atlasta olmayan tek karakter bulursa düşer. Literal alt simge ayrı
+mesajla raporlanır — Oxanium'da `₅`–`₉` olmadığı için atlasa eklenerek
+çözülemez, metin `<sub>` ile yazılmalıdır.
+
+> Bu kuralın bulduğu ilk hata: beş bilgi kartı literal `₂`/`₃` kullanıyordu.
+> Hiçbir atlasta (LiberationSans dahil) yoktu, yani duraklat kartında cihazda
+> **kutu** çiziliyordu. Hepsi `<sub>`'a çevrildi.
+
+**Atlas durumu:** 123 karakter, 1024×1024, tek doku, Static.
+`′` (U+2032) ve `″` (U+2033) tabandan çıkarıldı — Oxanium TTF'inde yoklar,
+bırakılsalardı atlas her koşuda "eklenemeyen glif" raporlar ve idempotans
+bozulurdu.
+
+## 10.2 `textMuted` rolü
+
+| Rol | Değer | Kullanım |
+|---|---|---|
+| `textPrimary` | `#FFFFFF` | koyu zeminde birincil metin |
+| `textSecondary` | `#ADB5BD` | koyu zeminde ikincil metin |
+| **`textMuted`** | **`#515961`** | **açık zeminde sönük metin, pasif durum** |
+| `textOnLight` | `#323232` | açık zeminde birincil metin |
+
+`#515961` bir metin rengiydi ama palette karşılığı yoktu; en yakın token
+`panelBackground` (bir **zemin** rengi) olduğu için geçici olarak
+`textSecondary`'ye bağlanmıştı. Artık kendi rolü var.
+
+**Ama o altı bileşen `textSecondary`'de bırakıldı** — ölçümle:
+
+| Yüzey | `textMuted` #515961 | `textSecondary` #ADB5BD |
+|---|---|---|
+| eski `Nasiloyanir_Buton` (#A2E6F6, açık) | **5,15:1** ✓ | 1,50:1 ✗ |
+| yeni `btn_secondary_normal` (#213B4A, koyu) | 1,65:1 ✗ | **5,66:1** ✓ |
+
+Sprite geçişi yüzeyi açıktan koyuya çevirdi; `textMuted`'a bağlamak kontrastı
+**1,65:1**'e düşürür, yani metni okunmaz yapardı. Kural açık zeminde
+`#515961` kullanan yeni bir metin çıkarsa devreye girer.

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 
@@ -44,6 +44,10 @@ public class NexumTheme : ScriptableObject
 
         [Tooltip("Koyu zeminde ikincil metin (açıklama, ipucu).")]
         public Color textSecondary = Hex("#ADB5BD");
+
+        [Tooltip("Koyu zeminde SÖNÜK metin (yardımcı satır, pasif durum). " +
+                 "textSecondary'den belirgin biçimde koyu.")]
+        public Color textMuted = Hex("#515961");
 
         [Tooltip("Açık zeminde metin (beyaz kartların üzeri).")]
         public Color textOnLight = Hex("#323232");
@@ -203,7 +207,8 @@ public class NexumTheme : ScriptableObject
             {
                 palette.primary, palette.primaryBright, palette.secondary,
                 palette.danger, palette.success, palette.warning,
-                palette.textPrimary, palette.textSecondary, palette.textOnLight,
+                palette.textPrimary, palette.textSecondary, palette.textMuted,
+                palette.textOnLight,
                 palette.panelBackground, palette.cardBackground,
             };
         }
