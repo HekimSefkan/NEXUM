@@ -523,7 +523,11 @@ TILE_STATES = {
     "normal":     dict(edge=1.00, core=1.00, halo=0.00, accent=None),
     "selected":   dict(edge=1.15, core=1.18, halo=0.80, accent="primaryBright"),
     "merging":    dict(edge=1.25, core=1.70, halo=1.00, accent="textPrimary"),
-    "newborn":    dict(edge=0.72, core=0.70, halo=0.00, accent=None),
+    # YENI DOGAN TASIN GOREVI KENDINI DUYURMAK. Ilk surumde normal'den
+    # SONUKTU (0.72 / 0.70) ve tas gorulmeden birlesiyordu; tersine cevrildi.
+    # Calisma zamaninda bu sprite dogum animasyonu suresince gosterilip
+    # normale doner — SURE DEGISMEZ, yalnizca gorsel.
+    "newborn":    dict(edge=1.30, core=1.45, halo=0.70, accent="primaryBright"),
     "discovered": dict(edge=1.10, core=1.10, halo=0.55, accent="warning"),
 }
 
