@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -76,6 +76,30 @@ public static class NexumRecipeCatalog
             });
         }
 
+        // Oyundaki TUM taslar: temel elementler + tariflerin urunleri.
+        // TileLevels seviyeyi bu listeden tureteceği icin eksiksiz olmali.
+        List<RecipeCatalog.TileInfo> tiles = new List<RecipeCatalog.TileInfo>();
+        HashSet<string> tasGorulen = new HashSet<string>();
+
+        void TasEkle(GameObject prefab)
+        {
+            if (prefab == null || !tasGorulen.Add(prefab.name)) return;
+            tiles.Add(new RecipeCatalog.TileInfo
+            {
+                name = prefab.name,
+                symbol = Symbol(prefab),
+                data = Data(prefab),
+            });
+        }
+
+        foreach (GameObject el in grid.basicElements) TasEkle(el);
+        foreach (MergeRecipe r in grid.recipes)
+        {
+            TasEkle(r.element1);
+            TasEkle(r.element2);
+            TasEkle(r.resultPrefab);
+        }
+
         List<RecipeCatalog.LevelGoalInfo> levelInfos = new List<RecipeCatalog.LevelGoalInfo>();
         foreach (LevelData level in levels.levels)
         {
@@ -96,18 +120,31 @@ public static class NexumRecipeCatalog
             levelInfos.Add(info);
         }
 
-        bool changed = created || Differs(catalog, entries, levelInfos);
+        bool changed = created || Differs(catalog, entries, levelInfos) || TilesDiffers(catalog, tiles);
         if (changed)
         {
             catalog.entries = entries;
             catalog.levels = levelInfos;
+            catalog.tiles = tiles;
             EditorUtility.SetDirty(catalog);
             AssetDatabase.SaveAssets();
         }
 
-        Debug.Log($"{Tag}: tarif {entries.Count}, bolum {levelInfos.Count} -> " +
+        Debug.Log($"{Tag}: tarif {entries.Count}, bolum {levelInfos.Count}, tas {tiles.Count} -> " +
                   $"{(changed ? "yazildi" : "zaten guncel")}");
         Debug.Log($"{Tag}: OK");
+    }
+
+    private static bool TilesDiffers(RecipeCatalog catalog, List<RecipeCatalog.TileInfo> tiles)
+    {
+        if (catalog.tiles.Count != tiles.Count) return true;
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (catalog.tiles[i].name != tiles[i].name) return true;
+            if (catalog.tiles[i].symbol != tiles[i].symbol) return true;
+            if (catalog.tiles[i].data != tiles[i].data) return true;
+        }
+        return false;
     }
 
     private static bool Differs(RecipeCatalog catalog,

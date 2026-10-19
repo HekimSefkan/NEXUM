@@ -1,0 +1,2306 @@
+{
+  "varyantlar": {
+    "C": {
+      "ad": "Metal",
+      "aciklama": "Metal cerceve agirlikli: kalin pahli bezel, acik-koyu gecisli kenarlik, ice cokmus koyu zemin.",
+      "sprites": {
+        "btn_primary_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            96
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_primary_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            96
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_primary_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            96
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_primary_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            96
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_secondary_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_secondary_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_secondary_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_secondary_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_ghost_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_ghost_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_ghost_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_ghost_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_destructive_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_destructive_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_destructive_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "btn_destructive_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            280,
+            80
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "chip_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            180,
+            56
+          ],
+          "border": [
+            27,
+            27,
+            27,
+            27
+          ]
+        },
+        "chip_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            180,
+            56
+          ],
+          "border": [
+            27,
+            27,
+            27,
+            27
+          ]
+        },
+        "chip_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            180,
+            56
+          ],
+          "border": [
+            27,
+            27,
+            27,
+            27
+          ]
+        },
+        "chip_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            180,
+            56
+          ],
+          "border": [
+            27,
+            27,
+            27,
+            27
+          ]
+        },
+        "panel_lg_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            300
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_lg_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            300
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_lg_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            300
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_lg_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            300
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_md_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            300,
+            220
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_md_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            300,
+            220
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_md_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            300,
+            220
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_md_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            300,
+            220
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_sm_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            220,
+            150
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_sm_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            220,
+            150
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_sm_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            220,
+            150
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "panel_sm_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            220,
+            150
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "modal_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            360,
+            260
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "modal_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            360,
+            260
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "modal_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            360,
+            260
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "modal_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            360,
+            260
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tab_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            72
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tab_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            72
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tab_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            72
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tab_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            72
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "list_row_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            92
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "list_row_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            92
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "list_row_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            92
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "list_row_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            92
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "progress_track_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_track_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_track_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_track_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_fill_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_fill_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_fill_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "progress_fill_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            36
+          ],
+          "border": [
+            17,
+            17,
+            17,
+            17
+          ]
+        },
+        "toast_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            84
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "toast_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            84
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "toast_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            84
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "toast_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            420,
+            84
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tooltip_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            120
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tooltip_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            120
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tooltip_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            120
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "tooltip_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            120
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "quiz_option_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "quiz_option_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "quiz_option_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "quiz_option_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "badge_frame_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            160,
+            160
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "badge_frame_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            160,
+            160
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "badge_frame_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            160,
+            160
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "badge_frame_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            160,
+            160
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "avatar_frame_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            200
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "avatar_frame_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            200
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "avatar_frame_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            200
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "avatar_frame_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            200,
+            200
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "input_field_normal.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "input_field_pressed.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "input_field_disabled.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "input_field_selected.png": {
+          "tip": "9slice",
+          "boyut": [
+            400,
+            88
+          ],
+          "border": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        "icon_button_normal.png": {
+          "tip": "sabit",
+          "boyut": [
+            96,
+            96
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_empty_normal.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_full_normal.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_off_normal.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_on_normal.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "icon_button_pressed.png": {
+          "tip": "sabit",
+          "boyut": [
+            96,
+            96
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_empty_pressed.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_full_pressed.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_off_pressed.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_on_pressed.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "icon_button_disabled.png": {
+          "tip": "sabit",
+          "boyut": [
+            96,
+            96
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_empty_disabled.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_full_disabled.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_off_disabled.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_on_disabled.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "icon_button_selected.png": {
+          "tip": "sabit",
+          "boyut": [
+            96,
+            96
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_empty_selected.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "star_full_selected.png": {
+          "tip": "sabit",
+          "boyut": [
+            72,
+            72
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_off_selected.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "toggle_on_selected.png": {
+          "tip": "sabit",
+          "boyut": [
+            120,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "level_node_locked.png": {
+          "tip": "sabit",
+          "boyut": [
+            140,
+            140
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "level_node_open.png": {
+          "tip": "sabit",
+          "boyut": [
+            140,
+            140
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "level_node_done.png": {
+          "tip": "sabit",
+          "boyut": [
+            140,
+            140
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "ring_progress.png": {
+          "tip": "sabit",
+          "boyut": [
+            256,
+            256
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "lock_overlay.png": {
+          "tip": "sabit",
+          "boyut": [
+            128,
+            128
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "slider_track.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            24
+          ],
+          "border": [
+            11,
+            11,
+            11,
+            11
+          ]
+        },
+        "slider_fill.png": {
+          "tip": "9slice",
+          "boyut": [
+            320,
+            24
+          ],
+          "border": [
+            11,
+            11,
+            11,
+            11
+          ]
+        },
+        "slider_knob.png": {
+          "tip": "sabit",
+          "boyut": [
+            56,
+            56
+          ],
+          "border": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  "not": "border = [sol, alt, sag, ust] (Unity spriteBorder sirasi)",
+  "taslar": {
+    "aciklama": "Iki katmanli: dis metal tutucu + ic isiyan numune alani. Seviye uc sinyalle: isima yogunlugu, kose centigi (0/1/2/3), cerceve kalinligi ve malzemesi (mat/fircalanmis/parlak). Renk tek basina ayirt edici degil.",
+    "seviyeler": {
+      "1": {
+        "notch": 0,
+        "border": 7,
+        "glow": 0.0,
+        "sheen": 0.1,
+        "core": "cardBackground",
+        "edge": "textSecondary",
+        "material": "mat"
+      },
+      "2": {
+        "notch": 1,
+        "border": 8,
+        "glow": 0.24,
+        "sheen": 0.22,
+        "core": "primary",
+        "edge": "secondary",
+        "material": "fircalanmis"
+      },
+      "3": {
+        "notch": 2,
+        "border": 9,
+        "glow": 0.46,
+        "sheen": 0.34,
+        "core": "primaryBright",
+        "edge": "primary",
+        "material": "fircalanmis"
+      },
+      "4": {
+        "notch": 3,
+        "border": 11,
+        "glow": 0.66,
+        "sheen": 0.48,
+        "core": "warning",
+        "edge": "warning",
+        "material": "parlak"
+      }
+    },
+    "sprites": {
+      "tile_L1_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  }
+}
