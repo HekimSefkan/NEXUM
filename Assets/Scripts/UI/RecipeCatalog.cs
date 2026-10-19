@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -32,6 +32,19 @@ public class RecipeCatalog : ScriptableObject
         public ElementData productData;
     }
 
+    /// <summary>
+    /// Oyundaki HER tas: temel elementler ve bilesikler. Seviye/derinlik
+    /// turetimi (<see cref="TileLevels"/>) ve ad -> ElementData eslemesi
+    /// buradan okunur.
+    /// </summary>
+    [System.Serializable]
+    public class TileInfo
+    {
+        public string name;            // Tile_H2O
+        public string symbol;          // H<sub>2</sub>O
+        public ElementData data;
+    }
+
     [System.Serializable]
     public class LevelGoalInfo
     {
@@ -42,6 +55,9 @@ public class RecipeCatalog : ScriptableObject
 
     public List<Entry> entries = new List<Entry>();
     public List<LevelGoalInfo> levels = new List<LevelGoalInfo>();
+
+    [Tooltip("Oyundaki tüm taşlar (temel element + bileşik).")]
+    public List<TileInfo> tiles = new List<TileInfo>();
 
     private static RecipeCatalog cached;
 
@@ -60,6 +76,27 @@ public class RecipeCatalog : ScriptableObject
     public static void ClearCache()
     {
         cached = null;
+    }
+
+    public TileInfo FindTile(string tileName)
+    {
+        if (string.IsNullOrEmpty(tileName)) return null;
+        string ad = tileName.Replace("(Clone)", "");
+        foreach (TileInfo t in tiles)
+        {
+            if (t.name == ad) return t;
+        }
+        return null;
+    }
+
+    public TileInfo FindTileByData(ElementData data)
+    {
+        if (data == null) return null;
+        foreach (TileInfo t in tiles)
+        {
+            if (t.data == data) return t;
+        }
+        return null;
     }
 
     public Entry Find(string key)

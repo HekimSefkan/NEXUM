@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -62,7 +62,7 @@ public static class RecipeBook
     ///     kümesine eklenir (zincir yukarı doğru yürür).
     ///  3. Bir bileşiği birden fazla tarif üretebiliyorsa hangisinin
     ///     kullanıldığı bilinemez: HİÇBİRİ sayılmaz, o dal orada biter.
-    ///  4. Spawn havuzundan gelen temel elementler tarif gerektirmez.
+    ///  4. Temel elementler tarif gerektirmez (TileLevels.IsBasic).
     ///
     /// Kural muhafazakârdır: oyuncunun yapmamış olabileceği bir tarifi asla
     /// keşfedilmiş saymaz. Fazladan keşif vermektense eksik vermeyi seçer.
@@ -90,13 +90,16 @@ public static class RecipeBook
             string bilesik = kuyruk.Dequeue();
             if (!islenen.Add(bilesik)) continue;
 
+            // Temel element: tek kaynak TileLevels (tarif grafiginden turetilir)
+            if (TileLevels.IsBasic(bilesik)) continue;
+
             List<RecipeCatalog.Entry> ureticiler = new List<RecipeCatalog.Entry>();
             foreach (RecipeCatalog.Entry e in catalog.entries)
             {
                 if (e.productName == bilesik) ureticiler.Add(e);
             }
 
-            // Temel element (üreticisi yok) ya da belirsiz (birden fazla üretici)
+            // Belirsiz: birden fazla uretici varsa hangisi yapildi bilinemez
             if (ureticiler.Count != 1) continue;
 
             RecipeCatalog.Entry zorunlu = ureticiler[0];

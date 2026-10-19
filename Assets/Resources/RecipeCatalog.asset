@@ -255,3 +255,82 @@ MonoBehaviour:
     goals:
     - Tile_H2CO3
     - Tile_CaCO3
+  tiles:
+  - name: Tile_O
+    symbol: O
+    data: {fileID: 11400000, guid: a28254ee48f48c141a0bb850e07061be, type: 2}
+  - name: Tile_H
+    symbol: H
+    data: {fileID: 11400000, guid: f7cb3aedf87e7fb4da9ebdb6643aeebf, type: 2}
+  - name: Tile_Fe
+    symbol: Fe
+    data: {fileID: 11400000, guid: 48815811125adff41b7a638cebc2f5c6, type: 2}
+  - name: Tile_C
+    symbol: C
+    data: {fileID: 11400000, guid: effc48e061099754eb754e463b9ea709, type: 2}
+  - name: Tile_Ca
+    symbol: Ca
+    data: {fileID: 11400000, guid: 656b2496a9bb7ea4aa644e469a7f0272, type: 2}
+  - name: Tile_N
+    symbol: N
+    data: {fileID: 11400000, guid: c6f7564fad39d434a99a652ad253c1b6, type: 2}
+  - name: Tile_Na
+    symbol: Na
+    data: {fileID: 11400000, guid: 3a7c79369de79c14ca6514930518a53b, type: 2}
+  - name: Tile_Cl
+    symbol: Cl
+    data: {fileID: 11400000, guid: 9144f2dc4fb4d4441bc6e5b7a62c78a3, type: 2}
+  - name: Tile_H2
+    symbol: H<sub>2</sub>
+    data: {fileID: 11400000, guid: b466eae93c5844b47a734142d641a8bf, type: 2}
+  - name: Tile_O2
+    symbol: O<sub>2</sub>
+    data: {fileID: 11400000, guid: bd1c5c4d86318304fabece9241eb88c1, type: 2}
+  - name: Tile_CO
+    symbol: CO
+    data: {fileID: 11400000, guid: ccce30102f502ac46a25d3963fa94b9d, type: 2}
+  - name: Tile_NH
+    symbol: NH
+    data: {fileID: 11400000, guid: c14c946652a45e54faae41115592622a, type: 2}
+  - name: Tile_H2O
+    symbol: H<sub>2</sub>O
+    data: {fileID: 11400000, guid: 318f890d598aadb42972d85c24f45218, type: 2}
+  - name: Tile_NaCl
+    symbol: NaCl
+    data: {fileID: 11400000, guid: a99661e37dba5a04287a829f24b0ba35, type: 2}
+  - name: Tile_CO2
+    symbol: CO<sub>2</sub>
+    data: {fileID: 11400000, guid: 6dbfbed7ec7b1e649864c72846a3b611, type: 2}
+  - name: Tile_O3
+    symbol: O<sub>3</sub>
+    data: {fileID: 11400000, guid: 255868abcf8c5b246b48f52e3166c4fb, type: 2}
+  - name: Tile_Fe2
+    symbol: Fe<sub>2</sub>
+    data: {fileID: 11400000, guid: dbef92b91ac2d1c48abfe888befbbf93, type: 2}
+  - name: Tile_Fe2O3
+    symbol: Fe<sub>2</sub>O<sub>3</sub>
+    data: {fileID: 11400000, guid: 4a000495baf465941b280d8b8c635dc3, type: 2}
+  - name: Tile_NH3
+    symbol: NH<sub>3</sub>
+    data: {fileID: 11400000, guid: 8438e46e31f66dd4780f6fe116d2aeba, type: 2}
+  - name: Tile_CaO
+    symbol: CaO
+    data: {fileID: 11400000, guid: fbf3eb8de6492334abf1db57b1127760, type: 2}
+  - name: Tile_H2CO3
+    symbol: H<sub>2</sub>CO<sub>3</sub>
+    data: {fileID: 11400000, guid: e26f07a078597974d875606c62475801, type: 2}
+  - name: Tile_CaCO3
+    symbol: CaCO<sub>3</sub>
+    data: {fileID: 11400000, guid: 5b55904ab52802847a9dc845beaed124, type: 2}
+  - name: Tile_NO
+    symbol: NO
+    data: {fileID: 11400000, guid: af3d1684054042843a300f35408469ad, type: 2}
+  - name: Tile_N2
+    symbol: N<sub>2</sub>
+    data: {fileID: 11400000, guid: 39e2c0b195f8f784da8e3b72147f6501, type: 2}
+  - name: Tile_Cl2
+    symbol: Cl<sub>2</sub>
+    data: {fileID: 11400000, guid: 48f8de41383b0e44e9a699bcae5fd72b, type: 2}
+  - name: Tile_C2
+    symbol: C<sub>2</sub>
+    data: {fileID: 11400000, guid: 95ed66a997156e84e872cd2d9beda37e, type: 2}

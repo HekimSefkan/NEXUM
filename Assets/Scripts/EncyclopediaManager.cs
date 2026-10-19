@@ -67,8 +67,11 @@ public class EncyclopediaManager : MonoBehaviour
         // Kalıp ve ok sprite'ı denklem gösterimiyle AYNI kaynaktan gelir
         // (ReactionText): "Sentez: H + H [ok] H2". Tarifi olmayan temel
         // elementlerde (H, O, C, N, Na, Cl, Fe, Ca) sabit metin yazılır.
+        // "Temel element mi?" sorusunun TEK KAYNAGI TileLevels (tarif
+        // grafiginden turetilir). Eskiden burada recipe alani bos mu diye
+        // bakiliyordu; ayni sonucu verir ama kaynak artik tek yerde.
         ReactionText.Bind(detailRecipeText);
-        string recipeText = string.IsNullOrWhiteSpace(clickedElement.recipe)
+        string recipeText = TileLevels.IsBasic(clickedElement)
             ? Loc.Get(CodeStrings.EncyclopediaBasicElement)
             : ReactionText.Equation(clickedElement.recipe, clickedElement.symbol);
         detailRecipeText.text = Loc.Format(CodeStrings.EncyclopediaSynthesis, recipeText);
