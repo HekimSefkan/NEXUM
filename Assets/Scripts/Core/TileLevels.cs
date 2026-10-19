@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -28,10 +28,14 @@ public static class TileLevels
 
     /// <summary>
     /// Seviye eşikleri: bir taşın seviyesi, derinliğinin geçtiği eşik
-    /// sayısıdır. {0, 1, 3} → seviye 1 = derinlik 0, seviye 2 = derinlik 1–2,
-    /// seviye 3 = derinlik 3+. Dördüncü seviye için tabloya değer eklenir.
+    /// sayısıdır. {0, 1, 2, 3} → seviye 1 = derinlik 0, seviye 2 = derinlik 1,
+    /// seviye 3 = derinlik 2, seviye 4 = derinlik 3+.
+    ///
+    /// Dağılım (21 tarif, 26 taş): 8 / 10 / 4 / 4 — alt seviyeler kalabalık,
+    /// üst seviyeler nadir. Beşinci seviye tabloya tek değer eklenerek gelir;
+    /// kod değişmez.
     /// </summary>
-    public static readonly int[] LevelThresholds = { 0, 1, 3 };
+    public static readonly int[] LevelThresholds = { 0, 1, 2, 3 };
 
     /// <summary>Derinliği bilinmeyen taş.</summary>
     public const int UnknownDepth = -1;

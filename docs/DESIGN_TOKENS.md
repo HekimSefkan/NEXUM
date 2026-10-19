@@ -460,3 +460,79 @@ düşer.
 Sabit kare sprite (9-slice **değil**), üç çözünürlük: **128 / 192 / 256**.
 Taş çalışma zamanında 200 birimde çiziliyor; 256 kaynak, doku import
 kuralındaki 1,5 kat şartını sağlar.
+
+---
+
+# 9. Taş ailesi v2 ve hub mimarisi (Faz 1 / Adım 2d-2b)
+
+## 9.1 İki katmanlı taş
+
+Teşhis: tek katmanlı taş butonlarla aynı malzemedendi; tahta tuş takımı gibi
+okunuyordu. Taş, arayüz kromundan **ayrı bir malzeme sınıfı** olmalı.
+
+| Katman | Ne yapar | Nasıl |
+|---|---|---|
+| **DIŞ** — metal tutucu | taşı arayüze **bağlar** | kitin pahı (%13), kenar vurgusu, bezel (mat/fırçalanmış/parlak) |
+| **İÇ** — ışıyan numune | taşı arayüzden **ayırır** | radyal gradyan + iç gölge ("kuyuda duran numune") |
+
+**Işıma KENARDA, merkez koyu.** Ölçüm: merkez parlakken L4 kontrastı **1,31:1**'e
+düşüyordu (sınır 4,5:1). Işımayı kenara alınca en kötü değer **11,18:1**.
+Fiziksel olarak da doğru — ışık kuyunun kenarında birikir.
+
+## 9.2 Dört seviye, üç sinyal
+
+| Seviye | Derinlik | Taş | Çentik | Kenarlık | Malzeme | Işıma |
+|---|---|---|---|---|---|---|
+| 1 | 0 | 8 | 0 | 7 | mat | 0,00 |
+| 2 | 1 | 10 | 1 | 8 | fırçalanmış | 0,24 |
+| 3 | 2 | 4 | 2 | 9 | fırçalanmış | 0,46 |
+| 4 | 3+ | 4 | 3 | 11 | parlak | 0,66 |
+
+Eşikler `TileLevels.LevelThresholds = {0, 1, 2, 3}` — **parametre**, beşinci
+seviye tek değer eklenerek gelir.
+
+**Renk tek başına asla ayırt edici değildir.** Kanıt: `tiles-sheet-v2.png`
+içindeki **gri tonlama ayrım şeridi** — renk kaldırıldığında dört seviye
+parlaklık merdiveni ve çentik sayısıyla hâlâ ayırt edilir.
+
+## 9.3 Çözünürlük
+
+Taş çalışma zamanında **200 birim**de çizilir. Üretilen boyutlar
+**256 / 384 / 512** → 1080 genişlikte 1:1'in üstünde piksel yoğunluğu
+(256/200 = 1,28×; 1440 genişlikte 512 kaynak 1,92×).
+
+## 9.4 Arka plan seçenekleri
+
+| Seçenek | Ortalama parlaklık | Taş çerçevesi | Buton kenarı | Beyaz metin |
+|---|---|---|---|---|
+| A — foto + güçlü işleme | 36 | 10,31:1 | 6,23:1 | 15,36:1 |
+| B — tamamen prosedürel | 55 | 7,93:1 | **4,79:1** | 11,81:1 |
+| C — hibrit | 37 | 10,25:1 | 6,20:1 | 15,27:1 |
+
+Üçü de 4,5:1 eşiğini geçiyor; B en dar paya sahip.
+
+## 9.5 Hub mimarisi
+
+Düz liste yerine **ağırlık kademeli hub**:
+
+| Kuşak | Bileşen | Görsel ağırlık |
+|---|---|---|
+| Üst şerit | profil kartı (avatar, rütbe, XP, seri) | orta |
+| **Kahraman** | DENEYİ BAŞLAT + bölüm no + yıldızlar | **en baskın** (300 birim, `selected`) |
+| İkili kart | Günlük Bulmaca · Bölüm Seçimi | orta (250 birim) |
+| Mod satırı | Sınav · Sonsuz Lab · Haftanın Deneyi | orta-düşük (190 birim, `tab`) |
+| Bilgi | Ansiklopedi · Tarif Defteri | düşük (160 birim, altın) |
+| İkon şeridi | Ayarlar · Nasıl Oynanır · Mentor · Ses | **en sakin** (134 birim ikon) |
+
+**Gizleme bayrağı:** her girişin `yeni_oyuncuda_gorunur` alanı var. Yeni
+oyuncuya kilitli girişler **gösterilmez** (sekiz kilit yerine üç açık giriş);
+düzen yine de bugünden oturur, giriş açıldığında yeri hazırdır.
+
+## 9.6 İpucu butonu
+
+`GERİ AL · PARÇALA · İPUCU` üçlüsü, her biri 300×112, aralıklar **eşit 50
+birim**, sağ kenar payı 40. Kalan hak rozeti butonun sağ üst köşesinde ayrı
+katman — Faz 5'te kademeli ipucu geldiğinde kademe göstergesi aynı yere girer.
+
+Dokunma kutusu **144 birime** tamamlanır (görsel 112): y 294..438.
+Ölçüm — hedef çipine 12 birim, tahtaya 36 birim pay, **çakışma yok**.

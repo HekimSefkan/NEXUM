@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -78,6 +78,17 @@ public class TileLevelTests
             Debug.Log($"{Tag}_DAGILIM: seviye {kv.Key} -> {kv.Value} taş");
         }
 
+        // Beklenen dağılım: alt seviyeler kalabalık, üst seviyeler nadir.
+        int[] beklenenDagilim = { 8, 10, 4, 4 };
+        for (int i = 0; i < beklenenDagilim.Length; i++)
+        {
+            int sayi = seviyeSayisi.TryGetValue(i + 1, out int n) ? n : 0;
+            if (sayi != beklenenDagilim[i])
+            {
+                hatalar.Add($"seviye {i + 1}: {sayi} taş (beklenen {beklenenDagilim[i]})");
+            }
+        }
+
         Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
         yield return null;
     }
@@ -137,9 +148,9 @@ public class TileLevelTests
 
         Assert.AreEqual(1, Reflect.Call<int>(Levels, "LevelForDepth", 0), "derinlik 0 -> seviye 1");
         Assert.AreEqual(2, Reflect.Call<int>(Levels, "LevelForDepth", 1), "derinlik 1 -> seviye 2");
-        Assert.AreEqual(2, Reflect.Call<int>(Levels, "LevelForDepth", 2), "derinlik 2 -> seviye 2");
-        Assert.AreEqual(3, Reflect.Call<int>(Levels, "LevelForDepth", 3), "derinlik 3 -> seviye 3");
-        Assert.AreEqual(3, Reflect.Call<int>(Levels, "LevelForDepth", 9), "derinlik 9 -> seviye 3");
+        Assert.AreEqual(3, Reflect.Call<int>(Levels, "LevelForDepth", 2), "derinlik 2 -> seviye 3");
+        Assert.AreEqual(4, Reflect.Call<int>(Levels, "LevelForDepth", 3), "derinlik 3 -> seviye 4");
+        Assert.AreEqual(4, Reflect.Call<int>(Levels, "LevelForDepth", 9), "derinlik 9 -> seviye 4");
         Assert.AreEqual(esikler.Length, Reflect.Call<int>(Levels, "LevelForDepth", 99),
             "en derin taş en üst seviyede olmalı");
         yield return null;
