@@ -108,3 +108,34 @@ Verilen ön görüşün çoğuna katılıyorum. İki yerde farklı düşünüyor
    ikisini de korumak ama **ölçülebilir parçalarını** (dolum çubuğu, sayaç
    etiketi) kite taşımak. Böylece hem kimlik kalır hem bugünkü iki ölçüm
    borcu (bulanık tüp, taşan beher etiketi) kapanır.
+
+---
+
+## 10. 2d-2b güncellemesi — kararların uygulanmış hâli
+
+2d-2 mockup'larında katalizör tüpü ve hedef beheri yanlışlıkla jenerik
+çubuğa dönüşmüştü. 2d-2b'de ikisi de **gerçek görselle** geri getirildi ve
+karar metnindeki "ölçülebilir parçasını kite taşı" ilkesi uygulandı:
+
+| Varlık | Nasıl korundu | Kite taşınan parça |
+|---|---|---|
+| `Entropitup.png` (katalizör tüpü) | görsel **yatayda 3-slice** edildi: altın kapaklar sabit, cam gövde gerilir | dolum çubuğu `progress_track` / `progress_fill` sprite'larına taşındı, tüpün cam içine oturuyor |
+| `Beherglas.png` (hedef beheri) | görsel korundu, formül beherin **içine** yazılıyor | sayaç serbest etiket yerine `chip` sprite'ına taşındı — bugünkü 22 birimlik taşmanın kaynağı (serbest etiket) ortadan kalktı |
+| `vecteezy_detective…png` | görsel korundu, dairesel kırpılıp `avatar_frame` içine oturtuldu | taşma kaynağı kalmadı; **2d-3'te dosya adı sadeleştirilecek** (`hint_assistant.png`) ve lisansı `docs/` altında belgelenecek |
+
+**3-slice notu:** tüpün yatayda esnetilebilir olması, 9-slice sözleşmesinin
+bir uygulamasıdır — gerçek görsel korunurken her genişliğe oturuyor. Bugün
+922×533'lük bir görsel 600×60'lık bir ölçüye sıkıştırılıyor.
+
+### Logo
+
+`NEXUM_logo.png` kararı **KORU → UYARLA** olarak güncellendi: geometri
+(element kutusu, N, 14.007, köşe çentiği, EXUM) aynen korunuyor, yalnızca
+malzeme Metal kitine taşınıyor. İki varyant üretildi (ölçülü / vurgulu);
+seçim kullanıcıda. Marka işaretinin kendisi değişmedi.
+
+### Taş sprite'ları
+
+`1/2/3.seviyetas.png` kararı **YENİDEN ÜRET** olarak kalıyor, ama artık
+**dört** seviye var (8/10/4/4). Üç dosya yerine 4 seviye × 5 durum ×
+3 çözünürlük = 60 sprite üreteçten çıkıyor.
