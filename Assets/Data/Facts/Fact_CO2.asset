@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c992036424e9974f873cca4bf7f6d52, type: 3}
   m_Name: Fact_CO2
   m_EditorClassIdentifier: 
-  factText: "Karbondioksit (CO\u2082) bitkilerin besin \xFCretmek (fotosentez) i\xE7in
+  factText: "Karbondioksit (CO<sub>2</sub>) bitkilerin besin \xFCretmek (fotosentez) i\xE7in
     soludu\u011Fu gazd\u0131r. Ayr\u0131ca gazl\u0131 i\xE7ecekleri a\xE7t\u0131\u011F\u0131nda
-    \xE7\u0131kan o k\xF6p\xFCk ve \"t\u0131ss\" sesi CO\u2082 gaz\u0131d\u0131r."
+    \xE7\u0131kan o k\xF6p\xFCk ve \"t\u0131ss\" sesi CO<sub>2</sub> gaz\u0131d\u0131r."

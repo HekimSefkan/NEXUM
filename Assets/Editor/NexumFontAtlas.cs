@@ -37,19 +37,52 @@ public static class NexumFontAtlas
     };
 
     /// <summary>
-    /// Hedef karakter kümesi: ASCII görünür aralığı + Türkçe harfler +
-    /// oyunda geçen tipografik işaretler. Alt simge karakterleri (U+2080+)
-    /// BİLEREK YOK: fontta ₅–₉ bulunmuyor, formüller TMP &lt;sub&gt; ile yazılıyor.
+    /// TABAN küme: ASCII görünür aralığı + Türkçe harfler + oyunda geçmesi
+    /// muhtemel tipografik işaretler. Bir metin henüz yazılmamış olsa bile
+    /// bunlar atlasta bulunur.
+    ///
+    /// Alt simge karakterleri (U+2080+) BİLEREK YOK: Oxanium'da yalnızca
+    /// ₀–₄ var, ₅–₉ fontun kendisinde bulunmuyor. Formüller TMP &lt;sub&gt;
+    /// etiketiyle yazılır (bkz. docs/DESIGN_TOKENS.md §8.4).
     /// </summary>
-    public static string CharacterSet
+    public static string BaseSet
     {
         get
         {
             StringBuilder sb = new StringBuilder();
             for (int c = 0x20; c <= 0x7E; c++) sb.Append((char)c);   // ASCII
             sb.Append("çÇğĞıİöÖşŞüÜ");                               // Türkçe
-            sb.Append("×–—’‘“”…€₺°±≤≥≈");                            // tipografi
+            // ′ (U+2032) ve ″ (U+2033) BILEREK YOK: Oxanium TTF'inde
+            // bulunmuyorlar (ölçüldü). Tabana konurlarsa atlas her koşuda
+            // "eklenemeyen glif" raporlar ve idempotans bozulur.
+            sb.Append("×–—’‘“”…€₺°±≤≥≈·");                           // tipografi
             return sb.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Hedef küme = taban + ekranda GÖSTERİLEN metinlerde geçen her karakter
+    /// (<see cref="NexumTextSources"/>). Böylece yeni bir metin eklendiğinde
+    /// atlas kendiliğinden kapsar; unutulan bir karakter sessizce dinamik
+    /// fallback'e düşmez.
+    /// </summary>
+    public static string CharacterSet
+    {
+        get
+        {
+            Dictionary<char, string> nerede;
+            string kullanilan = NexumTextSources.Topla(out nerede);
+
+            SortedSet<char> kume = new SortedSet<char>(BaseSet);
+            foreach (char c in kullanilan)
+            {
+                // Alt simgeler kurala göre <sub> ile yazılıyor; fontta
+                // bulunmayanları atlasa eklemeye çalışmak gürültü üretir.
+                if (c >= '₀' && c <= '₉') continue;
+                kume.Add(c);
+            }
+
+            return new string(kume.ToArray());
         }
     }
 
