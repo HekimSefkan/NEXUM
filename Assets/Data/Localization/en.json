@@ -323,6 +323,46 @@
             "value": "LABORATUVAR İSTATİSTİKLERİ"
         },
         {
+            "key": "menu.boiling_point",
+            "value": "BOILING POINT"
+        },
+        {
+            "key": "menu.boiling_point_status",
+            "value": "Best: {0}/{1} correct"
+        },
+        {
+            "key": "menu.coming_soon",
+            "value": "Coming soon"
+        },
+        {
+            "key": "menu.daily_puzzle",
+            "value": "DAILY PUZZLE"
+        },
+        {
+            "key": "menu.daily_puzzle_undone",
+            "value": "Not solved today"
+        },
+        {
+            "key": "menu.endless_lab",
+            "value": "ENDLESS LAB"
+        },
+        {
+            "key": "menu.endless_lab_best",
+            "value": "Best: {0} merges"
+        },
+        {
+            "key": "menu.level_select",
+            "value": "LEVEL SELECT"
+        },
+        {
+            "key": "menu.weekly_experiment",
+            "value": "EXPERIMENT OF THE WEEK"
+        },
+        {
+            "key": "menu.weekly_experiment_this",
+            "value": "This week: {0}"
+        },
+        {
             "key": "profile.default_name",
             "value": "Baş Kimyager"
         },

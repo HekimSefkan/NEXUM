@@ -40,6 +40,21 @@ public static class CodeStrings
     public const string RecipeBookRingValue = "recipebook.ring_value";
     public const string RecipeBookButtonLabel = "recipebook.button";
 
+    // --- Ana menü hub (3b'de ekranlara girecek) ---------------------------
+    // TYT/AYT soru modunun adı "KAYNAMA NOKTASI". Menüde "sınav", "deneme"
+    // ve "simülasyon" kelimeleri KULLANILMAZ; Ayarlar'daki oyun modu olan
+    // "SINAV" adını korur ve ikisi artık çakışmaz.
+    public const string MenuBoilingPoint = "menu.boiling_point";
+    public const string MenuBoilingPointStatus = "menu.boiling_point_status";
+    public const string MenuDailyPuzzle = "menu.daily_puzzle";
+    public const string MenuDailyPuzzleUndone = "menu.daily_puzzle_undone";
+    public const string MenuEndlessLab = "menu.endless_lab";
+    public const string MenuEndlessLabBest = "menu.endless_lab_best";
+    public const string MenuWeeklyExperiment = "menu.weekly_experiment";
+    public const string MenuWeeklyExperimentThis = "menu.weekly_experiment_this";
+    public const string MenuLevelSelect = "menu.level_select";
+    public const string MenuComingSoon = "menu.coming_soon";
+
     // --- Ansiklopedi -------------------------------------------------------
     public const string EncyclopediaSynthesis = "encyclopedia.synthesis";
     public const string EncyclopediaBasicElement = "encyclopedia.basic_element";
@@ -99,6 +114,17 @@ public static class CodeStrings
         [RecipeBookLockedSymbol] = "?",
         [RecipeBookRingValue] = "{0}/{1}",
         [RecipeBookButtonLabel] = "TARİF DEFTERİ",
+
+        [MenuBoilingPoint] = "KAYNAMA NOKTASI",
+        [MenuBoilingPointStatus] = "En iyi: {0}/{1} doğru",
+        [MenuDailyPuzzle] = "GÜNLÜK BULMACA",
+        [MenuDailyPuzzleUndone] = "Bugün çözülmedi",
+        [MenuEndlessLab] = "SONSUZ LAB",
+        [MenuEndlessLabBest] = "En iyi: {0} birleşme",
+        [MenuWeeklyExperiment] = "HAFTANIN DENEYİ",
+        [MenuWeeklyExperimentThis] = "Bu hafta: {0}",
+        [MenuLevelSelect] = "BÖLÜM SEÇİMİ",
+        [MenuComingSoon] = "Yakında",
 
         [EncyclopediaSynthesis] = "Sentez: {0}",
         [EncyclopediaBasicElement] = "Temel element",

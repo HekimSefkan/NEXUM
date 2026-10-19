@@ -125,14 +125,14 @@ MonoBehaviour:
       asistan\u0131ndan yard\u0131m alamazs\u0131n. Kendi bilgine g\xFCvenmelisin
       Ba\u015F Kimyager!"
   - key: hint.footer
-    turkish: "\n\n<size=80%><color=#F1C40F>Kalan \u0130pucu Hakk\u0131n: {0} | Sonraki
+    turkish: "\n\n<size=80%><color=#FFD700>Kalan \u0130pucu Hakk\u0131n: {0} | Sonraki
       Bedel: {1} Puan</color></size>"
-    english: "\n\n<size=80%><color=#F1C40F>Kalan \u0130pucu Hakk\u0131n: {0} | Sonraki
+    english: "\n\n<size=80%><color=#FFD700>Kalan \u0130pucu Hakk\u0131n: {0} | Sonraki
       Bedel: {1} Puan</color></size>"
   - key: hint.footer_free
-    turkish: "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipu\xE7lar\u0131 bedava ve
+    turkish: "\n\n<size=80%><color=#FFD700>Serbest Mod: ipu\xE7lar\u0131 bedava ve
       s\u0131n\u0131rs\u0131z</color></size>"
-    english: "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipu\xE7lar\u0131 bedava ve
+    english: "\n\n<size=80%><color=#FFD700>Serbest Mod: ipu\xE7lar\u0131 bedava ve
       s\u0131n\u0131rs\u0131z</color></size>"
   - key: hint.generic
     turkish: "Bu iki elementi birle\u015Ftirmek harika bir fikir olabilir!"
@@ -195,8 +195,8 @@ MonoBehaviour:
     turkish: KAYDET
     english: KAYDET
   - key: mainmenu.detailsbutton.text_tmp
-    turkish: "<color=#48CAE4>Ayr\u0131nt\u0131lar\u0131 G\xF6r >"
-    english: "<color=#48CAE4>Ayr\u0131nt\u0131lar\u0131 G\xF6r >"
+    turkish: "<color=#90E0EF>Ayr\u0131nt\u0131lar\u0131 G\xF6r >"
+    english: "<color=#90E0EF>Ayr\u0131nt\u0131lar\u0131 G\xF6r >"
   - key: mainmenu.exammodebtn.text_tmp
     turkish: SINAV MOD
     english: SINAV MOD
@@ -313,6 +313,36 @@ MonoBehaviour:
   - key: mainmenu.statssection.statsheadertext
     turkish: "LABORATUVAR \u0130STAT\u0130ST\u0130KLER\u0130"
     english: "LABORATUVAR \u0130STAT\u0130ST\u0130KLER\u0130"
+  - key: menu.boiling_point
+    turkish: KAYNAMA NOKTASI
+    english: BOILING POINT
+  - key: menu.boiling_point_status
+    turkish: "En iyi: {0}/{1} do\u011Fru"
+    english: 'Best: {0}/{1} correct'
+  - key: menu.coming_soon
+    turkish: "Yak\u0131nda"
+    english: Coming soon
+  - key: menu.daily_puzzle
+    turkish: "G\xDCNL\xDCK BULMACA"
+    english: DAILY PUZZLE
+  - key: menu.daily_puzzle_undone
+    turkish: "Bug\xFCn \xE7\xF6z\xFClmedi"
+    english: Not solved today
+  - key: menu.endless_lab
+    turkish: SONSUZ LAB
+    english: ENDLESS LAB
+  - key: menu.endless_lab_best
+    turkish: "En iyi: {0} birle\u015Fme"
+    english: 'Best: {0} merges'
+  - key: menu.level_select
+    turkish: "B\xD6L\xDCM SE\xC7\u0130M\u0130"
+    english: LEVEL SELECT
+  - key: menu.weekly_experiment
+    turkish: "HAFTANIN DENEY\u0130"
+    english: EXPERIMENT OF THE WEEK
+  - key: menu.weekly_experiment_this
+    turkish: 'Bu hafta: {0}'
+    english: 'This week: {0}'
   - key: profile.default_name
     turkish: "Ba\u015F Kimyager"
     english: "Ba\u015F Kimyager"
