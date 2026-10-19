@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -145,13 +145,18 @@ public static class NexumKitImport
         if (imp.maxTextureSize != maxSize) { imp.maxTextureSize = maxSize; degisti = true; }
         if (imp.spriteBorder != border) { imp.spriteBorder = border; degisti = true; }
 
-        // Atlasa girecekleri çift sıkıştırmadan korumak için Uncompressed
+        // SIKISTIRMA ACIK. "Uncompressed" kurali YALNIZCA atlasa giren
+        // dokular icindir (cift sikistirma olmasin diye). Bu sprite'lar
+        // henuz bir atlasta degil; sikistirmasiz birakmak 72 dokuyu ham
+        // boyutta pakete koyar ve APK'yi onlarca MiB sisirirdi.
         TextureImporterPlatformSettings varsayilan = imp.GetDefaultPlatformTextureSettings();
-        if (varsayilan.format != TextureImporterFormat.RGBA32 || varsayilan.maxTextureSize != maxSize)
+        if (varsayilan.maxTextureSize != maxSize ||
+            varsayilan.textureCompression != TextureImporterCompression.Compressed ||
+            varsayilan.format != TextureImporterFormat.Automatic)
         {
-            varsayilan.format = TextureImporterFormat.RGBA32;
+            varsayilan.format = TextureImporterFormat.Automatic;
             varsayilan.maxTextureSize = maxSize;
-            varsayilan.textureCompression = TextureImporterCompression.Uncompressed;
+            varsayilan.textureCompression = TextureImporterCompression.Compressed;
             imp.SetPlatformTextureSettings(varsayilan);
             degisti = true;
         }
