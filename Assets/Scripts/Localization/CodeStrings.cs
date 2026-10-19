@@ -85,8 +85,8 @@ public static class CodeStrings
         [HintNoBudget] = "Laboratuvar bütçemiz yetersiz! Asistanın {0}. ipucunu verebilmesi için <color=red>{1} puana</color> ihtiyacın var.",
         [HintNoMerge] = "Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin.",
         [HintGeneric] = "Bu iki elementi birleştirmek harika bir fikir olabilir!",
-        [HintFooterFree] = "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>",
-        [HintFooter] = "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>",
+        [HintFooterFree] = "\n\n<size=80%><color=#FFD700>Serbest Mod: ipuçları bedava ve sınırsız</color></size>",
+        [HintFooter] = "\n\n<size=80%><color=#FFD700>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>",
 
         [SystemMatrixReshuffled] = "MATRİS YENİDEN DÜZENLENDİ",
         [ReactionInputs] = "{0} + {1}",

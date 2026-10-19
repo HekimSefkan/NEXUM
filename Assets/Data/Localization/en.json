@@ -136,11 +136,11 @@
         },
         {
             "key": "hint.footer",
-            "value": "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>"
+            "value": "\n\n<size=80%><color=#FFD700>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>"
         },
         {
             "key": "hint.footer_free",
-            "value": "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>"
+            "value": "\n\n<size=80%><color=#FFD700>Serbest Mod: ipuçları bedava ve sınırsız</color></size>"
         },
         {
             "key": "hint.generic",
@@ -216,7 +216,7 @@
         },
         {
             "key": "mainmenu.detailsbutton.text_tmp",
-            "value": "<color=#48CAE4>Ayrıntıları Gör >"
+            "value": "<color=#90E0EF>Ayrıntıları Gör >"
         },
         {
             "key": "mainmenu.exammodebtn.text_tmp",
