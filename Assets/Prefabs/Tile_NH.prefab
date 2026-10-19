@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6773082429386211845}
   - component: {fileID: 4593228097711413809}
   - component: {fileID: -1060879116728908551}
+  - component: {fileID: 7513778148670424134}
   m_Layer: 5
   m_Name: Tile_NH
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8ecdddcdb33682343ace6e621414fc3e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bc9b64aaae3cd474ba1fc2d87b5a898c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -90,6 +91,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myElementData: {fileID: 11400000, guid: c14c946652a45e54faae41115592622a, type: 2}
+--- !u!114 &7513778148670424134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3634079177299486472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6072ea1fc2174b048a347c277e1bec50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 2
+  normal: {fileID: 21300000, guid: bc9b64aaae3cd474ba1fc2d87b5a898c, type: 3}
+  selected: {fileID: 21300000, guid: 561c315b335adc148a35e675e2f7d57a, type: 3}
+  merging: {fileID: 21300000, guid: d5305fc70d0a3c74586ba68784a7257e, type: 3}
+  newborn: {fileID: 21300000, guid: 6bf6746f135cc7e4bb7a04146e84933b, type: 3}
+  discovered: {fileID: 21300000, guid: ade7950fb9cd1fd4089dff5a7ea5f72e, type: 3}
 --- !u!1 &6570616426883380441
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,8 +201,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 70
+  m_fontSizeBase: 70
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
