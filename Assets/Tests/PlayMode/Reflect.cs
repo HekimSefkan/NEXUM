@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -40,11 +40,17 @@ public static class Reflect
         return (T)Call(typeName, method, args);
     }
 
+    /// <summary>Static özellik ya da alan (ikisi de aynı kapıdan okunur).</summary>
     public static object Prop(string typeName, string name)
     {
-        PropertyInfo p = Type(typeName).GetProperty(name, Any);
-        Assert.IsNotNull(p, $"özellik yok: {typeName}.{name}");
-        return p.GetValue(null);
+        Type t = Type(typeName);
+
+        PropertyInfo p = t.GetProperty(name, Any);
+        if (p != null) return p.GetValue(null);
+
+        FieldInfo f = t.GetField(name, Any);
+        Assert.IsNotNull(f, $"alan/özellik yok: {typeName}.{name}");
+        return f.GetValue(null);
     }
 
     public static T Prop<T>(string typeName, string name)
