@@ -364,3 +364,99 @@ git'te sürekli değişmesini de bitirir.
 > Liberation ailesi de OFL ile dağıtılıyor; üçü de ticari kullanıma açık.
 > Depoda lisans metni **yok** — yayından önce `Assets/Fonts/OFL.txt` olarak
 > eklenmeli (2d-2 iş listesinde).
+
+---
+
+# 7. Metal kiti — derinlik (Faz 1 / Adım 2d-2)
+
+Varyant **C (Metal)** seçildi. Bundan sonra üretilen her görsel bu dildedir;
+A ve B tabloda tarih olarak kalır, `ACTIVE_VARIANTS` yalnızca C'yi üretir.
+
+## 7.1 Eklenen efektler (öncesi → sonrası)
+
+| Efekt | Önce | Sonra | Neden |
+|---|---|---|---|
+| Zemin | düz dolgu | **dikey gradyan, `gradient = 0.34`** (üst ×1.19 açık, alt ×1.15 koyu) | metal plaka hissi; düz dolgu "boyanmış kutu" gibi duruyordu |
+| İç kabartma | yok | **`emboss = 0.55`, `emboss_px = 2`** — iç kenarın üstünde beyaz %55, altında siyah %70 şerit | kenar kalınlığı tek başına yüzeyi anlatmıyordu |
+| Basılı durum | yalnızca zemin ×0.72 | **ışık yer değiştirir**: gradyan ters döner, kabartma şeritleri yer değiştirir, bezel ters döner | gerçek "içeri çökme"; renk koyulaşması tek başına basılma okutmuyor |
+| Kenarlık | 7 birim | **8 birim** | kabartma şeridine yer açmak için |
+| Dış parıltı | gövdenin üstüne de düşüyordu | **yalnızca gövdenin dışında** | hayalet buton dolu görünüyordu |
+
+## 7.2 İkinci vurgu rengi
+
+Her şey camgöbeği olmasın; hiyerarşi **renkten de** okunsun:
+
+| Rol | Renk | Kullanım |
+|---|---|---|
+| `primary` | **Primary** `#00B4D8` | birincil eylem (DENEYİ BAŞLAT, DEVAM ET) |
+| `secondary` | **Warning** `#FFD700` (altın) | ikincil eylem (ANSİKLOPEDİ, AYARLAR, PARÇALA) |
+| `ghost` | TextSecondary `#ADB5BD` | düşük vurgulu eylem (GERİ AL, VAZGEÇ) |
+| `destructive` | Danger `#E63946` | geri alınamaz eylem (İLERLEMEYİ SIFIRLA) |
+| `info` | Secondary `#90E0EF` | bilgi yüzeyleri |
+
+Altın seçildi çünkü oyunun mevcut kimliğinde zaten var (katalizör tüpü,
+yıldızlar) ve camgöbeğiyle en yüksek ayrımı veren palet rengi.
+
+## 7.3 Panel kuralı — boyalı yuva yasak
+
+**Panel çerçevelerinde boyalı buton yuvası olmaz.** Bugünkü `gamepanel.png`
+alt kenarında iki boyalı yuva taşıyor; duraklat kartına üçüncü butonun
+eklenememesinin ölçülmüş sebebi buydu. Kit panelleri saf 9-slice çerçevedir,
+butonlar üstüne serbest yerleşir.
+
+---
+
+# 8. Taş dili (Faz 1 / Adım 2d-2)
+
+## 8.1 Seviye çerçeveden okunur
+
+| Seviye | Halka | Kenarlık | Köşe braketi | Kenar rengi |
+|---|---|---|---|---|
+| 1 — saf element | 1 | 6 birim | yok | TextSecondary (çelik) |
+| 2 — ara bileşik | 2 | 7 birim | yok | Primary (camgöbeği) |
+| 3 — ileri bileşik | 3 | 9 birim | **var** | Warning (altın) |
+
+**Renk tek başına ayırt edici değildir** (renk körlüğü): halka sayısı,
+kenarlık kalınlığı ve köşe braketi seviyeyi biçimden de okutur.
+
+## 8.2 Merkez sakin
+
+Zemin yalnızca çok hafif dikey gradyan taşır (üst +%16, alt −%18); desen yok.
+Bugünkü parçacıklı küre formülü yutuyordu. Ölçüm: merkez ile beyaz metin
+arasındaki kontrast **8,05 – 13,68 : 1** (WCAG hedefi 4,5:1).
+
+## 8.3 Durumlar
+
+| Durum | Kenar | Zemin | Hale | Vurgu halkası |
+|---|---|---|---|---|
+| normal | ×1.00 | ×1.00 | yok | — |
+| selected | ×1.00 | ×1.12 | 0.85 | PrimaryBright |
+| merging | ×1.00 | ×1.75 | 1.00 | TextPrimary |
+| newborn | ×0.70 | ×0.80 | yok | — |
+| discovered | ×1.00 | ×1.06 | 0.60 | Warning |
+
+Animasyon **zamanlamaları değişmez**; bunlar yalnızca sprite durumlarıdır.
+
+## 8.4 Alt simge kuralı — ölçümle
+
+Literal alt simge karakterleri (U+2080–2089) **kullanılamaz**:
+
+| Font | ₀₁₂₃₄ | ₅₆₇₈₉ |
+|---|---|---|
+| Oxanium (TTF) | var | **yok** |
+| Orbitron (TTF) | yok | yok |
+| LiberationSans (TTF) | yok | yok |
+| **Her statik TMP atlası** | **yok** | **yok** |
+
+Yani `₂` bugün hiçbir atlasta yok, `₅`–`₉` fontun kendisinde de yok.
+**Karar: TMP `<sub>` etiketi kullanılmaya devam edilir** — `<sub>` normal
+rakam glifini küçültüp alçalttığı için ek glif gerektirmez. ElementData
+sembolleri zaten böyle yazılmış (13 bileşikte `<sub>`). Bu karar
+`TileTextFitTests` ile her koşuda korunur: literal alt simge görülürse test
+düşer.
+
+## 8.5 Boyut
+
+Sabit kare sprite (9-slice **değil**), üç çözünürlük: **128 / 192 / 256**.
+Taş çalışma zamanında 200 birimde çiziliyor; 256 kaynak, doku import
+kuralındaki 1,5 kat şartını sağlar.
