@@ -1361,481 +1361,46 @@
   },
   "not": "border = [sol, alt, sag, ust] (Unity spriteBorder sirasi)",
   "taslar": {
-    "aciklama": "Seviye cerceveden okunur: halka sayisi 1/2/3, kenarlik 6/7/9, en ust seviyede kose braketi. Renk tek basina ayirt edici degil.",
+    "aciklama": "Iki katmanli: dis metal tutucu + ic isiyan numune alani. Seviye uc sinyalle: isima yogunlugu, kose centigi (0/1/2/3), cerceve kalinligi ve malzemesi (mat/fircalanmis/parlak). Renk tek basina ayirt edici degil.",
     "seviyeler": {
       "1": {
-        "rings": 1,
-        "border": 6,
-        "bracket": false,
+        "notch": 0,
+        "border": 7,
+        "glow": 0.0,
+        "sheen": 0.1,
+        "core": "cardBackground",
         "edge": "textSecondary",
-        "plate": 0.0
+        "material": "mat"
       },
       "2": {
-        "rings": 2,
-        "border": 7,
-        "bracket": false,
-        "edge": "primary",
-        "plate": 0.1
+        "notch": 1,
+        "border": 8,
+        "glow": 0.24,
+        "sheen": 0.22,
+        "core": "primary",
+        "edge": "secondary",
+        "material": "fircalanmis"
       },
       "3": {
-        "rings": 3,
+        "notch": 2,
         "border": 9,
-        "bracket": true,
+        "glow": 0.46,
+        "sheen": 0.34,
+        "core": "primaryBright",
+        "edge": "primary",
+        "material": "fircalanmis"
+      },
+      "4": {
+        "notch": 3,
+        "border": 11,
+        "glow": 0.66,
+        "sheen": 0.48,
+        "core": "warning",
         "edge": "warning",
-        "plate": 0.2
+        "material": "parlak"
       }
     },
     "sprites": {
-      "tile_L1_normal_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 1,
-        "durum": "normal",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_selected_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 1,
-        "durum": "selected",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_merging_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 1,
-        "durum": "merging",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_newborn_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 1,
-        "durum": "newborn",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_discovered_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 1,
-        "durum": "discovered",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_normal_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 2,
-        "durum": "normal",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_selected_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 2,
-        "durum": "selected",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_merging_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 2,
-        "durum": "merging",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_newborn_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 2,
-        "durum": "newborn",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_discovered_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 2,
-        "durum": "discovered",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_normal_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 3,
-        "durum": "normal",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_selected_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 3,
-        "durum": "selected",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_merging_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 3,
-        "durum": "merging",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_newborn_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 3,
-        "durum": "newborn",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_discovered_128.png": {
-        "tip": "sabit",
-        "boyut": [
-          128,
-          128
-        ],
-        "seviye": 3,
-        "durum": "discovered",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_normal_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 1,
-        "durum": "normal",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_selected_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 1,
-        "durum": "selected",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_merging_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 1,
-        "durum": "merging",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_newborn_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 1,
-        "durum": "newborn",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L1_discovered_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 1,
-        "durum": "discovered",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_normal_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 2,
-        "durum": "normal",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_selected_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 2,
-        "durum": "selected",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_merging_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 2,
-        "durum": "merging",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_newborn_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 2,
-        "durum": "newborn",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L2_discovered_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 2,
-        "durum": "discovered",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_normal_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 3,
-        "durum": "normal",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_selected_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 3,
-        "durum": "selected",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_merging_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 3,
-        "durum": "merging",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_newborn_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 3,
-        "durum": "newborn",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
-      "tile_L3_discovered_192.png": {
-        "tip": "sabit",
-        "boyut": [
-          192,
-          192
-        ],
-        "seviye": 3,
-        "durum": "discovered",
-        "border": [
-          0,
-          0,
-          0,
-          0
-        ]
-      },
       "tile_L1_normal_256.png": {
         "tip": "sabit",
         "boyut": [
@@ -2053,6 +1618,681 @@
           256
         ],
         "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_normal_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_selected_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_merging_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_newborn_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_discovered_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 4,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_selected_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_merging_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_newborn_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_discovered_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 4,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L1_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 1,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L2_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 2,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L3_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 3,
+        "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_normal_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_selected_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_merging_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "merging",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_newborn_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
+        "durum": "newborn",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_L4_discovered_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 4,
         "durum": "discovered",
         "border": [
           0,

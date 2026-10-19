@@ -489,109 +489,153 @@ ICONS = [
 
 
 # ======================================================================
-# TASLAR — seviye CERCEVEDEN okunur, merkez sakin kalir
+# TASLAR - IKI KATMANLI: metal tutucu + isiyan numune
 # ======================================================================
-# Kurallar:
-#  - Merkez SAKIN: cok hafif dikey gradyan, desen yok. Formul okunacak.
-#  - Seviye farki CERCEVEDEN: halka sayisi + kenarlik kalinligi + kose
-#    braketi. RENK TEK BASINA AYIRT EDICI DEGIL (renk korlugu): seviye
-#    bicimden de okunur.
-#  - Metal kitiyle ayni kose geometrisi (pah), ayni bezel dili.
-#  - Sabit kare sprite (9-slice degil), uc cozunurlukte.
+# TESHIS (2d-2b): tek katmanli tas butonlarla ayni malzemedendi ve tahta
+# tus takimi gibi okunuyordu. Tas, arayuz kromundan AYRI bir malzeme
+# sinifi olmali.
+#
+#   DIS katman - Metal kitinin cercevesi: ayni pah, ayni kenar vurgusu,
+#                ayni kabartma. Tasi arayuze BAGLAR.
+#   IC katman  - Isiyan madde alani: radyal gradyan, derinlik. Tasi
+#                arayuzden AYIRIR. "Tutucu icindeki numune".
+#
+# Seviye UC SINYALLE anlatilir (renk tek basina asla):
+#   1) ic alanin isima yogunlugu
+#   2) kose centigi sayisi (0 / 1 / 2 / 3)
+#   3) cerceve kalinligi ve malzemesi (mat -> fircalanmis -> parlak)
+# Gri tonlamaya cevrildiginde bile ayirt edilebilir (kanit seridi).
 
-TILE_SIZES = [128, 192, 256]
+TILE_SIZES = [256, 384, 512]        # tas 200 birimde cizilir: 1:1 ustu
 
-# seviye -> (halka sayisi, kenarlik birimi, kose braketi, kenar rengi rolu)
 TILE_LEVELS = {
-    1: dict(rings=1, border=6,  bracket=False, edge="textSecondary", plate=0.00),
-    2: dict(rings=2, border=7,  bracket=False, edge="primary",       plate=0.10),
-    3: dict(rings=3, border=9,  bracket=True,  edge="warning",       plate=0.20),
+    1: dict(notch=0, border=7,  glow=0.00, sheen=0.10, core="cardBackground",
+            edge="textSecondary", material="mat"),
+    2: dict(notch=1, border=8,  glow=0.24, sheen=0.22, core="primary",
+            edge="secondary",     material="fircalanmis"),
+    3: dict(notch=2, border=9,  glow=0.46, sheen=0.34, core="primaryBright",
+            edge="primary",       material="fircalanmis"),
+    4: dict(notch=3, border=11, glow=0.66, sheen=0.48, core="warning",
+            edge="warning",       material="parlak"),
 }
 
-# durum -> (kenar parlakligi, zemin parlakligi, dis hale, ek halka rengi)
 TILE_STATES = {
-    "normal":     dict(edge=1.00, plate=1.00, halo=0.00, accent=None),
-    "selected":   dict(edge=1.00, plate=1.12, halo=0.85, accent="primaryBright"),
-    "merging":    dict(edge=1.00, plate=1.75, halo=1.00, accent="textPrimary"),
-    "newborn":    dict(edge=0.70, plate=0.80, halo=0.00, accent=None),
-    "discovered": dict(edge=1.00, plate=1.06, halo=0.60, accent="warning"),
+    "normal":     dict(edge=1.00, core=1.00, halo=0.00, accent=None),
+    "selected":   dict(edge=1.15, core=1.18, halo=0.80, accent="primaryBright"),
+    "merging":    dict(edge=1.25, core=1.70, halo=1.00, accent="textPrimary"),
+    "newborn":    dict(edge=0.72, core=0.70, halo=0.00, accent=None),
+    "discovered": dict(edge=1.10, core=1.10, halo=0.55, accent="warning"),
 }
+
+
+def _radyal(size, ic_renk, dis_renk):
+    """Ic alanin isimasi.
+
+    ISIMA KENARDA, MERKEZ KOYU. Oyle ki formul koyu zemin uzerinde okunur
+    (olcum: merkez parlak oldugunda L4 kontrasti 1.31:1'e dusuyordu, sinir
+    4.5:1). Fiziksel olarak da dogru: isik numune kuyusunun kenarinda birikir.
+    """
+    import math
+    m = Image.new("RGBA", (size, size), CLEAR)
+    px = m.load()
+    c = (size - 1) / 2.0
+    enb = math.hypot(c, c)
+    for y in range(size):
+        for x in range(size):
+            t = min(1.0, math.hypot(x - c, y - c) / enb) ** 1.35
+            px[x, y] = mix(ic_renk, dis_renk, t) + (255,)
+    return m
 
 
 def tile(size, level, state):
-    """Tek tas sprite'i. Metin YOK — formul TMP etiketi olarak ustune gelir."""
+    """Tek tas sprite'i. Metin YOK - formul TMP etiketi olarak ustune gelir."""
     cfg = TILE_LEVELS[level]
     st = TILE_STATES[state]
 
     S = size * SS
-    chamfer = int(size * 0.14 * SS)          # metal kitiyle ayni pah dili
-    bw = int(cfg["border"] * SS * size / 128.0)
+    chamfer = int(size * 0.13 * SS)
+    bw = int(cfg["border"] * SS * size / 256.0)
 
     img = Image.new("RGBA", (S, S), CLEAR)
-    edge_col = PAL[cfg["edge"]]
-    edge_col = tuple(min(255, int(c * st["edge"])) for c in edge_col)
+
+    edge_col = tuple(min(255, int(c * st["edge"])) for c in PAL[cfg["edge"]])
+    core_col = PAL[cfg["core"]]
 
     govde = body_mask(S, S, 0, chamfer)
+    ic_maske = inner_mask(S, S, 0, chamfer, bw)
+    bos = Image.new("L", (S, S), 0)
 
-    # --- dis hale (secili / birlesme / yeni kesif)
+    # --- dis hale
     if st["halo"] > 0:
         hcol = PAL[st["accent"]] if st["accent"] else edge_col
-        g = glow(govde, int(size * 0.06 * SS), st["halo"])
-        g = Image.composite(Image.new("L", (S, S), 0), g, govde)
+        g = glow(govde, int(size * 0.05 * SS), st["halo"])
+        g = Image.composite(bos, g, govde)
         kat = Image.new("RGBA", (S, S), hcol + (0,))
-        kat.putalpha(g.point(lambda x: int(x * 0.7)))
+        kat.putalpha(g.point(lambda x: int(x * 0.75)))
         img = Image.alpha_composite(img, kat)
 
-    # --- zemin plakasi: SAKIN, cok hafif dikey gradyan
-    taban = mix(PAL["cardBackground"], PAL["panelBackground"], cfg["plate"])
-    taban = tuple(min(255, int(c * st["plate"])) for c in taban)
-    ust = mix(taban, (255, 255, 255), 0.16)
-    alt = mix(taban, (0, 0, 0), 0.18)
+    # --- IC KATMAN: isiyan numune alani
+    # Durum carpani MERKEZE kismen, KENARA tam uygulanir: merkez okunur kalsin.
+    merkez_carpan = 1.0 + (st["core"] - 1.0) * 0.35
+    yog = min(1.0, cfg["glow"] * st["core"])
 
-    plaka = Image.new("RGBA", (S, S), CLEAR)
-    pd = ImageDraw.Draw(plaka)
-    for yy in range(S):
-        pd.line([(0, yy), (S, yy)], fill=mix(ust, alt, yy / max(1, S - 1)) + (255,))
-    plaka.putalpha(inner_mask(S, S, 0, chamfer, bw))
-    img = Image.alpha_composite(img, plaka)
+    merkez = mix(PAL["cardBackground"], (0, 0, 0), 0.22)
+    merkez = tuple(min(255, int(c * merkez_carpan)) for c in merkez)
+    kenar = mix(PAL["cardBackground"], core_col, yog)
+    kenar = tuple(min(255, int(c * st["core"])) for c in kenar)
 
-    # --- halkalar: seviye SAYIDAN okunur
-    aralik = int(size * 0.022 * SS)
-    for i in range(cfg["rings"]):
-        ofs = i * (bw + aralik)
-        kalin = bw if i == 0 else max(2, bw // 4)
-        hm = ring_mask(S - 2 * ofs, S - 2 * ofs, 0, max(0, chamfer - ofs), kalin)
-        tam = Image.new("L", (S, S), 0)
-        tam.paste(hm, (ofs, ofs))
-        renk = edge_col if i == 0 else mix(edge_col, PAL["textPrimary"], 0.25)
-        kat = Image.new("RGBA", (S, S), renk + (0,))
-        kat.putalpha(tam.point(lambda x: int(x * (1.0 if i == 0 else 0.55))))
-        img = Image.alpha_composite(img, kat)
+    radyal = _radyal(96, merkez, kenar).resize((S, S), Image.BICUBIC)
+    radyal.putalpha(ic_maske)
+    img = Image.alpha_composite(img, radyal)
 
-    # --- bezel: ust acik / alt koyu (metal kitiyle ayni)
-    dis = ring_mask(S, S, 0, chamfer, bw)
+    # --- ic golge: numune cukurda duruyor hissi (keskin kenar, bulanik degil)
+    ic_golge = Image.composite(bos, ic_maske,
+                               inner_mask(S, S, 0, chamfer, bw + max(2, bw // 2)))
+    kat = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    kat.putalpha(ic_golge.point(lambda x: int(x * 0.50)))
+    img = Image.alpha_composite(img, kat)
+
+    # --- DIS KATMAN: metal cerceve (kitle ayni dil)
+    cerceve = ring_mask(S, S, 0, chamfer, bw)
+    kat = Image.new("RGBA", (S, S), edge_col + (0,))
+    kat.putalpha(cerceve)
+    img = Image.alpha_composite(img, kat)
+
+    # bezel: malzeme farki burada (mat / fircalanmis / parlak)
+    malzeme = {"mat": 0.40, "fircalanmis": 0.62, "parlak": 0.88}[cfg["material"]]
     yari = Image.new("L", (S, S), 0)
     ImageDraw.Draw(yari).rectangle([0, 0, S, S // 2], fill=255)
-    bos = Image.new("L", (S, S), 0)
-    kat = Image.new("RGBA", (S, S), mix(edge_col, (255, 255, 255), 0.55) + (0,))
-    kat.putalpha(Image.composite(dis, bos, yari).point(lambda x: int(x * 0.7)))
+
+    kat = Image.new("RGBA", (S, S), mix(edge_col, (255, 255, 255), 0.62) + (0,))
+    kat.putalpha(Image.composite(cerceve, bos, yari).point(lambda x: int(x * malzeme)))
     img = Image.alpha_composite(img, kat)
-    kat = Image.new("RGBA", (S, S), mix(edge_col, (0, 0, 0), 0.55) + (0,))
-    kat.putalpha(Image.composite(bos, dis, yari).point(lambda x: int(x * 0.6)))
+    kat = Image.new("RGBA", (S, S), mix(edge_col, (0, 0, 0), 0.60) + (0,))
+    kat.putalpha(Image.composite(bos, cerceve, yari).point(lambda x: int(x * malzeme * 0.9)))
     img = Image.alpha_composite(img, kat)
 
-    # --- kose braketi: yalnizca en ust seviyede (renksiz ayirt edici)
-    if cfg["bracket"]:
+    # --- ince spekuler vurgu (abartisiz): ust kenarda dar parlama seridi
+    sp = max(2, bw // 4)
+    sperit = Image.new("L", (S, S), 0)
+    ImageDraw.Draw(sperit).rectangle([0, int(bw * 0.22), S, int(bw * 0.22) + sp], fill=255)
+    sperit = Image.composite(sperit, bos, govde)
+    kat = Image.new("RGBA", (S, S), (255, 255, 255, 0))
+    kat.putalpha(sperit.point(lambda x: int(x * cfg["sheen"])))
+    img = Image.alpha_composite(img, kat)
+
+    # --- KOSE CENTIGI: seviye SAYIDAN okunur (renksiz sinyal)
+    if cfg["notch"] > 0:
         d = ImageDraw.Draw(img)
-        uz = int(size * 0.12 * SS)
-        kal = max(2, bw // 2)
-        pay = int(bw * 1.7)
-        bcol = mix(edge_col, PAL["textPrimary"], 0.35) + (235,)
+        kal = max(2, int(bw * 0.5))
+        boy = int(size * 0.075 * SS)
+        ara = int(kal * 2.4)
+        ccol = mix(edge_col, PAL["textPrimary"], 0.5) + (245,)
+        pay = int(bw * 1.8)
         for sx, sy in ((1, 1), (-1, 1), (1, -1), (-1, -1)):
-            x = pay if sx > 0 else S - pay
-            y = pay if sy > 0 else S - pay
-            d.line([(x, y), (x + sx * uz, y)], fill=bcol, width=kal)
-            d.line([(x, y), (x, y + sy * uz)], fill=bcol, width=kal)
+            for i in range(cfg["notch"]):
+                o = pay + i * ara
+                x = o if sx > 0 else S - o
+                y = pay if sy > 0 else S - pay
+                d.line([(x, y), (x, y + sy * boy)], fill=ccol, width=kal)
 
     return img.resize((size, size), Image.LANCZOS)
 
@@ -611,9 +655,11 @@ def uret_taslar(manifest):
                                 "durum": durum, "border": [0, 0, 0, 0]}
 
     manifest["taslar"] = {
-        "aciklama": "Seviye cerceveden okunur: halka sayisi 1/2/3, kenarlik 6/7/9, "
-                    "en ust seviyede kose braketi. Renk tek basina ayirt edici degil.",
-        "seviyeler": {str(k): {kk: vv for kk, vv in v.items()} for k, v in TILE_LEVELS.items()},
+        "aciklama": "Iki katmanli: dis metal tutucu + ic isiyan numune alani. "
+                    "Seviye uc sinyalle: isima yogunlugu, kose centigi (0/1/2/3), "
+                    "cerceve kalinligi ve malzemesi (mat/fircalanmis/parlak). "
+                    "Renk tek basina ayirt edici degil.",
+        "seviyeler": dict((str(k), dict(v)) for k, v in TILE_LEVELS.items()),
         "sprites": kayit,
     }
     print("taslar: %d sprite -> %s" % (len(kayit), klasor))
