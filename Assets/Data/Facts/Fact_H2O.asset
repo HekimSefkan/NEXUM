@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Fact_H2O
   m_EditorClassIdentifier: 
   factText: "\u0130ki yan\u0131c\u0131 (H) ve bir yak\u0131c\u0131 (O) gaz\u0131n
-    birle\u015Fmesi ate\u015Fi s\xF6nd\xFCren Suyu (H\u2082O) olu\u015Fturur. Ayr\u0131ca
+    birle\u015Fmesi ate\u015Fi s\xF6nd\xFCren Suyu (H<sub>2</sub>O) olu\u015Fturur. Ayr\u0131ca
     su, kat\u0131 hali (buz) s\u0131v\u0131 halinden daha hafif olan nadir maddelerdendir.
     Bu sayede g\xF6ller \xFCstten donar ve bal\u0131klar hayatta kal\u0131r!"

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -11,7 +11,7 @@ public class SettingsManager : MonoBehaviour
     
     [Header("Görsel Ayarlar")]
     public Color selectedColor = Color.white;
-    public Color unselectedColor = new Color(0.5f, 0.5f, 0.5f, 1f); 
+    public Color unselectedColor = NexumPalette.TextSecondary;   // tema: textSecondary (eskiden #808080) 
     public Sprite toggleOnSprite;
     public Sprite toggleOffSprite;
 

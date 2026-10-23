@@ -136,11 +136,11 @@
         },
         {
             "key": "hint.footer",
-            "value": "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>"
+            "value": "\n\n<size=80%><color=#FFD700>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>"
         },
         {
             "key": "hint.footer_free",
-            "value": "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>"
+            "value": "\n\n<size=80%><color=#FFD700>Serbest Mod: ipuçları bedava ve sınırsız</color></size>"
         },
         {
             "key": "hint.generic",
@@ -216,7 +216,7 @@
         },
         {
             "key": "mainmenu.detailsbutton.text_tmp",
-            "value": "<color=#48CAE4>Ayrıntıları Gör >"
+            "value": "<color=#90E0EF>Ayrıntıları Gör >"
         },
         {
             "key": "mainmenu.exammodebtn.text_tmp",
@@ -321,6 +321,46 @@
         {
             "key": "mainmenu.statssection.statsheadertext",
             "value": "LABORATUVAR İSTATİSTİKLERİ"
+        },
+        {
+            "key": "menu.boiling_point",
+            "value": "BOILING POINT"
+        },
+        {
+            "key": "menu.boiling_point_status",
+            "value": "Best: {0}/{1} correct"
+        },
+        {
+            "key": "menu.coming_soon",
+            "value": "Coming soon"
+        },
+        {
+            "key": "menu.daily_puzzle",
+            "value": "DAILY PUZZLE"
+        },
+        {
+            "key": "menu.daily_puzzle_undone",
+            "value": "Not solved today"
+        },
+        {
+            "key": "menu.endless_lab",
+            "value": "ENDLESS LAB"
+        },
+        {
+            "key": "menu.endless_lab_best",
+            "value": "Best: {0} merges"
+        },
+        {
+            "key": "menu.level_select",
+            "value": "LEVEL SELECT"
+        },
+        {
+            "key": "menu.weekly_experiment",
+            "value": "EXPERIMENT OF THE WEEK"
+        },
+        {
+            "key": "menu.weekly_experiment_this",
+            "value": "This week: {0}"
         },
         {
             "key": "profile.default_name",

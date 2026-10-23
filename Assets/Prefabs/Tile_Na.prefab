@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6773082429386211845}
   - component: {fileID: 4593228097711413809}
   - component: {fileID: 2678474990358023269}
+  - component: {fileID: 8758630649260177238}
   m_Layer: 5
   m_Name: Tile_Na
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cdb37a43f411ed54eafffbff6632f102, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c3d9047fbb3f4724da862f5c5a121af0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -90,6 +91,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myElementData: {fileID: 11400000, guid: 3a7c79369de79c14ca6514930518a53b, type: 2}
+--- !u!114 &8758630649260177238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3634079177299486472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6072ea1fc2174b048a347c277e1bec50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  normal: {fileID: 21300000, guid: c3d9047fbb3f4724da862f5c5a121af0, type: 3}
+  selected: {fileID: 21300000, guid: 5d42840e6a0bdec4899ac4205e19bd45, type: 3}
+  merging: {fileID: 21300000, guid: 0a3cfc36862fd5e4a9abeb48fe0136b9, type: 3}
+  newborn: {fileID: 21300000, guid: a205e1460835634419601f22c61f661a, type: 3}
+  discovered: {fileID: 21300000, guid: 3210d79052a37b349a0481933bd77bf0, type: 3}
 --- !u!1 &6570616426883380441
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,8 +176,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Na
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f24d09aa316c2e14b883e5bbf8ac1fe5, type: 2}
+  m_sharedMaterial: {fileID: -5998745718009126625, guid: f24d09aa316c2e14b883e5bbf8ac1fe5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -182,8 +201,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 70
+  m_fontSizeBase: 70
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -379,7 +379,7 @@ public class UIManager : MonoBehaviour
         tmpText.rectTransform.sizeDelta = new Vector2(SystemBoxWidth, SystemBoxHeight);
 
         tmpText.text = message;
-        tmpText.color = new Color(0.56f, 0.85f, 1f);   // #8FD8FF, HUD vurgu rengi
+        tmpText.color = NexumPalette.PrimaryBright;    // tema: primaryBright #8FD8FF
 
         floatingObj.transform.localScale = Vector3.zero;
         floatingObj.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack).SetUpdate(true);
@@ -632,17 +632,17 @@ public class UIManager : MonoBehaviour
         if (comboCount == 1)
         {
             comboMessage = Loc.Get(CodeStrings.Combo1);
-            comboColor = new Color(0.2f, 0.8f, 0.2f); 
+            comboColor = NexumPalette.Success;        // tema: success (eskiden #33CC33)
         }
         else if (comboCount == 2)
         {
             comboMessage = Loc.Get(CodeStrings.Combo2);
-            comboColor = new Color(1f, 0.6f, 0f); 
+            comboColor = NexumPalette.Warning;        // tema: warning (eskiden #FF9900)
         }
         else if (comboCount >= 3)
         {
             comboMessage = Loc.Get(CodeStrings.Combo3);
-            comboColor = new Color(1f, 0.2f, 0.2f); 
+            comboColor = NexumPalette.Danger;         // tema: danger (eskiden #FF3333)
         }
 
         tmpText.text = comboMessage;

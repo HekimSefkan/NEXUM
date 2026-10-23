@@ -132,7 +132,17 @@ public class TileTextFitTests
             {
                 kutu.fontSize = punto;
                 kutu.ForceMeshUpdate();
-                bool tamam = semboller.All(sym => LayoutCheck.FillRatio(kutu, sym) <= LayoutCheck.MaxFillRatio);
+                bool tamam = semboller.All(sym =>
+                {
+                    kutu.text = sym;
+                    kutu.ForceMeshUpdate();
+                    string d2;
+                    // Yukseklik kurali TEK BASINA yetmiyor: Fe2O3 74 puntoda
+                    // %83 dolulukta ama GENISLIKTE kirpiliyordu. Kirpilma da
+                    // taramaya girer.
+                    return LayoutCheck.FillRatio(kutu, sym) <= LayoutCheck.MaxFillRatio
+                           && !LayoutCheck.IsClipped(kutu, out d2);
+                });
                 if (tamam) { gereken = punto; break; }
             }
             kutu.fontSize = mevcutPunto;
@@ -146,14 +156,8 @@ public class TileTextFitTests
         Assert.IsEmpty(hatalar.Where(h => h.Contains("kırpık")).ToList(),
             "taş formülü kırpılıyor");
 
-        // %85 kurali: taş prefab'ları bu adımda DEĞİŞTİRİLMİYOR (2d-2 ekranlara
-        // dokunmuyor). Kural bozuksa test yeşile boyanmaz, ATLANIR ve ölçülen
-        // değer raporlanır; düzeltme 2d-3'ün iş listesinde.
-        if (hatalar.Count > 0)
-        {
-            Assert.Ignore($"%85 kuralı bozuk: en kötü %{enKotu * 100f:F0} ({enKotuAd}). " +
-                          $"Gereken punto {gereken:F0} (şu an {mevcutPunto:F0}). " +
-                          "Taş prefab'ları 2d-3'te güncellenecek.");
-        }
+        // %85 kuralı artık SERT: taş prefab'larında punto 80 -> 74 uygulandı
+        // (2d-3a). Atlanan test kabul edilmiyor.
+        Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
     }
 }
