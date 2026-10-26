@@ -90,6 +90,63 @@ Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dı�
 5. Validator + PlayMode testleri yeniden; ikisi de temiz olmalı.
 6. Push + PR. **Görsel etkisi olmayan adımlar** (belge, ayar, ölçüm aracı) kurallara uyuyorsa kendin birleştirilir; **ekranı veya oyun hissini etkileyen adımlarda** kullanıcı cihazda test edip karar verir.
 
+## Çalışma anlaşması (2d-3b'den itibaren her adımda geçerli)
+
+Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
+`docs/DESIGN_TOKENS.md`'ye yazılır.
+
+### Görsel
+- **Tüm görseller kit üretecinden gelir** (`Tools/generate_ui_kit.py` →
+  `NexumKitImport`). Tek seferlik görsel üretilmez.
+- **Hiçbir görselin içine metin basılmaz.** Metin TMP etiketi olarak gelir
+  (çeviri ve sığma kuralı için).
+- **Tüm renkler palet rollerinden gelir**; sahneye veya koda literal hex
+  yazılmaz. Gereken rol yoksa **role eklenir** (`NexumTheme` + `NexumPalette`,
+  ikisi `PaletteTests` ile bağlı).
+- **Panel çerçeveleri 9-slice'tır**, boyalı buton yuvası içermez, içeriğe
+  **açık iç pay** verilir (`UITokens.PanelFrameInset` + `PanelPadding`).
+
+### Yerleşim
+- **Sliced bir `Image`'in preferred değerini hiçbir `LayoutGroup` okumaz.**
+  `Image.Type.Sliced` olduğunda `preferredWidth` dokunun genişliği değil
+  **kenarlık toplamıdır**; gereken yerde açık `LayoutElement` verilir ya da
+  satır anchor'la kurulur. Dedektör: `SlicedCollapseTests`.
+- **`ContentSizeFitter` süren rect'te `ForceRebuildLayoutImmediate` yasağı
+  sürüyor.**
+- **Dokunma hedefi (144 birim): grafik BÜYÜTÜLMEZ**, altına saydam
+  `TouchArea` çocuğu konur (`NexumTouchTargets`). **Hiçbir iki `TouchArea`
+  kesişemez** — uGUI raycast'i ebeveyn rect'ine kırpılmaz. Listelerde alan
+  taşırmak yerine **satır yüksekliği artırılır**.
+
+### Metin
+- **Tüm metinler `Loc` üzerinden** (tr + en). Sabit string yok.
+- **Alt simge TMP `<sub>` ile**; literal alt simge karakteri (U+2080–2089)
+  yasak — fontlarda glif yok.
+- **Atlas kapsam testi geçmeden metin eklenmez**
+  (`AtlasCoversAllDisplayedTextTests`).
+- **Punto ölçülüp pişirilir**; çalışma zamanı auto-size yok.
+- **%85 doluluk kuralı ve genişlik sığma kuralı birlikte geçerli**
+  (`LayoutCheck.FillRatio` + `FillRatioWidth`, kırma **kapalı** ölçülür).
+
+### Ölçüm
+- **Süit ASLA `-nographics` ile koşulmaz.** Render tabanlı araçlar grafik
+  bağlamı olmadan boş kare ölçer ve **sessizce yanlış sonuç üretir**.
+  (`PixelProbe.IsBlank` ve taramanın boş kare muhafızı bunu yakalar.)
+- **Kontrast iddiaları token tablosundan değil, render edilmiş pikselden**
+  hesaplanır.
+- **Testler elle yazılmış nesne listesi kullanmaz**, alt ağacı gezer.
+  **Sprite ölçüsü teste sabit yazılmaz**, canlı `Image.sprite`'tan okunur.
+- **Yeni her test, düzeltmeden önceki hâlde DÜŞTÜĞÜ gösterilerek**
+  (negatif kontrol) doğrulanır.
+- **`docs/DESIGN_TOKENS.md`'de yazılı her karar uygulama tablosunda da
+  bulunmak zorundadır** (`DesignTokenConsistencyTests`).
+
+### Teslim
+- **Görsel etkisi olan her adım, `NexumDeviceShot` ile alınmış gerçek
+  render'ları PR'a ekler.**
+- **Küçük commit'ler**; oturum kesilirse en fazla bir commit kaybolur.
+- **Görünür değişiklik içeren PR merge edilmez**, kullanıcı cihazda test eder.
+
 ## Alınan kararlar
 - **CanvasScaler:** İki sahnede de Scale With Screen Size, 1080×1920, **Screen Match Mode = Expand** (`m_ScreenMatchMode: 1`). 1080×1920 tasarım alanı her ekranda tamamen görünür; fazla alan uzun eksene eklenir. Yeni UI bu varsayıma göre kurulmalı: canvas genişliği hiçbir zaman 1080'in, yüksekliği 1920'nin altına düşmez.
 - **Ekran yönü:** Sadece Portrait (`defaultScreenOrientation: 0`, diğer autorotate yönleri 0). Enum değerleri Unity 2022.3.62f3 DLL'inden doğrulandı: Portrait=0 … AutoRotation=4.
