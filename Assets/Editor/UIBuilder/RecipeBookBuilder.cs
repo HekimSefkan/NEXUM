@@ -33,7 +33,12 @@ public static class RecipeBookBuilder
     /// Satır yüksekliği. 76 birimde satır metni kutusunun %94'ünü dolduruyordu
     /// (%85 kuralı); 92 birimde %77'ye iniyor.
     /// </summary>
-    private const float RowHeight = 92f;
+    // 92 -> 144: LİSTEDE DOKUNMA ALANI TAŞIRILMAZ. 92'lik satıra 144'lük
+    // saydam alan konunca komşu satırlarla 52 birim örtüşüyordu ve oyuncu
+    // yanlış tarifi açabiliyordu (ölçüm: 20 çift, 6336 birim²). Liste
+    // bağlamında doğru çözüm satırı GERÇEKTEN büyütmek: kaydırılabilir bir
+    // listede satır yüksekliği tasarımın parçası, kalabalık değil.
+    private const float RowHeight = UITokens.TouchMin;
 
     /// <summary>Satır sonundaki kilit ikonu.</summary>
     private static readonly Vector2 LockSize = new Vector2(44f, 44f);
@@ -61,12 +66,23 @@ public static class RecipeBookBuilder
     // İÇİNDE basılı olduğu için birebir aynı sprite kullanılamaz; siluet olarak
     // en yakın olanı seçildi (köşeleri pahlı dikdörtgen çerçeve, ANSİKLOPEDİ /
     // AYARLAR ile aynı dil). İç dolgu açık olduğu için metin koyu renkte.
-    private const string MenuButtonFramePath = "Assets/Art/Figures/Nasiloyanir_Buton.png";
+    private const string MenuButtonFramePath = "Assets/Art/UI/btn_secondary_normal.png";
     private static readonly Vector2 MenuButtonLabelSize = new Vector2(430f, 120f);
 
     /// <summary>Duraklat kartındaki defter girişi (cam alanın altı).</summary>
+    // Duraklat kartı: kart 688x958, çerçeve payı sprite'ın kenarlığından +
+    // UITokens.PanelPadding. Buton GRAFİKLERİ eski ölçülerinde; dokunma
+    // alanları saydam TouchArea çocuğuyla tamamlanıyor.
+    private static readonly Vector2 PauseCardSize = new Vector2(688f, 958f);
     private static readonly Vector2 PauseButtonSize = new Vector2(560f, 64f);
-    private const float PauseButtonY = -265f;
+    // -265 -> -195: 64 birimlik grafiğin 144'lük dokunma alanı DEVAM ET /
+    // ANA MENÜ satırının alanıyla 58 birim kesişiyordu.
+    private const float PauseButtonY = -195f;
+    private const float PauseActionY = -350.59f;
+    private static readonly Vector2 ResumeSize = new Vector2(236.08f, 54.86f);
+    private static readonly Vector2 MainMenuSize = new Vector2(239.6f, 62.55f);
+    private const float PauseActionX = 180f;
+    private const string ModalFramePath = "Assets/Art/UI/modal_normal.png";
 
     /// <summary>Katalizör göstergesinin çerçeve görseli (yerel parıltı aynı şekli alır).</summary>
     private const string MeterFramePath = "Assets/Art/Figures/Entropitup.png";
@@ -383,15 +399,71 @@ public static class RecipeBookBuilder
         UIBuilder b = UIBuilder.Begin("RecipeBookPauseEntry", gameScene, dryRun);
         NexumTheme theme = UITokens.Theme;
 
+        // --- ÇERÇEVE KARTA TAŞINDI (2d-3a düzeltmesi)
+        // Eski gamepanel.png BOYALI bir karttı: kenar payı pikselin içinde
+        // pişmişti, bu yüzden 1080x1519'luk PausePanel'in üzerinde "daha
+        // küçük bir kart" görünüyordu. 9-slice karşılığının iç payı yok;
+        // dikdörtgeni kenardan kenara doldurdu ve kart ekranı kapladı.
+        // Çözüm: PausePanel yalnızca karartma katmanı, çerçeve ContainerBox'ta.
+        GameObject panel = b.Ensure("Canvas", "PausePanel", adopt: true);
+        if (panel != null)
+        {
+            // Karartma TAM EKRAN: panel 1080x1519 iken üstteki HUD ve alttaki
+            // katalizör göstergesi karartmanın dışında kalıyordu (eski opak
+            // kart onları örttüğü için görünmüyordu).
+            b.SetStretch(panel, UITokens.Zero, UITokens.One);
+
+            Image panelImage = panel.GetComponent<Image>();
+            if (panelImage != null)
+            {
+                b.Apply(panel, panelImage, i =>
+                {
+                    i.sprite = null;
+                    i.type = Image.Type.Simple;
+                    // Karartma rengi PALETTEN: saf siyah tema dışı
+                    // (validator uyarıyor) ve diğer karartma katmanları da
+                    // 0,78 alfada çalışıyor.
+                    i.color = new Color(theme.palette.cardBackground.r,
+                                        theme.palette.cardBackground.g,
+                                        theme.palette.cardBackground.b, 0.78f);
+                    i.raycastTarget = true;
+                });
+            }
+        }
+
+        GameObject box = b.Ensure("Canvas/PausePanel", "ContainerBox", adopt: true);
+        if (box != null)
+        {
+            b.SetFixed(box, UITokens.Center, PauseCardSize, Vector2.zero);
+            b.EnsureComponent<Image>(box, image =>
+            {
+                image.sprite = LoadSprite(ModalFramePath);
+                image.type = Image.Type.Sliced;
+                image.fillCenter = true;
+                image.color = Color.white;
+                image.raycastTarget = true;
+            });
+        }
+
         // --- kart içi denge (mevcut objeler devralınır)
+        // Dikey ritim kartın iç kenarından (479 - kenarlık - PanelPadding)
+        // başlar; üç buton da 144 birim yüksekliğinde.
         GameObject pauseTitle = b.Ensure(boxPath, "TitleText", adopt: true);
-        if (pauseTitle != null) b.SetFixed(pauseTitle, UITokens.Center, new Vector2(468.8f, 50f), new Vector2(0f, 425f));
+        if (pauseTitle != null) b.SetFixed(pauseTitle, UITokens.Center, new Vector2(468.8f, 50f), new Vector2(0f, 400f));
 
         GameObject pauseSubtitle = b.Ensure(boxPath, "SubtitleText", adopt: true);
-        if (pauseSubtitle != null) b.SetFixed(pauseSubtitle, UITokens.Center, new Vector2(474.9f, 45.8f), new Vector2(0f, 350f));
+        if (pauseSubtitle != null) b.SetFixed(pauseSubtitle, UITokens.Center, new Vector2(474.9f, 45.8f), new Vector2(0f, 330f));
 
         GameObject pauseFact = b.Ensure(boxPath, "FactText", adopt: true);
-        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(596.7f, 480f), new Vector2(0f, 55f));
+        // Defter girişi yukarı alınınca bilgi metni 480 -> 420 kısaldı.
+        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(596.7f, 420f), new Vector2(0f, 73f));
+
+        // --- DEVAM ET / ANA MENÜ: GRAFİK ölçüleri değişmedi
+        GameObject resume = b.Ensure(boxPath, "ResumeButton", adopt: true);
+        if (resume != null) b.SetFixed(resume, UITokens.Center, ResumeSize, new Vector2(-PauseActionX, PauseActionY));
+
+        GameObject toMenu = b.Ensure(boxPath, "MainMenuButton", adopt: true);
+        if (toMenu != null) b.SetFixed(toMenu, UITokens.Center, MainMenuSize, new Vector2(PauseActionX, PauseActionY));
 
         // --- defter girişi
         GameObject entry = b.Ensure(boxPath, "RecipeBookButton");

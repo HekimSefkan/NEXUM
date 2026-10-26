@@ -1,7 +1,19 @@
 {
     "managed": [
         {
+            "path": "Game::Canvas/PausePanel",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/PausePanel/ContainerBox",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
             "path": "Game::Canvas/PausePanel/ContainerBox/FactText",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/PausePanel/ContainerBox/MainMenuButton",
             "builder": "RecipeBookPauseEntry"
         },
         {
@@ -10,6 +22,10 @@
         },
         {
             "path": "Game::Canvas/PausePanel/ContainerBox/RecipeBookButton/Label",
+            "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/PausePanel/ContainerBox/ResumeButton",
             "builder": "RecipeBookPauseEntry"
         },
         {

@@ -31,7 +31,7 @@ using UnityEngine.SceneManagement;
 /// b.SetStretch(card, Vector2.zero, Vector2.one);
 /// b.EnsureComponent&lt;AspectRatioFitter&gt;(card, f =&gt; {
 ///     f.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
-///     f.aspectRatio = UITokens.CardAspect;
+///     f.aspectRatio = kartGenisligi / kartYuksekligi;
 /// });
 /// b.End();
 /// </code>
@@ -348,7 +348,6 @@ public class UIBuilder
         {
             if (rect.offsetMin != a) changed = true;
             if (rect.offsetMax != b) changed = true;
-            if (rect.anchoredPosition != Vector2.zero) changed = true;
         }
 
         string label = HierarchyPath(rect) + " :: RectTransform";
@@ -373,9 +372,12 @@ public class UIBuilder
         }
         else
         {
+            // anchoredPosition BURADA SIFIRLANMAZ. offsetMin/offsetMax zaten
+            // hem boyutu hem konumu belirler; ayrıca sıfırlamak, anchor'ları
+            // bir eksende çakışık olan bandları (ör. yatayda stretch, dikeyde
+            // sabit yükseklik) kartın ortasına topluyordu.
             rect.offsetMin = a;
             rect.offsetMax = b;
-            rect.anchoredPosition = Vector2.zero;
         }
 
         EditorUtility.SetDirty(rect);
