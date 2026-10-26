@@ -77,6 +77,30 @@
             "builder": "ReactionEquation"
         },
         {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HowToPlayButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HowToPlayButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/PlayButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/PlayButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/RecipeBookButton",
             "builder": "RecipeBook"
         },
@@ -86,6 +110,10 @@
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/SettingButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/SettingButton/Label",
             "builder": "RecipeBook"
         },
         {
