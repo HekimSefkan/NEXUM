@@ -508,16 +508,81 @@ ICONS = [
 
 TILE_SIZES = [256, 384, 512]        # tas 200 birimde cizilir: 1:1 ustu
 
+# IC ALAN DORT SEVIYEDE DE AYNI (2d-3a duzeltme, madde 2.1).
+# Onceki surumde isima yogunlugu seviyeyle artiyordu; olculen "duz ic alan"
+# L1'de 190, L4'te 70 birimdi ve en uzun formuller (CaCO3, Fe2O3) tam da en
+# dar seviyede kaliyordu. Artik ic alan SABIT; tum susleme (centik, kenarlik,
+# malzeme, kuyu golgesi) bu alanin DISINDAKI seritte yasiyor.
+TILE_CONTENT = 0.80                       # ic duz alan / tas kenari (200 -> 160)
+TILE_BAND = (1.0 - TILE_CONTENT) / 2.0    # susleme seridi: her kenarda %10
+
+
+def luminans(c):
+    """WCAG bagil luminansi."""
+    def f(v):
+        v /= 255.0
+        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+    return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2])
+
+
+def kontrast(a, b):
+    la, lb = luminans(a), luminans(b)
+    if la < lb:
+        la, lb = lb, la
+    return (la + 0.05) / (lb + 0.05)
+
+
+def hedefe_cek(taban, hedef_l):
+    """Palet rengini siyaha/beyaza karistirip hedef luminansa getirir.
+
+    RENK UYDURULMAZ kurali korunuyor: hue palet rolunden gelir, yalnizca
+    parlaklik kabul kriterine gore ayarlanir.
+    """
+    kutup = (0, 0, 0) if luminans(taban) > hedef_l else (255, 255, 255)
+    lo, hi = 0.0, 1.0
+    for _ in range(60):
+        t = (lo + hi) / 2
+        if (luminans(mix(taban, kutup, t)) > hedef_l) == (luminans(taban) > hedef_l):
+            lo = t
+        else:
+            hi = t
+    return mix(taban, kutup, (lo + hi) / 2)
+
+
+# --- SEVIYE MERDIVENI
+# Hedefler (kullanici, madde 2.4): komsu seviyeler >= 1,6:1 · L1<->L4 >= 3:1 ·
+# bos hucre <-> dolu tas >= 2,5:1 · ayrica formul BEYAZ (madde 2.2), yani ic
+# alanda beyaz >= 4,5:1 olmali.
+#
+# BU DORDU IC ALANDA AYNI ANDA SAGLANAMAZ. Beyaz metin ic alani
+# L <= 0,183 ile sinirlar; siyahtan (0,05) o tavana kadar olan araligin
+# dinamigi 4,67x'tir, oysa 2,5 x 1,6^3 = 10,24 gerekir. Aritmetik rapordadir.
+# Cozum: merdiven METNIN OLMADIGI cercevede tasinir; ic alan tek ve koyu
+# kalir. Boylece dordu de saglanir ve madde 2.1 ("susleme ic alanin disinda")
+# ile ayni yone bakar.
+#
+# Merdiven en USTTEN cakiliyor: L4 altinin (warning #FFD700) kendi
+# luminansinda birakiliyor (cizilmis serit ortalamasi 0,436) ve asagi dogru
+# 1,75 adimla iniliyor. Tersi denendi ve L4 hedefi altin hue'suyla
+# ulasilamadi; kalibrasyon cerceveyi beyaza itiyordu.
+TILE_LADDER = {1: 0.0396, 2: 0.1067, 3: 0.2243, 4: 0.4300}   # cizilmis serit luminansi
+TILE_CORE_L = 0.105                                       # ic alan (sabit)
+TILE_EMPTY_L = 0.005                                      # bos hucre kuyusu
+TILE_WHITE_MAX_L = 0.183                                  # beyaz 4,5:1 tavani
+
 TILE_LEVELS = {
-    1: dict(notch=0, border=7,  glow=0.00, sheen=0.10, core="cardBackground",
-            edge="textSecondary", material="mat"),
-    2: dict(notch=1, border=8,  glow=0.24, sheen=0.22, core="primary",
-            edge="secondary",     material="fircalanmis"),
-    3: dict(notch=2, border=9,  glow=0.46, sheen=0.34, core="primaryBright",
-            edge="primary",       material="fircalanmis"),
-    4: dict(notch=3, border=11, glow=0.66, sheen=0.48, core="warning",
-            edge="warning",       material="parlak"),
+    1: dict(notch=0, border=7,  sheen=0.10, hue="textSecondary", material="mat"),
+    2: dict(notch=1, border=8,  sheen=0.22, hue="primary",       material="fircalanmis"),
+    3: dict(notch=2, border=9,  sheen=0.34, hue="secondary",     material="fircalanmis"),
+    4: dict(notch=3, border=11, sheen=0.48, hue="warning",       material="parlak"),
 }
+
+TILE_CORE = hedefe_cek(PAL["cardBackground"], TILE_CORE_L)
+TILE_EMPTY = hedefe_cek(PAL["cardBackground"], TILE_EMPTY_L)
+
+# Ilk tahmin; asagidaki kalibrasyon bunu CIZILMIS sonuca gore duzeltir.
+for _s, _c in TILE_LEVELS.items():
+    _c["frame"] = hedefe_cek(PAL[_c["hue"]], TILE_LADDER[_s])
 
 TILE_STATES = {
     "normal":     dict(edge=1.00, core=1.00, halo=0.00, accent=None),
@@ -532,44 +597,42 @@ TILE_STATES = {
 }
 
 
-def _radyal(size, ic_renk, dis_renk):
-    """Ic alanin isimasi.
+def _beyaz_icin_kis(renk):
+    """Durum carpani ic alani beyazin okunamayacagi kadar acarsa geri ceker.
 
-    ISIMA KENARDA, MERKEZ KOYU. Oyle ki formul koyu zemin uzerinde okunur
-    (olcum: merkez parlak oldugunda L4 kontrasti 1.31:1'e dusuyordu, sinir
-    4.5:1). Fiziksel olarak da dogru: isik numune kuyusunun kenarinda birikir.
+    "merging" core carpani 1,70; ham uygulandiginda ic alan L=0,33'e cikiyor
+    ve beyaz metin 2,8:1'e dusuyordu. Tavan TILE_WHITE_MAX_L ile sabit.
     """
-    import math
-    m = Image.new("RGBA", (size, size), CLEAR)
-    px = m.load()
-    c = (size - 1) / 2.0
-    enb = math.hypot(c, c)
-    for y in range(size):
-        for x in range(size):
-            t = min(1.0, math.hypot(x - c, y - c) / enb) ** 1.35
-            px[x, y] = mix(ic_renk, dis_renk, t) + (255,)
-    return m
+    if luminans(renk) <= TILE_WHITE_MAX_L:
+        return renk
+    return hedefe_cek(renk, TILE_WHITE_MAX_L)
 
 
 def tile(size, level, state):
-    """Tek tas sprite'i. Metin YOK - formul TMP etiketi olarak ustune gelir."""
+    """Tek tas sprite'i. Metin YOK - formul TMP etiketi olarak ustune gelir.
+
+    Katmanlar (disaridan ice):
+      hale (durum) · cerceve + malzeme bezeli · kose centikleri ·
+      kuyu golgesi (SERIT ICINDE) · IC ALAN (duz, sabit olcu, sabit renk)
+    """
     cfg = TILE_LEVELS[level]
     st = TILE_STATES[state]
 
     S = size * SS
     chamfer = int(size * 0.13 * SS)
     bw = int(cfg["border"] * SS * size / 256.0)
-
+    band = int(round(TILE_BAND * S))         # susleme seridi kalinligi
     img = Image.new("RGBA", (S, S), CLEAR)
 
-    edge_col = tuple(min(255, int(c * st["edge"])) for c in PAL[cfg["edge"]])
-    core_col = PAL[cfg["core"]]
+    edge_col = tuple(min(255, int(c * st["edge"])) for c in cfg["frame"])
+    ic_col = _beyaz_icin_kis(
+        tuple(min(255, int(c * (1.0 + (st["core"] - 1.0) * 0.35))) for c in TILE_CORE))
 
     govde = body_mask(S, S, 0, chamfer)
-    ic_maske = inner_mask(S, S, 0, chamfer, bw)
+    ic_maske = inner_mask(S, S, 0, chamfer, band)     # IC ALAN: her seviyede ayni
     bos = Image.new("L", (S, S), 0)
 
-    # --- dis hale
+    # --- dis hale (durum)
     if st["halo"] > 0:
         hcol = PAL[st["accent"]] if st["accent"] else edge_col
         g = glow(govde, int(size * 0.05 * SS), st["halo"])
@@ -578,28 +641,16 @@ def tile(size, level, state):
         kat.putalpha(g.point(lambda x: int(x * 0.75)))
         img = Image.alpha_composite(img, kat)
 
-    # --- IC KATMAN: isiyan numune alani
-    # Durum carpani MERKEZE kismen, KENARA tam uygulanir: merkez okunur kalsin.
-    merkez_carpan = 1.0 + (st["core"] - 1.0) * 0.35
-    yog = min(1.0, cfg["glow"] * st["core"])
+    # --- SERIT ZEMINI: susleme seridi dogrudan SEVIYE RENGI.
+    # Onceki surumde burasi mix(edge_col, siyah, 0.45) idi; seridin
+    # ortalama luminansi seviye renginden kopuyor ve komsu seviyeler
+    # 1,48:1'e kadar sikisiyordu (olcum raporda). Zemin seviye rengi
+    # olunca serit ortalamasi dogrusal olarak kontrol edilebiliyor.
+    taban = Image.new("RGBA", (S, S), edge_col + (0,))
+    taban.putalpha(govde)
+    img = Image.alpha_composite(img, taban)
 
-    merkez = mix(PAL["cardBackground"], (0, 0, 0), 0.22)
-    merkez = tuple(min(255, int(c * merkez_carpan)) for c in merkez)
-    kenar = mix(PAL["cardBackground"], core_col, yog)
-    kenar = tuple(min(255, int(c * st["core"])) for c in kenar)
-
-    radyal = _radyal(96, merkez, kenar).resize((S, S), Image.BICUBIC)
-    radyal.putalpha(ic_maske)
-    img = Image.alpha_composite(img, radyal)
-
-    # --- ic golge: numune cukurda duruyor hissi (keskin kenar, bulanik degil)
-    ic_golge = Image.composite(bos, ic_maske,
-                               inner_mask(S, S, 0, chamfer, bw + max(2, bw // 2)))
-    kat = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-    kat.putalpha(ic_golge.point(lambda x: int(x * 0.50)))
-    img = Image.alpha_composite(img, kat)
-
-    # --- DIS KATMAN: metal cerceve (kitle ayni dil)
+    # --- CERCEVE: dis kenardaki metal serit
     cerceve = ring_mask(S, S, 0, chamfer, bw)
     kat = Image.new("RGBA", (S, S), edge_col + (0,))
     kat.putalpha(cerceve)
@@ -613,11 +664,14 @@ def tile(size, level, state):
     kat = Image.new("RGBA", (S, S), mix(edge_col, (255, 255, 255), 0.62) + (0,))
     kat.putalpha(Image.composite(cerceve, bos, yari).point(lambda x: int(x * malzeme)))
     img = Image.alpha_composite(img, kat)
-    kat = Image.new("RGBA", (S, S), mix(edge_col, (0, 0, 0), 0.60) + (0,))
+    # Alt golge 0.60 -> 0.42: eski deger seridin ortalama luminansini o kadar
+    # asagi cekiyordu ki L4 hedefi ALTIN HUE ILE ULASILAMIYORDU (kalibrasyon
+    # cerceveyi #FFFFFE'ye itiyordu). Golge hala var, merdiven de tavana carpmiyor.
+    kat = Image.new("RGBA", (S, S), mix(edge_col, (0, 0, 0), 0.42) + (0,))
     kat.putalpha(Image.composite(bos, cerceve, yari).point(lambda x: int(x * malzeme * 0.9)))
     img = Image.alpha_composite(img, kat)
 
-    # --- ince spekuler vurgu (abartisiz): ust kenarda dar parlama seridi
+    # --- ince spekuler vurgu: ust kenarda dar parlama seridi
     sp = max(2, bw // 4)
     sperit = Image.new("L", (S, S), 0)
     ImageDraw.Draw(sperit).rectangle([0, int(bw * 0.22), S, int(bw * 0.22) + sp], fill=255)
@@ -626,14 +680,15 @@ def tile(size, level, state):
     kat.putalpha(sperit.point(lambda x: int(x * cfg["sheen"])))
     img = Image.alpha_composite(img, kat)
 
-    # --- KOSE CENTIGI: seviye SAYIDAN okunur (renksiz sinyal)
+    # --- KOSE CENTIGI: seviye SAYIDAN okunur (renksiz sinyal).
+    # Centik SERIT ICINDE kalir: uzunlugu band - bw ile sinirli.
     if cfg["notch"] > 0:
         d = ImageDraw.Draw(img)
         kal = max(2, int(bw * 0.5))
-        boy = int(size * 0.075 * SS)
+        pay = int(bw * 1.5)
+        boy = max(kal, int((band - pay) * 0.70))
         ara = int(kal * 2.4)
         ccol = mix(edge_col, PAL["textPrimary"], 0.5) + (245,)
-        pay = int(bw * 1.8)
         for sx, sy in ((1, 1), (-1, 1), (1, -1), (-1, -1)):
             for i in range(cfg["notch"]):
                 o = pay + i * ara
@@ -641,13 +696,111 @@ def tile(size, level, state):
                 y = pay if sy > 0 else S - pay
                 d.line([(x, y), (x, y + sy * boy)], fill=ccol, width=kal)
 
+    # --- KUYU GOLGESI: ic alanin HEMEN DISINDA, serit icinde.
+    # Ic alana girmez; boylece duz alan olcusu seviyeden bagimsiz kalir.
+    golge_kal = max(2, band // 4)
+    golge = Image.composite(bos, inner_mask(S, S, 0, chamfer, band - golge_kal), ic_maske)
+    kat = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    kat.putalpha(golge.point(lambda x: int(x * 0.55)))
+    img = Image.alpha_composite(img, kat)
+
+    # --- IC ALAN: DUZ dolgu, dort seviyede ayni renk ve ayni olcu
+    kat = Image.new("RGBA", (S, S), ic_col + (0,))
+    kat.putalpha(ic_maske)
+    img = Image.alpha_composite(img, kat)
+
     return img.resize((size, size), Image.LANCZOS)
+
+
+def serit_luminansi(size, level, state="normal"):
+    """Cizilmis tasin susleme seridinin ortalama luminansi.
+
+    Kabul kriteri bu deger uzerinden olculur: hue, bezel ve malzeme
+    kompozisyondan SONRA ne verirse o. Nihai PNG'den olcumle birebir ayni
+    tanim (Assets/Tests/PlayMode/TileContrastTests.cs ve raporda da bu).
+    """
+    im = tile(size, level, state).convert("RGBA")
+    px = im.load()
+    w, h = im.size
+    ic = int(round(w * TILE_BAND))
+    t = [0, 0, 0]
+    n = 0
+    for y in range(h):
+        for x in range(w):
+            if ic <= x < w - ic and ic <= y < h - ic:
+                continue
+            q = px[x, y]
+            if q[3] < 200:
+                continue
+            t[0] += q[0]
+            t[1] += q[1]
+            t[2] += q[2]
+            n += 1
+    return luminans(tuple(v // n for v in t))
+
+
+def kalibre_et(size=128, tur=22):
+    """Seviye renklerini, CIZILMIS seridin luminansi merdivene otursun diye
+    ayarlar. Bezel ve malzeme kompozisyonu luminansi kaydirdigi icin ham
+    hue'yu hedefe cekmek yetmiyordu (L2<->L3 1,48:1 olculmustu)."""
+    for sev, hedef in TILE_LADDER.items():
+        taban = PAL[TILE_LEVELS[sev]["hue"]]
+        lo, hi = 0.002, 0.999
+        for _ in range(tur):
+            orta = (lo + hi) / 2
+            TILE_LEVELS[sev]["frame"] = hedefe_cek(taban, orta)
+            if serit_luminansi(size, sev) < hedef:
+                lo = orta
+            else:
+                hi = orta
+        TILE_LEVELS[sev]["frame"] = hedefe_cek(taban, (lo + hi) / 2)
+
+
+def tile_empty(size):
+    """Bos hucre: cerceve yok, ic alan yok — sadece koyu bir kuyu.
+
+    Olcum (madde 2.4): bos kuyu ile dolu tasin ic alani arasinda >= 2,5:1.
+    """
+    S = size * SS
+    chamfer = int(size * 0.13 * SS)
+    band = int(round(TILE_BAND * S))
+    img = Image.new("RGBA", (S, S), CLEAR)
+    govde = body_mask(S, S, 0, chamfer)
+    bos = Image.new("L", (S, S), 0)
+
+    kat = Image.new("RGBA", (S, S), TILE_EMPTY + (0,))
+    kat.putalpha(govde)
+    img = Image.alpha_composite(img, kat)
+
+    # Ustte ic golge, altta cok hafif vurgu: cukur hissi.
+    # Gecis DIKEY GRADYAN; sert yari-yariya maske tam orta yukseklikte
+    # gorunur bir dikis birakiyordu (gri tonlamada daha da belli oluyordu).
+    ust = Image.linear_gradient("L").resize((S, S)).point(lambda v: 255 - v)
+    alt = Image.linear_gradient("L").resize((S, S))
+    kenar = Image.composite(bos, govde, inner_mask(S, S, 0, chamfer, band))
+
+    kat = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    kat.putalpha(Image.composite(kenar, bos, ust).point(lambda x: int(x * 0.75)))
+    img = Image.alpha_composite(img, kat)
+
+    kat = Image.new("RGBA", (S, S), mix(TILE_EMPTY, (255, 255, 255), 0.30) + (0,))
+    kat.putalpha(Image.composite(kenar, bos, alt).point(lambda x: int(x * 0.35)))
+    img = Image.alpha_composite(img, kat)
+
+    return img.resize((size, size), Image.LANCZOS)
+
 
 
 def uret_taslar(manifest):
     klasor = os.path.join(OUT, "tiles")
     os.makedirs(klasor, exist_ok=True)
     kayit = {}
+
+    kalibre_et()
+    for sev in sorted(TILE_LEVELS):
+        print("  tas L%d serit luminansi %.4f (hedef %.3f)  cerceve #%02X%02X%02X"
+              % (sev, serit_luminansi(256, sev), TILE_LADDER[sev],
+                 *TILE_LEVELS[sev]["frame"]))
 
     for boy in TILE_SIZES:
         for seviye in TILE_LEVELS:
@@ -658,12 +811,23 @@ def uret_taslar(manifest):
                 kayit[dosya] = {"tip": "sabit", "boyut": [boy, boy], "seviye": seviye,
                                 "durum": durum, "border": [0, 0, 0, 0]}
 
+        dosya = "tile_empty_%d.png" % boy
+        tile_empty(boy).save(os.path.join(klasor, dosya))
+        kayit[dosya] = {"tip": "sabit", "boyut": [boy, boy], "seviye": 0,
+                        "durum": "empty", "border": [0, 0, 0, 0]}
+
     manifest["taslar"] = {
-        "aciklama": "Iki katmanli: dis metal tutucu + ic isiyan numune alani. "
-                    "Seviye uc sinyalle: isima yogunlugu, kose centigi (0/1/2/3), "
-                    "cerceve kalinligi ve malzemesi (mat/fircalanmis/parlak). "
-                    "Renk tek basina ayirt edici degil.",
-        "seviyeler": dict((str(k), dict(v)) for k, v in TILE_LEVELS.items()),
+        "aciklama": "Iki katmanli: dis metal tutucu + ic duz numune alani. "
+                    "IC ALAN DORT SEVIYEDE DE AYNI olcude ve ayni renkte; "
+                    "seviye merdiveni metnin olmadigi CERCEVEDE tasiniyor "
+                    "(centik sayisi 0/1/2/3, kalinlik, malzeme, luminans). "
+                    "Renk tek basina ayirt edici degil: gri tonlamada da ayrisir.",
+        "ic_alan_orani": TILE_CONTENT,
+        "merdiven_luminans": dict((str(k), v) for k, v in TILE_LADDER.items()),
+        "ic_alan_luminans": TILE_CORE_L,
+        "bos_hucre_luminans": TILE_EMPTY_L,
+        "seviyeler": dict((str(k), dict((a, b) for a, b in v.items() if a != "frame"))
+                          for k, v in TILE_LEVELS.items()),
         "sprites": kayit,
     }
     print("taslar: %d sprite -> %s" % (len(kayit), klasor))

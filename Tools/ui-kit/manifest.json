@@ -1361,42 +1361,43 @@
   },
   "not": "border = [sol, alt, sag, ust] (Unity spriteBorder sirasi)",
   "taslar": {
-    "aciklama": "Iki katmanli: dis metal tutucu + ic isiyan numune alani. Seviye uc sinyalle: isima yogunlugu, kose centigi (0/1/2/3), cerceve kalinligi ve malzemesi (mat/fircalanmis/parlak). Renk tek basina ayirt edici degil.",
+    "aciklama": "Iki katmanli: dis metal tutucu + ic duz numune alani. IC ALAN DORT SEVIYEDE DE AYNI olcude ve ayni renkte; seviye merdiveni metnin olmadigi CERCEVEDE tasiniyor (centik sayisi 0/1/2/3, kalinlik, malzeme, luminans). Renk tek basina ayirt edici degil: gri tonlamada da ayrisir.",
+    "ic_alan_orani": 0.8,
+    "merdiven_luminans": {
+      "1": 0.0396,
+      "2": 0.1067,
+      "3": 0.2243,
+      "4": 0.43
+    },
+    "ic_alan_luminans": 0.105,
+    "bos_hucre_luminans": 0.005,
     "seviyeler": {
       "1": {
         "notch": 0,
         "border": 7,
-        "glow": 0.0,
         "sheen": 0.1,
-        "core": "cardBackground",
-        "edge": "textSecondary",
+        "hue": "textSecondary",
         "material": "mat"
       },
       "2": {
         "notch": 1,
         "border": 8,
-        "glow": 0.24,
         "sheen": 0.22,
-        "core": "primary",
-        "edge": "secondary",
+        "hue": "primary",
         "material": "fircalanmis"
       },
       "3": {
         "notch": 2,
         "border": 9,
-        "glow": 0.46,
         "sheen": 0.34,
-        "core": "primaryBright",
-        "edge": "primary",
+        "hue": "secondary",
         "material": "fircalanmis"
       },
       "4": {
         "notch": 3,
         "border": 11,
-        "glow": 0.66,
         "sheen": 0.48,
-        "core": "warning",
-        "edge": "warning",
+        "hue": "warning",
         "material": "parlak"
       }
     },
@@ -1694,6 +1695,21 @@
         ],
         "seviye": 4,
         "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_empty_256.png": {
+        "tip": "sabit",
+        "boyut": [
+          256,
+          256
+        ],
+        "seviye": 0,
+        "durum": "empty",
         "border": [
           0,
           0,
@@ -2001,6 +2017,21 @@
           0
         ]
       },
+      "tile_empty_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "seviye": 0,
+        "durum": "empty",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
       "tile_L1_normal_512.png": {
         "tip": "sabit",
         "boyut": [
@@ -2294,6 +2325,21 @@
         ],
         "seviye": 4,
         "durum": "discovered",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "tile_empty_512.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "seviye": 0,
+        "durum": "empty",
         "border": [
           0,
           0,
