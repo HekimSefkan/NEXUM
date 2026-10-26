@@ -71,6 +71,39 @@ public static class NexumColorTokens
                     gerekce = "nötr gri" },
         new Kural { hex = "F1C40F", role = "warning",
                     gerekce = "altın vurgu" },
+        // --- 2d-3a düzeltmesi: BELGEDE VARDI, TABLODA YOKTU.
+        // docs/DESIGN_TOKENS.md "Renk sapmaları" tablosu bu eşlemeleri zaten
+        // yazmıştı ama uygulama tablosuna hiç geçmemişti; 26 taş prefab'ı
+        // geçiş öncesinin renkleriyle kaldı ve hiçbir test fark etmedi.
+        // Artık DesignTokenConsistencyTests belge ile tabloyu karşılaştırıyor.
+        // (Taş harfleri ayrıca NexumTileVisuals tarafından beyaza alındı.)
+        new Kural { hex = "00FF00", role = "success",
+                    gerekce = "saf yeşil -> success (belge: Renk sapmaları)" },
+        new Kural { hex = "C0C0C0", role = "textPrimary",
+                    gerekce = "gümüş -> textPrimary (belge: beyaza yakın aile)" },
+        new Kural { hex = "DADADA", role = "textPrimary",
+                    gerekce = "beyaza yakın gri (belge)" },
+        new Kural { hex = "D0D0D3", role = "textPrimary",
+                    gerekce = "beyaza yakın gri (belge)" },
+        new Kural { hex = "60E8F5", role = "secondary",
+                    gerekce = "camgöbeği ailesi -> secondary (belge)" },
+        new Kural { hex = "3F3F3F", role = "textOnLight",
+                    gerekce = "koyu gri metin; belge panelBackground diyordu ama "
+                              + "bu bir METİN rengi (bkz. #515961 tartışması)" },
+        new Kural { hex = "0D0C0C", role = "textOnLight",
+                    gerekce = "siyaha yakın metin; aynı gerekçe" },
+        new Kural { hex = "2E3240", role = "textOnLight",
+                    gerekce = "zemin rolü metinde kullanılmış; açık zeminde "
+                              + "textOnLight, koyu zeminde kontrast taraması düzeltir" },
+        new Kural { hex = "085D73", role = "primary", gerekce = "prefab içi camgöbeği (belge)" },
+        new Kural { hex = "00B4FF", role = "primary", gerekce = "prefab içi camgöbeği (belge)" },
+        new Kural { hex = "4EE145", role = "success", gerekce = "GERİ AL yeşili (belge)" },
+        new Kural { hex = "4EE045", role = "success", gerekce = "GERİ AL yeşili (belge)" },
+        new Kural { hex = "6DE847", role = "success", gerekce = "GERİ AL yeşili (belge)" },
+        new Kural { hex = "5CFF56", role = "success", gerekce = "GERİ AL yeşili (belge)" },
+        new Kural { hex = "87CF5D", role = "success", gerekce = "GERİ AL yeşili (belge)" },
+        new Kural { hex = "269501", role = "success", gerekce = "GERİ AL yeşili (belge)" },
+
         new Kural { hex = "33CC33", role = "success", gerekce = "kombo yeşili" },
         new Kural { hex = "FF9900", role = "warning", gerekce = "kombo turuncusu" },
         new Kural { hex = "FF3333", role = "danger",  gerekce = "kombo kırmızısı" },

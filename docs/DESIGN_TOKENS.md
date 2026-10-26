@@ -136,17 +136,59 @@
 
 Faz 6 / Adım 2'de ele alınacak. Hiçbiri bu turda değiştirilmedi.
 
+### Dokunma hedefi (144 birim) ve bilinçli istisnalar
+
+Etkileşimli her elemanın dokunma alanı en az **144 birim** (48dp, 1080 birimlik
+tasarım genişliğinde). Kural **görünür boyutla ilgili değil**: grafik olduğu
+gibi kalır, alan elemanın altındaki saydam bir `TouchArea` çocuğuyla tamamlanır
+(`Assets/Editor/NexumTouchTargets.cs`). uGUI'de tıklama olayı raycast'i
+yakalayan `Graphic`'ten en yakın `IPointerClickHandler` atasına kabardığı için
+saydam çocuk da aynı butonu tetikler.
+
+**İkinci ve daha önemli kural: iki dokunma alanı KESİŞEMEZ.** uGUI raycast'i
+ebeveyn rect'ine kırpılmaz; 92 birimlik tarif satırlarına konan 144 birimlik
+alan komşu satırlara taşıyor ve oyuncu yanlış tarifi açıyordu (ölçüm: 20 çift,
+6336 birim²). **Komşuyu çalmamak, 144'e ulaşmaktan önce gelir.** Çözüm sırası:
+(1) aralığı aç, (2) liste bağlamında satırı gerçekten büyüt, (3) ikisi de
+olmuyorsa kuralı bilinçli gevşet ve gerekçeyi buraya yaz.
+
+Her iki kural da `Assets/Tests/PlayMode/TouchTargetTests.cs` içinde dört canvas
+boyutunda ölçülüyor.
+
+| İstisna | Gerekçe |
+|---|---|
+| `ScrollRect` kaydırma çubukları (20 birim) | Çubuk dokunulan değil **sürüklenen** bir denetim; asıl etkileşim ScrollRect'in tam ekran içerik alanıdır. 144'e çıkarmak içeriğin üstünü kapatırdı. |
+
+Kuralı sağlamak için yapılan **gerçek** ölçü değişiklikleri (grafik büyütmesi,
+dokunma alanı taşırması değil): tarif defteri satırı 92 → 144 (liste bağlamı),
+ayarlar kartı içerik yüksekliği 1505 → 1560 (anahtar hatvesi 146 olsun diye),
+mod butonu aralığı 10 → 26 (hatve 144), quiz şıkkı hatvesi 140 → 148,
+duraklat kartı defter girişi −265 → −195 ve bilgi metni 480 → 420.
+
 ### Renk sapmaları
 
-| Aykırı | Yakın token | Nerede |
+> **Bu tablo bağlayıcıdır.** `Assets/Tests/PlayMode/DesignTokenConsistencyTests.cs`
+> her koşuda bu tabloyu `NexumColorTokens.Tablo` ile karşılaştırır; burada
+> yazan bir eşleme uygulama tablosunda yoksa ya da farklı bir role bağlanmışsa
+> test düşer. 2d-3a'da taş harf renkleri tam bu boşluktan kaçmıştı: üç eşleme
+> belgede vardı, tabloda yoktu ve 26 prefab geçiş öncesinin renkleriyle kaldı.
+>
+> İlk sürümde "Yakın token" sütunu **en yakın renk** hesabıyla doldurulmuştu;
+> bazı satırlar bu yüzden bir METİN rengini zemin rolüne bağlıyordu. Sütun
+> artık uygulanan kararı taşıyor.
+
+| Aykırı | Token | Nerede |
 |---|---|---|
 | `#FFA300` turuncu | yok | **PARÇALA (Joker) butonu** — Game.unity |
 | `#4EE145`, `#4EE045`, `#6DE847`, `#44E453`, `#5CFF56`, `#87CF5D`, `#269501` | `success` | **GERİ AL butonu** ve çeşitli yeşiller — 7 ayrı ton |
 | `#00FF00` (7), `#C4FFB9` (5), `#C3FFB8` | `success` | Saf/pastel yeşil |
 | `#90E0EF`, `#60E8F5`, `#48CAE4`, `#007DD8` | `primary` / `secondary` | Camgöbeği ailesi 4 ayrı tona dağılmış |
 | `#F1C40F` | `warning` (`#FFD700`) | İki farklı sarı |
-| `#F8F9FA`, `#DADADA`, `#D0D0D3`, `#C0C0C0`, `#E4E1E1`, `#D9D7D7` | `textPrimary` | Beyaza yakın 6 ton |
-| `#515961`, `#5B5B5B`, `#3F3F3F`, `#2E3240`, `#0D0C0C` | `panelBackground` | Gri/koyu aile |
+| `#F8F9FA`, `#DADADA`, `#D0D0D3`, `#C0C0C0`, `#E4E1E1` | `textPrimary` | Beyaza yakın aile |
+| `#D9D7D7` | `textSecondary` | Gövde değil **açıklama** metni; beyaza yakın ama ikincil |
+| `#515961` | `textMuted` | Açık zeminde sönük metin (ayrıntı aşağıda) |
+| `#5B5B5B` | `textSecondary` | Gri kimlik metni |
+| `#3F3F3F`, `#0D0C0C`, `#2E3240` | `textOnLight` | Koyu **metin** renkleri — zemin rolü değil |
 | `#085D73`, `#00B4FF` | `primary` | Prefab içi camgöbeği |
 | `red`, `green` (adlandırılmış) | `danger`, `success` | Kodda 13 çağrı |
 
