@@ -7,29 +7,31 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 
-// Ayarlar panelinin CAM KART üzerine oturup oturmadığını 4 canvas boyutunda ölçer.
-//
-// Ölçüm kodu burada değil, ortak yardımcıda: Assets/Tests/PlayMode/LayoutCheck.cs.
-// Her yerleşim testi oradan geçer, kopya ölçüm kodu kalmaz.
+/// <summary>
+/// Ayarlar kartı: içerik kartın içinde kalıyor mu, kardeşler çakışıyor mu.
+///
+/// <b>2d-3a'da iki kusuru düzeltildi:</b>
+///
+/// 1) <b>Sprite ölçüleri sabit yazılıydı</b> (madde 4.3). Test
+///    <c>796×1280</c> ve boyalı paylarını (<c>100/796</c>, <c>690/796</c>)
+///    sabit tutuyor, kartın "iç alanını" bunlardan türetiyordu. Sprite Metal
+///    kitine geçince bu sayılar EKRANDA OLMAYAN bir görseli tarif eder oldu;
+///    test hayalet bir çerçeveye göre "içeride" demeye devam etti. Artık iç
+///    alan canlı <c>Image.sprite</c>'ın kendi kenarlığından okunuyor.
+///
+/// 2) <b>Ölçülen nesneler elle yazılmış bir listeden geliyordu</b>
+///    (madde 4.2). <c>Content[11]</c> içinde <c>ModeContainer</c> vardı ama
+///    çöken üç buton (onun ÇOCUKLARI) yoktu. Artık kartın TÜM alt ağacı
+///    geziliyor.
+///
+/// Çökme iddiası burada değil, <see cref="TouchTargetTests"/> içinde.
+/// </summary>
 public class SettingsLayoutTests
 {
     private const string Tag = "NEXUM_SETTINGS";
-
-    // Cam kart sprite'ı (SettingsPanel_.png) ve çerçevenin iç kenarları
-    private const float SpriteW = 796f;
-    private const float SpriteH = 1280f;
-    private const float InnerLeft = 100f / SpriteW;
-    private const float InnerRight = 690f / SpriteW;
-    private const float InnerTop = 80f / SpriteH;
-    private const float InnerBottom = 1190f / SpriteH;
-
-    private static readonly string[] Content =
-    {
-        "Image", "Text (TMP)", "GameModeText", "ModeContainer",
-        "AudioTitle", "MusicRow", "SfxRow",
-        "LearningTitle", "FlashcardsRow", "HintsRow", "ResetProgressButton",
-    };
+    private const string CardPath = "SafeAreaRoot/SettingsPanel/GlassBackground";
 
     private RectTransform safeRoot;
     private RectTransform card;
@@ -51,7 +53,7 @@ public class SettingsLayoutTests
         safeRoot = LayoutCheck.PrepareSafeRoot();
         Assert.IsNotNull(safeRoot, "SafeAreaRoot yok");
 
-        card = LayoutCheck.Find("SafeAreaRoot/SettingsPanel/GlassBackground") as RectTransform;
+        card = LayoutCheck.Find(CardPath) as RectTransform;
         Assert.IsNotNull(card, "GlassBackground yok");
     }
 
@@ -60,6 +62,20 @@ public class SettingsLayoutTests
     {
         List<string> hatalar = new List<string>();
 
+        // --- İÇ ALAN SPRITE'IN KENDİSİNDEN. Sabit sayı yok.
+        Image kartImage = card.GetComponent<Image>();
+        Assert.IsNotNull(kartImage, "GlassBackground'da Image yok");
+        Assert.IsNotNull(kartImage.sprite, "GlassBackground'da sprite yok");
+
+        Vector4 border = kartImage.sprite.border;
+        float pay = Mathf.Max(Mathf.Max(border.x, border.y), Mathf.Max(border.z, border.w));
+        Debug.Log($"{Tag}_SPRITE: {kartImage.sprite.name} " +
+                  $"{kartImage.sprite.rect.width:F0}x{kartImage.sprite.rect.height:F0} " +
+                  $"border ({border.x:F0},{border.y:F0},{border.z:F0},{border.w:F0}) " +
+                  $"type {kartImage.type} -> iç pay {pay:F0}");
+        Assert.Greater(pay, 0f,
+            "kart sprite'ının 9-slice kenarlığı yok: iç alan türetilemez");
+
         foreach (Vector2 size in LayoutCheck.CanvasSizes)
         {
             LayoutCheck.SetCanvasSize(safeRoot, size);
@@ -67,61 +83,53 @@ public class SettingsLayoutTests
             yield return null;
 
             string ekran = $"{size.x:F0}x{size.y:F0}";
-            Vector4 inner = LayoutCheck.AspectFittedInner(
-                LayoutCheck.LocalRect(safeRoot, card),
-                SpriteW, SpriteH, InnerLeft, InnerRight, InnerTop, InnerBottom);
 
-            Debug.Log($"{Tag}_KART: {ekran} | ic alan x {inner.x:F0}..{inner.z:F0} y {inner.y:F0}..{inner.w:F0}");
+            Vector4 kartRect = LayoutCheck.LocalRect(safeRoot, card);
+            Vector4 inner = new Vector4(kartRect.x + pay, kartRect.y + pay,
+                                        kartRect.z - pay, kartRect.w - pay);
 
-            List<RectTransform> kardesler = new List<RectTransform>();
+            Debug.Log($"{Tag}_KART: {ekran} | kart {kartRect.z - kartRect.x:F0}x" +
+                      $"{kartRect.w - kartRect.y:F0} | iç alan x {inner.x:F0}..{inner.z:F0} " +
+                      $"y {inner.y:F0}..{inner.w:F0}");
 
-            foreach (string name in Content)
+            // --- ELLE LİSTE YOK: kartın tüm alt ağacı
+            // TouchArea HARİÇ: görünmez dokunma katmanı, yerleşim öğesi değil.
+            // Ait olduğu butonun metniyle tanımı gereği üst üste biner.
+            List<RectTransform> hepsi = card.GetComponentsInChildren<RectTransform>(true)
+                .Where(r => r != card && r.gameObject.activeInHierarchy && r.name != "TouchArea")
+                .ToList();
+
+            foreach (RectTransform rt in hepsi)
             {
-                Transform t = FindContent(name);
-                if (t == null) { Debug.Log($"{Tag}_SATIR: {ekran} | {name,-20} YOK"); continue; }
-
-                RectTransform rt = t as RectTransform;
-                kardesler.Add(rt);
-
                 Vector4 r = LayoutCheck.LocalRect(safeRoot, rt);
                 float tasma = LayoutCheck.Overflow(r, inner);
-
-                string tmpBilgi = "";
-                TMP_Text tmp = t.GetComponent<TMP_Text>();
-                if (tmp != null && LayoutCheck.IsClipped(tmp, out tmpBilgi))
+                if (tasma > 1f)
                 {
-                    hatalar.Add($"{ekran} {name} metin kirpiliyor");
+                    hatalar.Add($"{ekran} {PixelProbe.Path(rt)} kart dışına {tasma:F0} birim");
                 }
 
-                Debug.Log($"{Tag}_SATIR: {ekran} | {LayoutCheck.Describe(name, r)} " +
-                          $"| tasma {tasma,6:F0} | {tmpBilgi}");
-
-                if (tasma > 1f) hatalar.Add($"{ekran} {name} kart disina {tasma:F0} birim");
+                TMP_Text tmp = rt.GetComponent<TMP_Text>();
+                string bilgi;
+                if (tmp != null && LayoutCheck.IsClipped(tmp, out bilgi))
+                {
+                    hatalar.Add($"{ekran} {PixelProbe.Path(rt)} metin kırpılıyor ({bilgi})");
+                }
             }
 
-            foreach (string cakisma in LayoutCheck.FindOverlaps(safeRoot, kardesler))
+            // Çakışma: her ebeveyn altında kardeşler arasında
+            foreach (var grup in hepsi.Where(r => r.parent != null).GroupBy(r => r.parent))
             {
-                hatalar.Add($"{ekran} cakisma: {cakisma}");
+                foreach (string c in LayoutCheck.FindOverlaps(safeRoot, grup.ToList()))
+                {
+                    hatalar.Add($"{ekran} çakışma: {c}");
+                }
             }
         }
 
-        Debug.Log($"{Tag}_SONUC: sorun {hatalar.Count}");
-        foreach (string h in hatalar) Debug.Log($"{Tag}_SORUN: {h}");
+        List<string> tekil = hatalar.Distinct().ToList();
+        Debug.Log($"{Tag}_SONUC: sorun {tekil.Count}");
+        foreach (string h in tekil.Take(30)) Debug.Log($"{Tag}_SORUN: {h}");
 
-        Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
-    }
-
-    private Transform FindContent(string name)
-    {
-        Transform kart = LayoutCheck.Find("SafeAreaRoot/SettingsPanel/GlassBackground");
-        if (kart == null) return null;
-
-        Transform icerik = kart.Find("CardContent");
-        if (icerik != null)
-        {
-            Transform t = icerik.Find(name);
-            if (t != null) return t;
-        }
-        return kart.Find(name);
+        Assert.IsEmpty(tekil, string.Join(" | ", tekil.Take(8)));
     }
 }

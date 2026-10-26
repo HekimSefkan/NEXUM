@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -138,4 +139,49 @@ public static class Reflect
         }
         return true;
     }
+
+    // ------------------------------------------------------- Editor derlemesi
+
+    /// <summary>
+    /// <c>NexumColorTokens.Tablo</c> -> { HEX : rol }.
+    ///
+    /// Tablo Assembly-CSharp-Editor icinde; test asmdef'i onu referans
+    /// ALMAZ (ve alamaz). Bu yuzden tip adla cozulur.
+    /// </summary>
+    public static Dictionary<string, string> ColorTokenTable()
+    {
+        Type t = System.Type.GetType("NexumColorTokens, Assembly-CSharp-Editor");
+        if (t == null) return null;
+
+        FieldInfo f = t.GetField("Tablo", Any);
+        if (f == null) return null;
+
+        var dizi = f.GetValue(null) as System.Collections.IEnumerable;
+        if (dizi == null) return null;
+
+        Dictionary<string, string> sonuc = new Dictionary<string, string>();
+        foreach (object kural in dizi)
+        {
+            Type kt = kural.GetType();
+            string hex = (string)kt.GetField("hex", Any).GetValue(kural);
+            string role = (string)kt.GetField("role", Any).GetValue(kural);
+            if (!string.IsNullOrEmpty(hex)) sonuc[hex.ToUpperInvariant()] = role;
+        }
+        return sonuc;
+    }
+
+    /// <summary>NexumTileVisuals sabitleri (Assembly-CSharp-Editor).</summary>
+    private static T EditorConst<T>(string alan, T varsayilan)
+    {
+        Type t = System.Type.GetType("NexumTileVisuals, Assembly-CSharp-Editor");
+        if (t == null) return varsayilan;
+        FieldInfo f = t.GetField(alan, Any);
+        return f == null ? varsayilan : (T)f.GetValue(null);
+    }
+
+    public static float TileContentRatio() { return EditorConst("ContentRatio", 0.80f); }
+
+    public static float TileMinFont() { return EditorConst("MinFont", 32f); }
+
+    public static float TileMaxFont() { return EditorConst("MaxFont", 72f); }
 }
