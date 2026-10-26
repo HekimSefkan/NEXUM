@@ -50,7 +50,11 @@ public static class GameHudBuilder
     private const float ColumnX = 400f;
 
     /// <summary>Karakter: solda, GoalsContainer ile skor göstergesinin arasında.</summary>
-    private static readonly Vector2 AvatarCenter = new Vector2(-380f, 450f);
+    // y 450 -> 400: 200 birimlik karakter 350..550'ye oturuyordu ve
+    // GoalsContainer'ın alt kenarıyla (511) 39 birim çakışıyordu. Beherler
+    // çalışma zamanında doğduğu için edit mode render'ında görünmüyor,
+    // cihazda görünürdü. Artık 300..500, iki yana da 10 birim boşluk.
+    private static readonly Vector2 AvatarCenter = new Vector2(-380f, 400f);
 
     /// <summary>
     /// HUD ANCHOR'I TAHTAYLA AYNI (CLAUDE.md kararı): grid'le görsel grup
