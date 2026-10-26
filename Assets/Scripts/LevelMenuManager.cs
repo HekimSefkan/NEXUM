@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -13,8 +13,8 @@ public class LevelMenuManager : MonoBehaviour
     public Sprite lockedSprite;   // Gri metal kapsül (level_selection_kilitlibutton)
 
     [Header("Renk Paleti")]
-    public Color completedColor = new Color(0.18f, 0.8f, 0.44f); // Yeşil (Tamamlanmış) #2ECC71
-    public Color activeColor = new Color(0f, 0.7f, 0.84f);       // Camgöbeği (Aktif) #00B4D8
+    public Color completedColor = NexumPalette.Success;   // tema: success (eskiden #2ECC70)
+    public Color activeColor = NexumPalette.Primary;      // tema: primary (eskiden #00B2D6)
     public Color lockedColor = Color.white;                      // Kilitli (Görsel zaten gri olduğu için dokunmuyoruz)
 
     void Start()

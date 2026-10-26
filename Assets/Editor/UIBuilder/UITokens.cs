@@ -65,24 +65,33 @@ public static class UITokens
     public static float DurationLong { get { return Theme.motion.durationLong; } }
 
     // ======================================================================
-    // GEOMETRİ — temaya ait değil: cam kart sprite'ının (SettingsPanel_.png)
-    // kendi ölçüleri. Sprite değişirse burası değişir, tema değişmez.
+    // GEOMETRİ — temaya ait değil.
+    //
+    // 2d-3a'ya kadar burada eski cam kart sprite'ının (SettingsPanel_.png)
+    // ölçüleri SABİT yazılıydı: 796×1280 ve boyalı payları 100/690. Sprite
+    // Metal kitine geçince bu sayılar EKRANDA OLMAYAN bir görseli tarif eder
+    // oldu; hem kurucu hem test hayalet bir çerçeveye göre ölçmeye devam etti
+    // ve çöken butonları yakalayamadı. Artık çerçeve payı sprite'ın KENDİ
+    // kenarlığından okunuyor.
     // ======================================================================
-    public const float CardSpriteWidth = 796f;
-    public const float CardSpriteHeight = 1280f;
-    public const float CardAspect = CardSpriteWidth / CardSpriteHeight;
-    public const float CardInsetLeft = 100f / CardSpriteWidth;    // 0.1256
-    public const float CardInsetRight = 690f / CardSpriteWidth;   // 0.8668
 
-    // Kartın parlak ayraçları: üç bölümün sınırları (oransal, alttan)
-    public const float CardDividerUpper = 0.575f;
-    public const float CardDividerLower = 0.3172f;
+    /// <summary>Sprite'ın 9-slice kenar payı (birim). Sabit yazılmaz, asset'ten okunur.</summary>
+    public static float PanelFrameInset(Sprite sprite)
+    {
+        if (sprite == null) return 0f;
+        Vector4 b = sprite.border;
+        return Mathf.Max(Mathf.Max(b.x, b.y), Mathf.Max(b.z, b.w));
+    }
 
-    // --- Dikey ritim (oransal, kart yüksekliğine göre) ---------------------
-    public const float RhythmTitleHeight = 0.043f;
-    public const float RhythmRowHeight = 0.058f;
-    public const float RhythmGapAfterTitle = 0.015f;
-    public const float RhythmGapBetweenRows = 0.012f;
+    /// <summary>Çerçevenin iç kenarı ile içeriğin arasındaki tasarım payı.</summary>
+    public const float PanelPadding = 24f;
+
+    /// <summary>
+    /// Dokunma hedefi alt sınırı (birim). 48dp, 1080 birimlik tasarım
+    /// genişliğinde 144. Etkileşimli hiçbir eleman bunun altına düşemez;
+    /// <c>Assets/Tests/PlayMode/TouchTargetTests.cs</c> her koşuda doğrular.
+    /// </summary>
+    public const float TouchMin = 144f;
 
     // --- Ortak anchor'lar -------------------------------------------------
     public static readonly Vector2 Center = new Vector2(0.5f, 0.5f);

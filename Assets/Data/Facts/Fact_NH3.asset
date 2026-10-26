@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c992036424e9974f873cca4bf7f6d52, type: 3}
   m_Name: Fact_NH3
   m_EditorClassIdentifier: 
-  factText: "Amonyak (NH\u2083), renksiz ama \xE7ok keskin ve rahats\u0131z edici
+  factText: "Amonyak (NH<sub>3</sub>), renksiz ama \xE7ok keskin ve rahats\u0131z edici
     kokulu bir gazd\u0131r. \xC7o\u011Funlukla tar\u0131mda g\xFCbre \xFCretiminde
     ve ev temizlik malzemelerinde kullan\u0131l\u0131r."

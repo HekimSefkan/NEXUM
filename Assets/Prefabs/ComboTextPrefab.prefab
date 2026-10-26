@@ -67,15 +67,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Z\u0130NC\u0130RLEME REAKS\u0130YON!"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: d5701c3fd2a610941b1f68f13a4cd404, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f24d09aa316c2e14b883e5bbf8ac1fe5, type: 2}
+  m_sharedMaterial: {fileID: -5998745718009126625, guid: f24d09aa316c2e14b883e5bbf8ac1fe5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
     rgba: 4283891548
-  m_fontColor: {r: 0.36062172, g: 1, b: 0.33773577, a: 1}
+  m_fontColor: {r: 0.18039216, g: 0.8, b: 0.44313726, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

@@ -40,6 +40,21 @@ public static class CodeStrings
     public const string RecipeBookRingValue = "recipebook.ring_value";
     public const string RecipeBookButtonLabel = "recipebook.button";
 
+    // --- Ana menü hub (3b'de ekranlara girecek) ---------------------------
+    // TYT/AYT soru modunun adı "KAYNAMA NOKTASI". Menüde "sınav", "deneme"
+    // ve "simülasyon" kelimeleri KULLANILMAZ; Ayarlar'daki oyun modu olan
+    // "SINAV" adını korur ve ikisi artık çakışmaz.
+    public const string MenuBoilingPoint = "menu.boiling_point";
+    public const string MenuBoilingPointStatus = "menu.boiling_point_status";
+    public const string MenuDailyPuzzle = "menu.daily_puzzle";
+    public const string MenuDailyPuzzleUndone = "menu.daily_puzzle_undone";
+    public const string MenuEndlessLab = "menu.endless_lab";
+    public const string MenuEndlessLabBest = "menu.endless_lab_best";
+    public const string MenuWeeklyExperiment = "menu.weekly_experiment";
+    public const string MenuWeeklyExperimentThis = "menu.weekly_experiment_this";
+    public const string MenuLevelSelect = "menu.level_select";
+    public const string MenuComingSoon = "menu.coming_soon";
+
     // --- Ansiklopedi -------------------------------------------------------
     public const string EncyclopediaSynthesis = "encyclopedia.synthesis";
     public const string EncyclopediaBasicElement = "encyclopedia.basic_element";
@@ -85,8 +100,8 @@ public static class CodeStrings
         [HintNoBudget] = "Laboratuvar bütçemiz yetersiz! Asistanın {0}. ipucunu verebilmesi için <color=red>{1} puana</color> ihtiyacın var.",
         [HintNoMerge] = "Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin.",
         [HintGeneric] = "Bu iki elementi birleştirmek harika bir fikir olabilir!",
-        [HintFooterFree] = "\n\n<size=80%><color=#F1C40F>Serbest Mod: ipuçları bedava ve sınırsız</color></size>",
-        [HintFooter] = "\n\n<size=80%><color=#F1C40F>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>",
+        [HintFooterFree] = "\n\n<size=80%><color=#FFD700>Serbest Mod: ipuçları bedava ve sınırsız</color></size>",
+        [HintFooter] = "\n\n<size=80%><color=#FFD700>Kalan İpucu Hakkın: {0} | Sonraki Bedel: {1} Puan</color></size>",
 
         [SystemMatrixReshuffled] = "MATRİS YENİDEN DÜZENLENDİ",
         [ReactionInputs] = "{0} + {1}",
@@ -99,6 +114,17 @@ public static class CodeStrings
         [RecipeBookLockedSymbol] = "?",
         [RecipeBookRingValue] = "{0}/{1}",
         [RecipeBookButtonLabel] = "TARİF DEFTERİ",
+
+        [MenuBoilingPoint] = "KAYNAMA NOKTASI",
+        [MenuBoilingPointStatus] = "En iyi: {0}/{1} doğru",
+        [MenuDailyPuzzle] = "GÜNLÜK BULMACA",
+        [MenuDailyPuzzleUndone] = "Bugün çözülmedi",
+        [MenuEndlessLab] = "SONSUZ LAB",
+        [MenuEndlessLabBest] = "En iyi: {0} birleşme",
+        [MenuWeeklyExperiment] = "HAFTANIN DENEYİ",
+        [MenuWeeklyExperimentThis] = "Bu hafta: {0}",
+        [MenuLevelSelect] = "BÖLÜM SEÇİMİ",
+        [MenuComingSoon] = "Yakında",
 
         [EncyclopediaSynthesis] = "Sentez: {0}",
         [EncyclopediaBasicElement] = "Temel element",

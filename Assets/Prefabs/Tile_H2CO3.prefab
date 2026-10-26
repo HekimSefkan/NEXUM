@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6773082429386211845}
   - component: {fileID: 4593228097711413809}
   - component: {fileID: 4463625317376284077}
+  - component: {fileID: 1365882851218084810}
   m_Layer: 5
   m_Name: Tile_H2CO3
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 936cc86dcffccc743a48d0b32f48bd7d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e6f1d5193c962d4dade51d18a399443, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -90,6 +91,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myElementData: {fileID: 11400000, guid: e26f07a078597974d875606c62475801, type: 2}
+--- !u!114 &1365882851218084810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3634079177299486472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6072ea1fc2174b048a347c277e1bec50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 4
+  normal: {fileID: 21300000, guid: 5e6f1d5193c962d4dade51d18a399443, type: 3}
+  selected: {fileID: 21300000, guid: d1cc4851015edae448c89993c3c146fb, type: 3}
+  merging: {fileID: 21300000, guid: 6347f90d9117ee341b3608643fec6109, type: 3}
+  newborn: {fileID: 21300000, guid: 069b13911d5651e45b3193d21fcb7ae7, type: 3}
+  discovered: {fileID: 21300000, guid: 7b3089dcaacc146478028980452a2b0a, type: 3}
 --- !u!1 &6570616426883380441
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,8 +141,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4504129500059717286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.099999994, y: 0.099999994}
+  m_AnchorMax: {x: 0.9, y: 0.9}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -157,15 +176,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: H<sub>2</sub>CO<sub>3</sub>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f24d09aa316c2e14b883e5bbf8ac1fe5, type: 2}
+  m_sharedMaterial: {fileID: -5998745718009126625, guid: f24d09aa316c2e14b883e5bbf8ac1fe5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
     rgba: 4290822336
-  m_fontColor: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -182,8 +201,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 47
+  m_fontSizeBase: 47
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -198,7 +217,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

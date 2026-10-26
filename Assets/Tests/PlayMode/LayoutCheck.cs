@@ -153,12 +153,49 @@ public static class LayoutCheck
     /// <summary>Metnin kutusunu ne kadar doldurduğu (%). Sığma kuralı %85.</summary>
     public const float MaxFillRatio = 0.85f;
 
+    /// <summary>
+    /// YÜKSEKLİK doluluğu. Kutu genişliği yalnızca SATIR KIRMA KISITI olarak
+    /// geçilir; dönen değer yüksekliğin oranıdır.
+    /// </summary>
     public static float FillRatio(TMP_Text tmp, string content)
     {
         float boxH = tmp.rectTransform.rect.height;
         float boxW = tmp.rectTransform.rect.width;
         if (boxH <= 0f) return 0f;
         return tmp.GetPreferredValues(content, boxW, 0f).y / boxH;
+    }
+
+    /// <summary>
+    /// GENİŞLİK doluluğu — satır kırma KAPALI ölçülür.
+    ///
+    /// NEDEN AYRI BİR ÖLÇÜ: <see cref="FillRatio"/> yalnızca yüksekliğe bakar
+    /// ve <see cref="IsClipped"/> satır kırma açıkken genişlik sorununu
+    /// BİLDİREMEZ (çizilen genişlik tanımı gereği kutuyu aşamaz, çünkü TMP
+    /// sığdırmak için kırmıştır). 2d-3a'da CaCO₃ taşta "CaCO" / "₃" diye iki
+    /// satıra kırılıyordu, Fe₂O₃ kutunun %90'ını kaplıyordu — iki test de
+    /// yeşildi ve "en kötü doluluk %79" diyordu.
+    /// </summary>
+    public static float FillRatioWidth(TMP_Text tmp, string content)
+    {
+        float boxW = tmp.rectTransform.rect.width;
+        if (boxW <= 0f) return 0f;
+
+        // Kırma kısıtı yok: gerçekte İSTENEN genişlik ölçülür.
+        return tmp.GetPreferredValues(content, 0f, 0f).x / boxW;
+    }
+
+    /// <summary>
+    /// Metin kaç satıra düşüyor? Tek satırlık alanda kırılma kusurdur.
+    /// </summary>
+    public static int LineCount(TMP_Text tmp, string content)
+    {
+        string eski = tmp.text;
+        tmp.text = content;
+        tmp.ForceMeshUpdate();
+        int n = tmp.textInfo != null ? tmp.textInfo.lineCount : 1;
+        tmp.text = eski;
+        tmp.ForceMeshUpdate();
+        return n;
     }
 
     // ------------------------------------------------------------------ rapor

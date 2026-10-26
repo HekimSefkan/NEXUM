@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -257,6 +257,12 @@ public class GridManager : MonoBehaviour
     /// <summary>Taşın üstünde bir kez parlayıp sönen beyaz kopya.</summary>
     private void PlaySpawnFlash(GameObject tile)
     {
+        // Yeni dogan tas kendini duyurur: parlak sprite dogum animasyonu
+        // suresince gosterilip normale doner. SURE DEGISMIYOR (SpawnDelay),
+        // yalnizca gorsel.
+        TileVisual visual = tile.GetComponent<TileVisual>();
+        if (visual != null) visual.PlayNewborn(SpawnDelay);
+
         Image source = tile.GetComponent<Image>();
         if (source == null) return;
 

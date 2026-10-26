@@ -136,17 +136,59 @@
 
 Faz 6 / Adım 2'de ele alınacak. Hiçbiri bu turda değiştirilmedi.
 
+### Dokunma hedefi (144 birim) ve bilinçli istisnalar
+
+Etkileşimli her elemanın dokunma alanı en az **144 birim** (48dp, 1080 birimlik
+tasarım genişliğinde). Kural **görünür boyutla ilgili değil**: grafik olduğu
+gibi kalır, alan elemanın altındaki saydam bir `TouchArea` çocuğuyla tamamlanır
+(`Assets/Editor/NexumTouchTargets.cs`). uGUI'de tıklama olayı raycast'i
+yakalayan `Graphic`'ten en yakın `IPointerClickHandler` atasına kabardığı için
+saydam çocuk da aynı butonu tetikler.
+
+**İkinci ve daha önemli kural: iki dokunma alanı KESİŞEMEZ.** uGUI raycast'i
+ebeveyn rect'ine kırpılmaz; 92 birimlik tarif satırlarına konan 144 birimlik
+alan komşu satırlara taşıyor ve oyuncu yanlış tarifi açıyordu (ölçüm: 20 çift,
+6336 birim²). **Komşuyu çalmamak, 144'e ulaşmaktan önce gelir.** Çözüm sırası:
+(1) aralığı aç, (2) liste bağlamında satırı gerçekten büyüt, (3) ikisi de
+olmuyorsa kuralı bilinçli gevşet ve gerekçeyi buraya yaz.
+
+Her iki kural da `Assets/Tests/PlayMode/TouchTargetTests.cs` içinde dört canvas
+boyutunda ölçülüyor.
+
+| İstisna | Gerekçe |
+|---|---|
+| `ScrollRect` kaydırma çubukları (20 birim) | Çubuk dokunulan değil **sürüklenen** bir denetim; asıl etkileşim ScrollRect'in tam ekran içerik alanıdır. 144'e çıkarmak içeriğin üstünü kapatırdı. |
+
+Kuralı sağlamak için yapılan **gerçek** ölçü değişiklikleri (grafik büyütmesi,
+dokunma alanı taşırması değil): tarif defteri satırı 92 → 144 (liste bağlamı),
+ayarlar kartı içerik yüksekliği 1505 → 1560 (anahtar hatvesi 146 olsun diye),
+mod butonu aralığı 10 → 26 (hatve 144), quiz şıkkı hatvesi 140 → 148,
+duraklat kartı defter girişi −265 → −195 ve bilgi metni 480 → 420.
+
 ### Renk sapmaları
 
-| Aykırı | Yakın token | Nerede |
+> **Bu tablo bağlayıcıdır.** `Assets/Tests/PlayMode/DesignTokenConsistencyTests.cs`
+> her koşuda bu tabloyu `NexumColorTokens.Tablo` ile karşılaştırır; burada
+> yazan bir eşleme uygulama tablosunda yoksa ya da farklı bir role bağlanmışsa
+> test düşer. 2d-3a'da taş harf renkleri tam bu boşluktan kaçmıştı: üç eşleme
+> belgede vardı, tabloda yoktu ve 26 prefab geçiş öncesinin renkleriyle kaldı.
+>
+> İlk sürümde "Yakın token" sütunu **en yakın renk** hesabıyla doldurulmuştu;
+> bazı satırlar bu yüzden bir METİN rengini zemin rolüne bağlıyordu. Sütun
+> artık uygulanan kararı taşıyor.
+
+| Aykırı | Token | Nerede |
 |---|---|---|
 | `#FFA300` turuncu | yok | **PARÇALA (Joker) butonu** — Game.unity |
 | `#4EE145`, `#4EE045`, `#6DE847`, `#44E453`, `#5CFF56`, `#87CF5D`, `#269501` | `success` | **GERİ AL butonu** ve çeşitli yeşiller — 7 ayrı ton |
 | `#00FF00` (7), `#C4FFB9` (5), `#C3FFB8` | `success` | Saf/pastel yeşil |
 | `#90E0EF`, `#60E8F5`, `#48CAE4`, `#007DD8` | `primary` / `secondary` | Camgöbeği ailesi 4 ayrı tona dağılmış |
 | `#F1C40F` | `warning` (`#FFD700`) | İki farklı sarı |
-| `#F8F9FA`, `#DADADA`, `#D0D0D3`, `#C0C0C0`, `#E4E1E1`, `#D9D7D7` | `textPrimary` | Beyaza yakın 6 ton |
-| `#515961`, `#5B5B5B`, `#3F3F3F`, `#2E3240`, `#0D0C0C` | `panelBackground` | Gri/koyu aile |
+| `#F8F9FA`, `#DADADA`, `#D0D0D3`, `#C0C0C0`, `#E4E1E1` | `textPrimary` | Beyaza yakın aile |
+| `#D9D7D7` | `textSecondary` | Gövde değil **açıklama** metni; beyaza yakın ama ikincil |
+| `#515961` | `textMuted` | Açık zeminde sönük metin (ayrıntı aşağıda) |
+| `#5B5B5B` | `textSecondary` | Gri kimlik metni |
+| `#3F3F3F`, `#0D0C0C`, `#2E3240` | `textOnLight` | Koyu **metin** renkleri — zemin rolü değil |
 | `#085D73`, `#00B4FF` | `primary` | Prefab içi camgöbeği |
 | `red`, `green` (adlandırılmış) | `danger`, `success` | Kodda 13 çağrı |
 
@@ -536,3 +578,60 @@ katman — Faz 5'te kademeli ipucu geldiğinde kademe göstergesi aynı yere gir
 
 Dokunma kutusu **144 birime** tamamlanır (görsel 112): y 294..438.
 Ölçüm — hedef çipine 12 birim, tahtaya 36 birim pay, **çakışma yok**.
+
+---
+
+# 10. Atlas kapsamı ve `textMuted` (2d-3a eki)
+
+## 10.1 Ekrandaki her karakter atlasta olmalı
+
+Statik atlasta karşılığı olmayan bir karakter TMP'de sessizce **dinamik
+fallback**'e düşer; ekranda kutu ya da başka bir fontun harfi çıkar. Nadir
+görülen bir ekranda bu cihaz testinde fark edilmez.
+
+**Tek toplama noktası:** `Assets/Editor/NexumTextSources.cs` — sözlük (iki dil,
+tüm değerler), `ElementData` (ad, sembol, tarif, açıklama), `ChemistryFact`,
+`ChemistryQuiz` (soru + şıklar), bölüm adları, `scientificHint`, sahnelerde ve
+prefab'larda yazılı metinler. Zengin metin etiketleri ayıklanır; kontrol ve
+sıfır genişlikli karakterler glif sayılmaz.
+
+Atlas üreteci hedef kümeyi **taban + toplanan** olarak kurar, yani yeni bir
+metin eklendiğinde atlas kendiliğinden kapsar.
+
+**Test:** `AtlasCoversAllDisplayedTextTests` kümeyi her koşuda yeniden
+hesaplar; atlasta olmayan tek karakter bulursa düşer. Literal alt simge ayrı
+mesajla raporlanır — Oxanium'da `₅`–`₉` olmadığı için atlasa eklenerek
+çözülemez, metin `<sub>` ile yazılmalıdır.
+
+> Bu kuralın bulduğu ilk hata: beş bilgi kartı literal `₂`/`₃` kullanıyordu.
+> Hiçbir atlasta (LiberationSans dahil) yoktu, yani duraklat kartında cihazda
+> **kutu** çiziliyordu. Hepsi `<sub>`'a çevrildi.
+
+**Atlas durumu:** 123 karakter, 1024×1024, tek doku, Static.
+`′` (U+2032) ve `″` (U+2033) tabandan çıkarıldı — Oxanium TTF'inde yoklar,
+bırakılsalardı atlas her koşuda "eklenemeyen glif" raporlar ve idempotans
+bozulurdu.
+
+## 10.2 `textMuted` rolü
+
+| Rol | Değer | Kullanım |
+|---|---|---|
+| `textPrimary` | `#FFFFFF` | koyu zeminde birincil metin |
+| `textSecondary` | `#ADB5BD` | koyu zeminde ikincil metin |
+| **`textMuted`** | **`#515961`** | **açık zeminde sönük metin, pasif durum** |
+| `textOnLight` | `#323232` | açık zeminde birincil metin |
+
+`#515961` bir metin rengiydi ama palette karşılığı yoktu; en yakın token
+`panelBackground` (bir **zemin** rengi) olduğu için geçici olarak
+`textSecondary`'ye bağlanmıştı. Artık kendi rolü var.
+
+**Ama o altı bileşen `textSecondary`'de bırakıldı** — ölçümle:
+
+| Yüzey | `textMuted` #515961 | `textSecondary` #ADB5BD |
+|---|---|---|
+| eski `Nasiloyanir_Buton` (#A2E6F6, açık) | **5,15:1** ✓ | 1,50:1 ✗ |
+| yeni `btn_secondary_normal` (#213B4A, koyu) | 1,65:1 ✗ | **5,66:1** ✓ |
+
+Sprite geçişi yüzeyi açıktan koyuya çevirdi; `textMuted`'a bağlamak kontrastı
+**1,65:1**'e düşürür, yani metni okunmaz yapardı. Kural açık zeminde
+`#515961` kullanan yeni bir metin çıkarsa devreye girer.

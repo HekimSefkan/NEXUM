@@ -153,3 +153,9 @@ Set-Location "C:\Projects\NEXUM"; python Tools\generate_icons.py
 ```powershell
 & "C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -nographics -quit -projectPath "C:\Projects\NEXUM" -executeMethod NexumIconSetup.Apply -logFile "C:\Projects\NEXUM\Logs\icons.log" | Out-Null
 ```
+
+## ⚠️ Varlık lisansı — kapatılmadan yayın yok
+
+`Assets/Art/Figures/hint_assistant.png` Vecteezy kaynaklı (varlık no
+65428683) ve lisansı **doğrulanmadı**. Free License atıf zorunlu kılıyor,
+Pro License kılmıyor. Ayrıntı ve yapılacaklar: `docs/ASSET_LICENSES.md` §4.
