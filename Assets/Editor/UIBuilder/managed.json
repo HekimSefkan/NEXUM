@@ -37,6 +37,18 @@
             "builder": "RecipeBookPauseEntry"
         },
         {
+            "path": "Game::Canvas/SafeAreaRoot/HintButton",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/HintButton/Portrait",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/JokerButton",
+            "builder": "GameHud"
+        },
+        {
             "path": "Game::Canvas/SafeAreaRoot/PressureMeter/ReadyGlow",
             "builder": "RecipeBookPauseEntry"
         },
@@ -75,6 +87,26 @@
         {
             "path": "Game::Canvas/SafeAreaRoot/ReactionEquations/Equation7",
             "builder": "ReactionEquation"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/HintBadge",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/HintBadge/Count",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/Label",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/UndoButton",
+            "builder": "GameHud"
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton",

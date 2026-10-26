@@ -152,6 +152,9 @@ MonoBehaviour:
       Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
     english: "\u015Eu an matriste yap\u0131labilecek hi\xE7bir kimyasal sentez g\xF6remiyorum!
       Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
+  - key: hud.tip_button
+    turkish: "\u0130PUCU"
+    english: HINT
   - key: mainmenu.addemailbutton.text_tmp
     turkish: Ekle
     english: Ekle

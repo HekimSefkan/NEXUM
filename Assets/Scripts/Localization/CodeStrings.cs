@@ -46,6 +46,9 @@ public static class CodeStrings
     public const string MenuEncyclopedia = "menu.encyclopedia";
     public const string MenuSettings = "menu.settings";
 
+    // --- Oyun HUD'u ------------------------------------------------------
+    public const string HudTipButton = "hud.tip_button";
+
     // --- Ana menü hub (3b'de ekranlara girecek) ---------------------------
     // TYT/AYT soru modunun adı "KAYNAMA NOKTASI". Menüde "sınav", "deneme"
     // ve "simülasyon" kelimeleri KULLANILMAZ; Ayarlar'daki oyun modu olan
@@ -125,6 +128,8 @@ public static class CodeStrings
         [MenuHowToPlay] = "NASIL OYNANIR",
         [MenuEncyclopedia] = "ANSİKLOPEDİ",
         [MenuSettings] = "AYARLAR",
+
+        [HudTipButton] = "İPUCU",
 
         [MenuBoilingPoint] = "KAYNAMA NOKTASI",
         [MenuBoilingPointStatus] = "En iyi: {0}/{1} doğru",

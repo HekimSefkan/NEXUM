@@ -159,6 +159,10 @@
             "value": "Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin."
         },
         {
+            "key": "hud.tip_button",
+            "value": "İPUCU"
+        },
+        {
             "key": "mainmenu.addemailbutton.text_tmp",
             "value": "Ekle"
         },
