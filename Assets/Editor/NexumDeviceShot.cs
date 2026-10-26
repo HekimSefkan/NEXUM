@@ -37,7 +37,7 @@ public static class NexumDeviceShot
         new Vector2Int(1440, 1920),
     };
 
-    private struct Ekran
+    public struct Ekran
     {
         public string ad;
         public string scene;
@@ -46,7 +46,7 @@ public static class NexumDeviceShot
         public bool tahtayiDoldur;
     }
 
-    private static readonly Ekran[] Ekranlar =
+    public static readonly Ekran[] Ekranlar =
     {
         new Ekran { ad = "ana-menu", scene = "Assets/Scenes/MainMenu.unity",
                     ac = new[] { "SafeAreaRoot/MainMenuPanel" },
@@ -113,11 +113,48 @@ public static class NexumDeviceShot
             }
         }
 
+        TahtaKesiti();
         Debug.Log($"{Tag}: {alinan} görüntü -> {OutDir}");
         Debug.Log($"{Tag}: OK");
     }
 
-    private static void Hazirla(Transform canvas, Ekran e)
+    /// <summary>
+    /// 4x4 tahtanın 1:1 (birim = piksel) kesiti. Seviye merdiveni ÇERÇEVEDE
+    /// taşınıyor ve çerçeve ince bir eleman: ölçüm sayısının vaat ettiği
+    /// ayrımın gözle de okunduğu buradan görülür. Dört seviye + boş hücre
+    /// aynı karede.
+    /// </summary>
+    private static void TahtaKesiti()
+    {
+        string kaynak = $"{OutDir}/oyun_1080x1920.png";
+        if (!File.Exists(kaynak))
+        {
+            Debug.LogError($"{Tag}: {kaynak} yok");
+            return;
+        }
+
+        byte[] ham = File.ReadAllBytes(kaynak);
+        Texture2D tam = new Texture2D(2, 2, TextureFormat.RGB24, false);
+        if (!tam.LoadImage(ham)) { Object.DestroyImmediate(tam); return; }
+
+        // GridBoard: 900x900, anchor (0.5, 0.41666666) -> merkez ekranın
+        // ALTINDAN 800 birim. Texture2D'de de y=0 alttadır, yani kesit
+        // doğrudan 350..1250 aralığı; "üstten" hesaplamak kareyi kaydırıyordu.
+        const int x0 = 90, w = 900, h = 900, y0 = 350;
+
+        Texture2D kes = new Texture2D(w, h, TextureFormat.RGB24, false);
+        kes.SetPixels(tam.GetPixels(x0, y0, w, h));
+        kes.Apply();
+
+        string yol = $"{OutDir}/detay_tahta-1-1.png";
+        File.WriteAllBytes(yol, kes.EncodeToPNG());
+        Debug.Log($"{Tag}: {yol}  {w}x{h} (1:1)");
+
+        Object.DestroyImmediate(kes);
+        Object.DestroyImmediate(tam);
+    }
+
+    public static void Hazirla(Transform canvas, Ekran e)
     {
         foreach (string p in e.kapa)
         {
@@ -136,7 +173,7 @@ public static class NexumDeviceShot
     }
 
     /// <summary>Oyun ekranı için tahtaya dört seviyeden taş yerleştirir.</summary>
-    private static void TahtayiDoldur(Scene scene)
+    public static void TahtayiDoldur(Scene scene)
     {
         GridManager grid = Object.FindObjectOfType<GridManager>(true);
         if (grid == null) return;

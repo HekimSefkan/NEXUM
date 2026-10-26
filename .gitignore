@@ -123,3 +123,7 @@ Tools/store/screenshots/
 
 # Python onbellegi
 Tools/__pycache__/
+
+# Unity Test Runner gecici sahnesi (kosma yarida kesilirse kaliyor)
+Assets/InitTestScene*.unity
+Assets/InitTestScene*.unity.meta

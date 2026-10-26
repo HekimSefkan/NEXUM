@@ -27,26 +27,34 @@ Loc anahtarları **hazır** (tr + en, `NexumLocalize` ile derlendi):
 | `menu.level_select` | BÖLÜM SEÇİMİ | LEVEL SELECT |
 | `menu.coming_soon` | Yakında | Coming soon |
 
-## 2. Ana menü hub düzeni
+## 2. Ana menü hub düzeni — **FAZ 1.7'YE ALINDI**
 
-- **Logo EN ÜSTTE ince bant** (profil şeridinin altında değil).
-- **Mod kartları ve günlük bulmaca kartı boş kalmayacak**; her biri tek satır
-  durum taşıyacak — anahtarlar yukarıda hazır.
-- **Bilgi satırı (Ansiklopedi, Tarif Defteri) en zayıf ağırlıkta olmayacak**;
-  mod kartlarıyla eşit ağırlık alacak.
-- Gizleme bayrağı: yeni oyuncuya kilitli girişler gösterilmez.
+Hub düzeni (logo bandı, mod kartları, günlük bulmaca kartı, bilgi satırının
+ağırlığı, kilitli giriş gizleme) **3b kapsamından çıkarıldı**. Loc anahtarları
+yukarıda hazır bekliyor; iş Faz 1.7'de yapılacak.
 
-## 3. Yerleşim düzeltmeleri — 3a'da yapılamayanlar
+## 3. 3b KAPSAMI — beş madde
 
-| Konu | Neden 3a'da yapılmadı | 3b'de ne yapılacak |
-|---|---|---|
-| **Dört menü butonu** (`oyna`, `nasıloynanır`, `ansiklopedi`, `ayarlar`) | Metin **görselin içinde basılı**; kit çerçevesi koymak metni siler | Kit çerçevesi + **TMP etiketi eklenecek** (yapı değişikliği, UIBuilder) |
-| **Beher etiketi** | Formül beherin **içinde** ve çok küçük, okunmuyor | Formül beherin **YANINDA** duracak; sayaç `chip` sprite'ına taşınacak |
-| **Katalizör tüpü** | 3-slice uygulaması yeni oran gerektiriyor | Tüp yatayda 3-slice, dolum çubuğu camın içine |
-| **İpucu butonu** | HUD'da yok | `GERİ AL / PARÇALA / İPUCU` üçlüsü, rozet, devre dışı durumu |
-| **Karakter (hint_assistant)** | Sağ kenardan taşıyor | `icon_button` / `avatar_frame` içine alınıp yeniden çerçevelenecek |
-| **Taş durum sprite'ları** | `TileVisual` bağlı ama yalnızca `newborn` tetikleniyor | `selected` / `merging` / `discovered` çağrı noktaları eklenecek |
-| **Toggle ve kilitli bölüm sprite'ları** | Sahnede `Image.sprite` olarak değil, Button geçişinde tutuluyor olabilir — swap tablosunda eşleşme bulunamadı | Nerede tutulduğu bulunup kite bağlanacak |
+Aşağıdakiler dışında 3b'ye bir şey eklenmez.
+
+| # | Konu | Neden 3a'da yapılmadı | 3b'de ne yapılacak |
+|---|---|---|---|
+| 1 | **Dört menü butonu** (`oyna`, `nasıloynanır`, `ansiklopedi`, `ayarlar`) | Metin **görselin içinde basılı**; kit çerçevesi koymak metni siler | Kit çerçevesi + **TMP etiketi eklenecek** (yapı değişikliği, UIBuilder) |
+| 2 | **İpucu butonu** | HUD'da ayrı bir buton yok; ipucu karakterin kendisine basılarak açılıyor | `GERİ AL / PARÇALA / İPUCU` üçlüsü, rozet, devre dışı durumu |
+| 3 | **Beher etiketi** | Formül beherin **içinde** ve çok küçük, okunmuyor | Formül beherin **YANINDA** duracak; sayaç `chip` sprite'ına taşınacak |
+| 4 | **Duraklat kartı** | 3a'da yalnızca çerçeve ve ritim düzeltildi; DEVAM ET / ANA MENÜ hâlâ görselsiz (alfa 0) metin | Butonlar kit çerçevesine oturtulacak |
+| 5 | **Mod kartı durum satırları** | Ayarlar'daki üç mod butonu hangi modun seçili olduğunu yalnızca sprite durumuyla anlatıyor | Her mod kartı tek satır durum/açıklama taşıyacak |
+
+### 3b dışında kalan, bilinen açık maddeler
+
+Bunlar 3b kapsamında **değil**; sırası geldiğinde ayrı adım olarak ele alınır.
+
+| Konu | Durum |
+|---|---|
+| Katalizör tüpü 3-slice | Açık |
+| Karakter (`hint_assistant`) çerçevelenmesi | Açık |
+| Taş durum sprite'ları (`selected` / `merging` / `discovered` çağrı noktaları) | Açık — yalnızca `newborn` tetikleniyor |
+| Toggle sprite'ları `SettingsManager`'da çalışma zamanında atanıyor | Açık — kite bağlanacak |
 
 ## 4. Silinecek dosyalar (silme yetkim yok)
 
