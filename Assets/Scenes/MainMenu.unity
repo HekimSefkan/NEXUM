@@ -1473,7 +1473,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 69ce27af3e1596c47a158e560821f560, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fd8a69256245d574aa0fdf7c023ecc80, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6347,9 +6347,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 95015008ba5778147911e635b2a3477b, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -6678,9 +6678,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 95015008ba5778147911e635b2a3477b, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -9011,9 +9011,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 95015008ba5778147911e635b2a3477b, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -21161,7 +21161,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -83.87988}
+  m_AnchoredPosition: {x: 0, y: -83.88}
   m_SizeDelta: {x: 500, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376075351
@@ -21184,7 +21184,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2ff0e1c1632d07f4aa267124d2f3d5f0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0eb292d72a86d1f4a8ebfae4d1fedc69, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -28011,8 +28011,8 @@ MonoBehaviour:
   - {fileID: 1925579027}
   - {fileID: 1451172193}
   - {fileID: 1301025575}
-  unlockedSprite: {fileID: 21300000, guid: a9e3e8dc1e1a9014186a8cc96182df8b, type: 3}
-  lockedSprite: {fileID: 21300000, guid: 29b787230807d3a46bd0a4c7c6a82366, type: 3}
+  unlockedSprite: {fileID: 21300000, guid: 0bb298a30a84c90438be83c683fc7dad, type: 3}
+  lockedSprite: {fileID: 21300000, guid: be581e0c8702d5649a1a233ff95b6e7f, type: 3}
   completedColor: {r: 0.18, g: 0.8, b: 0.44, a: 1}
   activeColor: {r: 0, g: 0.7, b: 0.84, a: 1}
   lockedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -28151,8 +28151,8 @@ MonoBehaviour:
   freeModeImg: {fileID: 23526031}
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   unselectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  toggleOnSprite: {fileID: 21300000, guid: c71f48c3150494e4dbb1c499ade30010, type: 3}
-  toggleOffSprite: {fileID: 21300000, guid: 7805f70e020250549841868206dcbadf, type: 3}
+  toggleOnSprite: {fileID: 21300000, guid: 74f1bb2715edce748b71bd3dc221cb32, type: 3}
+  toggleOffSprite: {fileID: 21300000, guid: 95015008ba5778147911e635b2a3477b, type: 3}
   musicToggleImg: {fileID: 403061808}
   sfxToggleImg: {fileID: 420957764}
   flashcardsToggleImg: {fileID: 542589106}
@@ -30502,7 +30502,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 0.6784314, g: 0.70980394, b: 0.7411765, a: 1}
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -32479,9 +32479,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 95015008ba5778147911e635b2a3477b, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

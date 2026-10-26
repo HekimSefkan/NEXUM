@@ -107,6 +107,12 @@ public class GridManager : MonoBehaviour
     [Header("Görsel Efektler")]
     public GameObject mergeParticlePrefab; 
 
+    /// <summary>
+    /// Birleşen taşın "pop" tween süresi. TileVisual durum süresi de
+    /// buradan okunur ki ikisi ayrışmasın.
+    /// </summary>
+    public const float MergePopDuration = 0.3f;
+
     /// <summary>Serbest mod: hedefsiz, kaybetmesiz keşif alanı.</summary>
     public bool IsFreeMode { get { return currentGameMode == 2; } }
 
@@ -255,6 +261,13 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>Taşın üstünde bir kez parlayıp sönen beyaz kopya.</summary>
+    private static void SetTileSelected(Transform t, bool acik)
+    {
+        if (t == null) return;
+        TileVisual v = t.GetComponent<TileVisual>();
+        if (v != null) v.SetSelected(acik);
+    }
+
     private void PlaySpawnFlash(GameObject tile)
     {
         // Yeni dogan tas kendini duyurur: parlak sprite dogum animasyonu
@@ -501,7 +514,12 @@ public class GridManager : MonoBehaviour
 
                     GameObject mergedTile = Instantiate(recipe.resultPrefab, cells[targetIndex]);
                     mergedTile.transform.localScale = Vector3.zero;
-                    mergedTile.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+                    mergedTile.transform.DOScale(Vector3.one, MergePopDuration).SetEase(Ease.OutBack);
+
+                    // Birleşme durumu: SÜRE AYNI TWEEN'DEN gelir, yeni bir
+                    // zamanlama sabiti girmez.
+                    TileVisual mergedVisual = mergedTile.GetComponent<TileVisual>();
+                    if (mergedVisual != null) mergedVisual.PlayMerging(MergePopDuration);
                     mergedThisShift.Add(mergedTile.transform);
 
                     if (gameManager != null)
@@ -523,6 +541,9 @@ public class GridManager : MonoBehaviour
                     if (RecipeBook.Discover(recipeKey))
                     {
                         UIManager.Instance.ShowSystemMessage(Loc.Get(CodeStrings.RecipeDiscovered), 1.6f);
+
+                        // Keşif, birleşmenin üstüne yazılır (aynı süre).
+                        if (mergedVisual != null) mergedVisual.PlayDiscovered(MergePopDuration);
                     }
 
                     actionHappened = true;
@@ -921,6 +942,11 @@ public class GridManager : MonoBehaviour
         t1.DOScale(Vector3.one * 1.15f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
         t2.DOScale(Vector3.one * 1.15f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
 
+        // Vurgulanan iki taş "seçili" sprite'ına geçer; süreli değil,
+        // StopHintHighlight kapatır. Tween'lere dokunulmaz.
+        SetTileSelected(t1, true);
+        SetTileSelected(t2, true);
+
         string coreMsg = string.IsNullOrEmpty(hintMsg) ? Loc.Get(CodeStrings.HintGeneric) : hintMsg;
         
         string infoFooter;
@@ -940,6 +966,9 @@ public class GridManager : MonoBehaviour
 
     public void StopHintHighlight()
     {
+        SetTileSelected(activeHintTile1, false);
+        SetTileSelected(activeHintTile2, false);
+
         if (activeHintTile1 != null) { activeHintTile1.DOKill(); activeHintTile1.localScale = Vector3.one; }
         if (activeHintTile2 != null) { activeHintTile2.DOKill(); activeHintTile2.localScale = Vector3.one; }
     }

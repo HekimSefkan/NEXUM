@@ -150,6 +150,11 @@ public static class NexumSpriteSwap
                 {
                     if (Uygula(img, harita, hedefler, dokum)) d++;
                 }
+
+                foreach (MonoBehaviour mb in kok.GetComponentsInChildren<MonoBehaviour>(true))
+                {
+                    d += AlanlariTasi(mb, hedefler, dokum);
+                }
             }
 
             if (d > 0) EditorSceneManager.SaveScene(scene);
@@ -169,6 +174,12 @@ public static class NexumSpriteSwap
                 if (Uygula(img, harita, hedefler, dokum)) { degisti = true; pd++; }
             }
 
+            foreach (MonoBehaviour mb in kok.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                int n = AlanlariTasi(mb, hedefler, dokum);
+                if (n > 0) { degisti = true; pd += n; }
+            }
+
             if (degisti) PrefabUtility.SaveAsPrefabAsset(kok, normal);
             PrefabUtility.UnloadPrefabContents(kok);
         }
@@ -184,6 +195,45 @@ public static class NexumSpriteSwap
         AssetDatabase.SaveAssets();
         Debug.Log($"{Tag}: TOPLAM değişen {degisen}");
         Debug.Log($"{Tag}: OK");
+    }
+
+    /// <summary>
+    /// Scriptlerin SERİLEŞTİRİLMİŞ Sprite alanlarını da taşır.
+    ///
+    /// NEDEN: tarama yalnızca <c>Image.sprite</c>'a bakıyordu. Ayarlar
+    /// anahtarları <c>SettingsManager.toggleOnSprite/toggleOffSprite</c>
+    /// alanlarında duruyor ve çalışma zamanında atanıyor; bu yüzden kit
+    /// geçişinde eski görselde kaldılar ve sahnede beyaz dikdörtgen
+    /// göründüler. Aynı boşluk kilitli bölüm düğümleri gibi başka
+    /// alanlarda da vardı.
+    /// </summary>
+    private static int AlanlariTasi(MonoBehaviour mb, Dictionary<Sprite, Sprite> hedefler,
+                                    Dictionary<string, int> dokum)
+    {
+        if (mb == null) return 0;
+
+        SerializedObject so = new SerializedObject(mb);
+        SerializedProperty it = so.GetIterator();
+        int n = 0;
+
+        while (it.NextVisible(true))
+        {
+            if (it.propertyType != SerializedPropertyType.ObjectReference) continue;
+
+            Sprite eski = it.objectReferenceValue as Sprite;
+            if (eski == null) continue;
+
+            Sprite yeni;
+            if (!hedefler.TryGetValue(eski, out yeni) || yeni == eski) continue;
+
+            it.objectReferenceValue = yeni;
+            string anahtar = $"{mb.GetType().Name}.{it.name}: {eski.name} -> {yeni.name}";
+            dokum[anahtar] = dokum.TryGetValue(anahtar, out int k) ? k + 1 : 1;
+            n++;
+        }
+
+        if (n > 0) so.ApplyModifiedPropertiesWithoutUndo();
+        return n;
     }
 
     private static bool Uygula(Image img, Dictionary<Sprite, Kural> harita,

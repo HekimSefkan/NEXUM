@@ -44,9 +44,12 @@ public static class RecipeBookBuilder
     private static readonly Vector2 LockSize = new Vector2(44f, 44f);
 
     // --- paylaşılan varlıklar (yeni görsel üretilmez, mevcutlar paylaşılır)
-    private const string MenuBackgroundPath = "Assets/Art/Figures/arkaplan.png";
+    // Kit karşılıkları doğrudan yazılı: eski yolları yazmak kurucu ile
+    // NexumSpriteSwap'i birbirine karşı çalıştırıyordu (kurucu eskiyi
+    // yazıyor, tarama yeniye taşıyor, diff hiç durulmuyordu).
+    private const string MenuBackgroundPath = "Assets/Art/Figures/background_c_main.png";
     private const float MenuBackgroundAspect = 0.56279904f;   // 941x1672, MainMenu/Background ile aynı
-    private const string LogoPath = "Assets/Art/Figures/NEXUM_logo.png";
+    private const string LogoPath = "Assets/Art/Figures/NEXUM_logo_metal.png";
     private static readonly Vector2 LogoSize = new Vector2(500f, 130f);
     private static readonly Vector2 LogoPosition = new Vector2(0f, -83.88f);   // Game sahnesindeki logo ile aynı
 

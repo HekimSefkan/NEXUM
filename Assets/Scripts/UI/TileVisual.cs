@@ -23,6 +23,7 @@ public class TileVisual : MonoBehaviour
 
     private Image image;
     private float normaleDonusZamani = -1f;
+    private bool seciliKilitli;          // ipucu vurgusu: süreyle değil, açma/kapama ile
 
     private Image Target
     {
@@ -36,11 +37,13 @@ public class TileVisual : MonoBehaviour
     private void OnEnable()
     {
         normaleDonusZamani = -1f;
+        seciliKilitli = false;
         Apply(normal);
     }
 
     private void Update()
     {
+        if (seciliKilitli) return;
         if (normaleDonusZamani < 0f) return;
         if (Time.unscaledTime < normaleDonusZamani) return;
 
@@ -57,9 +60,48 @@ public class TileVisual : MonoBehaviour
     /// </summary>
     public void PlayNewborn(float sure)
     {
-        if (newborn == null) return;
+        Zamanli(newborn, sure);
+    }
 
-        Apply(newborn);
+    /// <summary>
+    /// Birleşmeden doğan taş: <paramref name="sure"/> boyunca birleşme
+    /// sprite'ı. Süre ÇAĞIRANDAN gelir (GridManager'ın kendi pop tween
+    /// süresi); yeni bir zamanlama sabiti girmez.
+    /// </summary>
+    public void PlayMerging(float sure)
+    {
+        Zamanli(merging, sure);
+    }
+
+    /// <summary>İlk kez keşfedilen tarif: keşif sprite'ı.</summary>
+    public void PlayDiscovered(float sure)
+    {
+        Zamanli(discovered, sure);
+    }
+
+    /// <summary>
+    /// İpucu vurgusu. Süreli değil: <c>GridManager.ActivateHint</c> açar,
+    /// <c>StopHintHighlight</c> kapatır.
+    /// </summary>
+    public void SetSelected(bool acik)
+    {
+        seciliKilitli = acik;
+        if (acik)
+        {
+            Apply(selected);
+        }
+        else
+        {
+            normaleDonusZamani = -1f;
+            Apply(normal);
+        }
+    }
+
+    private void Zamanli(Sprite s, float sure)
+    {
+        if (s == null || seciliKilitli) return;
+
+        Apply(s);
         normaleDonusZamani = Time.unscaledTime + Mathf.Max(0f, sure);
     }
 

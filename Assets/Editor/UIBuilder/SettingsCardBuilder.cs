@@ -61,6 +61,8 @@ public static class SettingsCardBuilder
     // 10 -> 26: 118 birimlik grafiklerin 144'lük dokunma alanları 128
     // hatvede 16 birim kesişiyordu. Hatve = 118 + 26 = 144.
     private const float ModeGap = 26f;
+
+    private const string ToggleOffPath = "Assets/Art/UI/toggle_off_normal.png";
     private const float ModeBlock = 3f * ModeH + 2f * ModeGap;   // 374
 
     private struct Band
@@ -281,6 +283,23 @@ public static class SettingsCardBuilder
                 {
                     b.SetFixed(go, UITokens.Center, new Vector2(130f, 60f),
                                new Vector2(RowW * 0.5f - 65f - 10f, 0f));
+
+                    // Serileştirilmiş sprite de kitten olsun: SettingsManager
+                    // çalışma zamanında açık/kapalı sprite'ını atıyor ama
+                    // edit mode'da (ve gerçek render'da) yerleşik beyaz
+                    // dikdörtgen görünüyordu.
+                    Image img = go.GetComponent<Image>();
+                    Sprite kapali = AssetDatabase.LoadAssetAtPath<Sprite>(ToggleOffPath);
+                    if (img != null && kapali != null)
+                    {
+                        b.Apply(go, img, i =>
+                        {
+                            i.sprite = kapali;
+                            i.type = Image.Type.Simple;
+                            i.color = Color.white;
+                            i.preserveAspect = true;
+                        });
+                    }
                 }
                 else if (go.name.EndsWith("Text"))
                 {
