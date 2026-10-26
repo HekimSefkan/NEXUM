@@ -40,6 +40,12 @@ public static class CodeStrings
     public const string RecipeBookRingValue = "recipebook.ring_value";
     public const string RecipeBookButtonLabel = "recipebook.button";
 
+    // --- Ana menü butonları (3b: metin görselden TMP etiketine taşındı) ---
+    public const string MenuPlay = "menu.play";
+    public const string MenuHowToPlay = "menu.how_to_play";
+    public const string MenuEncyclopedia = "menu.encyclopedia";
+    public const string MenuSettings = "menu.settings";
+
     // --- Ana menü hub (3b'de ekranlara girecek) ---------------------------
     // TYT/AYT soru modunun adı "KAYNAMA NOKTASI". Menüde "sınav", "deneme"
     // ve "simülasyon" kelimeleri KULLANILMAZ; Ayarlar'daki oyun modu olan
@@ -114,6 +120,11 @@ public static class CodeStrings
         [RecipeBookLockedSymbol] = "?",
         [RecipeBookRingValue] = "{0}/{1}",
         [RecipeBookButtonLabel] = "TARİF DEFTERİ",
+
+        [MenuPlay] = "OYNA",
+        [MenuHowToPlay] = "NASIL OYNANIR",
+        [MenuEncyclopedia] = "ANSİKLOPEDİ",
+        [MenuSettings] = "AYARLAR",
 
         [MenuBoilingPoint] = "KAYNAMA NOKTASI",
         [MenuBoilingPointStatus] = "En iyi: {0}/{1} doğru",

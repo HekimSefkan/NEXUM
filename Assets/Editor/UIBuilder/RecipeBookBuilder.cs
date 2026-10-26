@@ -65,6 +65,10 @@ public static class RecipeBookBuilder
     private const float MenuButtonSpacing = 265f;
     private const float EncyclopediaY = -137f;
 
+    // OYNA butonu kardeşlerinden bir tık büyük kalır (birincil eylem).
+    private static readonly Vector2 PlayButtonSize = new Vector2(600f, 242f);
+    private const float PlayY = 395f;
+
     // Metinsiz buton çerçevesi. Diğer dört menü butonunun metni GÖRSELİN
     // İÇİNDE basılı olduğu için birebir aynı sprite kullanılamaz; siluet olarak
     // en yakın olanı seçildi (köşeleri pahlı dikdörtgen çerçeve, ANSİKLOPEDİ /
@@ -347,36 +351,62 @@ public static class RecipeBookBuilder
         b.SetFixed(entry, UITokens.Center, MenuButtonSize,
                    new Vector2(0f, EncyclopediaY - MenuButtonSpacing));
 
-        // Diğer menü butonları metni görselin içinde taşıyor; defter için metinsiz
-        // çerçeve (level_selection_button) + TMP etiketi kullanılır. Yeni görsel
-        // üretilmez. preserveAspect kapalı: kardeşleri de kutularına geriliyor.
-        b.EnsureComponent<Image>(entry, image =>
-        {
-            image.sprite = LoadSprite(MenuButtonFramePath);
-            image.color = Color.white;
-            image.preserveAspect = false;
-        });
-        b.EnsureComponent<Button>(entry, button => button.transition = Selectable.Transition.ColorTint);
+        KurMenuButonu(b, theme, menuPath, "RecipeBookButton",
+                      CodeStrings.RecipeBookButtonLabel,
+                      EncyclopediaY - MenuButtonSpacing);
 
-        GameObject label = b.Ensure(menuPath + "/RecipeBookButton", "Label");
-        b.SetFixed(label, UITokens.Center, MenuButtonLabelSize);
-        b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(tmp, theme,
-            theme.typography.subtitle, theme.palette.textOnLight, TextAlignmentOptions.Center));
-        EnsureLocalized(b, label, CodeStrings.RecipeBookButtonLabel);
-
-        // AYARLAR bir sıra aşağı: kurucunun kaydında olmadığı için devralınır
-        GameObject settings = b.Ensure(menuPath, "SettingButton", adopt: true);
-        if (settings != null)
-        {
-            b.SetFixed(settings, UITokens.Center, MenuButtonSize,
-                       new Vector2(0f, EncyclopediaY - 2f * MenuButtonSpacing));
-        }
+        // --- 3b/B1: DÖRT BUTONUN METNİ GÖRSELİN İÇİNDEN ÇIKTI
+        // oyna.png / nasıloynanır.png / ansiklopedi.png / ayarlar.png metni
+        // PİKSELİN İÇİNDE taşıyordu: çeviri imkânsız, sığma kuralı
+        // ölçülemez, punto denetlenemez. Beşi artık aynı aileden: kit
+        // çerçevesi + TMP etiketi.
+        KurMenuButonu(b, theme, menuPath, "PlayButton",
+                      CodeStrings.MenuPlay, PlayY, PlayButtonSize);
+        KurMenuButonu(b, theme, menuPath, "HowToPlayButton",
+                      CodeStrings.MenuHowToPlay, EncyclopediaY + MenuButtonSpacing);
+        KurMenuButonu(b, theme, menuPath, "EncyclopediaButton",
+                      CodeStrings.MenuEncyclopedia, EncyclopediaY);
+        KurMenuButonu(b, theme, menuPath, "SettingButton",
+                      CodeStrings.MenuSettings, EncyclopediaY - 2f * MenuButtonSpacing);
 
         if (dryRun) return;
 
         MainMenuManager menu = Object.FindObjectOfType<MainMenuManager>(true);
-        Button entryButton = entry.GetComponent<Button>();
+        GameObject defter = b.FindObject(menuPath + "/RecipeBookButton");
+        Button entryButton = defter != null ? defter.GetComponent<Button>() : null;
         if (menu != null && entryButton != null) Wire(entryButton, menu, menu.OpenRecipeBook);
+    }
+
+    /// <summary>
+    /// Menü butonu: kit çerçevesi + TMP etiketi, metin GÖRSELDE DEĞİL.
+    /// Etiket rengi burada seçilmez — <c>NexumContrastSweep</c> gerçek
+    /// yüzeyden ölçüp rolü belirler; buradaki değer yalnızca başlangıçtır.
+    /// </summary>
+    private static void KurMenuButonu(UIBuilder b, NexumTheme theme, string menuPath,
+                                      string ad, string locKey, float y,
+                                      Vector2 boyut = default(Vector2))
+    {
+        GameObject btn = b.Ensure(menuPath, ad, adopt: true);
+        if (btn == null) return;
+
+        Vector2 olcu = boyut == default(Vector2) ? MenuButtonSize : boyut;
+        b.SetFixed(btn, UITokens.Center, olcu, new Vector2(0f, y));
+
+        b.EnsureComponent<Image>(btn, image =>
+        {
+            image.sprite = LoadSprite(MenuButtonFramePath);
+            image.type = Image.Type.Sliced;
+            image.fillCenter = true;
+            image.color = Color.white;
+            image.preserveAspect = false;
+        });
+        b.EnsureComponent<Button>(btn, button => button.transition = Selectable.Transition.ColorTint);
+
+        GameObject label = b.Ensure(menuPath + "/" + ad, "Label");
+        b.SetFixed(label, UITokens.Center, MenuButtonLabelSize);
+        b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(tmp, theme,
+            theme.typography.subtitle, theme.palette.textPrimary, TextAlignmentOptions.Center));
+        EnsureLocalized(b, label, locKey);
     }
 
     /// <summary>

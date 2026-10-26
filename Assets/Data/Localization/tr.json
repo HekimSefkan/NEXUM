@@ -343,6 +343,10 @@
             "value": "Bugün çözülmedi"
         },
         {
+            "key": "menu.encyclopedia",
+            "value": "ANSİKLOPEDİ"
+        },
+        {
             "key": "menu.endless_lab",
             "value": "SONSUZ LAB"
         },
@@ -351,8 +355,20 @@
             "value": "En iyi: {0} birleşme"
         },
         {
+            "key": "menu.how_to_play",
+            "value": "NASIL OYNANIR"
+        },
+        {
             "key": "menu.level_select",
             "value": "BÖLÜM SEÇİMİ"
+        },
+        {
+            "key": "menu.play",
+            "value": "OYNA"
+        },
+        {
+            "key": "menu.settings",
+            "value": "AYARLAR"
         },
         {
             "key": "menu.weekly_experiment",
