@@ -86,7 +86,9 @@ public static class RecipeBookBuilder
     private static readonly Vector2 PauseButtonSize = new Vector2(560f, 88f);
     // -265 -> -195: 64 birimlik grafiğin 144'lük dokunma alanı DEVAM ET /
     // ANA MENÜ satırının alanıyla 58 birim kesişiyordu.
-    private const float PauseButtonY = -219f;
+// -219 -> -209: 144'luk dokunma alani eylem satiriyla 8 birim
+    // kesisiyordu (ResumeButton x RecipeBookButton 2016 birim2).
+    private const float PauseButtonY = -209f;
     private const float PauseActionY = -355f;
     // 3b/B4: DEVAM ET ve ANA MENÜ çerçevesiz metindi (alfa 0). Kit
     // çerçevesine alındı; ikisi de aynı ölçü, defter girişiyle aynı aile.
@@ -515,7 +517,7 @@ public static class RecipeBookBuilder
         GameObject pauseFact = b.Ensure(boxPath, "FactText", adopt: true);
         // Bilgi metni kartın ortasını dolduruyor: üstte alt başlık (313),
         // altta defter girişi (-147). 560x440 @ 83 -> 83±220 = -137..303.
-        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(560f, 440f), new Vector2(0f, 83f));
+        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(560f, 430f), new Vector2(0f, 90f));
 
         // --- DEVAM ET / ANA MENÜ: GRAFİK ölçüleri değişmedi
         GameObject resume = b.Ensure(boxPath, "ResumeButton", adopt: true);

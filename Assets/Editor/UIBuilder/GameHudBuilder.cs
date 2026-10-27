@@ -37,7 +37,9 @@ public static class GameHudBuilder
     private const string CharacterPath = "Assets/Art/Figures/hint_assistant.png";
 
     private static readonly Vector2 ActionSize = new Vector2(250f, 100f);
-    private static readonly Vector2 BadgeSize = new Vector2(64f, 64f);
+    // Rozet kutusu label puntosunu (30) rahat alacak kadar: 30 punto bir
+    // rakam için ~22 birim, kutu 72 -> %31 doluluk.
+    private static readonly Vector2 BadgeSize = new Vector2(72f, 72f);
     private static readonly Vector2 AvatarSize = new Vector2(200f, 200f);
 
     /// <summary>
@@ -130,7 +132,7 @@ public static class GameHudBuilder
         b.EnsureComponent<TextMeshProUGUI>(badgeText, tmp =>
         {
             tmp.font = theme.typography.label.font;
-            tmp.fontSize = theme.typography.label.size * 0.8f;
+            tmp.fontSize = theme.typography.label.size;   // tema rolü; çarpan yok
             tmp.color = theme.palette.textPrimary;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.enableWordWrapping = false;
@@ -140,7 +142,14 @@ public static class GameHudBuilder
 
         // --- Sütunun geri kalanı aynı ritme oturur (ölçüler DEĞİŞMEZ)
         GameObject undo = b.Ensure(HudPath, "UndoButton", adopt: true);
-        if (undo != null) b.SetFixed(undo, GridAnchor, ActionSize, Pos(new Vector2(ColumnX, UndoY)));
+        if (undo != null)
+        {
+            b.SetFixed(undo, GridAnchor, ActionSize, Pos(new Vector2(ColumnX, UndoY)));
+
+            // Tint PALETTEN: eski #6DE847 tema dışıydı (validator uyarıyordu).
+            Image img = undo.GetComponent<Image>();
+            if (img != null) b.Apply(undo, img, i => i.color = theme.palette.success);
+        }
 
         GameObject joker = b.Ensure(HudPath, "JokerButton", adopt: true);
         if (joker != null) b.SetFixed(joker, GridAnchor, ActionSize, Pos(new Vector2(ColumnX, JokerY)));

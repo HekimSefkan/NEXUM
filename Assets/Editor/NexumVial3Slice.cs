@@ -83,6 +83,21 @@ public static class NexumVial3Slice
         foreach (Image img in Object.FindObjectsOfType<Image>(true))
         {
             if (img.sprite != tup) continue;
+
+            // YALNIZCA ÇERÇEVE. ReadyGlow aynı dokuyu dekoratif bir tint
+            // olarak kullanıyor ve rect'i 648x132; 352+320 kenarlık oraya
+            // sığmıyor (orta alan -24) ve çökme dedektörü haklı olarak
+            // düşürüyor. Parıltının 3-slice'a ihtiyacı yok.
+            if (img.name != "VialFrame")
+            {
+                // Daha önce Sliced yapıldıysa geri al
+                if (img.type == Image.Type.Simple) continue;
+                img.type = Image.Type.Simple;
+                EditorUtility.SetDirty(img);
+                n++;
+                Debug.Log($"{Tag}_CIZIM: {img.name} -> Simple (çerçeve değil)");
+                continue;
+            }
             if (img.type == Image.Type.Sliced && img.fillCenter) continue;
 
             img.type = Image.Type.Sliced;
