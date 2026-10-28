@@ -37,6 +37,30 @@
             "builder": "RecipeBookPauseEntry"
         },
         {
+            "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel",
+            "builder": "EncyclopediaDetailGame"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel/CloseButton",
+            "builder": "EncyclopediaDetailGame"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel/DescriptionText",
+            "builder": "EncyclopediaDetailGame"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel/FormulaText",
+            "builder": "EncyclopediaDetailGame"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel/NameText",
+            "builder": "EncyclopediaDetailGame"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel/ScoreText",
+            "builder": "EncyclopediaDetailGame"
+        },
+        {
             "path": "Game::Canvas/SafeAreaRoot/HintButton",
             "builder": "GameHud"
         },

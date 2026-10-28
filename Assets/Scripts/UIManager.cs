@@ -26,6 +26,9 @@ public class UIManager : MonoBehaviour
 
     [Tooltip("Oyun sahnesindeki tarif defteri paneli (RecipeBookBuilder bağlar).")]
     public GameObject recipeBookPanel;
+
+    [Tooltip("Defterden açılan ansiklopedi kartı (EncyclopediaDetailBuilder bağlar).")]
+    public GameObject elementDetailPanel;
     public TextMeshProUGUI factTextUI; 
     public List<ChemistryFact> allFacts; 
 
@@ -93,7 +96,8 @@ public class UIManager : MonoBehaviour
                 || IsPanelOpen(winPanel)
                 || IsPanelOpen(hypothesisPanel)
                 || IsPanelOpen(undoPanel)
-                || IsPanelOpen(recipeBookPanel);
+                || IsPanelOpen(recipeBookPanel)
+                || IsPanelOpen(elementDetailPanel);
         }
     }
 

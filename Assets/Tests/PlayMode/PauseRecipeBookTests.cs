@@ -128,6 +128,37 @@ public class PauseRecipeBookTests
         Debug.Log($"{Tag}_GERITUSU: defter kapandı, duraklat açık, sahne Game");
     }
 
+    /// <summary>
+    /// PANEL ERİŞİMİ kuralı: defter satırına basınca açılan ansiklopedi
+    /// kartı oyun sahnesinde de KURULU olmalı. Değilse satıra basmak
+    /// sessizce hiçbir şey yapmaz (tarif defteri hatasının bir adım ilerisi).
+    /// </summary>
+    [UnityTest]
+    public IEnumerator DefterSatiriOyundaAnsiklopediKartiniAcar()
+    {
+        SaveService.Data.selectedLevel = 0;
+        SaveService.SetTutorialRead(0);
+
+        SceneManager.LoadScene("Game");
+        yield return null;
+        yield return new WaitForSeconds(1f);
+
+        MonoBehaviour ui = Object.FindObjectsOfType<MonoBehaviour>(true)
+            .FirstOrDefault(m => m.GetType().Name == "UIManager");
+        GameObject kart = Reflect.Get<GameObject>(ui, "elementDetailPanel");
+        Assert.IsNotNull(kart, "oyun sahnesinde ansiklopedi kartı kurulu değil");
+
+        MonoBehaviour defter = Object.FindObjectsOfType<MonoBehaviour>(true)
+            .FirstOrDefault(m => m.GetType().Name == "RecipeBookPanel");
+        Assert.IsNotNull(defter, "oyun sahnesinde RecipeBookPanel yok");
+
+        Object ansiklopedi = Reflect.Get<Object>(defter, "encyclopedia");
+        Assert.IsNotNull(ansiklopedi,
+            "RecipeBookPanel.encyclopedia oyunda null: satıra basmak sessizce hiçbir şey yapar");
+
+        Debug.Log($"{Tag}_KART: oyun sahnesinde ansiklopedi kartı kurulu, defter ona bağlı");
+    }
+
     private static int TahtadakiTas(MonoBehaviour grid)
     {
         var cells = Reflect.Get<System.Collections.Generic.List<Transform>>(grid, "cells");
