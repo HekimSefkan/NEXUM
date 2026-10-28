@@ -23,6 +23,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Eğitim ve Duraklatma Paneli")]
     public GameObject pausePanel;
+
+    [Tooltip("Oyun sahnesindeki tarif defteri paneli (RecipeBookBuilder bağlar).")]
+    public GameObject recipeBookPanel;
     public TextMeshProUGUI factTextUI; 
     public List<ChemistryFact> allFacts; 
 
@@ -89,7 +92,8 @@ public class UIManager : MonoBehaviour
                 || IsPanelOpen(gameOverPanel)
                 || IsPanelOpen(winPanel)
                 || IsPanelOpen(hypothesisPanel)
-                || IsPanelOpen(undoPanel);
+                || IsPanelOpen(undoPanel)
+                || IsPanelOpen(recipeBookPanel);
         }
     }
 
@@ -415,12 +419,43 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    /// <summary>Duraklat menüsünden tarif defteri: ana menüye dönüp defteri açar.</summary>
+    /// <summary>
+    /// Duraklat menüsünden tarif defteri.
+    ///
+    /// ESKİ DAVRANIŞ BİR HATAYDI: <c>SceneManager.LoadScene("MainMenu")</c>
+    /// çağrılıyordu, yani defter açmak OYUNDAN ÇIKMAK demekti — tahta, skor
+    /// ve duraklatılmış durum yok oluyordu. Defter paneli artık Game
+    /// sahnesinde de var (RecipeBookBuilder iki sahneye birden kuruyor);
+    /// sahne terk edilmiyor.
+    ///
+    /// <c>Time.timeScale</c>'e DOKUNULMAZ: oyun duraklatılmış kalır.
+    /// </summary>
     public void OpenRecipeBook()
     {
         PlayButtonSound();
-        MainMenuManager.OpenRecipeBookOnLoad = true;
-        SceneManager.LoadScene("MainMenu");
+
+        if (recipeBookPanel == null)
+        {
+            // Panel kurulmamışsa eski yola düş (ana menüde aç).
+            MainMenuManager.OpenRecipeBookOnLoad = true;
+            SceneManager.LoadScene("MainMenu");
+            return;
+        }
+
+        if (pausePanel != null) pausePanel.SetActive(false);
+        recipeBookPanel.SetActive(true);
+
+        RecipeBookPanel panel = recipeBookPanel.GetComponent<RecipeBookPanel>();
+        if (panel != null) panel.Refresh();
+    }
+
+    /// <summary>Defterden duraklat menüsüne dön. Oyun durumu korunur.</summary>
+    public void CloseRecipeBook()
+    {
+        PlayButtonSound();
+
+        if (recipeBookPanel != null) recipeBookPanel.SetActive(false);
+        if (pausePanel != null) pausePanel.SetActive(true);
     }
 
     public void GoToMainMenu()

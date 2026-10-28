@@ -95,12 +95,16 @@ namespace Nexum.Core
                 return true;
             }
 
-            // 4) Küçük pop-up'lar
+            // 4) Tarif defteri: duraklat menüsünden açıldı, oraya dönülür.
+            // Oyun sahnesinden ÇIKILMAZ; tahta ve skor yerinde kalır.
+            if (IsOpen(ui.recipeBookPanel)) { ui.CloseRecipeBook(); return true; }
+
+            // 5) Küçük pop-up'lar
             if (IsOpen(ui.undoPanel)) { ui.HideUndoPanel(); return true; }
             if (IsOpen(ui.hypothesisPanel)) { ui.HideHypothesisPanel(); return true; }
             if (IsOpen(ui.assistantPanel)) { ui.HideHintMessage(); return true; }
 
-            // 5) Duraklat: açıksa oyuna dön, kapalıysa aç
+            // 6) Duraklat: açıksa oyuna dön, kapalıysa aç
             ui.TogglePause(!IsOpen(ui.pausePanel));
             return true;
         }
