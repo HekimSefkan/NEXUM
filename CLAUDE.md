@@ -118,6 +118,19 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
   kesişemez** — uGUI raycast'i ebeveyn rect'ine kırpılmaz. Listelerde alan
   taşırmak yerine **satır yüksekliği artırılır**.
 
+### Panel erişimi
+- **Birden fazla sahneden erişilebilen bir panel, erişilebildiği TÜM
+  sahnelere kurulur.** "Paneli aç" eylemi **asla sahne yüklemesi olarak
+  yazılmaz** — sahne yüklemek oyun durumunu yok eder.
+- **Kurucu, paneli kurduğu sahneleri parametre olarak alır.**
+- **Yeni bir panel eklenirken hangi sahnelerden erişileceği baştan
+  kararlaştırılır.**
+
+> Tarif defteri bu hatayı yaşadı: yalnızca `MainMenu`'ye kurulduğu için
+> duraklat menüsünden açmak `SceneManager.LoadScene("MainMenu")` demekti ve
+> oyunu terk ettiriyordu (2d-3c/1). Ansiklopedi, profil, koleksiyon ve
+> günlük bulmaca aynı riski taşıyor.
+
 ### Metin
 - **Tüm metinler `Loc` üzerinden** (tr + en). Sabit string yok.
 - **Alt simge TMP `<sub>` ile**; literal alt simge karakteri (U+2080–2089)
