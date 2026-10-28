@@ -2348,5 +2348,2541 @@
         ]
       }
     }
+  },
+  "simgeler": {
+    "aciklama": "Tek ureteçten simge ailesi. Kimya temasi glifte DEGIL cercevede: yuvarlak metal pano + ince olcu izgarasi. Ayni cizgi kalinligi, ayni kose geometrisi, ayni malzeme. Sabit kare, 9-slice degil.",
+    "durumlar": [
+      "normal",
+      "pressed",
+      "disabled",
+      "selected"
+    ],
+    "cozunurlukler": [
+      96,
+      144,
+      192
+    ],
+    "sprites": {
+      "icon_back_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "back",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "back",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "back",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "back",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "back",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "back",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "back",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "back",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "back",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "back",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "back",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_back_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "back",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "forward",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "forward",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "forward",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "forward",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "forward",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "forward",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "forward",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "forward",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "forward",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "forward",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "forward",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_forward_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "forward",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "pause",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "pause",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "pause",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "pause",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "pause",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "pause",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "pause",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "pause",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "pause",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "pause",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "pause",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_pause_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "pause",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "close",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "close",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "close",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "close",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "close",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "close",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "close",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "close",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "close",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "close",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "close",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_close_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "close",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "confirm",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "confirm",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "confirm",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "confirm",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "confirm",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "confirm",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "confirm",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "confirm",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "confirm",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "confirm",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "confirm",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_confirm_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "confirm",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "hint",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "hint",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "hint",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "hint",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "hint",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "hint",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "hint",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "hint",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "hint",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "hint",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "hint",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_hint_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "hint",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_on",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_on",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_on",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_on",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_on",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_on",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_on",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_on",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_on",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_on",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_on",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_on_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_on",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_off",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_off",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_off",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_off",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_off",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_off",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_off",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_off",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_off",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "sound_off",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "sound_off",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_sound_off_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "sound_off",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "settings",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "settings",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "settings",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "settings",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "settings",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "settings",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "settings",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "settings",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "settings",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "settings",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "settings",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_settings_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "settings",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "person",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "person",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "person",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "person",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "person",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "person",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "person",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "person",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "person",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "person",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "person",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_person_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "person",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "info",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "info",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "info",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "info",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "info",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "info",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "info",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "info",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "info",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "info",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "info",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_info_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "info",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "lock",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "lock",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "lock",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "lock",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "lock",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "lock",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "lock",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "lock",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "lock",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "lock",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "lock",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_lock_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "lock",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_full",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_full",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_full",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_full",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_full",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_full",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_full",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_full",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_full",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_full",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_full",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_full_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_full",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_normal_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_empty",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_normal_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_empty",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_normal_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_empty",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_pressed_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_empty",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_pressed_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_empty",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_pressed_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_empty",
+        "durum": "pressed",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_disabled_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_empty",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_disabled_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_empty",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_disabled_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_empty",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_selected_96.png": {
+        "tip": "sabit",
+        "boyut": [
+          96,
+          96
+        ],
+        "simge": "star_empty",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_selected_144.png": {
+        "tip": "sabit",
+        "boyut": [
+          144,
+          144
+        ],
+        "simge": "star_empty",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "icon_star_empty_selected_192.png": {
+        "tip": "sabit",
+        "boyut": [
+          192,
+          192
+        ],
+        "simge": "star_empty",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
   }
 }

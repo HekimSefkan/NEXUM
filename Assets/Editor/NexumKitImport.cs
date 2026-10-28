@@ -32,6 +32,10 @@ public static class NexumKitImport
     private const string KitRoot = "Tools/ui-kit";
     private const string UiDir = "Assets/Art/UI";
     private const string TileDir = "Assets/Art/Tiles";
+    private const string IconDir = "Assets/Art/Icons/UI";
+
+    /// <summary>Simge en büyük 192 birimde çiziliyor; 1,5 katı 288 -> 512.</summary>
+    private const int IconMaxSize = 512;
 
     /// <summary>Taş 200 birimde çizilir; 1440 genişlikte 266 px, ×1,5 = 400 → 512.</summary>
     private const int TileMaxSize = 512;
@@ -105,6 +109,20 @@ public static class NexumKitImport
             string hedef = TileDir + "/" + ad + ".png";
             if (Kopyala(kaynak, hedef)) kopyalanan++;
             if (Ayarla(hedef, TileMaxSize, Vector4.zero)) ayarlanan++; else dokunulmayan++;
+        }
+
+        // --- simge ailesi: tek çözünürlük (192), sabit kare, 9-slice değil
+        string iconSrc = Path.Combine(KitRoot, "icons");
+        if (Directory.Exists(iconSrc))
+        {
+            Directory.CreateDirectory(IconDir);
+            foreach (string kaynak in Directory.GetFiles(iconSrc, "*_192.png"))
+            {
+                string ad = Path.GetFileNameWithoutExtension(kaynak).Replace("_192", "");
+                string hedef = IconDir + "/" + ad + ".png";
+                if (Kopyala(kaynak, hedef)) kopyalanan++;
+                if (Ayarla(hedef, IconMaxSize, Vector4.zero)) ayarlanan++; else dokunulmayan++;
+            }
         }
 
         if (kopyalanan > 0 || ayarlanan > 0) AssetDatabase.Refresh();
