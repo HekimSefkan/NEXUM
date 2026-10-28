@@ -44,9 +44,12 @@ public static class RecipeBookBuilder
     private static readonly Vector2 LockSize = new Vector2(44f, 44f);
 
     // --- paylaşılan varlıklar (yeni görsel üretilmez, mevcutlar paylaşılır)
-    private const string MenuBackgroundPath = "Assets/Art/Figures/arkaplan.png";
+    // Kit karşılıkları doğrudan yazılı: eski yolları yazmak kurucu ile
+    // NexumSpriteSwap'i birbirine karşı çalıştırıyordu (kurucu eskiyi
+    // yazıyor, tarama yeniye taşıyor, diff hiç durulmuyordu).
+    private const string MenuBackgroundPath = "Assets/Art/Figures/background_c_main.png";
     private const float MenuBackgroundAspect = 0.56279904f;   // 941x1672, MainMenu/Background ile aynı
-    private const string LogoPath = "Assets/Art/Figures/NEXUM_logo.png";
+    private const string LogoPath = "Assets/Art/Figures/NEXUM_logo_metal.png";
     private static readonly Vector2 LogoSize = new Vector2(500f, 130f);
     private static readonly Vector2 LogoPosition = new Vector2(0f, -83.88f);   // Game sahnesindeki logo ile aynı
 
@@ -62,6 +65,10 @@ public static class RecipeBookBuilder
     private const float MenuButtonSpacing = 265f;
     private const float EncyclopediaY = -137f;
 
+    // OYNA butonu kardeşlerinden bir tık büyük kalır (birincil eylem).
+    private static readonly Vector2 PlayButtonSize = new Vector2(600f, 242f);
+    private const float PlayY = 395f;
+
     // Metinsiz buton çerçevesi. Diğer dört menü butonunun metni GÖRSELİN
     // İÇİNDE basılı olduğu için birebir aynı sprite kullanılamaz; siluet olarak
     // en yakın olanı seçildi (köşeleri pahlı dikdörtgen çerçeve, ANSİKLOPEDİ /
@@ -74,14 +81,20 @@ public static class RecipeBookBuilder
     // UITokens.PanelPadding. Buton GRAFİKLERİ eski ölçülerinde; dokunma
     // alanları saydam TouchArea çocuğuyla tamamlanıyor.
     private static readonly Vector2 PauseCardSize = new Vector2(688f, 958f);
-    private static readonly Vector2 PauseButtonSize = new Vector2(560f, 64f);
+    // Üç buton aynı aileden: defter girişi de eylem butonlarıyla aynı
+    // yükseklik ailesinde (64 -> 88).
+    private static readonly Vector2 PauseButtonSize = new Vector2(560f, 88f);
     // -265 -> -195: 64 birimlik grafiğin 144'lük dokunma alanı DEVAM ET /
     // ANA MENÜ satırının alanıyla 58 birim kesişiyordu.
-    private const float PauseButtonY = -195f;
-    private const float PauseActionY = -350.59f;
-    private static readonly Vector2 ResumeSize = new Vector2(236.08f, 54.86f);
-    private static readonly Vector2 MainMenuSize = new Vector2(239.6f, 62.55f);
-    private const float PauseActionX = 180f;
+// -219 -> -209: 144'luk dokunma alani eylem satiriyla 8 birim
+    // kesisiyordu (ResumeButton x RecipeBookButton 2016 birim2).
+    private const float PauseButtonY = -209f;
+    private const float PauseActionY = -355f;
+    // 3b/B4: DEVAM ET ve ANA MENÜ çerçevesiz metindi (alfa 0). Kit
+    // çerçevesine alındı; ikisi de aynı ölçü, defter girişiyle aynı aile.
+    private static readonly Vector2 PauseActionSize = new Vector2(252f, 96f);
+    private const float PauseActionX = 142f;
+    private const string PauseActionFramePath = "Assets/Art/UI/btn_ghost_normal.png";
     private const string ModalFramePath = "Assets/Art/UI/modal_normal.png";
 
     /// <summary>Katalizör göstergesinin çerçeve görseli (yerel parıltı aynı şekli alır).</summary>
@@ -329,6 +342,27 @@ public static class RecipeBookBuilder
         BuildPauseEntry(dryRun);
     }
 
+    /// <summary>
+    /// Duraklat kartının eylem butonu: kit çerçevesi + mevcut metin.
+    /// Metin objesi (Text (TMP)) olduğu gibi kalır, içeriğini sahne taşır.
+    /// </summary>
+    private static void KurDuraklatButonu(UIBuilder b, NexumTheme theme, GameObject btn, float x)
+    {
+        b.SetFixed(btn, UITokens.Center, PauseActionSize, new Vector2(x, PauseActionY));
+        b.EnsureComponent<Image>(btn, image =>
+        {
+            image.sprite = LoadSprite(PauseActionFramePath);
+            image.type = Image.Type.Sliced;
+            image.fillCenter = true;
+            image.color = Color.white;
+            image.preserveAspect = false;
+            image.raycastTarget = true;
+        });
+
+        Transform label = btn.transform.Find("Text (TMP)");
+        if (label != null) b.SetStretch(label.gameObject, UITokens.Zero, UITokens.One);
+    }
+
     /// <summary>Ana menüde Ansiklopedi'nin yanında ikincil giriş.</summary>
     private static void BuildMenuEntry(UIBuilder b, NexumTheme theme, bool dryRun)
     {
@@ -344,36 +378,62 @@ public static class RecipeBookBuilder
         b.SetFixed(entry, UITokens.Center, MenuButtonSize,
                    new Vector2(0f, EncyclopediaY - MenuButtonSpacing));
 
-        // Diğer menü butonları metni görselin içinde taşıyor; defter için metinsiz
-        // çerçeve (level_selection_button) + TMP etiketi kullanılır. Yeni görsel
-        // üretilmez. preserveAspect kapalı: kardeşleri de kutularına geriliyor.
-        b.EnsureComponent<Image>(entry, image =>
-        {
-            image.sprite = LoadSprite(MenuButtonFramePath);
-            image.color = Color.white;
-            image.preserveAspect = false;
-        });
-        b.EnsureComponent<Button>(entry, button => button.transition = Selectable.Transition.ColorTint);
+        KurMenuButonu(b, theme, menuPath, "RecipeBookButton",
+                      CodeStrings.RecipeBookButtonLabel,
+                      EncyclopediaY - MenuButtonSpacing);
 
-        GameObject label = b.Ensure(menuPath + "/RecipeBookButton", "Label");
-        b.SetFixed(label, UITokens.Center, MenuButtonLabelSize);
-        b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(tmp, theme,
-            theme.typography.subtitle, theme.palette.textOnLight, TextAlignmentOptions.Center));
-        EnsureLocalized(b, label, CodeStrings.RecipeBookButtonLabel);
-
-        // AYARLAR bir sıra aşağı: kurucunun kaydında olmadığı için devralınır
-        GameObject settings = b.Ensure(menuPath, "SettingButton", adopt: true);
-        if (settings != null)
-        {
-            b.SetFixed(settings, UITokens.Center, MenuButtonSize,
-                       new Vector2(0f, EncyclopediaY - 2f * MenuButtonSpacing));
-        }
+        // --- 3b/B1: DÖRT BUTONUN METNİ GÖRSELİN İÇİNDEN ÇIKTI
+        // oyna.png / nasıloynanır.png / ansiklopedi.png / ayarlar.png metni
+        // PİKSELİN İÇİNDE taşıyordu: çeviri imkânsız, sığma kuralı
+        // ölçülemez, punto denetlenemez. Beşi artık aynı aileden: kit
+        // çerçevesi + TMP etiketi.
+        KurMenuButonu(b, theme, menuPath, "PlayButton",
+                      CodeStrings.MenuPlay, PlayY, PlayButtonSize);
+        KurMenuButonu(b, theme, menuPath, "HowToPlayButton",
+                      CodeStrings.MenuHowToPlay, EncyclopediaY + MenuButtonSpacing);
+        KurMenuButonu(b, theme, menuPath, "EncyclopediaButton",
+                      CodeStrings.MenuEncyclopedia, EncyclopediaY);
+        KurMenuButonu(b, theme, menuPath, "SettingButton",
+                      CodeStrings.MenuSettings, EncyclopediaY - 2f * MenuButtonSpacing);
 
         if (dryRun) return;
 
         MainMenuManager menu = Object.FindObjectOfType<MainMenuManager>(true);
-        Button entryButton = entry.GetComponent<Button>();
+        GameObject defter = b.FindObject(menuPath + "/RecipeBookButton");
+        Button entryButton = defter != null ? defter.GetComponent<Button>() : null;
         if (menu != null && entryButton != null) Wire(entryButton, menu, menu.OpenRecipeBook);
+    }
+
+    /// <summary>
+    /// Menü butonu: kit çerçevesi + TMP etiketi, metin GÖRSELDE DEĞİL.
+    /// Etiket rengi burada seçilmez — <c>NexumContrastSweep</c> gerçek
+    /// yüzeyden ölçüp rolü belirler; buradaki değer yalnızca başlangıçtır.
+    /// </summary>
+    private static void KurMenuButonu(UIBuilder b, NexumTheme theme, string menuPath,
+                                      string ad, string locKey, float y,
+                                      Vector2 boyut = default(Vector2))
+    {
+        GameObject btn = b.Ensure(menuPath, ad, adopt: true);
+        if (btn == null) return;
+
+        Vector2 olcu = boyut == default(Vector2) ? MenuButtonSize : boyut;
+        b.SetFixed(btn, UITokens.Center, olcu, new Vector2(0f, y));
+
+        b.EnsureComponent<Image>(btn, image =>
+        {
+            image.sprite = LoadSprite(MenuButtonFramePath);
+            image.type = Image.Type.Sliced;
+            image.fillCenter = true;
+            image.color = Color.white;
+            image.preserveAspect = false;
+        });
+        b.EnsureComponent<Button>(btn, button => button.transition = Selectable.Transition.ColorTint);
+
+        GameObject label = b.Ensure(menuPath + "/" + ad, "Label");
+        b.SetFixed(label, UITokens.Center, MenuButtonLabelSize);
+        b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(tmp, theme,
+            theme.typography.subtitle, theme.palette.textPrimary, TextAlignmentOptions.Center));
+        EnsureLocalized(b, label, locKey);
     }
 
     /// <summary>
@@ -449,21 +509,22 @@ public static class RecipeBookBuilder
         // Dikey ritim kartın iç kenarından (479 - kenarlık - PanelPadding)
         // başlar; üç buton da 144 birim yüksekliğinde.
         GameObject pauseTitle = b.Ensure(boxPath, "TitleText", adopt: true);
-        if (pauseTitle != null) b.SetFixed(pauseTitle, UITokens.Center, new Vector2(468.8f, 50f), new Vector2(0f, 400f));
+        if (pauseTitle != null) b.SetFixed(pauseTitle, UITokens.Center, new Vector2(560f, 56f), new Vector2(0f, 398f));
 
         GameObject pauseSubtitle = b.Ensure(boxPath, "SubtitleText", adopt: true);
-        if (pauseSubtitle != null) b.SetFixed(pauseSubtitle, UITokens.Center, new Vector2(474.9f, 45.8f), new Vector2(0f, 330f));
+        if (pauseSubtitle != null) b.SetFixed(pauseSubtitle, UITokens.Center, new Vector2(560f, 46f), new Vector2(0f, 336f));
 
         GameObject pauseFact = b.Ensure(boxPath, "FactText", adopt: true);
-        // Defter girişi yukarı alınınca bilgi metni 480 -> 420 kısaldı.
-        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(596.7f, 420f), new Vector2(0f, 73f));
+        // Bilgi metni kartın ortasını dolduruyor: üstte alt başlık (313),
+        // altta defter girişi (-147). 560x440 @ 83 -> 83±220 = -137..303.
+        if (pauseFact != null) b.SetFixed(pauseFact, UITokens.Center, new Vector2(560f, 430f), new Vector2(0f, 90f));
 
         // --- DEVAM ET / ANA MENÜ: GRAFİK ölçüleri değişmedi
         GameObject resume = b.Ensure(boxPath, "ResumeButton", adopt: true);
-        if (resume != null) b.SetFixed(resume, UITokens.Center, ResumeSize, new Vector2(-PauseActionX, PauseActionY));
+        if (resume != null) KurDuraklatButonu(b, theme, resume, -PauseActionX);
 
         GameObject toMenu = b.Ensure(boxPath, "MainMenuButton", adopt: true);
-        if (toMenu != null) b.SetFixed(toMenu, UITokens.Center, MainMenuSize, new Vector2(PauseActionX, PauseActionY));
+        if (toMenu != null) KurDuraklatButonu(b, theme, toMenu, PauseActionX);
 
         // --- defter girişi
         GameObject entry = b.Ensure(boxPath, "RecipeBookButton");
@@ -471,11 +532,14 @@ public static class RecipeBookBuilder
 
         b.SetFixed(entry, UITokens.Center, PauseButtonSize, new Vector2(0f, PauseButtonY));
 
-        // DEVAM ET / ANA MENÜ ile aynı stil: görsel yok, yalnızca metin
+        // Üçü de aynı aile: kit çerçevesi. Eski hâlde defter girişi
+        // görselsizdi ve cihazda "kaybolmuş" görünüyordu.
         b.EnsureComponent<Image>(entry, image =>
         {
-            image.sprite = null;
-            image.color = new Color(1f, 1f, 1f, 0f);
+            image.sprite = LoadSprite(PauseActionFramePath);
+            image.type = Image.Type.Sliced;
+            image.fillCenter = true;
+            image.color = Color.white;
             image.preserveAspect = false;
             image.raycastTarget = true;
         });

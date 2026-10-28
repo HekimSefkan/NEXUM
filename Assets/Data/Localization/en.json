@@ -159,6 +159,10 @@
             "value": "Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin."
         },
         {
+            "key": "hud.tip_button",
+            "value": "HINT"
+        },
+        {
             "key": "mainmenu.addemailbutton.text_tmp",
             "value": "Ekle"
         },
@@ -343,6 +347,10 @@
             "value": "Not solved today"
         },
         {
+            "key": "menu.encyclopedia",
+            "value": "ENCYCLOPEDIA"
+        },
+        {
             "key": "menu.endless_lab",
             "value": "ENDLESS LAB"
         },
@@ -351,8 +359,20 @@
             "value": "Best: {0} merges"
         },
         {
+            "key": "menu.how_to_play",
+            "value": "HOW TO PLAY"
+        },
+        {
             "key": "menu.level_select",
             "value": "LEVEL SELECT"
+        },
+        {
+            "key": "menu.play",
+            "value": "PLAY"
+        },
+        {
+            "key": "menu.settings",
+            "value": "SETTINGS"
         },
         {
             "key": "menu.weekly_experiment",

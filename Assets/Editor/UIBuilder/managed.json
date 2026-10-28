@@ -37,6 +37,18 @@
             "builder": "RecipeBookPauseEntry"
         },
         {
+            "path": "Game::Canvas/SafeAreaRoot/HintButton",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/HintButton/Portrait",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/JokerButton",
+            "builder": "GameHud"
+        },
+        {
             "path": "Game::Canvas/SafeAreaRoot/PressureMeter/ReadyGlow",
             "builder": "RecipeBookPauseEntry"
         },
@@ -77,6 +89,50 @@
             "builder": "ReactionEquation"
         },
         {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/HintBadge",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/HintBadge/Count",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/Label",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/UndoButton",
+            "builder": "GameHud"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HowToPlayButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HowToPlayButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/PlayButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/PlayButton/Label",
+            "builder": "RecipeBook"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/RecipeBookButton",
             "builder": "RecipeBook"
         },
@@ -86,6 +142,10 @@
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/SettingButton",
+            "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/SettingButton/Label",
             "builder": "RecipeBook"
         },
         {

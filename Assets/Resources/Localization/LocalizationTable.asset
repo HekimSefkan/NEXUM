@@ -152,6 +152,9 @@ MonoBehaviour:
       Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
     english: "\u015Eu an matriste yap\u0131labilecek hi\xE7bir kimyasal sentez g\xF6remiyorum!
       Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
+  - key: hud.tip_button
+    turkish: "\u0130PUCU"
+    english: HINT
   - key: mainmenu.addemailbutton.text_tmp
     turkish: Ekle
     english: Ekle
@@ -328,15 +331,27 @@ MonoBehaviour:
   - key: menu.daily_puzzle_undone
     turkish: "Bug\xFCn \xE7\xF6z\xFClmedi"
     english: Not solved today
+  - key: menu.encyclopedia
+    turkish: "ANS\u0130KLOPED\u0130"
+    english: ENCYCLOPEDIA
   - key: menu.endless_lab
     turkish: SONSUZ LAB
     english: ENDLESS LAB
   - key: menu.endless_lab_best
     turkish: "En iyi: {0} birle\u015Fme"
     english: 'Best: {0} merges'
+  - key: menu.how_to_play
+    turkish: NASIL OYNANIR
+    english: HOW TO PLAY
   - key: menu.level_select
     turkish: "B\xD6L\xDCM SE\xC7\u0130M\u0130"
     english: LEVEL SELECT
+  - key: menu.play
+    turkish: OYNA
+    english: PLAY
+  - key: menu.settings
+    turkish: AYARLAR
+    english: SETTINGS
   - key: menu.weekly_experiment
     turkish: "HAFTANIN DENEY\u0130"
     english: EXPERIMENT OF THE WEEK

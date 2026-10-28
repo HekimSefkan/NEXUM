@@ -70,8 +70,6 @@ public static class NexumTouchTargets
                 }
             }
 
-            if (yol.EndsWith("Game.unity") && HudSutunu(dokum)) degisti = true;
-
             if (degisti) EditorSceneManager.SaveScene(scene);
             Debug.Log($"{Tag}: {Path.GetFileName(yol)} işlendi");
         }
@@ -146,84 +144,9 @@ public static class NexumTouchTargets
         return degisti;
     }
 
-    /// <summary>
-    /// Oyun HUD'unun sağ sütunu: dokunma alanları kesişiyordu
-    /// (JokerButton x UndoButton 3680 birim², JokerButton x PauseButton
-    /// 4438 birim²). GRAFİK ÖLÇÜLERİ DEĞİŞMEDİ; yalnızca dikey ritim
-    /// sıkıştırıldı.
-    ///
-    /// Sütun bütçesi: tahtanın üstü (290) ile güvenli alanın tepesi (960)
-    /// arası 670 birim. Dokunma kapsamları 230 (ipucu karakteri, kendi
-    /// grafiği zaten 144'ün üstünde) + 3 x 144 = 662; geriye 8 birim boşluk
-    /// kalıyor. Bu yüzden aralıklar 2 birim: görünmez alanlar için yeterli,
-    /// çakışma yok.
-    ///
-    /// Hedef SafeAreaRoot-yerel MERKEZ olarak yazılı; ölçülen merkezle farkı
-    /// alınıp anchoredPosition'a eklenir — pivot/anchor karmaşasından
-    /// bağımsız ve İDEMPOTENT.
-    /// </summary>
-    private static readonly Dictionary<string, Vector2> HudMerkez =
-        new Dictionary<string, Vector2>
-        {
-            { "HintButton",  new Vector2(400f, 407f) },   // kapsam 292..522
-            { "UndoButton",  new Vector2(400f, 596f) },   // 524..668
-            { "JokerButton", new Vector2(400f, 742f) },   // 670..814
-            { "PauseButton", new Vector2(464f, 888f) },   // 816..960, x 392..536
-        };
-
-    private static readonly Vector2 HudReferans = new Vector2(1080f, 1920f);
-
-    private static bool HudSutunu(List<string> dokum)
-    {
-        RectTransform safe = Object.FindObjectsOfType<RectTransform>(true)
-            .FirstOrDefault(r => r.name == "SafeAreaRoot");
-        if (safe == null) return false;
-
-        MonoBehaviour safeArea = safe.GetComponents<MonoBehaviour>()
-            .FirstOrDefault(m => m != null && m.GetType().Name == "SafeArea");
-        if (safeArea != null) safeArea.enabled = false;
-
-        Vector2 aMin = safe.anchorMin, aMax = safe.anchorMax, piv = safe.pivot;
-        Vector2 sd = safe.sizeDelta, ap = safe.anchoredPosition;
-
-        safe.anchorMin = safe.anchorMax = safe.pivot = new Vector2(0.5f, 0.5f);
-        safe.sizeDelta = HudReferans;
-        safe.anchoredPosition = Vector2.zero;
-        Canvas.ForceUpdateCanvases();
-
-        bool degisti = false;
-        foreach (var kv in HudMerkez)
-        {
-            RectTransform rt = safe.GetComponentsInChildren<RectTransform>(true)
-                .FirstOrDefault(r => r.name == kv.Key);
-            if (rt == null) { Debug.LogError($"{Tag}: HUD nesnesi yok -> {kv.Key}"); continue; }
-
-            Vector2 merkez = Merkez(safe, rt);
-            Vector2 fark = kv.Value - merkez;
-            if (fark.sqrMagnitude < 0.25f) continue;
-
-            dokum.Add($"{kv.Key} merkez ({merkez.x:F0},{merkez.y:F0}) -> " +
-                      $"({kv.Value.x:F0},{kv.Value.y:F0})  — grafik ölçüsü değişmedi");
-            rt.anchoredPosition += fark;
-            EditorUtility.SetDirty(rt);
-            degisti = true;
-            Canvas.ForceUpdateCanvases();
-        }
-
-        safe.anchorMin = aMin; safe.anchorMax = aMax; safe.pivot = piv;
-        safe.sizeDelta = sd; safe.anchoredPosition = ap;
-        if (safeArea != null) safeArea.enabled = true;
-        return degisti;
-    }
-
-    private static Vector2 Merkez(RectTransform kok, RectTransform rt)
-    {
-        Vector3[] k = new Vector3[4];
-        rt.GetWorldCorners(k);
-        Vector3 a = kok.InverseTransformPoint(k[0]);
-        Vector3 b = kok.InverseTransformPoint(k[2]);
-        return new Vector2((a.x + b.x) * 0.5f, (a.y + b.y) * 0.5f);
-    }
+    // HUD sağ sütununun konumları artık GameHudBuilder'ın işi (3b/B2).
+    // Burada da tutmak iki aracı birbirine karşı çalıştırıyordu: kurucu
+    // karakteri sola alıyor, bu tablo geri çekiyordu.
 
     /// <summary>Kaydırma çubukları: ölçüleri kasıtlı olarak ince.</summary>
     private static bool Muaf(Selectable s)
