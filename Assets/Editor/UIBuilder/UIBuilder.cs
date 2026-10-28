@@ -187,6 +187,35 @@ public class UIBuilder
         return go;
     }
 
+    /// <summary>
+    /// Kurucunun KENDİ kaydındaki bir objeyi sahneden kaldırır.
+    ///
+    /// Sahiplik kuralı silmede de geçerli: kayıtta olmayan (elle yapılmış)
+    /// bir obje kaldırılmaz, HATA verir. Obje zaten yoksa sessizce
+    /// "dokunulmayan" sayılır — ikinci koşuda sahne değişmez.
+    /// </summary>
+    public void Remove(string parentPath, string name)
+    {
+        string objectPath = parentPath + "/" + name;
+        Transform parent = Find(parentPath);
+        Transform existing = parent != null ? parent.Find(name) : null;
+
+        if (existing == null)
+        {
+            untouched.Add(objectPath + " (zaten yok)");
+            return;
+        }
+
+        if (!IsManaged(objectPath))
+        {
+            Error($"kaldırılamaz: {objectPath} kurucu kaydında yok (elle yapılmış olabilir)");
+            return;
+        }
+
+        updated.Add(objectPath + " (KALDIRILDI)");
+        if (!dryRun) UnityEngine.Object.DestroyImmediate(existing.gameObject);
+    }
+
     /// <summary>Objeyi başka bir ebeveynin altına taşır (zaten oradaysa dokunmaz).</summary>
     public void Reparent(GameObject go, GameObject newParent)
     {

@@ -61,6 +61,10 @@
             "builder": "EncyclopediaDetailGame"
         },
         {
+            "path": "Game::Canvas/SafeAreaRoot/GoalsContainer",
+            "builder": "GoalTiles"
+        },
+        {
             "path": "Game::Canvas/SafeAreaRoot/HintButton",
             "builder": "GameHud"
         },
@@ -413,6 +417,10 @@
             "builder": "RecipeBookGame"
         },
         {
+            "path": "Game::Canvas/SafeAreaRoot/ScoreButton",
+            "builder": "GoalTiles"
+        },
+        {
             "path": "Game::Canvas/SafeAreaRoot/TipButton",
             "builder": "GameHud"
         },
@@ -422,6 +430,10 @@
         },
         {
             "path": "Game::Canvas/SafeAreaRoot/TipButton/HintBadge/Count",
+            "builder": "GameHud"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/TipButton/Icon",
             "builder": "GameHud"
         },
         {
