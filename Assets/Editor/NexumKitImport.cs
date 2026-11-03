@@ -43,6 +43,17 @@ public static class NexumKitImport
     /// <summary>Kit çerçeveleri en çok ~1000 birim genişlikte kullanılıyor.</summary>
     private const int UiMaxSize = 512;
 
+    /// <summary>
+    /// Sprite başına istisna. <c>bg_vignette</c> tam ekran gerilen bir alfa
+    /// rampası: kaynağı 512x1024 ve 512'ye kısılırsa doku import ayarı
+    /// kaynağın altında kalır (validator uyarır). Yumuşak bir rampa olduğu
+    /// için büyütme görünmez, ama ayar kaynağı KISITLAMAMALI.
+    /// </summary>
+    private static readonly Dictionary<string, int> UiMaxOverrides = new Dictionary<string, int>
+    {
+        { "bg_vignette", 1024 },
+    };
+
     /// <summary>Oyuna girecek kit sprite'ları (varyant C).</summary>
     private static readonly string[] UiSprites =
     {
@@ -101,7 +112,10 @@ public static class NexumKitImport
 
             Vector4 border;
             borderlar.TryGetValue(ad + ".png", out border);
-            if (Ayarla(hedef, UiMaxSize, border)) ayarlanan++; else dokunulmayan++;
+
+            int maxSize;
+            if (!UiMaxOverrides.TryGetValue(ad, out maxSize)) maxSize = UiMaxSize;
+            if (Ayarla(hedef, maxSize, border)) ayarlanan++; else dokunulmayan++;
         }
 
         // --- taşlar: seviye × durum, tek çözünürlük (512)

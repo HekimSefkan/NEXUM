@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,7 +56,11 @@ public static class GameHudBuilder
     private const float TipY = 450f;
     private const float UndoY = 596f;
     private const float JokerY = 742f;
-    private const float ColumnX = 400f;
+    // 400 -> 375: rozet butonun sağ üst köşesinden 28 birim DIŞARI taşıyor;
+    // 400'de rozetin sağ kenarı 1093'e düşüyordu ve 1080 genişlikte ekran
+    // kenarı rozeti kesiyordu (cihaz görüntüsünde ölçüldü). 375'te sağ
+    // kenar 1068, yani 12 birim pay kalıyor.
+    private const float ColumnX = 375f;
 
 
     /// <summary>

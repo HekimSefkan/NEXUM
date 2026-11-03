@@ -1,6 +1,46 @@
 {
     "managed": [
         {
+            "path": "Game::Canvas/Background/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/Background/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/Background/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/Background/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/Background/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
             "path": "Game::Canvas/PausePanel",
             "builder": "RecipeBookPauseEntry"
         },
@@ -127,6 +167,46 @@
         {
             "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop",
             "builder": "RecipeBookGame"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/Vignette",
+            "builder": "Background"
         },
         {
             "path": "Game::Canvas/SafeAreaRoot/RecipeBookPanel/CounterText",
@@ -445,6 +525,166 @@
             "builder": "GameHud"
         },
         {
+            "path": "MainMenu::Canvas/Background/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/Background/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/Background/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/Background/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/Background/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BG/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BG/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BG/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BG/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BG/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/EncyclopediaPanel/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/HowToPlayPanel/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/HowToPlayPanel/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/HowToPlayPanel/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/HowToPlayPanel/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/HowToPlayPanel/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton",
             "builder": "RecipeBook"
         },
@@ -485,6 +725,26 @@
             "builder": "RecipeBook"
         },
         {
+            "path": "MainMenu::Canvas/SafeAreaRoot/ProfilePanel/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/ProfilePanel/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/ProfilePanel/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/ProfilePanel/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/ProfilePanel/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel",
             "builder": "RecipeBook"
         },
@@ -495,6 +755,46 @@
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop",
             "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/Backdrop/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/BackgroundTreatment/Vignette",
+            "builder": "Background"
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/CounterText",
@@ -783,6 +1083,46 @@
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/RecipeBookPanel/TitleText",
             "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BG/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BG/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BG/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BG/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BG/BackgroundTreatment/Vignette",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BackgroundTreatment",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BackgroundTreatment/Darken",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BackgroundTreatment/Grid",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BackgroundTreatment/PanelStrip",
+            "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/RegistrationPanel/BackgroundTreatment/Vignette",
+            "builder": "Background"
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/SettingsPanel/GlassBackground/CardContent",

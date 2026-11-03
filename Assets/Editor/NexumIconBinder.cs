@@ -152,6 +152,23 @@ public static class NexumIconBinder
                     continue;
                 }
 
+                // ÇÖKMÜŞ ÇERÇEVEYİ GERİ AL. Önceki koşuda konan kit çerçevesi
+                // rect'e sığmıyorsa (kenarlık toplamı > rect) orta alan
+                // negatife düşer; sprite kaldırılır, buton düz dolguda kalır.
+                if (img.sprite != null && img.type == Image.Type.Sliced
+                    && !Yerlesik(img.sprite) && !CerceveSigar(img.rectTransform, img.sprite))
+                {
+                    dokum.Add($"{Yol(img.transform)}: {img.sprite.name} ÇÖKMÜŞ " +
+                              $"(rect {img.rectTransform.rect.width:F0}x{img.rectTransform.rect.height:F0}, " +
+                              $"kenarlık {img.sprite.border.y + img.sprite.border.w:F0}) -> sprite yok");
+                    img.sprite = null;
+                    img.type = Image.Type.Simple;
+                    EditorUtility.SetDirty(img);
+                    bosaltilan++;
+                    degisti = true;
+                    continue;
+                }
+
                 if (!Yerlesik(img.sprite)) continue;
 
                 // Karartma katmanı: düz renk dolgusu, sprite GEREKMEZ
@@ -203,6 +220,26 @@ public static class NexumIconBinder
                 Sprite kit = AssetDatabase.LoadAssetAtPath<Sprite>(cerceve);
                 if (kit == null) continue;
 
+                // ÇERÇEVE TAŞIYAMAYAN RECT'E ÇERÇEVE KONMAZ.
+                // 9-slice bir sprite'ın kenarlık toplamı rect'ten büyükse
+                // orta alan NEGATİFE düşer (SlicedCollapseTests bunu
+                // yakalıyor): kit çerçevesi 28+28 kenarlık taşıyor, yani
+                // 56+içerik'ten kısa bir butonda çöküyor. Bu durumda
+                // yerleşik sprite yine kaldırılır ama yerine çerçeve değil
+                // DÜZ dolgu konur; buton kendi renginde kalır.
+                if (!CerceveSigar(img.rectTransform, kit))
+                {
+                    dokum.Add($"{Yol(img.transform)}: yerleşik {img.sprite.name} -> sprite yok " +
+                              $"(rect {img.rectTransform.rect.width:F0}x{img.rectTransform.rect.height:F0}, " +
+                              $"kenarlık {kit.border.y + kit.border.w:F0} sığmıyor)");
+                    img.sprite = null;
+                    img.type = Image.Type.Simple;
+                    EditorUtility.SetDirty(img);
+                    bosaltilan++;
+                    degisti = true;
+                    continue;
+                }
+
                 dokum.Add($"{Yol(img.transform)}: yerleşik {img.sprite.name} -> " +
                           $"{System.IO.Path.GetFileNameWithoutExtension(cerceve)}");
                 img.sprite = kit;
@@ -251,6 +288,21 @@ public static class NexumIconBinder
         Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>($"{IconDir}/{ad}_normal.png");
         if (s == null) Debug.LogError($"{Tag}: simge yok -> {IconDir}/{ad}_normal.png");
         return s;
+    }
+
+    /// <summary>En az bu kadar boyalı orta alan kalmalı (birim).</summary>
+    private const float EnAzOrtaAlan = 8f;
+
+    /// <summary>9-slice kenarlık toplamı rect'e sığıyor mu?</summary>
+    private static bool CerceveSigar(RectTransform rt, Sprite kit)
+    {
+        if (rt == null || kit == null) return false;
+
+        Vector4 b = kit.border;
+        if (b == Vector4.zero) return true;   // 9-slice değil
+
+        return rt.rect.width - (b.x + b.z) >= EnAzOrtaAlan
+               && rt.rect.height - (b.y + b.w) >= EnAzOrtaAlan;
     }
 
     private static string Hex(Color c)
