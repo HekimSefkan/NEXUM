@@ -19,7 +19,8 @@ public class GameHudLayoutTests
     private static readonly string[] HudOgeleri =
     {
         "GridBoard", "ScoreButton", "GoalsContainer", "logo", "PauseButton",
-        "HintButton", "UndoButton", "JokerButton", "PressureMeter", YeniObje,
+        // HintButton (dedektif) 3c/3'te sahneden kalktı; ipucu artık TipButton.
+        "TipButton", "UndoButton", "JokerButton", "PressureMeter", YeniObje,
     };
 
     private RectTransform safeRoot;
