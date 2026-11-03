@@ -90,6 +90,27 @@ public static class ReactionText
         return Loc.Format(key, inputs, product);
     }
 
+    /// <summary>
+    /// "A + B [çarpı]" — TEPKİME YOK. Çarpı da ok gibi bir TMP sprite'ı
+    /// (aynı sayfa, aynı yöntem); sprite yoksa düz metne düşülür.
+    /// Kalıp yeniden yazılmaz, denklem kalıbının ÜRÜN yerine çarpı konur.
+    /// </summary>
+    public static string NoReaction(string a, string b)
+    {
+        string yok = Loc.Get(ArrowAvailable ? CodeStrings.ReactionNoProduct
+                                            : CodeStrings.ReactionNoProductFallback);
+        return Equation(Inputs(a, b), yok);
+    }
+
+    /// <summary>Girdiler sönük, çarpı uyarı renginde.</summary>
+    public static string NoReactionColored(string a, string b,
+                                           Color inputColor, Color crossColor)
+    {
+        string yok = Loc.Get(ArrowAvailable ? CodeStrings.ReactionNoProduct
+                                            : CodeStrings.ReactionNoProductFallback);
+        return Equation(Tint(Inputs(a, b), inputColor), Tint(yok, crossColor));
+    }
+
     /// <summary>Girdiler sönük, ürün vurgulu renkli denklem.</summary>
     public static string Colored(string a, string b, string product,
                                  Color inputColor, Color productColor)
