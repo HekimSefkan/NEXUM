@@ -98,13 +98,20 @@ public static class NexumIconBinder
                 if (FrameSlots.TryGetValue(img.name, out ozelCerceve))
                 {
                     Sprite ozelSprite = AssetDatabase.LoadAssetAtPath<Sprite>(ozelCerceve);
-                    if (ozelSprite != null && img.sprite != ozelSprite)
+                    // TİNT BEYAZ OLMALI. 3c/7'de yalnızca sprite bağlanmıştı;
+                    // kutuların üzerinde eski tasarımın parlak yeşil tinti
+                    // kalmıştı ve kit sprite'ını yeşile boyuyordu (cihaz
+                    // görüntüsünde ölçüldü). Kit kendi rengini taşır.
+                    bool tintYanlis = img.color != Color.white;
+                    if (ozelSprite != null && (img.sprite != ozelSprite || tintYanlis))
                     {
-                        dokum.Add($"{Yol(img.transform)}: {(img.sprite != null ? img.sprite.name : "yok")} -> " +
-                                  $"{System.IO.Path.GetFileNameWithoutExtension(ozelCerceve)}");
+                        string eskiAd = img.sprite != null ? img.sprite.name : "yok";
+                        dokum.Add($"{Yol(img.transform)}: {eskiAd} {Hex(img.color)} -> " +
+                                  $"{System.IO.Path.GetFileNameWithoutExtension(ozelCerceve)} (beyaz tint)");
                         img.sprite = ozelSprite;
                         img.type = Image.Type.Sliced;
                         img.fillCenter = true;
+                        img.color = Color.white;
                         EditorUtility.SetDirty(img);
                         baglanan++;
                         degisti = true;
@@ -112,6 +119,16 @@ public static class NexumIconBinder
                     else
                     {
                         dokunulmayan++;
+                    }
+
+                    // Etiket koyu kit yüzeyinde okunabilir kalmalı
+                    foreach (TMPro.TMP_Text tmp in img.GetComponentsInChildren<TMPro.TMP_Text>(true))
+                    {
+                        if (tmp.color == UITokens.Theme.palette.textPrimary) continue;
+                        tmp.color = UITokens.Theme.palette.textPrimary;
+                        EditorUtility.SetDirty(tmp);
+                        baglanan++;
+                        degisti = true;
                     }
                     continue;
                 }
@@ -234,6 +251,12 @@ public static class NexumIconBinder
         Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>($"{IconDir}/{ad}_normal.png");
         if (s == null) Debug.LogError($"{Tag}: simge yok -> {IconDir}/{ad}_normal.png");
         return s;
+    }
+
+    private static string Hex(Color c)
+    {
+        Color32 x = c;
+        return $"#{x.r:X2}{x.g:X2}{x.b:X2}";
     }
 
     private static string Yol(Transform t)
