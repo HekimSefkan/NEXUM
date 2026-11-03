@@ -75,6 +75,12 @@ public class BackgroundSourceTests
         {
             if (img == null || img.sprite == null) continue;
             if (IslemeKatmani(img.transform)) continue;
+            if (KaydirmaParcasi(img)) continue;
+            if (img.color.a < 0.02f) continue;          // görünmez katman zemin değildir
+
+            // 9-slice bir görsel ÇERÇEVEDİR, zemin değil: tam ekrana
+            // gerilmiş olsa bile kenarlığı taşımak için çizilir.
+            if (img.type != Image.Type.Simple) continue;
 
             RectTransform rt = img.rectTransform;
             if (rt.rect.width < cw * Kaplama || rt.rect.height < ch * Kaplama) continue;
@@ -148,6 +154,19 @@ public class BackgroundSourceTests
 
         Debug.Log($"{Tag}_PARLAKLIK: {sahne}: ortalama {ortalama:F1}/255 " +
                   $"(karartma alfası {BackgroundTreatmentInfo.KarartmaAlfa:F2})");
+    }
+
+    /// <summary>
+    /// ScrollRect'in KENDİ parçaları zemin değildir: görüntü alanı maskesi
+    /// tam ekran olabilir ama gösterdiği şey içeriktir, zemin değil.
+    /// </summary>
+    private static bool KaydirmaParcasi(Image img)
+    {
+        if (img.GetComponent<Mask>() != null || img.GetComponent<RectMask2D>() != null) return true;
+        if (img.GetComponent<ScrollRect>() != null) return true;
+
+        Transform ebeveyn = img.transform.parent;
+        return ebeveyn != null && ebeveyn.GetComponent<ScrollRect>() != null;
     }
 
     private static bool IslemeKatmani(Transform t)
