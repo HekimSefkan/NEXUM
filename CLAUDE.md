@@ -118,6 +118,29 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
   kesişemez** — uGUI raycast'i ebeveyn rect'ine kırpılmaz. Listelerde alan
   taşırmak yerine **satır yüksekliği artırılır**.
 
+### Panel erişimi
+- **Birden fazla sahneden erişilebilen bir panel, erişilebildiği TÜM
+  sahnelere kurulur.** "Paneli aç" eylemi **asla sahne yüklemesi olarak
+  yazılmaz** — sahne yüklemek oyun durumunu yok eder.
+- **Kurucu, paneli kurduğu sahneleri parametre olarak alır.**
+- **Yeni bir panel eklenirken hangi sahnelerden erişileceği baştan
+  kararlaştırılır.**
+
+- **Bir `OnClick`, serileştirilmiş veya çalışma zamanında bulunan bir
+  referansa bağlıysa, o referans null iken buton SESSİZCE GEÇMEZ:**
+  editörde uyarı verir (`NexumValidation`). Bağlı tüm butonların
+  bağımlılıklarının dolu olduğunu doğrulayan bir test bulunur
+  (`WiredButtonTests`). Bilerek boş bırakılan alan
+  `NexumValidation.AllowedNullFields` listesine gerekçesiyle yazılır.
+
+> Tarif defteri bu hatayı yaşadı: yalnızca `MainMenu`'ye kurulduğu için
+> duraklat menüsünden açmak `SceneManager.LoadScene("MainMenu")` demekti ve
+> oyunu terk ettiriyordu (2d-3c/1). Ansiklopedi, profil, koleksiyon ve
+> günlük bulmaca aynı riski taşıyor. Aynı turda defter satırları oyunda
+> SESSİZCE çalışmadı: `RecipeBookPanel.encyclopedia` null'dı ve hiçbir
+> kontrol bunu söylemiyordu — validator yalnızca null **GameObject**
+> referansına bakıyor, bileşen referansına bakmıyordu.
+
 ### Metin
 - **Tüm metinler `Loc` üzerinden** (tr + en). Sabit string yok.
 - **Alt simge TMP `<sub>` ile**; literal alt simge karakteri (U+2080–2089)

@@ -25,7 +25,24 @@ public static class NexumValidation
     private static readonly HashSet<string> AllowedNullFields = new HashSet<string>
     {
         "GridManager.mergeParticlePrefab", // Overlay canvas'ta particle görünmediği için efekt kapalı
+
+        // Oyun sahnesindeki ansiklopedi YALNIZCA ayrıntı kartı için kurulu;
+        // kart listesi (ve onun alanları) orada kullanılmıyor. Ana menüdeki
+        // kopyada bu alanlar DOLU olmak zorunda — anahtar sahneye özel.
+        "Game::EncyclopediaManager.cardPrefab",
+        "Game::EncyclopediaManager.cardParent",
+        "Game::EncyclopediaManager.detailFormulaText",
+        "Game::EncyclopediaManager.contentArea",
     };
+
+    /// <summary>
+    /// O sahnede bir UnityEvent'in (OnClick vb.) hedefi olan bileşenler.
+    /// Null bağımlılık uyarısı YALNIZCA bunlar için verilir: bir butonun
+    /// çağırdığı script'in boş referansı butonu SESSİZCE işlevsiz bırakır
+    /// (RecipeBookPanel.encyclopedia oyunda böyle null kaldı). Projedeki
+    /// her boş referansı bildirmek 381 uyarı üretiyor ve sinyali boğuyordu.
+    /// </summary>
+    private static readonly HashSet<UnityEngine.Object> ButtonTargets = new HashSet<UnityEngine.Object>();
 
     // Sahne yükleyen metotlar. Aynı olayda birden fazlası varsa uyarı verilir. Biçim: "Tip.Metot"
     private static readonly HashSet<string> SceneLoadMethods = new HashSet<string>
@@ -74,6 +91,14 @@ public static class NexumValidation
             sceneCount++;
 
             CheckLevelSolvability(buildScene.path, problems, warnings);
+
+            // Önce UnityEvent hedeflerini topla: null bağımlılık uyarısı
+            // yalnızca bir butonun çağırdığı bileşenler için verilir.
+            ButtonTargets.Clear();
+            foreach (GameObject root in scene.GetRootGameObjects())
+            {
+                ToplaButonHedefleri(root);
+            }
 
             foreach (GameObject root in scene.GetRootGameObjects())
             {
@@ -143,6 +168,30 @@ public static class NexumValidation
     }
 
     // Kontrol edilen kalıcı UnityEvent çağrısı sayısını döndürür
+    private static string SahneAnahtari(string assetPath)
+    {
+        return System.IO.Path.GetFileNameWithoutExtension(assetPath);
+    }
+
+    /// <summary>UnityEvent hedeflerini toplar (null bağımlılık kontrolü için).</summary>
+    private static void ToplaButonHedefleri(GameObject go)
+    {
+        foreach (Component component in go.GetComponents<Component>())
+        {
+            if (component == null) continue;
+
+            SerializedProperty it = new SerializedObject(component).GetIterator();
+            while (it.NextVisible(true))
+            {
+                if (it.name != "m_Target") continue;
+                if (it.propertyType != SerializedPropertyType.ObjectReference) continue;
+                if (it.objectReferenceValue != null) ButtonTargets.Add(it.objectReferenceValue);
+            }
+        }
+
+        foreach (Transform child in go.transform) ToplaButonHedefleri(child.gameObject);
+    }
+
     private static int CheckGameObject(string assetPath, GameObject go, List<string> problems, List<string> warnings)
     {
         string where = $"{assetPath} :: {HierarchyPath(go.transform)}";
@@ -179,10 +228,18 @@ public static class NexumValidation
                 if (property.objectReferenceValue != null) continue;
 
                 string fieldKey = $"{component.GetType().Name}.{property.propertyPath}";
+                string sceneKey = SahneAnahtari(assetPath) + "::" + fieldKey;
+                bool muaf = AllowedNullFields.Contains(fieldKey) || AllowedNullFields.Contains(sceneKey);
+
                 if (property.objectReferenceInstanceIDValue != 0)
                     problems.Add($"Kopuk referans (Missing) {fieldKey} -> {where}");
-                else if (isProjectScript && property.type == "PPtr<$GameObject>" && !AllowedNullFields.Contains(fieldKey))
+                else if (isProjectScript && property.type == "PPtr<$GameObject>" && !muaf)
                     problems.Add($"Null prefab/GameObject referansı {fieldKey} -> {where}");
+                else if (isProjectScript && !muaf && ButtonTargets.Contains(component)
+                         && !property.propertyPath.StartsWith("m_"))
+                    // Bu bileşen bir OnClick hedefi: boş bağımlılığı butonu
+                    // SESSİZCE işlevsiz bırakır.
+                    warnings.Add($"OnClick hedefinde null bağımlılık {fieldKey} -> {where}");
             }
         }
 

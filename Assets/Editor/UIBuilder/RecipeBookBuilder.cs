@@ -100,6 +100,8 @@ public static class RecipeBookBuilder
     /// <summary>Katalizör göstergesinin çerçeve görseli (yerel parıltı aynı şekli alır).</summary>
     private const string MeterFramePath = "Assets/Art/Figures/Entropitup.png";
 
+    private const string GameScenePath = "Assets/Scenes/Game.unity";
+
     private static string PanelPath { get { return ParentPath + "/" + PanelName; } }
     private static string ContentPath { get { return PanelPath + "/Scroll View/Viewport/Content"; } }
 
@@ -112,7 +114,19 @@ public static class RecipeBookBuilder
 
     private static void Build(bool dryRun)
     {
-        UIBuilder b = UIBuilder.Begin("RecipeBook", ScenePath, dryRun);
+        // Defter paneli İKİ SAHNEYE birden kurulur. Eskiden yalnızca ana
+        // menüdeydi; duraklat menüsündeki giriş bu yüzden SAHNE YÜKLÜYOR
+        // ve oyundan çıkıyordu (2d-3c/1).
+        BuildPanel(ScenePath, dryRun);
+        BuildPanel(GameScenePath, dryRun);
+
+        BuildPauseEntry(dryRun);
+    }
+
+    private static void BuildPanel(string scene, bool dryRun)
+    {
+        bool oyunSahnesi = scene == GameScenePath;
+        UIBuilder b = UIBuilder.Begin(oyunSahnesi ? "RecipeBookGame" : "RecipeBook", scene, dryRun);
         NexumTheme theme = UITokens.Theme;
 
         GameObject panel = b.Ensure(ParentPath, PanelName);
@@ -313,33 +327,31 @@ public static class RecipeBookBuilder
             });
         }
 
-        // --- geri butonu: ana menüye dön
+        // --- geri butonu ve panel referansı SAHNEYE GÖRE
         if (!dryRun && back != null)
         {
-            MainMenuManager menu = Object.FindObjectOfType<MainMenuManager>(true);
             Button backButton = back.GetComponent<Button>();
-            if (menu != null && backButton != null) Wire(backButton, menu, menu.BackToMainMenu);
 
-            // Panel referansını yöneticiye bağla
-            if (menu != null && menu.recipeBookPanel != panel)
+            if (oyunSahnesi)
             {
-                SerializedObject so = new SerializedObject(menu);
-                SerializedProperty prop = so.FindProperty("recipeBookPanel");
-                if (prop != null)
-                {
-                    prop.objectReferenceValue = panel;
-                    so.ApplyModifiedPropertiesWithoutUndo();
-                    EditorUtility.SetDirty(menu);
-                }
+                // Oyunda: defteri kapat, duraklat menüsüne dön. Sahne
+                // YÜKLENMEZ, Time.timeScale'e dokunulmaz.
+                UIManager ui = Object.FindObjectOfType<UIManager>(true);
+                if (ui != null && backButton != null) Wire(backButton, ui, ui.CloseRecipeBook);
+                BaglaPanel(ui, "recipeBookPanel", panel);
+            }
+            else
+            {
+                MainMenuManager menu = Object.FindObjectOfType<MainMenuManager>(true);
+                if (menu != null && backButton != null) Wire(backButton, menu, menu.BackToMainMenu);
+                BaglaPanel(menu, "recipeBookPanel", panel);
             }
         }
 
         if (!dryRun && panel.activeSelf) panel.SetActive(false);
 
-        BuildMenuEntry(b, theme, dryRun);
+        if (!oyunSahnesi) BuildMenuEntry(b, theme, dryRun);
         b.End();
-
-        BuildPauseEntry(dryRun);
     }
 
     /// <summary>
@@ -361,6 +373,20 @@ public static class RecipeBookBuilder
 
         Transform label = btn.transform.Find("Text (TMP)");
         if (label != null) b.SetStretch(label.gameObject, UITokens.Zero, UITokens.One);
+    }
+
+    /// <summary>Panel referansını hedefin serileştirilmiş alanına yazar.</summary>
+    private static void BaglaPanel(Object hedef, string alan, GameObject panel)
+    {
+        if (hedef == null) return;
+
+        SerializedObject so = new SerializedObject(hedef);
+        SerializedProperty prop = so.FindProperty(alan);
+        if (prop == null || prop.objectReferenceValue == panel) return;
+
+        prop.objectReferenceValue = panel;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(hedef);
     }
 
     /// <summary>Ana menüde Ansiklopedi'nin yanında ikincil giriş.</summary>

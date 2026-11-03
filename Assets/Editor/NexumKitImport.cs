@@ -32,12 +32,27 @@ public static class NexumKitImport
     private const string KitRoot = "Tools/ui-kit";
     private const string UiDir = "Assets/Art/UI";
     private const string TileDir = "Assets/Art/Tiles";
+    private const string IconDir = "Assets/Art/Icons/UI";
+
+    /// <summary>Simge en büyük 192 birimde çiziliyor; 1,5 katı 288 -> 512.</summary>
+    private const int IconMaxSize = 512;
 
     /// <summary>Taş 200 birimde çizilir; 1440 genişlikte 266 px, ×1,5 = 400 → 512.</summary>
     private const int TileMaxSize = 512;
 
     /// <summary>Kit çerçeveleri en çok ~1000 birim genişlikte kullanılıyor.</summary>
     private const int UiMaxSize = 512;
+
+    /// <summary>
+    /// Sprite başına istisna. <c>bg_vignette</c> tam ekran gerilen bir alfa
+    /// rampası: kaynağı 512x1024 ve 512'ye kısılırsa doku import ayarı
+    /// kaynağın altında kalır (validator uyarır). Yumuşak bir rampa olduğu
+    /// için büyütme görünmez, ama ayar kaynağı KISITLAMAMALI.
+    /// </summary>
+    private static readonly Dictionary<string, int> UiMaxOverrides = new Dictionary<string, int>
+    {
+        { "bg_vignette", 1024 },
+    };
 
     /// <summary>Oyuna girecek kit sprite'ları (varyant C).</summary>
     private static readonly string[] UiSprites =
@@ -60,6 +75,8 @@ public static class NexumKitImport
         "star_full_normal", "star_empty_normal",
         "level_node_locked", "level_node_open", "level_node_done",
         "slider_track", "slider_fill", "slider_knob",
+        "bg_vignette", "bg_grid",
+        "compound_ring_normal", "compound_ring_selected",
     };
 
     [MenuItem("NEXUM/Kit Sprite'larını İçeri Al")]
@@ -95,7 +112,10 @@ public static class NexumKitImport
 
             Vector4 border;
             borderlar.TryGetValue(ad + ".png", out border);
-            if (Ayarla(hedef, UiMaxSize, border)) ayarlanan++; else dokunulmayan++;
+
+            int maxSize;
+            if (!UiMaxOverrides.TryGetValue(ad, out maxSize)) maxSize = UiMaxSize;
+            if (Ayarla(hedef, maxSize, border)) ayarlanan++; else dokunulmayan++;
         }
 
         // --- taşlar: seviye × durum, tek çözünürlük (512)
@@ -105,6 +125,20 @@ public static class NexumKitImport
             string hedef = TileDir + "/" + ad + ".png";
             if (Kopyala(kaynak, hedef)) kopyalanan++;
             if (Ayarla(hedef, TileMaxSize, Vector4.zero)) ayarlanan++; else dokunulmayan++;
+        }
+
+        // --- simge ailesi: tek çözünürlük (192), sabit kare, 9-slice değil
+        string iconSrc = Path.Combine(KitRoot, "icons");
+        if (Directory.Exists(iconSrc))
+        {
+            Directory.CreateDirectory(IconDir);
+            foreach (string kaynak in Directory.GetFiles(iconSrc, "*_192.png"))
+            {
+                string ad = Path.GetFileNameWithoutExtension(kaynak).Replace("_192", "");
+                string hedef = IconDir + "/" + ad + ".png";
+                if (Kopyala(kaynak, hedef)) kopyalanan++;
+                if (Ayarla(hedef, IconMaxSize, Vector4.zero)) ayarlanan++; else dokunulmayan++;
+            }
         }
 
         if (kopyalanan > 0 || ayarlanan > 0) AssetDatabase.Refresh();

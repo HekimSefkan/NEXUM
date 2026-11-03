@@ -15,14 +15,23 @@ public class UIManager : MonoBehaviour
     public GameObject gameOverPanel; 
     public GameObject winPanel; 
 
-    [Header("Beherglas Hedef (Titrasyon) Sistemi")]
-    public Transform goalsContainer; 
-    public GameObject beakerGoalPrefab; 
-    private List<UnityEngine.UI.Image> goalFills = new List<UnityEngine.UI.Image>(); 
-    private List<TextMeshProUGUI> goalTexts = new List<TextMeshProUGUI>(); 
+    [Header("Bölüm Hedefi (hedefin kendi taşı)")]
+    public Transform goalsContainer;
+
+    [Tooltip("Taş yuvası + sayaç satırı (GoalTileBuilder üretir ve bağlar).")]
+    public GameObject goalTilePrefab;
+
+    private List<TextMeshProUGUI> goalTexts = new List<TextMeshProUGUI>();
+    private List<TileVisual> goalTiles = new List<TileVisual>();
 
     [Header("Eğitim ve Duraklatma Paneli")]
     public GameObject pausePanel;
+
+    [Tooltip("Oyun sahnesindeki tarif defteri paneli (RecipeBookBuilder bağlar).")]
+    public GameObject recipeBookPanel;
+
+    [Tooltip("Defterden açılan ansiklopedi kartı (EncyclopediaDetailBuilder bağlar).")]
+    public GameObject elementDetailPanel;
     public TextMeshProUGUI factTextUI; 
     public List<ChemistryFact> allFacts; 
 
@@ -89,7 +98,9 @@ public class UIManager : MonoBehaviour
                 || IsPanelOpen(gameOverPanel)
                 || IsPanelOpen(winPanel)
                 || IsPanelOpen(hypothesisPanel)
-                || IsPanelOpen(undoPanel);
+                || IsPanelOpen(undoPanel)
+                || IsPanelOpen(recipeBookPanel)
+                || IsPanelOpen(elementDetailPanel);
         }
     }
 
@@ -121,11 +132,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hedef gösterimi: BEHER DEĞİL, HEDEFİN KENDİ TAŞI (3c/3).
+    ///
+    /// Oyuncunun tahtada arayacağı görsel ile hedef kutusunda gördüğü görsel
+    /// artık aynı: hedefin prefab'ı olduğu gibi klonlanır, formül taşın
+    /// üstünde (prefab'ın kendi metni, pişmiş puntosuyla), sayaç altında.
+    /// Taş görseli hiçbir yerde ÇOĞALTILMAZ — tek kaynak hedefin prefab'ı.
+    /// </summary>
     public void InitGoalsUI()
     {
         foreach(Transform child in goalsContainer) Destroy(child.gameObject);
-        goalFills.Clear();
         goalTexts.Clear();
+        goalTiles.Clear();
 
         // Serbest modda bölüm hedefi yok; beher paneli hiç gösterilmez.
         // Ayar doğrudan kayıttan okunur: GridManager.Start ile UIManager.Start
@@ -138,47 +157,79 @@ public class UIManager : MonoBehaviour
 
         foreach(var goal in currentGoals)
         {
-            GameObject newBeaker = Instantiate(beakerGoalPrefab, goalsContainer);
-            UnityEngine.UI.Image icon = newBeaker.transform.Find("ElementIcon").GetComponent<UnityEngine.UI.Image>();
-            UnityEngine.UI.Image targetImage = goal.targetPrefab.GetComponent<UnityEngine.UI.Image>();
-            
-            if (targetImage != null) 
-            {
-                icon.sprite = targetImage.sprite; 
-                icon.color = targetImage.color; 
-            }
+            GameObject item = Instantiate(goalTilePrefab, goalsContainer);
+            Transform slot = item.transform.Find("TileSlot");
 
-            UnityEngine.UI.Image fill = newBeaker.transform.Find("LiquidFill").GetComponent<UnityEngine.UI.Image>();
-            fill.fillAmount = 0;
-            goalFills.Add(fill);
+            GameObject tile = Instantiate(goal.targetPrefab, slot);
+            HazirlaHedefTasi(tile, slot as RectTransform);
+            goalTiles.Add(tile.GetComponent<TileVisual>());
 
-            string cleanName = goal.targetPrefab.name.Replace("Tile_", "").Replace("(Clone)", "");
-            string chemName = cleanName.Replace("2", "<sub>2</sub>").Replace("3", "<sub>3</sub>").Replace("4", "<sub>4</sub>");
-
-            TextMeshProUGUI text = newBeaker.transform.Find("AmountText").GetComponent<TextMeshProUGUI>();
-            text.text = $"<b>{chemName}</b>\n0 / {goal.targetAmount}";
+            TextMeshProUGUI text = item.transform.Find("CountText").GetComponent<TextMeshProUGUI>();
+            text.text = $"0 / {goal.targetAmount}";
             goalTexts.Add(text);
         }
     }
 
+    /// <summary>
+    /// Hedef kutusundaki taş GÖSTERİMDİR: dokunulmaz, oynanmaz.
+    ///
+    /// Ölçek CANLI hücre boyutundan hesaplanır (tahtanın GridLayoutGroup'u);
+    /// böylece taşın pişmiş puntosu ile görseli arasındaki oran korunur ve
+    /// hücre boyutu değişirse hedef kutusu kendiliğinden uyar.
+    /// </summary>
+    private void HazirlaHedefTasi(GameObject tile, RectTransform slot)
+    {
+        TileInteraction dokunma = tile.GetComponent<TileInteraction>();
+        if (dokunma != null) Destroy(dokunma);
+
+        UnityEngine.UI.Image img = tile.GetComponent<UnityEngine.UI.Image>();
+        if (img != null) img.raycastTarget = false;
+
+        RectTransform rt = tile.GetComponent<RectTransform>();
+        if (rt == null || slot == null) return;
+
+        float hucre = HucreBoyutu();
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(hucre, hucre);
+        rt.anchoredPosition = Vector2.zero;
+
+        float olcek = slot.rect.width / hucre;
+        rt.localScale = new Vector3(olcek, olcek, 1f);
+    }
+
+    /// <summary>Tahtadaki hücrenin canlı boyutu; okunamazsa tasarım değeri.</summary>
+    private float HucreBoyutu()
+    {
+        GridManager grid = GridManager.Instance;
+        if (grid != null && grid.gridBoard != null)
+        {
+            UnityEngine.UI.GridLayoutGroup glg =
+                grid.gridBoard.GetComponent<UnityEngine.UI.GridLayoutGroup>();
+            if (glg != null && glg.cellSize.x > 1f) return glg.cellSize.x;
+        }
+        return 200f;
+    }
+
     public void UpdateGoalUI()
     {
-        if (goalFills.Count == 0) return;   // serbest modda beher yok
+        if (goalTexts.Count == 0) return;   // serbest modda hedef yok
 
         var currentGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
 
-        for(int i = 0; i < currentGoals.Count; i++)
+        for(int i = 0; i < currentGoals.Count && i < goalTexts.Count; i++)
         {
             var goal = currentGoals[i];
-            float fillRatio = (float)goal.currentAmount / goal.targetAmount;
-            
-            goalFills[i].DOFillAmount(fillRatio, 0.5f).SetEase(Ease.OutBounce);
-            
-            string cleanName = goal.targetPrefab.name.Replace("Tile_", "").Replace("(Clone)", "");
-            string chemName = cleanName.Replace("2", "<sub>2</sub>").Replace("3", "<sub>3</sub>").Replace("4", "<sub>4</sub>");
+            bool tamam = goal.currentAmount >= goal.targetAmount;
 
-            string color = (goal.currentAmount >= goal.targetAmount) ? "#2ECC71" : "#FFFFFF";
-            goalTexts[i].text = $"<b>{chemName}</b>\n<color={color}>{goal.currentAmount} / {goal.targetAmount}</color>";
+            string color = tamam ? "#2ECC71" : "#FFFFFF";
+            goalTexts[i].text = $"<color={color}>{goal.currentAmount} / {goal.targetAmount}</color>";
+
+            // Tamamlanan hedef taşın KENDİ keşif durumuyla işaretlenir;
+            // yeni sprite üretilmez.
+            if (i < goalTiles.Count && goalTiles[i] != null)
+            {
+                goalTiles[i].SetState(tamam ? "discovered" : "normal");
+            }
         }
     }
 
@@ -415,12 +466,43 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    /// <summary>Duraklat menüsünden tarif defteri: ana menüye dönüp defteri açar.</summary>
+    /// <summary>
+    /// Duraklat menüsünden tarif defteri.
+    ///
+    /// ESKİ DAVRANIŞ BİR HATAYDI: <c>SceneManager.LoadScene("MainMenu")</c>
+    /// çağrılıyordu, yani defter açmak OYUNDAN ÇIKMAK demekti — tahta, skor
+    /// ve duraklatılmış durum yok oluyordu. Defter paneli artık Game
+    /// sahnesinde de var (RecipeBookBuilder iki sahneye birden kuruyor);
+    /// sahne terk edilmiyor.
+    ///
+    /// <c>Time.timeScale</c>'e DOKUNULMAZ: oyun duraklatılmış kalır.
+    /// </summary>
     public void OpenRecipeBook()
     {
         PlayButtonSound();
-        MainMenuManager.OpenRecipeBookOnLoad = true;
-        SceneManager.LoadScene("MainMenu");
+
+        if (recipeBookPanel == null)
+        {
+            // Panel kurulmamışsa eski yola düş (ana menüde aç).
+            MainMenuManager.OpenRecipeBookOnLoad = true;
+            SceneManager.LoadScene("MainMenu");
+            return;
+        }
+
+        if (pausePanel != null) pausePanel.SetActive(false);
+        recipeBookPanel.SetActive(true);
+
+        RecipeBookPanel panel = recipeBookPanel.GetComponent<RecipeBookPanel>();
+        if (panel != null) panel.Refresh();
+    }
+
+    /// <summary>Defterden duraklat menüsüne dön. Oyun durumu korunur.</summary>
+    public void CloseRecipeBook()
+    {
+        PlayButtonSound();
+
+        if (recipeBookPanel != null) recipeBookPanel.SetActive(false);
+        if (pausePanel != null) pausePanel.SetActive(true);
     }
 
     public void GoToMainMenu()

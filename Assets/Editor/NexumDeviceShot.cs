@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
@@ -44,6 +44,7 @@ public static class NexumDeviceShot
         public string[] ac;      // açılacak obje yolları (Canvas altından)
         public string[] kapa;    // kapatılacak obje yolları
         public bool tahtayiDoldur;
+        public bool ansiklopediyiDoldur;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -79,6 +80,30 @@ public static class NexumDeviceShot
                                    "AssistantPanel" },
                     tahtayiDoldur = true },
 
+        new Ekran { ad = "ansiklopedi", scene = "Assets/Scenes/MainMenu.unity",
+                    ac = new[] { "SafeAreaRoot/EncyclopediaPanel" },
+                    kapa = new[] { "SafeAreaRoot/MainMenuPanel", "SafeAreaRoot/SettingsPanel",
+                                   "SafeAreaRoot/HowToPlayPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ProfilePanel", "SafeAreaRoot/LevelSelectionPanel",
+                                   "SafeAreaRoot/EncyclopediaPanel/ElementDetailPanel" },
+                    ansiklopediyiDoldur = true },
+
+        new Ekran { ad = "mentor-karti", scene = "Assets/Scenes/MainMenu.unity",
+                    ac = new[] { "SafeAreaRoot/RegistrationPanel",
+                                 "SafeAreaRoot/RegistrationPanel/MentorDetailPanel" },
+                    kapa = new[] { "SafeAreaRoot/MainMenuPanel", "SafeAreaRoot/SettingsPanel",
+                                   "SafeAreaRoot/HowToPlayPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ProfilePanel", "SafeAreaRoot/EncyclopediaPanel",
+                                   "SafeAreaRoot/LevelSelectionPanel",
+                                   "SafeAreaRoot/RegistrationPanel/IDCardPanel" } },
+
+        new Ekran { ad = "quiz", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "QuizPanel" },
+                    kapa = new[] { "PausePanel", "GameOverPanel", "LevelCompletePanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel" },
+                    tahtayiDoldur = true },
+
         new Ekran { ad = "duraklat", scene = "Assets/Scenes/Game.unity",
                     ac = new[] { "PausePanel" },
                     kapa = new[] { "QuizPanel", "GameOverPanel", "LevelCompletePanel",
@@ -106,7 +131,8 @@ public static class NexumDeviceShot
                 }
 
                 Hazirla(canvasGo.transform, e);
-                if (e.tahtayiDoldur) TahtayiDoldur(scene);
+                if (e.tahtayiDoldur) { TahtayiDoldur(scene); HedefleriDoldur(); }
+                if (e.ansiklopediyiDoldur) AnsiklopediyiDoldur(canvasGo.transform);
 
                 string yol = $"{OutDir}/{e.ad}_{boy.x}x{boy.y}.png";
                 if (Cek(canvasGo, boy, yol)) alinan++;
@@ -169,6 +195,100 @@ public static class NexumDeviceShot
                 t.gameObject.SetActive(true);
                 t.localScale = Vector3.one;      // panel geçişi tween'i ölçeği 0'da bırakmış olabilir
             }
+        }
+
+        MetinleriDoldur(canvas);
+    }
+
+    /// <summary>
+    /// Yerelleştirilmiş etiketler çalışma zamanında yazılıyor; edit mode'da
+    /// BOŞ görünüyorlardı, yani cihaz görüntüleri buton yazılarını hiç
+    /// göstermiyordu. Sözlük burada da okunur — görüntü ne gösteriyorsa
+    /// oyuncunun göreceği metin odur.
+    /// </summary>
+    public static void MetinleriDoldur(Transform canvas)
+    {
+        foreach (LocalizedText loc in canvas.GetComponentsInChildren<LocalizedText>(true))
+        {
+            if (loc == null || string.IsNullOrEmpty(loc.key)) continue;
+
+            TMP_Text tmp = loc.GetComponent<TMP_Text>();
+            if (tmp == null) continue;
+
+            string metin = Loc.Get(loc.key);
+            if (!string.IsNullOrEmpty(metin)) tmp.text = metin;
+        }
+    }
+
+    /// <summary>
+    /// Hedef satırı: beherler çalışma zamanında doğuyor, edit mode'da
+    /// görünmüyorlardı — bu yüzden 3c'ye kadar hiçbir cihaz görüntüsünde
+    /// hedef kutusu YOKTU. Artık görüntü de hedefi gösteriyor.
+    /// </summary>
+    public static void HedefleriDoldur()
+    {
+        LevelManager lm = Object.FindObjectOfType<LevelManager>(true);
+        Transform goals = Object.FindObjectsOfType<RectTransform>(true)
+            .FirstOrDefault(r => r.name == "GoalsContainer");
+        GameObject kutuPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/Prefabs/GoalTilePrefab.prefab");
+        if (lm == null || goals == null || kutuPrefab == null || lm.levels.Count == 0) return;
+
+        for (int i = goals.childCount - 1; i >= 0; i--)
+        {
+            Object.DestroyImmediate(goals.GetChild(i).gameObject);
+        }
+
+        foreach (var hedef in lm.levels[0].levelGoals)
+        {
+            if (hedef.targetPrefab == null) continue;
+
+            GameObject kutu = (GameObject)PrefabUtility.InstantiatePrefab(kutuPrefab, goals);
+            RectTransform slot = kutu.transform.Find("TileSlot") as RectTransform;
+            if (slot == null) continue;
+
+            GameObject tas = (GameObject)PrefabUtility.InstantiatePrefab(hedef.targetPrefab, slot);
+            RectTransform rt = tas.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.sizeDelta = new Vector2(200f, 200f);
+                rt.anchoredPosition = Vector2.zero;
+                float olcek = slot.rect.width / 200f;
+                rt.localScale = new Vector3(olcek, olcek, 1f);
+            }
+
+            TMPro.TMP_Text sayac = kutu.transform.Find("CountText").GetComponent<TMPro.TMP_Text>();
+            if (sayac != null) sayac.text = "0 / " + hedef.targetAmount;
+        }
+    }
+
+    /// <summary>
+    /// Ansiklopedi kartları da çalışma zamanında doğuyor; liste edit mode'da
+    /// boştu. Görüntü gerçek kart sayısıyla alınsın diye doldurulur.
+    /// </summary>
+    public static void AnsiklopediyiDoldur(Transform canvas)
+    {
+        Transform content = canvas.Find("SafeAreaRoot/EncyclopediaPanel/Scroll View/Viewport/Content");
+        GameObject kart = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/ElementCard.prefab");
+        if (content == null || kart == null) return;
+
+        for (int i = content.childCount - 1; i >= 0; i--)
+        {
+            Object.DestroyImmediate(content.GetChild(i).gameObject);
+        }
+
+        foreach (string guid in AssetDatabase.FindAssets("t:ElementData"))
+        {
+            ElementData veri = AssetDatabase.LoadAssetAtPath<ElementData>(
+                AssetDatabase.GUIDToAssetPath(guid));
+            if (veri == null) continue;
+
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(kart, content);
+            TMPro.TMP_Text sembol = go.transform.Find("SymbolText").GetComponent<TMPro.TMP_Text>();
+            TMPro.TMP_Text isim = go.transform.Find("NameText").GetComponent<TMPro.TMP_Text>();
+            if (sembol != null) sembol.text = veri.symbol;
+            if (isim != null) isim.text = veri.elementName;
         }
     }
 

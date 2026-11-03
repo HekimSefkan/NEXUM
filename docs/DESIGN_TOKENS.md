@@ -635,3 +635,46 @@ bozulurdu.
 Sprite geçişi yüzeyi açıktan koyuya çevirdi; `textMuted`'a bağlamak kontrastı
 **1,65:1**'e düşürür, yani metni okunmaz yapardı. Kural açık zeminde
 `#515961` kullanan yeni bir metin çıkarsa devreye girer.
+
+---
+
+# 11. 3c sapmaları (son görsel tur)
+
+## 11.1 Tek arka plan dokusu 4096'da
+
+Doku import kuralı `maxTextureSize` için **en çok 2048** diyor.
+`Assets/Art/Backgrounds/nexum_background.png` bunun dışında tutuldu:
+
+| | değer |
+|---|---|
+| kaynak | 941×1672 (`Tools/ui-kit/source/nexum_background_source.png`) |
+| üretilen | 2161×3840 (LANCZOS, oran sapması 0,000039) |
+| en büyük kullanım | 1440×2560 (1440 genişlikte Envelope Parent) |
+| kuralın istediği | 2560 × 1,5 = 3840 → **4096** |
+
+Yani sapma kuralın **kendi formülünden** çıkıyor; 2048'e çekilseydi doku
+1152×2048'e inerdi ve 1440 genişlikte yine büyütülürdü. Karşılığında
+**altı ayrı arka plan dokusu** (`arkaplan`, `Registration_arkaplan`,
+`Nasiloyanir_arkaplan1/2`, `level_selection_arkaplan`, `background_c_main`,
+`background_c_level`, `background_c_register`) sahneden düştü.
+
+## 11.2 İşleme katmanı görsele pişmez
+
+Karartma, ölçü ızgarası, panel şeridi ve vinyet sahnede ayrı `Image`
+katmanlarıdır (`BackgroundBuilder`), görselin içinde değil. Parametreler tek
+yerde ve ölçümle belirlenir; alfası 0 olan katman **kapatılır**, boş kare
+için draw call harcanmaz.
+
+| Katman | Rol | Alfa |
+|---|---|---|
+| Darken | `cardBackground` | 0,00 (kapalı — ölçüm 11.3) |
+| Grid | `primary` | 0,055 |
+| PanelStrip | `panelBackground` | 0,16 |
+| Vignette | `cardBackground` | 0,55 |
+
+## 11.3 Ortalama parlaklık bandı
+
+İstenen bant 35–40/255 idi. Kaynak görselin kendi ortalaması **21,5**;
+yani bant *karartmayla* tutturulamaz, ancak düz bir açık örtüyle
+**yükseltilerek** tutturulabilirdi — o da görselin derinliğini silerdi.
+Ölçülen değerler PR'da; karartma alfası bu yüzden 0'da bırakıldı.

@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +13,11 @@ using UnityEngine.UI;
 /// ritim. İpucu butonu ayrıca <see cref="HintBadge"/> rozetiyle kalan hakkı
 /// gösterir ve hak bitince devre dışı görünür.
 ///
-/// <b>B5 — KARAKTER ÇERÇEVESİ.</b> Karakter görseli (hint_assistant) kit
-/// avatar çerçevesine oturdu ve sağ sütundan SOL tarafa alındı. Sebep ölçüm:
-/// tahtanın üstü (290) ile güvenli alanın tepesi (960) arası 670 birim;
-/// karakterin dokunma kapsamı 200 + üç eylem butonu 3×144 + duraklat 144 =
-/// 776 birim, sütuna sığmıyordu. Karakter solda GoalsContainer ile skor
-/// göstergesinin arasındaki boş alanda duruyor.
+/// <b>B5 → 3c/3: KARAKTER KALKTI.</b> Karakter görseli (hint_assistant)
+/// 3b'de kit avatar çerçevesine oturtulmuştu; 3c'de sahneden tamamen çıktı.
+/// İki sebep: karikatür çizim metal kitin diliyle aynı ekranda duruyordu ve
+/// İPUCU'nun İKİNCİ giriş noktasıydı. Eylem tek yerde toplandı; buton
+/// simgesini aile üretecinden alıyor. Görsel dosyası silinmedi.
 ///
 /// Rozet AYRI KATMAN: Faz 5'teki kademeli ipucu rozeti değiştirecek,
 /// butonun kendisi değişmeyecek.
@@ -33,14 +32,22 @@ public static class GameHudBuilder
 
     private const string ButtonFramePath = "Assets/Art/UI/btn_ghost_normal.png";
     private const string BadgeFramePath = "Assets/Art/UI/badge_frame_normal.png";
-    private const string AvatarFramePath = "Assets/Art/UI/avatar_frame_normal.png";
-    private const string CharacterPath = "Assets/Art/Figures/hint_assistant.png";
+    private const string HintIconPath = "Assets/Art/Icons/UI/icon_hint_normal.png";
 
     private static readonly Vector2 ActionSize = new Vector2(250f, 100f);
+
+    /// <summary>
+    /// Simge solda, etiket sağda. Rozet sağ üst köşede durduğu için etiket
+    /// kutusu rozetin altına girmez: 250 birimlik butonda simge -113..-57,
+    /// etiket -55..105, rozet 81'den sağa.
+    /// </summary>
+    private static readonly Vector2 IconSize = new Vector2(56f, 56f);
+    private static readonly Vector2 IconPos = new Vector2(-85f, 0f);
+    private static readonly Vector2 LabelSize = new Vector2(160f, 100f);
+    private static readonly Vector2 LabelPos = new Vector2(25f, 0f);
     // Rozet kutusu label puntosunu (30) rahat alacak kadar: 30 punto bir
     // rakam için ~22 birim, kutu 72 -> %31 doluluk.
     private static readonly Vector2 BadgeSize = new Vector2(72f, 72f);
-    private static readonly Vector2 AvatarSize = new Vector2(200f, 200f);
 
     /// <summary>
     /// Sağ sütun: dokunma kapsamları (144) 2 birim boşlukla dizili.
@@ -49,14 +56,12 @@ public static class GameHudBuilder
     private const float TipY = 450f;
     private const float UndoY = 596f;
     private const float JokerY = 742f;
-    private const float ColumnX = 400f;
+    // 400 -> 375: rozet butonun sağ üst köşesinden 28 birim DIŞARI taşıyor;
+    // 400'de rozetin sağ kenarı 1093'e düşüyordu ve 1080 genişlikte ekran
+    // kenarı rozeti kesiyordu (cihaz görüntüsünde ölçüldü). 375'te sağ
+    // kenar 1068, yani 12 birim pay kalıyor.
+    private const float ColumnX = 375f;
 
-    /// <summary>Karakter: solda, GoalsContainer ile skor göstergesinin arasında.</summary>
-    // y 450 -> 400: 200 birimlik karakter 350..550'ye oturuyordu ve
-    // GoalsContainer'ın alt kenarıyla (511) 39 birim çakışıyordu. Beherler
-    // çalışma zamanında doğduğu için edit mode render'ında görünmüyor,
-    // cihazda görünürdü. Artık 300..500, iki yana da 10 birim boşluk.
-    private static readonly Vector2 AvatarCenter = new Vector2(-380f, 400f);
 
     /// <summary>
     /// HUD ANCHOR'I TAHTAYLA AYNI (CLAUDE.md kararı): grid'le görsel grup
@@ -102,8 +107,20 @@ public static class GameHudBuilder
         });
         b.EnsureComponent<Button>(tip, button => button.transition = Selectable.Transition.ColorTint);
 
+        // --- Simge + etiket (3c/3): eylem artık yalnız metinle anlatılmıyor
+        GameObject tipIcon = b.Ensure(HudPath + "/TipButton", "Icon");
+        b.SetFixed(tipIcon, UITokens.Center, IconSize, IconPos);
+        b.EnsureComponent<Image>(tipIcon, image =>
+        {
+            image.sprite = LoadSprite(HintIconPath);
+            image.type = Image.Type.Simple;
+            image.color = Color.white;
+            image.preserveAspect = true;
+            image.raycastTarget = false;
+        });
+
         GameObject tipLabel = b.Ensure(HudPath + "/TipButton", "Label");
-        b.SetStretch(tipLabel, UITokens.Zero, UITokens.One);
+        b.SetFixed(tipLabel, UITokens.Center, LabelSize, LabelPos);
         b.EnsureComponent<TextMeshProUGUI>(tipLabel, tmp =>
         {
             tmp.font = theme.typography.label.font;
@@ -154,32 +171,13 @@ public static class GameHudBuilder
         GameObject joker = b.Ensure(HudPath, "JokerButton", adopt: true);
         if (joker != null) b.SetFixed(joker, GridAnchor, ActionSize, Pos(new Vector2(ColumnX, JokerY)));
 
-        // --- Karakter: kit avatar çerçevesine oturdu, sola alındı
-        GameObject hint = b.Ensure(HudPath, "HintButton", adopt: true);
-        if (hint != null)
-        {
-            b.SetFixed(hint, GridAnchor, AvatarSize, Pos(AvatarCenter));
-            b.EnsureComponent<Image>(hint, image =>
-            {
-                image.sprite = LoadSprite(AvatarFramePath);
-                image.type = Image.Type.Sliced;
-                image.fillCenter = true;
-                image.color = Color.white;
-                image.preserveAspect = false;
-                image.raycastTarget = true;
-            });
-
-            GameObject portre = b.Ensure(HudPath + "/HintButton", "Portrait");
-            b.SetStretch(portre, new Vector2(0.12f, 0.12f), new Vector2(0.88f, 0.88f));
-            b.EnsureComponent<Image>(portre, image =>
-            {
-                image.sprite = LoadSprite(CharacterPath);
-                image.type = Image.Type.Simple;
-                image.color = Color.white;
-                image.preserveAspect = true;
-                image.raycastTarget = false;
-            });
-        }
+        // --- DEDEKTİF KALKTI (3c/3)
+        // Karikatür dedektif (hint_assistant) metal kitin diliyle aynı
+        // ekranda duruyordu ve İPUCU için İKİNCİ bir giriş noktasıydı:
+        // aynı eylem iki ayrı görselle iki ayrı yerden açılıyordu. Eylem
+        // tek yerde toplandı — İPUCU butonu artık simgesiyle kendini
+        // anlatıyor. Dosya silinmedi, yalnızca sahneden çıktı.
+        b.Remove(HudPath, "HintButton");
 
         // Rozet ve devre dışı durumu çalışma zamanında
         b.EnsureComponent<HintButtonState>(tip, state =>

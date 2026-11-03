@@ -25,6 +25,12 @@ public class EncyclopediaManager : MonoBehaviour
 
     public void LoadEncyclopedia()
     {
+        // LİSTESİZ KURULUM: oyun sahnesindeki ansiklopedi YALNIZCA ayrıntı
+        // kartı için kurulu (PANEL ERİŞİMİ kuralı, 3c/1) — kart listesi,
+        // kart prefab'ı ve içerik alanı orada bilerek boş. Liste alanı yoksa
+        // üretilecek liste de yoktur; sessizce değil, AÇIKÇA çıkılır.
+        if (contentArea == null || cardPrefab == null) return;
+
         // Idempotent olsun: kartlar normalde Start'ta bir kez üretilir ve panel kapanıp açılınca korunur.
         // Bu metot ileride bir butona bağlanırsa kartlar kopyalanmasın diye eskiler önce temizlenir.
         for (int i = contentArea.childCount - 1; i >= 0; i--)
