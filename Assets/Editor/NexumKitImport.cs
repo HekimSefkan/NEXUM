@@ -64,6 +64,8 @@ public static class NexumKitImport
         "star_full_normal", "star_empty_normal",
         "level_node_locked", "level_node_open", "level_node_done",
         "slider_track", "slider_fill", "slider_knob",
+        "bg_vignette", "bg_grid",
+        "compound_ring_normal", "compound_ring_selected",
     };
 
     [MenuItem("NEXUM/Kit Sprite'larını İçeri Al")]
