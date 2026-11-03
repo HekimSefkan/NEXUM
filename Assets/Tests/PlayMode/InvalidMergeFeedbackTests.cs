@@ -156,6 +156,10 @@ public class InvalidMergeFeedbackTests
     {
         TahtaKur("H", "Fe");
         yield return Kaydir(Vector2.right);
+
+        Debug.Log($"{Tag}_DURUM: satır={(Satir() == null ? "YOK" : "var")} " +
+                  $"metin=\"{Metin()}\" mentor={SaveService.Data.mentorHintsOn} " +
+                  $"mod={Field(grid, "currentGameMode").GetValue(grid)}");
         Assert.IsTrue(Gorundu(), "ölçüm için mesaj görünür olmalı");
 
         // Sistem bildirimi de aynı anda ekranda olsun
