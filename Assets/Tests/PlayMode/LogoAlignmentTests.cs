@@ -167,6 +167,75 @@ public class LogoAlignmentTests
     }
 
     /// <summary>
+    /// ÜST BANT (1.3/0.1-0.2): logo yatayda ortalı, avatar buton bandının
+    /// sol kenarında ve üçü (logo × avatar × ilk buton) çakışmıyor.
+    /// Dört canvas boyutunda ölçülür.
+    /// </summary>
+    [UnityTest]
+    [Timeout(900000)]
+    public IEnumerator MenuUstBandiHizali()
+    {
+        SaveService.Data.selectedLevel = 0;
+        SceneManager.LoadScene("MainMenu");
+        yield return null;
+        yield return new WaitForSeconds(1f);
+
+        RectTransform safeRoot = LayoutCheck.PrepareSafeRoot();
+        Assert.IsNotNull(safeRoot, "SafeAreaRoot yok");
+
+        RectTransform logo = Bul(safeRoot, "MainMenuPanel/Logo");
+        RectTransform avatar = Bul(safeRoot, "MainMenuPanel/ProfileButton");
+        RectTransform oyna = Bul(safeRoot, "MainMenuPanel/PlayButton");
+        Assert.IsNotNull(logo, "ana menüde Logo yok");
+        Assert.IsNotNull(avatar, "ProfileButton yok");
+        Assert.IsNotNull(oyna, "PlayButton yok");
+
+        List<string> hatalar = new List<string>();
+
+        foreach (Vector2 boyut in LayoutCheck.CanvasSizes)
+        {
+            LayoutCheck.SetCanvasSize(safeRoot, boyut);
+            yield return null;
+            yield return null;
+
+            string ekran = $"{boyut.x:F0}x{boyut.y:F0}";
+            Vector4 l = LayoutCheck.LocalRect(safeRoot, logo);
+            Vector4 a = LayoutCheck.LocalRect(safeRoot, avatar);
+            Vector4 p = LayoutCheck.LocalRect(safeRoot, oyna);
+
+            float logoMerkez = (l.x + l.z) * 0.5f;
+            float bandSol = p.x;
+            float avatarSol = a.x;
+
+            Debug.Log($"{Tag}_USTBANT: {ekran} | logo merkez {logoMerkez:F1} " +
+                      $"({l.y:F0}..{l.w:F0}) | avatar sol {avatarSol:F1} ({a.y:F0}..{a.w:F0}) | " +
+                      $"band sol {bandSol:F1} | OYNA üst {p.w:F0}");
+
+            if (Mathf.Abs(logoMerkez) > 1f)
+            {
+                hatalar.Add($"{ekran}: logo kutusu ortada değil ({logoMerkez:F1})");
+            }
+            if (Mathf.Abs(avatarSol - bandSol) > 1f)
+            {
+                hatalar.Add($"{ekran}: avatar sol kenarı band kenarında değil " +
+                            $"({avatarSol:F1} ≠ {bandSol:F1})");
+            }
+            if (LayoutCheck.OverlapArea(l, a) > 1f) hatalar.Add($"{ekran}: logo × avatar çakışıyor");
+            if (LayoutCheck.OverlapArea(l, p) > 1f) hatalar.Add($"{ekran}: logo × OYNA çakışıyor");
+            if (LayoutCheck.OverlapArea(a, p) > 1f) hatalar.Add($"{ekran}: avatar × OYNA çakışıyor");
+        }
+
+        foreach (string h in hatalar) Debug.Log($"{Tag}_SORUN: {h}");
+        Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
+    }
+
+    private static RectTransform Bul(RectTransform safeRoot, string yol)
+    {
+        Transform t = safeRoot.Find(yol);
+        return t as RectTransform;
+    }
+
+    /// <summary>
     /// Kutunun içindeki BOYALI içeriğin yatay sınırları (x0, x1).
     /// Zemin, kutunun en sol ve en sağ sütunlarının ortalamasıdır; ondan
     /// yeterince ayrışan sütun "logo var" sayılır.

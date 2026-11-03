@@ -609,14 +609,6 @@ public class GridManager : MonoBehaviour
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.shiftClip, 0.5f);
             }
 
-            // GERİ BİLDİRİM (1.3): hamle taş oynattı ama SIFIR birleşme üretti.
-            // Oyun kuralı burada değişmez; yalnızca neden olmadığı gösterilir.
-            // Tek çağrı noktası burasıdır — tetikleme kuralı bu daldan gelir.
-            if (InvalidMergeFeedback.Instance != null)
-            {
-                InvalidMergeFeedback.Instance.Report(direction);
-            }
-
             // Melez spawn: birleşme olmasa da her 2 hamlede bir yeni taş gelir.
             // Her modda geçerlidir; tahtanın hiç dolmadan sonsuza kadar
             // kaydırılabilmesini engeller.
