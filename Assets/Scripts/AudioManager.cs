@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
@@ -27,7 +27,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip winClip;         
     public AudioClip gameOverClip;    
     public AudioClip quizCorrectClip; 
-    public AudioClip quizWrongClip;   
+    public AudioClip quizWrongClip;
+
+    // Geçersiz birleştirme (1.3). Ses dosyası ARANMADI/ÜRETİLMEDİ; alan
+    // bilerek boş. PlaySFX null klibi sessizce geçer, olay yerinde durur.
+    public AudioClip invalidMergeClip;   
 
     void Awake()
     {

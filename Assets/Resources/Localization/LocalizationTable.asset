@@ -40,6 +40,9 @@ MonoBehaviour:
   - key: encyclopedia.synthesis
     turkish: 'Sentez: {0}'
     english: 'Sentez: {0}'
+  - key: feedback.no_reaction
+    turkish: Bu ikisi tepkimeye girmiyor.
+    english: Bu ikisi tepkimeye girmiyor.
   - key: game.cancelbutton.text_tmp
     turkish: "VAZGE\xC7"
     english: "VAZGE\xC7"
@@ -386,6 +389,12 @@ MonoBehaviour:
   - key: reaction.inputs
     turkish: '{0} + {1}'
     english: '{0} + {1}'
+  - key: reaction.no_product
+    turkish: <sprite="NexumSymbols" name="nope">
+    english: <sprite="NexumSymbols" name="nope">
+  - key: reaction.no_product_fallback
+    turkish: X
+    english: X
   - key: recipebook.button
     turkish: "TAR\u0130F DEFTER\u0130"
     english: "TAR\u0130F DEFTER\u0130"

@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,6 +33,11 @@ public static class NexumValidation
         "Game::EncyclopediaManager.cardParent",
         "Game::EncyclopediaManager.detailFormulaText",
         "Game::EncyclopediaManager.contentArea",
+
+        // Geçersiz birleştirme sesi (1.3): olay bağlandı ama ses dosyası
+        // ARANMADI/ÜRETİLMEDİ. PlaySFX null klibi sessizce geçer; klip
+        // bulununca yalnızca bu alan doldurulur.
+        "AudioManager.invalidMergeClip",
     };
 
     /// <summary>
