@@ -35,6 +35,12 @@ SS = 4                      # superornekleme
 CLEAR = (0, 0, 0, 0)
 SIZES = [96, 144, 192]      # dokunma hedefi 144; ustu ve alti da uretilir
 
+# Ansiklopedi bilesik cemberi AYNI cerceveden cikar: ayni cizgi kalinligi,
+# ayni metal, ayni olcu izgarasi — yalnizca glif yoktur. Kit klasorune
+# yazilir, cunku kullanimi simge degil YUZEY (250 birim kart).
+KIT = os.path.join(ROOT, "Tools", "ui-kit", "C")
+CEMBER_BOY = 512
+
 
 THEME_CS = os.path.join(ROOT, "Assets", "Scripts", "Theme", "NexumTheme.cs")
 
@@ -311,6 +317,21 @@ def icon(size, ad, durum):
     return img.resize((size, size), Image.LANCZOS)
 
 
+def uret_cember():
+    """Bilesik cemberi: simge cercevesinin glifsiz hali (ansiklopedi karti)."""
+    os.makedirs(KIT, exist_ok=True)
+    ICONS["_cember"] = lambda d, S, kal, c: None
+    kayit = {}
+    for durum in ("normal", "selected"):
+        dosya = "compound_ring_%s.png" % durum
+        icon(CEMBER_BOY, "_cember", durum).save(os.path.join(KIT, dosya))
+        kayit[dosya] = {"tip": "sabit", "boyut": [CEMBER_BOY, CEMBER_BOY],
+                        "simge": "cember", "durum": durum, "border": [0, 0, 0, 0]}
+    del ICONS["_cember"]
+    print("bilesik cemberi: %d sprite -> %s" % (len(kayit), KIT))
+    return kayit
+
+
 def uret():
     os.makedirs(OUT, exist_ok=True)
     kayit = {}
@@ -324,6 +345,8 @@ def uret():
                                 "simge": ad, "durum": durum, "border": [0, 0, 0, 0]}
 
     print("simgeler: %d sprite -> %s" % (len(kayit), OUT))
+
+    kayit.update(uret_cember())
 
     if os.path.exists(MANIFEST):
         man = json.load(open(MANIFEST, encoding="utf-8"))

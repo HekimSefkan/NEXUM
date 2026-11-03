@@ -4882,6 +4882,36 @@
           0,
           0
         ]
+      },
+      "compound_ring_normal.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "simge": "cember",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "compound_ring_selected.png": {
+        "tip": "sabit",
+        "boyut": [
+          512,
+          512
+        ],
+        "simge": "cember",
+        "durum": "selected",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
       }
     }
   }
