@@ -42,7 +42,7 @@ MonoBehaviour:
     english: 'Sentez: {0}'
   - key: feedback.no_reaction
     turkish: Bu ikisi tepkimeye girmiyor.
-    english: Bu ikisi tepkimeye girmiyor.
+    english: These two don't react.
   - key: game.cancelbutton.text_tmp
     turkish: "VAZGE\xC7"
     english: "VAZGE\xC7"
