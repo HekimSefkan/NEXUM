@@ -7,22 +7,27 @@ using UnityEngine.UI;
 /// Geçersiz birleştirme mesajının bandı (Faz 1 / 1.3).
 ///
 /// <b>NEDEN BU BANT.</b> Tahtanın altındaki şerit üç şey tarafından zaten
-/// paylaşılıyor ve ikisi daha önce çakıştı. Yerleşim ÖLÇÜLDÜ (1080x1920
-/// cihaz görüntüsünde boyalı satır taraması):
+/// paylaşılıyor. Yerleşim ÖLÇÜLDÜ (gerçek render, boyalı piksel sınırları):
 ///
 ///   tahta alt kenarı            -610
-///   BOŞ                         -610 .. -675   &lt;-- mesaj buraya
-///   katalizör etiketi           -680 .. -710
-///   katalizör tüpü              -730 .. -815
-///   sistem bildirimi (merkez)   -850   (UIManager.SystemBelowBoard = 240)
+///   boş şerit                   -610 .. -682   (72 birim)
+///   katalizör etiketi           -682 .. -710
+///   katalizör göstergesi        -682 .. -808
+///   sistem bildirimi            -828 .. -862
+///   BOŞ                         -862 .. -960   (98 birim)  &lt;-- mesaj buraya
 ///
-/// Yani tahtanın hemen altındaki 65 birimlik şerit, üç bandın hiçbirine
-/// ait değil. Mesaj TEK SATIR olmak zorunda: iki satır ancak katalizörün
-/// ya da sistem bildiriminin bandına girerek sığardı.
+/// <b>Neden tahtanın hemen altı DEĞİL.</b> Bantlar arasında en az 24 birim
+/// pay isteniyor. Tahta altı şeridi 72 birim; mesajın boyalı yüksekliği
+/// 36 puntoda 30 birim, yani iki yana 21'er birim kalıyor. 24'ü tutturmak
+/// için punto 28'e inerdi ve marj 0,3 birime düşerdi — ölçüm gürültüsünün
+/// altında bir pay, yani kural adı var kendi yok. En alttaki 98 birimlik
+/// şerit aynı puntoyla 34/34 birim pay bırakıyor.
 ///
-/// Çakışmasızlık <c>InvalidMergeFeedbackTests</c> içinde GERÇEK RENDER'dan
-/// ölçülerek doğrulanır (rect ölçmek yanıltır: katalizörün dekoratif
-/// çerçevesinin rect'i çiziminden çok daha büyük).
+/// Mesaj TEK SATIR: bant 58 birim ve ikinci satır payı yer.
+///
+/// Çakışmasızlık ve PAY <c>InvalidMergeFeedbackTests</c> içinde GERÇEK
+/// RENDER'dan ölçülerek doğrulanır (rect ölçmek yanıltır: katalizörün
+/// dekoratif çerçevesinin rect'i çiziminden çok daha büyük).
 ///
 /// Menüden: NEXUM → Geçersiz Birleştirme Bandını Kur
 /// Batch:   -executeMethod InvalidMergeBuilder.Run
@@ -38,9 +43,12 @@ public static class InvalidMergeBuilder
     /// <summary>Tahtayla aynı anchor: uzun ekranlarda birlikte kayarlar.</summary>
     private static readonly Vector2 GridAnchor = new Vector2(0.5f, 0.41666666f);
 
-    /// <summary>Bant: tahtanın alt kenarı (-610) ile katalizör etiketi (-675) arası.</summary>
+    /// <summary>Bant: sistem bildiriminin (-862) altı ile güvenli alanın dibi arası.</summary>
     private static readonly Vector2 BandSize = new Vector2(1000f, 58f);
-    private static readonly float BandCenterY = -642f;
+    private static readonly float BandCenterY = -911f;
+
+    /// <summary>Bantlar arası en az pay (birim). Ölçümle doğrulanır.</summary>
+    public const float EnAzPay = 24f;
 
     private static Vector2 Pos(Vector2 yerelMerkez)
     {
@@ -106,7 +114,8 @@ public static class InvalidMergeBuilder
 
         Debug.Log($"{Tag}: bant {BandSize.x:F0}x{BandSize.y:F0} merkez y={BandCenterY:F0} " +
                   $"({BandCenterY + BandSize.y * 0.5f:F0} .. {BandCenterY - BandSize.y * 0.5f:F0}); " +
-                  $"tahta alt kenarı -610, katalizör etiketi -675'ten aşağıda");
+                  $"sistem bildirimi -862'de biter, güvenli alan -960'ta; " +
+                  $"en az pay {EnAzPay:F0} birim");
 
         b.End();
     }

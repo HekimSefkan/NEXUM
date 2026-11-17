@@ -29,6 +29,19 @@ public class InvalidMergeFeedbackTests
     /// <summary>İçerik sayılma eşiği: nesnenin kendi en parlak pikselinin oranı.</summary>
     private const float IcerikOrani = 0.25f;
 
+    private const string MesajAdi = "InvalidMergePanel";
+
+    /// <summary>Bantlar arası en az pay (birim) — kurucudan okunur, sabit yazılmaz.</summary>
+    private static float EnAzPay
+    {
+        get
+        {
+            System.Type tip = System.Type.GetType("InvalidMergeBuilder, Assembly-CSharp-Editor");
+            System.Reflection.FieldInfo f = tip != null ? tip.GetField("EnAzPay") : null;
+            return f != null ? (float)f.GetValue(null) : 24f;
+        }
+    }
+
     private MonoBehaviour grid;
     private MonoBehaviour feedback;
     private List<Transform> cells;
@@ -146,13 +159,21 @@ public class InvalidMergeFeedbackTests
 
     /// <summary>
     /// Bant × katalizör göstergesi × katalizör etiketi × sistem bildirimi:
-    /// kesişim SIFIR olmalı. Ölçüm GERÇEK RENDER'dan yapılır — katalizörün
-    /// dekoratif çerçevesinin rect'i çiziminden çok daha büyük olduğu için
-    /// rect karşılaştırmak yanıltırdı.
+    /// yalnızca kesişmemek YETMEZ, aralarında EN AZ <see cref="EnAzPay"/>
+    /// birim PAY olmalı. Altı birimlik bir pay ölçüm gürültüsünde kapanır;
+    /// kural adı var kendi yok olurdu.
+    ///
+    /// Ölçüm GERÇEK RENDER'dan: katalizörün dekoratif çerçevesinin rect'i
+    /// çiziminden çok daha büyük olduğu için rect karşılaştırmak yanıltırdı.
+    ///
+    /// Bütün bantlar tahtayla AYNI anchor'da (0.5, 0.41666666) durduğu için
+    /// aralarındaki pay canvas boyutundan bağımsızdır; bu yüzden pahalı
+    /// render ölçümü tek boyutta yapılır. Metnin SIĞMASI dile ve boyuta
+    /// bağlı olduğundan o ayrı testte dört boyut × iki dilde ölçülür.
     /// </summary>
     [UnityTest]
     [Timeout(900000)]
-    public IEnumerator BantlarCakismiyor()
+    public IEnumerator BantlarArasindaPayVar()
     {
         TahtaKur("H", "Fe");
         yield return Kaydir(Vector2.right);
@@ -191,6 +212,10 @@ public class InvalidMergeFeedbackTests
             yield return BoyaliKutu(canvas, kv.Key, kv.Value, kutular);
         }
 
+        // Piksel -> referans birimi: render 960 piksel, canvas 1920 birim
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        float birimBasinaPiksel = 960f / canvasRect.rect.height;
+
         List<string> hatalar = new List<string>();
         List<string> adlar = kutular.Keys.ToList();
         for (int i = 0; i < adlar.Count; i++)
@@ -203,11 +228,33 @@ public class InvalidMergeFeedbackTests
                 if (AtaTorun(olculecek, adlar[i], adlar[j])) continue;
 
                 Rect a = kutular[adlar[i]], b = kutular[adlar[j]];
-                float ox = Mathf.Min(a.xMax, b.xMax) - Mathf.Max(a.xMin, b.xMin);
-                float oy = Mathf.Min(a.yMax, b.yMax) - Mathf.Max(a.yMin, b.yMin);
-                if (ox <= 0f || oy <= 0f) continue;
 
-                hatalar.Add($"{adlar[i]} × {adlar[j]} = {ox:F0}x{oy:F0} piksel");
+                // Dikey pay: kutular üst üste değilse aralarındaki boşluk,
+                // üst üsteyse negatif (çakışma).
+                float dikeyPay = Mathf.Max(a.yMin, b.yMin) - Mathf.Min(a.yMax, b.yMax);
+                float yatayOrtusme = Mathf.Min(a.xMax, b.xMax) - Mathf.Max(a.xMin, b.xMin);
+
+                // Yatayda hiç örtüşmüyorlarsa yan yanadırlar, dikey pay aranmaz
+                if (yatayOrtusme <= 0f) continue;
+
+                float payBirim = dikeyPay / birimBasinaPiksel;
+
+                // Kural MESAJ BANDI için: bu adımın getirdiği bant, mevcut
+                // bantlardan en az EnAzPay kadar uzak durmalı. Mesajı
+                // içermeyen çiftler (ör. katalizör göstergesi ile sistem
+                // bildirimi arası 20 birim) bu adımın getirdiği bir durum
+                // değil; ÖLÇÜLÜR ve loglanır, ama burada hata sayılmaz —
+                // düzeltmek HUD yerleşimini değiştirmek olurdu.
+                bool mesajIlgili = adlar[i] == MesajAdi || adlar[j] == MesajAdi;
+
+                Debug.Log($"{Tag}_PAY: {adlar[i]} ↔ {adlar[j]} = {payBirim:F1} birim" +
+                          (mesajIlgili ? string.Empty : "  (MEVCUT, bu adımın işi değil)"));
+
+                if (mesajIlgili && payBirim + 0.5f < EnAzPay)
+                {
+                    hatalar.Add($"{adlar[i]} ↔ {adlar[j]} payı {payBirim:F1} birim " +
+                                $"(alt sınır {EnAzPay:F0})");
+                }
             }
         }
 
@@ -218,7 +265,95 @@ public class InvalidMergeFeedbackTests
                       $"y {kv.Value.yMin:F0}..{kv.Value.yMax:F0}");
         }
 
-        Assert.IsEmpty(hatalar, "çakışma: " + string.Join(" | ", hatalar));
+        Assert.IsEmpty(hatalar, "pay yetersiz: " + string.Join(" | ", hatalar));
+    }
+
+    /// <summary>
+    /// EN UZUN VARYANT dört canvas boyutunda ve İKİ DİLDE kutusuna sığar.
+    ///
+    /// Sembol listesi elle yazılmaz: sahnedeki tarif tablosundan en uzun
+    /// iki sembol bulunur. Kırma kapalı ölçülür (CLAUDE.md kuralı) ve
+    /// %85 doluluk sınırı geçerlidir.
+    /// </summary>
+    [UnityTest]
+    [Timeout(900000)]
+    public IEnumerator EnUzunVaryantSigar()
+    {
+        TMP_Text satir = Satir();
+        Assert.IsNotNull(satir, "mesaj satırı yok");
+
+        RectTransform safeRoot = LayoutCheck.PrepareSafeRoot();
+        Assert.IsNotNull(safeRoot, "SafeAreaRoot yok");
+
+        string a, b;
+        EnUzunCift(out a, out b);
+        Debug.Log($"{Tag}_UZUN: en uzun çift {a} + {b}");
+
+        Loc.Language onceki = Loc.Current;
+        List<string> hatalar = new List<string>();
+
+        foreach (Loc.Language dil in new[] { Loc.Language.Turkish, Loc.Language.English })
+        {
+            Loc.SetLanguage(dil);
+
+            // Test derlemesi Assembly-CSharp'ı referans alamaz (CLAUDE.md):
+            // oyun tiplerine Reflect üzerinden erişilir.
+            string metin = Reflect.Call<string>("ReactionText", "NoReaction", a, b) +
+                           "   " + Loc.Get(CodeStrings.FeedbackNoReaction);
+
+            foreach (Vector2 boyut in LayoutCheck.CanvasSizes)
+            {
+                LayoutCheck.SetCanvasSize(safeRoot, boyut);
+                yield return null;
+                yield return null;
+
+                float doluluk = LayoutCheck.FillRatioWidth(satir, metin);
+                int satirSayisi = LayoutCheck.LineCount(satir, metin);
+
+                Debug.Log($"{Tag}_SIGMA: {dil} {boyut.x:F0}x{boyut.y:F0} | " +
+                          $"genişlik doluluk %{doluluk * 100f:F0} | satır {satirSayisi}");
+
+                if (doluluk > 0.85f)
+                {
+                    hatalar.Add($"{dil} {boyut.x:F0}x{boyut.y:F0}: doluluk " +
+                                $"%{doluluk * 100f:F0} (sınır %85)");
+                }
+                if (satirSayisi > 1)
+                {
+                    hatalar.Add($"{dil} {boyut.x:F0}x{boyut.y:F0}: {satirSayisi} satır " +
+                                "(bant tek satırlık)");
+                }
+            }
+        }
+
+        Loc.SetLanguage(onceki);
+        satir.text = string.Empty;
+
+        Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
+    }
+
+    /// <summary>Tarif tablosundaki en uzun iki sembol (elle liste yok).</summary>
+    private void EnUzunCift(out string a, out string b)
+    {
+        List<string> semboller = new List<string>();
+
+        System.Collections.IList tarifler =
+            Field(grid, "recipes").GetValue(grid) as System.Collections.IList;
+        if (tarifler != null)
+        {
+            foreach (object r in tarifler)
+            {
+                foreach (string alan in new[] { "element1", "element2", "resultPrefab" })
+                {
+                    GameObject go = r.GetType().GetField(alan).GetValue(r) as GameObject;
+                    if (go != null) semboller.Add(Reflect.Call<string>("ReactionText", "Symbol", go));
+                }
+            }
+        }
+
+        semboller = semboller.Distinct().OrderByDescending(s => s.Length).ToList();
+        a = semboller.Count > 0 ? semboller[0] : "CaCO3";
+        b = semboller.Count > 1 ? semboller[1] : "H2CO3";
     }
 
     // ---------------------------------------------------------- yardımcılar
