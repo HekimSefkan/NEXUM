@@ -449,11 +449,16 @@ public class UIManager : MonoBehaviour
         winPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
 
         int currentLevelIndex = LevelManager.Instance.currentLevelIndex;
+        int levelCount = LevelManager.Instance.levels.Count;
         int highestUnlocked = SaveService.Data.unlockedLevel; 
         if (currentLevelIndex >= highestUnlocked)
         {
-            SaveService.Data.unlockedLevel = currentLevelIndex + 1;
-            SaveService.Data.maxLevelUnlocked = currentLevelIndex + 2;
+            // VAR OLMAYAN BÖLÜM AÇILMAZ (1.4). Son bölüm kazanılınca eski kod
+            // indeks+1 ve indeks+2 yazıyordu; 7 bölümlük oyunda sonuç 7 ve 8
+            // oluyor, profil kartı "AÇILAN BÖLÜM 8" diyordu. Sayaçlar artık
+            // bölüm sayısına kırpılıyor (eski kayıtlar: StatsIntegrity).
+            SaveService.Data.unlockedLevel = Mathf.Min(currentLevelIndex + 1, levelCount - 1);
+            SaveService.Data.maxLevelUnlocked = Mathf.Min(currentLevelIndex + 2, levelCount);
             SaveService.SaveNow(); 
         }
     }
