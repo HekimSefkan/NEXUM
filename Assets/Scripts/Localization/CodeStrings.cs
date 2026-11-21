@@ -32,6 +32,13 @@ public static class CodeStrings
     public const string ReactionEquation = "reaction.equation";
     public const string ReactionEquationFallback = "reaction.equation_fallback";
 
+    // --- Geçersiz birleştirme geri bildirimi (1.3) -----------------------
+    // "Tepkime yok" sembolü de (✕, U+2715) fontlarda yok; ok ile AYNI
+    // sayfadan gelen bir TMP sprite'ı. Sprite yoksa düz metne düşülür.
+    public const string ReactionNoProduct = "reaction.no_product";
+    public const string ReactionNoProductFallback = "reaction.no_product_fallback";
+    public const string FeedbackNoReaction = "feedback.no_reaction";
+
     // --- Tarif defteri ----------------------------------------------------
     public const string RecipeDiscovered = "recipebook.discovered";
     public const string RecipeBookTitle = "recipebook.title";
@@ -116,6 +123,9 @@ public static class CodeStrings
         [ReactionInputs] = "{0} + {1}",
         [ReactionEquation] = "{0} <sprite=\"NexumSymbols\" name=\"arrow\"> {1}",
         [ReactionEquationFallback] = "{0} -> {1}",
+        [ReactionNoProduct] = "<sprite=\"NexumSymbols\" name=\"nope\">",
+        [ReactionNoProductFallback] = "X",
+        [FeedbackNoReaction] = "Bu ikisi tepkimeye girmiyor.",
 
         [RecipeDiscovered] = "YENİ TEPKİME KAYDEDİLDİ",
         [RecipeBookTitle] = "TARİF DEFTERİ",

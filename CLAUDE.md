@@ -164,6 +164,18 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
 - **`docs/DESIGN_TOKENS.md`'de yazılı her karar uygulama tablosunda da
   bulunmak zorundadır** (`DesignTokenConsistencyTests`).
 
+### Negatif kontrol
+- **Negatif kontrol yalnızca TEMİZ çalışma ağacında yapılır.**
+- Kontrol değişikliği geri alındıktan sonra, commit'ten ÖNCE `git status`
+  ile ağacın temiz olduğu **doğrulanır**.
+- **Kontrol değişikliği staged iken ASLA commit atılmaz.**
+
+> 1.3'te negatif kontrol betiği `GridManager.cs`'i `git checkout main --`
+> ile geri aldı; bu komut dosyayı **staged** bırakır. Araya giren test
+> commit'i o geri almayı da içine aldı ve geri bildirimin tetikleme kancası
+> depodan düştü. Testler "kanca yokken düşüyor" diye yeşil görünseydi
+> eksik kod birleşecekti.
+
 ### Teslim
 - **Görsel etkisi olan her adım, `NexumDeviceShot` ile alınmış gerçek
   render'ları PR'a ekler.**

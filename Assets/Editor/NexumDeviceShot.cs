@@ -45,6 +45,7 @@ public static class NexumDeviceShot
         public string[] kapa;    // kapatılacak obje yolları
         public bool tahtayiDoldur;
         public bool ansiklopediyiDoldur;
+        public bool geriBildirim;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -79,6 +80,13 @@ public static class NexumDeviceShot
                                    "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
                                    "AssistantPanel" },
                     tahtayiDoldur = true },
+
+        new Ekran { ad = "gecersiz-birlestirme", scene = "Assets/Scenes/Game.unity",
+                    ac = new string[0],
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel", "LevelCompletePanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel" },
+                    tahtayiDoldur = true, geriBildirim = true },
 
         new Ekran { ad = "ansiklopedi", scene = "Assets/Scenes/MainMenu.unity",
                     ac = new[] { "SafeAreaRoot/EncyclopediaPanel" },
@@ -133,6 +141,7 @@ public static class NexumDeviceShot
                 Hazirla(canvasGo.transform, e);
                 if (e.tahtayiDoldur) { TahtayiDoldur(scene); HedefleriDoldur(); }
                 if (e.ansiklopediyiDoldur) AnsiklopediyiDoldur(canvasGo.transform);
+                if (e.geriBildirim) GeriBildirimiDoldur(canvasGo.transform);
 
                 string yol = $"{OutDir}/{e.ad}_{boy.x}x{boy.y}.png";
                 if (Cek(canvasGo, boy, yol)) alinan++;
@@ -218,6 +227,29 @@ public static class NexumDeviceShot
             string metin = Loc.Get(loc.key);
             if (!string.IsNullOrEmpty(metin)) tmp.text = metin;
         }
+    }
+
+    /// <summary>
+    /// Geçersiz birleştirme mesajı çalışma zamanında doluyor; görüntüde
+    /// görünsün diye METNİ AYNI KAYNAKTAN (ReactionText + Loc) kurulur.
+    /// </summary>
+    public static void GeriBildirimiDoldur(Transform canvas)
+    {
+        Transform panel = canvas.Find("SafeAreaRoot/InvalidMergePanel");
+        if (panel == null) return;
+
+        CanvasGroup grup = panel.GetComponent<CanvasGroup>();
+        if (grup != null) grup.alpha = 1f;
+
+        TMP_Text satir = panel.GetComponentInChildren<TMP_Text>(true);
+        if (satir == null) return;
+
+        NexumTheme tema = AssetDatabase.LoadAssetAtPath<NexumTheme>(NexumTheme.AssetPath);
+        satir.spriteAsset = Resources.Load<TMP_SpriteAsset>(ReactionText.SpriteAssetResource);
+        string denklem = tema != null
+            ? ReactionText.NoReactionColored("N", "Cl", tema.palette.textSecondary, tema.palette.warning)
+            : ReactionText.NoReaction("N", "Cl");
+        satir.text = denklem + "   " + Loc.Get(CodeStrings.FeedbackNoReaction);
     }
 
     /// <summary>

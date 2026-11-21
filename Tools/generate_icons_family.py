@@ -317,6 +317,26 @@ def icon(size, ad, durum):
     return img.resize((size, size), Image.LANCZOS)
 
 
+def uret_maske():
+    """Dairesel kirpma maskesi: BEYAZ DOLU DAIRE.
+
+    Gorsel degildir — hicbir yerde CIZILMEZ (showMaskGraphic kapali).
+    Unity'nin Mask bileseni cocuklari bu seklin alfasina gore kirpar;
+    profil portresi boylece daire olur. Ayni superornekleme, ayni
+    kenar yumusakligi.
+    """
+    os.makedirs(KIT, exist_ok=True)
+    S = CEMBER_BOY * SS
+    img = Image.new("RGBA", (S, S), CLEAR)
+    ImageDraw.Draw(img).ellipse([0, 0, S - 1, S - 1], fill=(255, 255, 255, 255))
+    img = img.resize((CEMBER_BOY, CEMBER_BOY), Image.LANCZOS)
+    dosya = "mask_circle.png"
+    img.save(os.path.join(KIT, dosya))
+    print("maske: 1 sprite -> %s" % KIT)
+    return {dosya: {"tip": "maske", "boyut": [CEMBER_BOY, CEMBER_BOY],
+                    "border": [0, 0, 0, 0]}}
+
+
 def uret_cember():
     """Bilesik cemberi: simge cercevesinin glifsiz hali (ansiklopedi karti)."""
     os.makedirs(KIT, exist_ok=True)
@@ -347,6 +367,7 @@ def uret():
     print("simgeler: %d sprite -> %s" % (len(kayit), OUT))
 
     kayit.update(uret_cember())
+    kayit.update(uret_maske())
 
     if os.path.exists(MANIFEST):
         man = json.load(open(MANIFEST, encoding="utf-8"))
