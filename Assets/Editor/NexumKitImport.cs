@@ -77,6 +77,7 @@ public static class NexumKitImport
         "slider_track", "slider_fill", "slider_knob",
         "bg_vignette", "bg_grid",
         "compound_ring_normal", "compound_ring_selected",
+        "mask_circle",
     };
 
     [MenuItem("NEXUM/Kit Sprite'larını İçeri Al")]

@@ -52,18 +52,19 @@ geri alma ve Joker'e harcanan puanlar sayılmıyor. Gösterilmeye başlanacaksa
 | `gameMode` | `SettingsManager` | `GridManager`, `UIManager` | CANLI |
 | `language` | `Loc` | `Loc` | CANLI |
 | `showReactionEquations` | **hiçbir yerde** | `ReactionEquationDisplay.Enabled` | ÖLÜ-KAYIT (ayar) |
-| `mentorHintsOn` | `SettingsManager` | yalnızca kendi anahtarının görünümü | ÖLÜ-KAYIT (ayar) |
+| `mentorHintsOn` | `SettingsManager` | `InvalidMergeFeedback.Enabled` (geçersiz birleştirme geri bildirimi) | CANLI |
 | `flashcardsOn` | `SettingsManager` | yalnızca kendi anahtarının görünümü | ÖLÜ-KAYIT (ayar) |
 
 - `showReactionEquations` okunuyor ama **ayar ekranında karşılığı yok**:
   oyuncu tepkime denklemlerini kapatamıyor, değer kalıcı olarak varsayılan
   (açık). Düzeltmesi yeni bir anahtar satırı eklemek, yani yeni UI → Faz 2.
-- `mentorHintsOn` ve `flashcardsOn` kaydediliyor ama **hiçbir davranışı
-  değiştirmiyor**: oyuncu anahtarı çeviriyor, oyunda bir şey olmuyor.
-  Bağlamak oyun davranışını değiştirir (ipucu erişimi, bilgi kartları) —
-  CLAUDE.md'nin onay kuralına tabi, bu adımın kapsamı dışı.
-  (1.3'te `mentorHintsOn` geçersiz birleştirme geri bildirimine bağlandı;
-  o dal birleşince bu satır CANLI olur.)
+- `mentorHintsOn` **CANLI**: 1.3'te geçersiz birleştirme geri bildirimine
+  bağlandı (`InvalidMergeFeedback.Enabled`) — anahtar kapalıyken mesaj
+  çıkmıyor. 1.3 main'e birleşince bu satır CANLI'ya döndü.
+- `flashcardsOn` kaydediliyor ama **hiçbir davranışı değiştirmiyor**:
+  oyuncu anahtarı çeviriyor, oyunda bir şey olmuyor. Bağlamak yeni bir
+  özellik (bilgi kartları) demek — CLAUDE.md'nin onay kuralına tabi, bu
+  adımın kapsamı dışı.
 
 ## Ayrılmış alanlar (Faz 2–3, dokunulmadı)
 

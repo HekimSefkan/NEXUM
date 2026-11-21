@@ -39,6 +39,10 @@
             "value": "Sentez: {0}"
         },
         {
+            "key": "feedback.no_reaction",
+            "value": "Bu ikisi tepkimeye girmiyor."
+        },
+        {
             "key": "game.cancelbutton.text_tmp",
             "value": "VAZGEÇ"
         },
@@ -413,6 +417,14 @@
         {
             "key": "reaction.inputs",
             "value": "{0} + {1}"
+        },
+        {
+            "key": "reaction.no_product",
+            "value": "<sprite=\"NexumSymbols\" name=\"nope\">"
+        },
+        {
+            "key": "reaction.no_product_fallback",
+            "value": "X"
         },
         {
             "key": "recipebook.button",

@@ -41,6 +41,9 @@ public class WiredButtonTests
 
         // Overlay canvas'ta particle görünmüyor; efekt bilerek kapalı.
         "GridManager.mergeParticlePrefab",
+
+        // Geçersiz birleştirme sesi: olay bağlı, ses dosyası bilerek yok (1.3).
+        "AudioManager.invalidMergeClip",
     };
 
     [UnityTest]

@@ -87,6 +87,12 @@ MonoBehaviour:
     m_Scale: 1.77
     m_Name: arrow
     m_HashCode: 119075993
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 1
+    m_Scale: 1.77
+    m_Name: nope
+    m_HashCode: 3971156
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -100,6 +106,22 @@ MonoBehaviour:
       m_Y: 53
       m_Width: 108
       m_Height: 33
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: 0}
+  - m_Index: 1
+    m_Metrics:
+      m_Width: 36
+      m_Height: 35
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 40.2
+      m_HorizontalAdvance: 46
+    m_GlyphRect:
+      m_X: 46
+      m_Y: 180
+      m_Width: 36
+      m_Height: 35
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0

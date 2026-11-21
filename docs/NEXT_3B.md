@@ -55,3 +55,25 @@ ama panelin kendi zemini (`QuizPanel/Image`) hâlâ eski gri yüzey. Kit
 `MainMenuPanel` içinde NEXUM logosu yok; logo yalnızca alt panellerde
 (ansiklopedi, nasıl oynanır, tarif defteri, kayıt) duruyor. 3c/8'de avatar
 çerçevesi buton bandına hizalandı — logoya hizalanacak bir logo yoktu.
+
+---
+
+## 1.3 turundan
+
+### Katalizör göstergesi ↔ sistem bildirimi payı 20 birim
+
+1.3'te bantlar arası pay ölçülürken çıktı: mesaj bandının mevcut bantlara
+payı 52–204 birim, ama **katalizör göstergesi ile sistem bildirimi arasında
+yalnızca 20 birim** var (ölçüm: boyalı piksel, `InvalidMergeFeedbackTests`
+log'unda `NEXUM_GECERSIZ_PAY`). Bu, bu turun getirdiği bir durum değil;
+düzeltmek HUD yerleşimini değiştirmek olurdu. Test onu ölçüp loglar ama
+hata saymaz.
+
+### Mesaj bandı tahtadan uzakta
+
+24 birimlik pay kuralı, tahtanın hemen altındaki 72 birimlik şeride
+36 puntoluk tek satırı sığdırmaya izin vermedi (iki yana 21'er birim
+kalıyordu). Bant ekranın en alt şeridine alındı. Oyuncunun gözü tahtadayken
+mesajı kaçırıp kaçırmadığı CİHAZDA bakılacak; kaçırılıyorsa seçenekler:
+katalizör etiketini aşağı almak, ya da mesajı tahtanın üstündeki kombo
+bandıyla paylaştırmak.

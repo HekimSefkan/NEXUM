@@ -29,17 +29,31 @@ public static class NexumSymbolSprites
 
     public const string AssetName = "NexumSymbols";
     public const string ArrowName = "arrow";
+
+    /// <summary>"Tepkime yok" çarpısı (1.3): ok ile AYNI sayfada, aynı yöntemle.</summary>
+    public const string CrossName = "nope";
     private const string TexturePath = "Assets/Art/Figures/arrow_reaction.png";
     private const string AssetDir = "Assets/Resources/Sprite Assets";
     private const string AssetPath = AssetDir + "/" + AssetName + ".asset";
 
-    // arrow_reaction.png 128x128; opak alan generate_arrow.py tarafından raporlanır.
-    // GlyphRect ALTTAN sayar: üstten y 42..75 -> alttan 53..86.
-    private const int TextureSize = 128;
+    // arrow_reaction.png artık 128x256 İKİ SEMBOLLÜK SAYFA: ALT yarı ok,
+    // ÜST yarı çarpı. Okun yeri sayfada DEĞİŞMEDİ (alt yarıya birebir aynı
+    // konumda basılıyor), bu yüzden okun ölçülmüş GlyphRect'i aynı kaldı ve
+    // ArrowCalibrationTests'in modeli geçerli.
+    // Değerler generate_arrow.py'nin raporundan alınır, elle uydurulmaz.
+    private const int TextureSize = 256;
     private const int RectX = 10;
     private const int RectY = 53;
     private const int RectW = 108;
     private const int RectH = 33;
+
+    // Çarpının opak kutusu okunkiyle aynı yükseklikte (33-35 px) tutuldu:
+    // böylece AYNI metrikler (scale, bearingY) iki sembolü de aynı optik
+    // merkeze oturtur ve ikinci bir kalibrasyon gerekmez.
+    private const int CrossX = 46;
+    private const int CrossY = 180;
+    private const int CrossW = 36;
+    private const int CrossH = 35;
 
     // Ölçek: okun yüksekliği punto × (RectH / pointSize) kadar olur.
     // ÖLÇÜMLE BULUNDU (ArrowCalibrationTests taraması, pointSize 146):
@@ -104,22 +118,8 @@ public static class NexumSymbolSprites
         asset.spriteGlyphTable.Clear();
         asset.spriteCharacterTable.Clear();
 
-        TMP_SpriteGlyph glyph = new TMP_SpriteGlyph
-        {
-            index = 0,
-            metrics = new GlyphMetrics(RectW, RectH, 0f, BearingY, RectW + 10f),
-            glyphRect = new GlyphRect(RectX, RectY, RectW, RectH),
-            scale = 1f,
-            atlasIndex = 0,
-        };
-        asset.spriteGlyphTable.Add(glyph);
-
-        TMP_SpriteCharacter character = new TMP_SpriteCharacter(0, glyph)
-        {
-            name = ArrowName,
-            scale = CharacterScale,
-        };
-        asset.spriteCharacterTable.Add(character);
+        Ekle(asset, 0, ArrowName, RectX, RectY, RectW, RectH);
+        Ekle(asset, 1, CrossName, CrossX, CrossY, CrossW, CrossH);
 
         EnsureMaterial(asset, texture);
         asset.UpdateLookupTables();
@@ -129,9 +129,31 @@ public static class NexumSymbolSprites
         AssetDatabase.Refresh();
 
         Debug.Log($"{Tag}: sprite asset {(created ? "oluşturuldu" : "güncellendi")} -> {AssetPath}");
-        Debug.Log($"{Tag}: glyphRect {RectX},{RectY} {RectW}x{RectH}  pointSize {PointSize}  " +
-                  $"scale {CharacterScale}  bearingY {BearingY}");
+        Debug.Log($"{Tag}: {ArrowName} glyphRect {RectX},{RectY} {RectW}x{RectH} · " +
+                  $"{CrossName} glyphRect {CrossX},{CrossY} {CrossW}x{CrossH} · " +
+                  $"pointSize {PointSize}  scale {CharacterScale}  bearingY {BearingY}");
         Debug.Log($"{Tag}: OK");
+    }
+
+    /// <summary>Sayfadaki bir sembolü glyph + karakter olarak ekler.</summary>
+    private static void Ekle(TMP_SpriteAsset asset, uint index, string ad,
+                             int x, int y, int w, int h)
+    {
+        TMP_SpriteGlyph glyph = new TMP_SpriteGlyph
+        {
+            index = index,
+            metrics = new GlyphMetrics(w, h, 0f, BearingY, w + 10f),
+            glyphRect = new GlyphRect(x, y, w, h),
+            scale = 1f,
+            atlasIndex = 0,
+        };
+        asset.spriteGlyphTable.Add(glyph);
+
+        asset.spriteCharacterTable.Add(new TMP_SpriteCharacter(0, glyph)
+        {
+            name = ad,
+            scale = CharacterScale,
+        });
     }
 
     private static void SetIfExists(SerializedProperty parent, string name, int value)
