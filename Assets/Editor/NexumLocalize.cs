@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -106,6 +106,12 @@ public static class NexumLocalize
 
         // Koddan gelen anahtarlar da sözlükte olmalı
         foreach (KeyValuePair<string, string> pair in CodeStrings.All)
+        {
+            if (!turkish.ContainsKey(pair.Key)) turkish[pair.Key] = pair.Value;
+        }
+
+        // Quiz açıklamaları (1.5): ayrı sözlükte durur ama aynı kapıdan geçer
+        foreach (KeyValuePair<string, string> pair in QuizStrings.All)
         {
             if (!turkish.ContainsKey(pair.Key)) turkish[pair.Key] = pair.Value;
         }
