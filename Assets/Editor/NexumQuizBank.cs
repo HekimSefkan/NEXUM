@@ -192,7 +192,7 @@ public static class NexumQuizBank
             options = new[] { "Aynı elementin allotroplarıdır",
                               "Birbirinin izotopudur",
                               "Birbirinin izomeridir",
-                              "Aynı maddenin farklı fiziksel hâlleridir" } },
+                              "Aynı maddenin iki farklı fiziksel durumudur" } },
 
         new Spec { name = "Soru_36", correct = 3, topic = "Biyokimya", difficulty = 1, compound = "Ca",
             question = "Kemik ve dişlerin sertliğini sağlayan, vücutta en bol bulunan metal hangisidir?",

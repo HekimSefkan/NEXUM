@@ -81,7 +81,7 @@ public static class QuizStrings
         ["quiz.soru_28.explain"] =
             "Motor içindeki yüksek sıcaklıkta havanın azotu ve oksijeni birleşip azot monoksit verir; bu gaz havada yükseltgenerek kirliliğe yol açar.",
         ["quiz.soru_29.explain"] =
-            "Karbonmonoksit hemoglobine oksijenden çok daha güçlü bağlanır; kan oksijen taşıyamaz hâle gelir.",
+            "Karbonmonoksit hemoglobine oksijenden çok daha güçlü bağlanır; kan artık oksijen taşıyamaz.",
         ["quiz.soru_30.explain"] =
             "Oksijen yeterliyse karbondioksit, yetersizse zehirli karbonmonoksit oluşur; sobalı ortamlar bu yüzden havalandırılır.",
         ["quiz.soru_31.explain"] =
@@ -89,7 +89,7 @@ public static class QuizStrings
         ["quiz.soru_32.explain"] =
             "Her su molekülünde iki hidrojen, bir oksijen vardır; elektrolizde gazlar da 2'ye 1 hacim oranında çıkar.",
         ["quiz.soru_33.explain"] =
-            "Klor güçlü bir yükseltgendir; sudaki bakteri ve virüsleri etkisiz hâle getirdiği için dezenfeksiyonda kullanılır.",
+            "Klor güçlü bir yükseltgendir; sudaki bakteri ve virüsleri etkisiz kıldığı için dezenfeksiyonda kullanılır.",
         ["quiz.soru_34.explain"] =
             "Sodyum nemle şiddetli tepkime verip hidrojen açığa çıkarır; bu yüzden havayla temas etmeyecek şekilde gazyağında saklanır.",
         ["quiz.soru_35.explain"] =

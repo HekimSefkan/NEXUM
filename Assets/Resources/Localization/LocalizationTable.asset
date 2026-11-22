@@ -510,9 +510,9 @@ MonoBehaviour:
       kirlili\u011Fe yol a\xE7ar."
   - key: quiz.soru_29.explain
     turkish: "Karbonmonoksit hemoglobine oksijenden \xE7ok daha g\xFC\xE7l\xFC ba\u011Flan\u0131r;
-      kan oksijen ta\u015F\u0131yamaz h\xE2le gelir."
+      kan art\u0131k oksijen ta\u015F\u0131yamaz."
     english: "Karbonmonoksit hemoglobine oksijenden \xE7ok daha g\xFC\xE7l\xFC ba\u011Flan\u0131r;
-      kan oksijen ta\u015F\u0131yamaz h\xE2le gelir."
+      kan art\u0131k oksijen ta\u015F\u0131yamaz."
   - key: quiz.soru_3.explain
     turkish: "\u0130ki ametal elektronlar\u0131n\u0131 ortakla\u015Fa kullan\u0131r.
       Elektron al\u0131\u015Fveri\u015Fi olsayd\u0131 iyonik ba\u011F olu\u015Furdu."
@@ -535,9 +535,9 @@ MonoBehaviour:
       gazlar da 2'ye 1 hacim oran\u0131nda \xE7\u0131kar."
   - key: quiz.soru_33.explain
     turkish: "Klor g\xFC\xE7l\xFC bir y\xFCkseltgendir; sudaki bakteri ve vir\xFCsleri
-      etkisiz h\xE2le getirdi\u011Fi i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
+      etkisiz k\u0131ld\u0131\u011F\u0131 i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
     english: "Klor g\xFC\xE7l\xFC bir y\xFCkseltgendir; sudaki bakteri ve vir\xFCsleri
-      etkisiz h\xE2le getirdi\u011Fi i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
+      etkisiz k\u0131ld\u0131\u011F\u0131 i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
   - key: quiz.soru_34.explain
     turkish: "Sodyum nemle \u015Fiddetli tepkime verip hidrojen a\xE7\u0131\u011Fa
       \xE7\u0131kar\u0131r; bu y\xFCzden havayla temas etmeyecek \u015Fekilde gazya\u011F\u0131nda
