@@ -83,6 +83,31 @@ public class UIBuilder
         AssetDatabase.ImportAsset(RegistryPath);
     }
 
+    // --------------------------------------------------------------- tarama
+    // Kurucu sapması taraması (1.6): NexumBuilderSweep bütün kurucuları
+    // DRY-RUN koşturur ve her birinin kayıtlı sahneyi aynen üretip
+    // üretmediğine bakar. Rapor loga değil buraya yazılır; log ayrıştırmak
+    // kırılgan.
+    //
+    // Neden burada: her kurucu End() çağırıyor, yani tek nokta. Kurucuların
+    // kendisine dokunmadan hepsi taranabiliyor.
+
+    /// <summary>Tarama açıkken her <see cref="End"/> buraya bir satır yazar.</summary>
+    public static bool SweepActive;
+
+    public class SweepEntry
+    {
+        public string builder;
+        public string scene;
+        public List<string> created = new List<string>();
+        public List<string> updated = new List<string>();
+        public List<string> errors = new List<string>();
+
+        public int Changes { get { return created.Count + updated.Count; } }
+    }
+
+    public static readonly List<SweepEntry> SweepLog = new List<SweepEntry>();
+
     // ------------------------------------------------------------------ durum
 
     private readonly string builderName;
@@ -431,6 +456,18 @@ public class UIBuilder
             EditorSceneManager.SaveScene(scene);
             SaveRegistry(registry);
             AssetDatabase.SaveAssets();
+        }
+
+        if (SweepActive)
+        {
+            SweepLog.Add(new SweepEntry
+            {
+                builder = builderName,
+                scene = scenePath,
+                created = new List<string>(created),
+                updated = new List<string>(updated),
+                errors = new List<string>(errors),
+            });
         }
 
         string mode = dryRun ? "DRY-RUN" : "UYGULANDI";
