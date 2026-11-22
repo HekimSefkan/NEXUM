@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f261e93a975a0ad4f99ebed1e624a3cc, type: 3}
+  m_Name: Soru_27
+  m_EditorClassIdentifier: 
+  questionText: "Azot molek\xFCl\xFCn\xFC (N<sub>2</sub>) oda ko\u015Fullar\u0131nda
+    \xE7ok kararl\u0131 yapan ba\u011F t\xFCr\xFC nedir?"
+  options:
+  - "Tek kovalent ba\u011F"
+  - "\u0130kili kovalent ba\u011F"
+  - "\xDC\xE7l\xFC kovalent ba\u011F"
+  - "\u0130yonik ba\u011F"
+  correctAnswerIndex: 2
+  topic: "Ba\u011Flar"
+  difficulty: 2
+  relatedCompound: N2

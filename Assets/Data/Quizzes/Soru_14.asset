@@ -20,3 +20,6 @@ MonoBehaviour:
   - H<sub>2</sub>SO<sub>4</sub>
   - NaClO
   correctAnswerIndex: 0
+  topic: "G\xFCnl\xFCk kimya"
+  difficulty: 2
+  relatedCompound: HNO3

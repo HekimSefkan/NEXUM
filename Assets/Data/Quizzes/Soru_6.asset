@@ -20,3 +20,6 @@ MonoBehaviour:
   - H<sub>2</sub>SO<sub>4</sub>
   - CO<sub>2</sub>
   correctAnswerIndex: 0
+  topic: Organik kimya
+  difficulty: 1
+  relatedCompound: CH4

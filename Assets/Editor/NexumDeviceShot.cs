@@ -46,6 +46,11 @@ public static class NexumDeviceShot
         public bool tahtayiDoldur;
         public bool ansiklopediyiDoldur;
         public bool geriBildirim;
+
+        // 1.5: quiz paneli iki hâlde gösterilir (soru / açıklamalı cevap) ve
+        // duraklat kartı bilgi kartları kapalıyken de alınır.
+        public int quiz;                  // 0 yok, 1 soru, 2 açıklamalı cevap
+        public bool bilgiKartlariKapali;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -110,7 +115,14 @@ public static class NexumDeviceShot
                     kapa = new[] { "PausePanel", "GameOverPanel", "LevelCompletePanel",
                                    "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
                                    "AssistantPanel" },
-                    tahtayiDoldur = true },
+                    tahtayiDoldur = true, quiz = 1 },
+
+        new Ekran { ad = "quiz-aciklama", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "QuizPanel" },
+                    kapa = new[] { "PausePanel", "GameOverPanel", "LevelCompletePanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel" },
+                    tahtayiDoldur = true, quiz = 2 },
 
         new Ekran { ad = "duraklat", scene = "Assets/Scenes/Game.unity",
                     ac = new[] { "PausePanel" },
@@ -118,6 +130,13 @@ public static class NexumDeviceShot
                                    "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
                                    "AssistantPanel" },
                     tahtayiDoldur = true },
+
+        new Ekran { ad = "duraklat-bilgi-kapali", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "PausePanel" },
+                    kapa = new[] { "QuizPanel", "GameOverPanel", "LevelCompletePanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel" },
+                    tahtayiDoldur = true, bilgiKartlariKapali = true },
     };
 
     [MenuItem("NEXUM/Gerçek Ekran Görüntüsü Al")]
@@ -142,6 +161,8 @@ public static class NexumDeviceShot
                 if (e.tahtayiDoldur) { TahtayiDoldur(scene); HedefleriDoldur(); }
                 if (e.ansiklopediyiDoldur) AnsiklopediyiDoldur(canvasGo.transform);
                 if (e.geriBildirim) GeriBildirimiDoldur(canvasGo.transform);
+                if (e.quiz > 0) QuiziDoldur(canvasGo.transform, e.quiz == 2);
+                BilgiKartiniAyarla(canvasGo.transform, e.bilgiKartlariKapali);
 
                 string yol = $"{OutDir}/{e.ad}_{boy.x}x{boy.y}.png";
                 if (Cek(canvasGo, boy, yol)) alinan++;
@@ -250,6 +271,90 @@ public static class NexumDeviceShot
             ? ReactionText.NoReactionColored("N", "Cl", tema.palette.textSecondary, tema.palette.warning)
             : ReactionText.NoReaction("N", "Cl");
         satir.text = denklem + "   " + Loc.Get(CodeStrings.FeedbackNoReaction);
+    }
+
+    /// <summary>
+    /// Quiz paneli çalışma zamanında doluyor; edit mode'da soru ve şıklar
+    /// "New Text" görünüyordu. İki hâl de GERÇEK veriden kurulur:
+    ///  - soru hâli: bankadaki EN UZUN soru (en kötü durum)
+    ///  - cevap hâli: EN UZUN açıklama + şıklar gizli + kutu 800x700
+    ///    (UIManager.ProvideFeedbackRoutine ile aynı düzen, metin
+    ///     UIManager.BuildCorrectFeedback ile aynı kaynak)
+    /// </summary>
+    public static void QuiziDoldur(Transform canvas, bool cevapli)
+    {
+        UIManager ui = Object.FindObjectOfType<UIManager>(true);
+        if (ui == null) { Debug.LogError($"{Tag}: UIManager yok"); return; }
+
+        TMP_Text soru = ui.questionTextUI;
+        if (soru == null) { Debug.LogError($"{Tag}: questionTextUI atanmamış"); return; }
+
+        List<ChemistryQuiz> banka = AssetDatabase.FindAssets("t:ChemistryQuiz")
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Select(AssetDatabase.LoadAssetAtPath<ChemistryQuiz>)
+            .Where(q => q != null)
+            .ToList();
+        if (banka.Count == 0) { Debug.LogError($"{Tag}: quiz bankası boş"); return; }
+
+        soru.spriteAsset = Resources.Load<TMP_SpriteAsset>(ReactionText.SpriteAssetResource);
+
+        if (!cevapli)
+        {
+            ChemistryQuiz q = banka.OrderByDescending(x => x.questionText.Length).First();
+            soru.text = q.questionText;
+
+            for (int i = 0; i < ui.optionTexts.Length && i < q.options.Length; i++)
+            {
+                if (ui.optionTexts[i] != null) ui.optionTexts[i].text = q.options[i];
+            }
+            Debug.Log($"{Tag}_QUIZ: soru hâli -> {q.name} ({q.questionText.Length} krk)");
+            return;
+        }
+
+        // --- açıklamalı cevap hâli
+        ChemistryQuiz enUzun = banka
+            .OrderByDescending(x => Loc.Get(x.ExplanationKey).Length)
+            .First();
+
+        foreach (GameObject btn in ui.optionButtonObjects)
+        {
+            if (btn != null) btn.SetActive(false);
+        }
+
+        RectTransform rect = soru.rectTransform;
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 700f);
+        rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0f);
+
+        string metin = Loc.Format(CodeStrings.QuizCorrectExplained,
+                                  Loc.Get(CodeStrings.QuizCorrect),
+                                  Loc.Get(enUzun.ExplanationKey),
+                                  Loc.Get(CodeStrings.QuizContinueHint));
+        soru.text = metin;
+
+        Debug.Log($"{Tag}_QUIZ: cevap hâli -> {enUzun.name} " +
+                  $"(açıklama {Loc.Get(enUzun.ExplanationKey).Length} krk)");
+    }
+
+    /// <summary>
+    /// Bilgi kartı: bilgi metni de çalışma zamanında doluyor. Ayar kapalı
+    /// istendiğinde kart parçaları UIManager'ın yaptığı gibi gizlenir.
+    /// </summary>
+    public static void BilgiKartiniAyarla(Transform canvas, bool kapali)
+    {
+        UIManager ui = Object.FindObjectOfType<UIManager>(true);
+        if (ui == null) return;
+
+        if (ui.factTextUI != null && ui.allFacts != null && ui.allFacts.Count > 0)
+        {
+            ChemistryFact f = ui.allFacts.FirstOrDefault(x => x != null);
+            if (f != null) ui.factTextUI.text = f.factText;
+        }
+
+        if (ui.flashcardObjects == null) return;
+        foreach (GameObject go in ui.flashcardObjects)
+        {
+            if (go != null) go.SetActive(!kapali);
+        }
     }
 
     /// <summary>

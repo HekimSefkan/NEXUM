@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f261e93a975a0ad4f99ebed1e624a3cc, type: 3}
+  m_Name: Soru_29
+  m_EditorClassIdentifier: 
+  questionText: "Karbonmonoksit (CO) solundu\u011Funda neden \xF6l\xFCmc\xFCl olabilir?"
+  options:
+  - "Hemoglobine oksijenden daha g\xFC\xE7l\xFC ba\u011Flan\u0131r"
+  - "Kan\u0131 asitle\u015Ftirir"
+  - "Akci\u011Fer dokusunu yakar"
+  - "Suda \xE7\xF6z\xFCn\xFCp baz olu\u015Fturur"
+  correctAnswerIndex: 0
+  topic: "Sa\u011Fl\u0131k ve kimya"
+  difficulty: 2
+  relatedCompound: CO

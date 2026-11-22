@@ -20,3 +20,6 @@ MonoBehaviour:
   - "N\xF6trd\xFCr"
   - "Kuvvetli Bazd\u0131r"
   correctAnswerIndex: 3
+  topic: Asit-baz
+  difficulty: 2
+  relatedCompound: NaOH

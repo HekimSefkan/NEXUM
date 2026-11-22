@@ -8308,6 +8308,26 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 93f3e1199f0e82f4f96fbc9988c272fb, type: 2}
   - {fileID: 11400000, guid: 54e05273a4817e74097bee91b212f79a, type: 2}
   - {fileID: 11400000, guid: f4abb67698c870e4d8660ed387e48472, type: 2}
+  - {fileID: 11400000, guid: f2de4ee44c57a7e49b2168e01c3d367f, type: 2}
+  - {fileID: 11400000, guid: 43f31d87e36a39a468c7a1ec40b74d9f, type: 2}
+  - {fileID: 11400000, guid: 27b92d2eca7246e41a288c7356b644a9, type: 2}
+  - {fileID: 11400000, guid: cea80570625442b45bd2174ee77ce722, type: 2}
+  - {fileID: 11400000, guid: b574f3af4da5df44abc20131a8e60906, type: 2}
+  - {fileID: 11400000, guid: b21435480e893db4ab38a35ef176942d, type: 2}
+  - {fileID: 11400000, guid: fcf1432fc0c474a49b1c8281339a5f16, type: 2}
+  - {fileID: 11400000, guid: c1a457d371165964c9f4bd78a79313b8, type: 2}
+  - {fileID: 11400000, guid: 2a0f201360f09d245bffdafd980ca60e, type: 2}
+  - {fileID: 11400000, guid: f17496be42e52d14cbda6441fcbfb098, type: 2}
+  - {fileID: 11400000, guid: e6a3d3bd5a1962a4b8892eb5516cfd17, type: 2}
+  - {fileID: 11400000, guid: 6c97321d0ba87ab42a9668599fa6df47, type: 2}
+  - {fileID: 11400000, guid: a3bd7250996f89c4aa2396e2b6a30ca4, type: 2}
+  - {fileID: 11400000, guid: 25540fb924ae77648a0d5615cb91cf74, type: 2}
+  - {fileID: 11400000, guid: 9b17fe4b421f6e242b8f86d6e97a7f69, type: 2}
+  - {fileID: 11400000, guid: 7d9a753145d34984bb4ee7e4b9f18b70, type: 2}
+  - {fileID: 11400000, guid: 957a15e1894faaf4fa03aa4044678eb4, type: 2}
+  - {fileID: 11400000, guid: 37c3b0a6b3f4d7040b046abed1679d7a, type: 2}
+  - {fileID: 11400000, guid: 8b89c30912a04a8448fdb6c911f1f6b4, type: 2}
+  - {fileID: 11400000, guid: 25f1359c0ee0e1a4fa7ff1533e62166b, type: 2}
   reviveButton: {fileID: 589652129}
   optionButtonObjects:
   - {fileID: 709730009}
@@ -8344,6 +8364,9 @@ MonoBehaviour:
   hudHiddenWhilePaused:
   - {fileID: 1369131829}
   - {fileID: 318439762}
+  flashcardObjects:
+  - {fileID: 1739191935}
+  - {fileID: 772697259}
   catalystGlowImage: {fileID: 1125949494}
 --- !u!114 &641637255
 MonoBehaviour:
@@ -17480,10 +17503,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 46
+  m_fontSizeBase: 46
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 34
   m_fontSizeMax: 50
   m_fontStyle: 1

@@ -77,3 +77,33 @@ kalıyordu). Bant ekranın en alt şeridine alındı. Oyuncunun gözü tahtadayk
 mesajı kaçırıp kaçırmadığı CİHAZDA bakılacak; kaçırılıyorsa seçenekler:
 katalizör etiketini aşağı almak, ya da mesajı tahtanın üstündeki kombo
 bandıyla paylaştırmak.
+
+---
+
+## 1.5 turundan
+
+### `RecipeBookBuilder` sahnenin kayıtlı hâlini üretmiyor
+
+1.5'te bilgi kartı alanını bu kurucudan bağlamak istendi; tek koşuda
+**25 ilgisiz obje** güncellendi (`git diff`: MainMenu 93 satır, Game 113
+satır). Değişenler: tarif defteri satırlarının `LockIcon` sprite'ı ve rengi
+(beyaz → `#ADB5BD`), `Backdrop` sprite'ı + AspectRatioFitter oranı
+(0.5627604 → 0.56279904) ve `BackButton` sprite'ı.
+
+Yani ya sahne kurucudan SONRA elle değişti, ya da kurucunun okuduğu
+`UITokens` / kit sprite'ları değişti ve sahne yeniden kurulmadı. İkisinin de
+anlamı aynı: **kurucu bugün idempotent değil**, kim çağırsa görünüm değişir.
+
+1.5'te çözüm: alan ayrı bir scriptten bağlandı (`NexumFlashcardBind`,
+yalnızca `UIManager.flashcardObjects` değerini yazar, obje/bileşen eklemez),
+sahne değişiklikleri `git restore` ile geri alındı. Sapma **düzeltilmedi**.
+
+Kapatmak için gereken: kurucuyu bir kez koşup çıkan görünümü cihazda
+doğrulamak ve sonucu birleştirmek — yani görsel etkisi olan ayrı bir adım.
+Bugünkü hâlde `RecipeBookBuilder` çağıran herhangi bir iş bu 25 değişikliği
+de yanında getirir.
+
+### Quiz paneli zemini (3c'den devam)
+
+Şık kutuları ve soru puntosu 1.5'te düzeltildi; panelin kendi zemini
+(`QuizPanel/Image`) hâlâ eski gri yüzey, kit `modal_normal`'a geçmedi.

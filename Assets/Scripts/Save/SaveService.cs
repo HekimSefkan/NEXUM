@@ -34,6 +34,14 @@ public class SaveData
     public List<string> discoveredRecipes = new List<string>();
     public int recipeBackfillDone;   // geriye dönük doldurma bir kez çalışır
 
+    // --- Quiz öğrenme (1.5) ----------------------------------------------
+    [Tooltip("Yanlış cevaplanan soruların asset adları (\"Soru_7\"). Sonraki " +
+             "quizlerde önceliklidir; doğru cevaplanınca havuzdan çıkar.")]
+    public List<string> quizWrongPool = new List<string>();
+
+    [Tooltip("En son sorulan sorunun asset adı; aynı soru üst üste sorulmaz.")]
+    public string quizLastAsked = "";
+
     // --- İstatistik -------------------------------------------------------
     public int totalScore;
     public int totalSynthesis;
@@ -80,8 +88,11 @@ public class SaveData
 public static class SaveService
 {
     public const string SaveKey = "NEXUM_SAVE";
-    public const int CurrentVersion = 2;
+    public const int CurrentVersion = 3;
     private const string Tag = "NEXUM_SAVE";
+
+    /// <summary>Ad listelerinde kabul edilen en fazla girdi (bozuk veri koruması).</summary>
+    private const int NameListMax = 256;
 
     private static SaveData data;
     private static bool dirty;
@@ -221,6 +232,8 @@ public static class SaveService
         if (d.nexumId == null) { d.nexumId = ""; Log("nexumId"); repaired++; }
         if (d.tutorialReadLevels == null) { d.tutorialReadLevels = new List<int>(); Log("tutorialReadLevels"); repaired++; }
         if (d.discoveredRecipes == null) { d.discoveredRecipes = new List<string>(); Log("discoveredRecipes"); repaired++; }
+        if (d.quizLastAsked == null) { d.quizLastAsked = ""; Log("quizLastAsked"); repaired++; }
+        repaired += RepairNameList(ref d.quizWrongPool, "quizWrongPool");
 
         repaired += ClampMin(ref d.avatarIndex, 0, "avatarIndex");
         repaired += ClampMin(ref d.selectedLevel, 0, "selectedLevel");
@@ -248,6 +261,40 @@ public static class SaveService
         }
 
         return repaired;
+    }
+
+    /// <summary>
+    /// Ad listesi onarımı: null, boş girdi, yineleme ve akıl dışı uzunluk.
+    /// Havuz bir KÜME gibi davranır (aynı soru iki kez durmaz); üst sınır
+    /// yalnızca bozuk veriye karşı korumadır — gerçek sınır banka boyutudur
+    /// ve bankada olmayan adlar <c>QuizSelector</c> ilk kullanımda ayıklar.
+    /// </summary>
+    private static int RepairNameList(ref List<string> list, string field)
+    {
+        if (list == null)
+        {
+            list = new List<string>();
+            Log(field);
+            return 1;
+        }
+
+        int before = list.Count;
+        HashSet<string> seen = new HashSet<string>();
+        List<string> temiz = new List<string>(before);
+
+        foreach (string s in list)
+        {
+            if (string.IsNullOrWhiteSpace(s)) continue;
+            if (!seen.Add(s)) continue;
+            temiz.Add(s);
+            if (temiz.Count >= NameListMax) break;
+        }
+
+        if (temiz.Count == before) return 0;
+
+        Log($"{field} ({before} -> {temiz.Count})");
+        list = temiz;
+        return 1;
     }
 
     private static int ClampMin(ref int value, int min, string field)
@@ -293,6 +340,18 @@ public static class SaveService
             if (d.discoveredRecipes == null) d.discoveredRecipes = new List<string>();
             d.recipeBackfillDone = 0;     // ilk fırsatta doldurulsun
             d.saveVersion = 2;
+            steps++;
+        }
+
+        // Sürüm 3: quiz öğrenme (yanlış cevap havuzu). Eski kayıtta havuz yok;
+        // GERİYE DÖNÜK DOLDURMA YAPILMAZ — hangi soruların yanlış cevaplandığı
+        // kaydedilmemişti, uydurmak oyuncuya yanlış soru önceliği verirdi.
+        // Boş havuz "henüz yanlış yok" ile aynı davranır: düz rastgele seçim.
+        if (d.saveVersion < 3)
+        {
+            if (d.quizWrongPool == null) d.quizWrongPool = new List<string>();
+            if (d.quizLastAsked == null) d.quizLastAsked = "";
+            d.saveVersion = 3;
             steps++;
         }
 

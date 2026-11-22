@@ -272,14 +272,81 @@ public class UIManager : MonoBehaviour
         }
 
         quizPanel.SetActive(true);
-        int randomIndex = Random.Range(0, allQuizzes.Count);
-        ChemistryQuiz selectedQuiz = allQuizzes[randomIndex];
+
+        // Seçim kuralı QuizSelector'da (yanlış cevap havuzu, oran tavanı,
+        // üst üste tekrar yasağı). Burada düz Random.Range YOKTUR.
+        ChemistryQuiz selectedQuiz = QuizSelector.Pick(allQuizzes);
+        if (selectedQuiz == null)
+        {
+            Debug.LogError("UIManager: quiz bankası boş, panel kapatılıyor");
+            quizPanel.SetActive(false);
+            return;
+        }
+
+        currentQuiz = selectedQuiz;
         questionTextUI.text = selectedQuiz.questionText;
         currentCorrectIndex = selectedQuiz.correctAnswerIndex;
         for (int i = 0; i < optionTexts.Length; i++) optionTexts[i].text = selectedQuiz.options[i];
     }
 
     public void CheckAnswer(int selectedIndex) { StartCoroutine(ProvideFeedbackRoutine(selectedIndex)); }
+
+    // --- Doğru cevap paneli: açıklama (1.5) ------------------------------
+    // Eski hâl: "DOĞRU CEVAP" yazısı 2 saniye durup kapanıyordu. Artık
+    // altında sorunun AÇIKLAMASI var (sözlükten, soru asset'inden türetilen
+    // anahtarla) ve 2 saniye 1-2 cümleyi okumaya yetmiyor.
+    //
+    // KURAL: en az QuizMinHold bekler (yanlışlıkla dokunup atlamasın),
+    // sonra YALNIZCA dokununca kapanır. Kendiliğinden kapanma YOK — süre
+    // sınırı, metni okuması yavaş olan oyuncuyu cezalandırıyordu ve
+    // "okuyacak kadar süre" diye bir evrensel değer yok. Panel açık
+    // kaldığı sürece oyun zaten duruyor (quiz modal, girdi kilitli).
+    private const float QuizWrongHold = 2f;        // yanlış cevap: eski süre
+    private const float QuizMinHold = 2f;          // dokunuş kabul edilmeden önce
+
+    private ChemistryQuiz currentQuiz;
+
+    /// <summary>Başlık + açıklama + "dokun" ipucu (hepsi sözlükten).</summary>
+    private static string BuildCorrectFeedback(ChemistryQuiz quiz)
+    {
+        string basligi = Loc.Get(CodeStrings.QuizCorrect);
+        if (quiz == null) return basligi;
+
+        string aciklama = Loc.Get(quiz.ExplanationKey);
+        return Loc.Format(CodeStrings.QuizCorrectExplained, basligi, aciklama,
+                          Loc.Get(CodeStrings.QuizContinueHint));
+    }
+
+    /// <summary>
+    /// En az <see cref="QuizMinHold"/> bekler, sonra dokunuşu bekler.
+    /// Üst sınır YOK: dokunulmadıkça panel kapanmaz.
+    /// </summary>
+    private static System.Collections.IEnumerator ReadHold()
+    {
+        float gecen = 0f;
+        while (gecen < QuizMinHold)
+        {
+            gecen += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        while (!DokunusVar()) yield return null;
+    }
+
+    /// <summary>
+    /// Ham girdi okunur: quiz paneli açıkken GameManager'ın girdisi zaten
+    /// kilitli (IsModalPanelOpen), yani bu dokunuş kaydırmaya dönüşmez.
+    /// </summary>
+    private static bool DokunusVar()
+    {
+        if (Input.GetMouseButtonDown(0)) return true;
+
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            if (Input.GetTouch(i).phase == TouchPhase.Began) return true;
+        }
+        return false;
+    }
 
     private System.Collections.IEnumerator ProvideFeedbackRoutine(int selectedIndex)
     {
@@ -295,7 +362,13 @@ public class UIManager : MonoBehaviour
         int totalAttempts = SaveService.Data.quizAttempts + 1;
         SaveService.Data.quizAttempts = totalAttempts;
 
-        if (selectedIndex == currentCorrectIndex)
+        bool dogru = selectedIndex == currentCorrectIndex;
+
+        // KESİNLEŞMİŞ cevap: yanlış cevap havuzu burada (ve yalnızca burada)
+        // değişir. Quiz cevabının geri alınması yok.
+        QuizSelector.RecordAnswer(currentQuiz, dogru);
+
+        if (dogru)
         {
             if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.quizCorrectClip);
             
@@ -303,8 +376,8 @@ public class UIManager : MonoBehaviour
             SaveService.Data.quizCorrect = totalCorrect;
             SaveService.SaveNow();
 
-            questionTextUI.text = Loc.Get(CodeStrings.QuizCorrect);
-            yield return new WaitForSeconds(2f); 
+            questionTextUI.text = BuildCorrectFeedback(currentQuiz);
+            yield return ReadHold();
             quizPanel.SetActive(false); 
             GridManager.Instance.ApplyReviveBonus(); 
         }
@@ -314,7 +387,7 @@ public class UIManager : MonoBehaviour
             SaveService.SaveNow(); 
             
             questionTextUI.text = Loc.Get(CodeStrings.QuizWrong);
-            yield return new WaitForSeconds(2f); 
+            yield return new WaitForSeconds(QuizWrongHold); 
             quizPanel.SetActive(false);
             ShowGameOver(); 
         }
@@ -330,6 +403,25 @@ public class UIManager : MonoBehaviour
     [Tooltip("Duraklat kartı açıkken gizlenecek HUD objeleri (UIBuilder bağlar).")]
     public GameObject[] hudHiddenWhilePaused;
 
+    // Bilgi kartı = duraklat kartındaki "BİLİYOR MUYDUN?" alt başlığı + bilgi
+    // metni. Ayar kapalıyken ikisi de gizlenir; kartın kendisi, başlığı ve üç
+    // butonu yerinde kalır. Listeyi UIBuilder doldurur
+    // (RecipeBookBuilder.BuildPauseEntry).
+    [Tooltip("\"BİLİYOR MUYDUN?\" kartının parçaları; Bilgi Kartları ayarı " +
+             "kapalıyken gizlenir (UIBuilder bağlar).")]
+    public GameObject[] flashcardObjects;
+
+    /// <summary>Bilgi kartı parçalarını gösterir/gizler.</summary>
+    private void SetFlashcardsVisible(bool visible)
+    {
+        if (flashcardObjects == null) return;
+
+        foreach (GameObject go in flashcardObjects)
+        {
+            if (go != null) go.SetActive(visible);
+        }
+    }
+
     public void TogglePause(bool isPaused)
     {
         PlayButtonSound();   // PausePanel'deki "Devam Et" butonunun OnClick'inde ses yok
@@ -338,7 +430,15 @@ public class UIManager : MonoBehaviour
         {
             Time.timeScale = 0f;
             pausePanel.SetActive(true);
-            if (allFacts != null && allFacts.Count > 0) factTextUI.text = allFacts[Random.Range(0, allFacts.Count)].factText;
+
+            // BİLGİ KARTLARI AYARI (1.5): kapalıysa "BİLİYOR MUYDUN?" kartı
+            // hiç görünmez; duraklat menüsünün gerisi (başlık, Devam Et,
+            // Ana Menü, Tarif Defteri) değişmez.
+            bool bilgiKartlari = SaveService.Data.flashcardsOn == 1;
+            SetFlashcardsVisible(bilgiKartlari);
+
+            if (bilgiKartlari && allFacts != null && allFacts.Count > 0)
+                factTextUI.text = allFacts[Random.Range(0, allFacts.Count)].factText;
         }
         else { Time.timeScale = 1f; pausePanel.SetActive(false); }
 

@@ -17,6 +17,9 @@ MonoBehaviour:
   options:
   - Sadece Proton
   - Proton ve Elektron
-  - "Proten ve N\xF6tron"
+  - "Proton ve N\xF6tron"
   - "N\xF6tron ve Elektron"
   correctAnswerIndex: 2
+  topic: "Atomun yap\u0131s\u0131"
+  difficulty: 1
+  relatedCompound: H
