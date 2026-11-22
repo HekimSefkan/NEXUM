@@ -176,6 +176,23 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
 > depodan düştü. Testler "kanca yokken düşüyor" diye yeşil görünseydi
 > eksik kod birleşecekti.
 
+### Ömür boyu istatistikler
+- **Ömür boyu sayaçlar yalnızca KESİNLEŞMİŞ eylemleri sayar.** Geri alınan
+  bir hamle, ömür boyu sayaçları artırmış olarak KALAMAZ.
+- Uygulama yöntemi: hamle öncesi anlık görüntü (`SaveCurrentState`) sayaç
+  değerlerini de saklar, `ExecuteUndo` onları geri yazar. Bölüm sonunda
+  toplu yazmak yerine bu yöntem seçildi; oyuncu oyunu bölüm bitmeden
+  kapatırsa da sayaç doğru kalıyor.
+- **Yeni bir ömür boyu sayaç eklenirse** anlık görüntüye ve geri alma
+  geri yüklemesine de eklenir; aksi hâlde birleştir → geri al → birleştir
+  döngüsüyle şişirilebilir.
+- **İstisna: tarif keşfi.** `discoveredRecipes` geri alınmaz — keşfedilen
+  bilgi geri alınamaz; oyuncu o tepkimeyi gerçekten gördü. Defter
+  "öğrenilen"i sayar, "kesinleşen hamle"yi değil.
+- **İlerleme alanları var olmayan bölümü gösteremez:** `unlockedLevel` ve
+  `maxLevelUnlocked` bölüm sayısına kırpılır (yazarken `ShowWinScreen`,
+  eski kayıtlarda açılışta `StatsIntegrity`).
+
 ### Teslim
 - **Görsel etkisi olan her adım, `NexumDeviceShot` ile alınmış gerçek
   render'ları PR'a ekler.**
