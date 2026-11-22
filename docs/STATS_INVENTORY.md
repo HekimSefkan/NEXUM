@@ -53,7 +53,7 @@ geri alma ve Joker'e harcanan puanlar sayılmıyor. Gösterilmeye başlanacaksa
 | `language` | `Loc` | `Loc` | CANLI |
 | `showReactionEquations` | **hiçbir yerde** | `ReactionEquationDisplay.Enabled` | ÖLÜ-KAYIT (ayar) |
 | `mentorHintsOn` | `SettingsManager` | `InvalidMergeFeedback.Enabled` (geçersiz birleştirme geri bildirimi) | CANLI |
-| `flashcardsOn` | `SettingsManager` | yalnızca kendi anahtarının görünümü | ÖLÜ-KAYIT (ayar) |
+| `flashcardsOn` | `SettingsManager` | `UIManager.TogglePause` (duraklat kartındaki "BİLİYOR MUYDUN?" bölümü) | CANLI |
 
 - `showReactionEquations` okunuyor ama **ayar ekranında karşılığı yok**:
   oyuncu tepkime denklemlerini kapatamıyor, değer kalıcı olarak varsayılan
@@ -61,10 +61,12 @@ geri alma ve Joker'e harcanan puanlar sayılmıyor. Gösterilmeye başlanacaksa
 - `mentorHintsOn` **CANLI**: 1.3'te geçersiz birleştirme geri bildirimine
   bağlandı (`InvalidMergeFeedback.Enabled`) — anahtar kapalıyken mesaj
   çıkmıyor. 1.3 main'e birleşince bu satır CANLI'ya döndü.
-- `flashcardsOn` kaydediliyor ama **hiçbir davranışı değiştirmiyor**:
-  oyuncu anahtarı çeviriyor, oyunda bir şey olmuyor. Bağlamak yeni bir
-  özellik (bilgi kartları) demek — CLAUDE.md'nin onay kuralına tabi, bu
-  adımın kapsamı dışı.
+- `flashcardsOn` **CANLI** (1.5'te bağlandı): duraklat kartındaki
+  "BİLİYOR MUYDUN?" alt başlığı ile bilgi metnini yönetir. Ayar kapalıyken
+  ikisi de gizlenir; kartın kendisi, başlığı ve üç butonu yerinde kalır.
+  Parçalar `UIManager.flashcardObjects` dizisinde ve sahneye
+  `NexumFlashcardBind` ile bağlıdır. Ölçüm: `FlashcardSettingTests`
+  (iki durum, iki tur).
 
 ## Ayrılmış alanlar (Faz 2–3, dokunulmadı)
 
