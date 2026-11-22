@@ -294,12 +294,15 @@ public class UIManager : MonoBehaviour
     // --- Doğru cevap paneli: açıklama (1.5) ------------------------------
     // Eski hâl: "DOĞRU CEVAP" yazısı 2 saniye durup kapanıyordu. Artık
     // altında sorunun AÇIKLAMASI var (sözlükten, soru asset'inden türetilen
-    // anahtarla). 2 saniye 1-2 cümleyi okumaya yetmiyor; bu yüzden bekleme
-    // "en az 2 sn, dokununca kapanır, en çok 10 sn" oldu. Akış değişmedi:
-    // panel yine kendiliğinden kapanıp ApplyReviveBonus'a gidiyor.
+    // anahtarla) ve 2 saniye 1-2 cümleyi okumaya yetmiyor.
+    //
+    // KURAL: en az QuizMinHold bekler (yanlışlıkla dokunup atlamasın),
+    // sonra YALNIZCA dokununca kapanır. Kendiliğinden kapanma YOK — süre
+    // sınırı, metni okuması yavaş olan oyuncuyu cezalandırıyordu ve
+    // "okuyacak kadar süre" diye bir evrensel değer yok. Panel açık
+    // kaldığı sürece oyun zaten duruyor (quiz modal, girdi kilitli).
     private const float QuizWrongHold = 2f;        // yanlış cevap: eski süre
     private const float QuizMinHold = 2f;          // dokunuş kabul edilmeden önce
-    private const float QuizMaxHold = 10f;         // dokunulmazsa kendiliğinden
 
     private ChemistryQuiz currentQuiz;
 
@@ -314,7 +317,10 @@ public class UIManager : MonoBehaviour
                           Loc.Get(CodeStrings.QuizContinueHint));
     }
 
-    /// <summary>En az QuizMinHold bekler; sonra dokunuşu ya da QuizMaxHold'u.</summary>
+    /// <summary>
+    /// En az <see cref="QuizMinHold"/> bekler, sonra dokunuşu bekler.
+    /// Üst sınır YOK: dokunulmadıkça panel kapanmaz.
+    /// </summary>
     private static System.Collections.IEnumerator ReadHold()
     {
         float gecen = 0f;
@@ -324,11 +330,7 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        while (gecen < QuizMaxHold && !DokunusVar())
-        {
-            gecen += Time.unscaledDeltaTime;
-            yield return null;
-        }
+        while (!DokunusVar()) yield return null;
     }
 
     /// <summary>

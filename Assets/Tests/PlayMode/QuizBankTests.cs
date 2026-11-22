@@ -95,6 +95,7 @@ public class QuizBankTests
     public IEnumerator SorularVeEtiketlerGecerli()
     {
         List<string> sorunlar = new List<string>();
+        List<string> bilesiksiz = new List<string>();
         HashSet<string> govdeler = new HashSet<string>();
         HashSet<string> adlar = new HashSet<string>();
         Dictionary<string, int> zorluklar = new Dictionary<string, int>();
@@ -130,7 +131,13 @@ public class QuizBankTests
             if (dogru < 0 || dogru > 3) sorunlar.Add($"{ad}: doğru cevap indeksi {dogru}");
             if (string.IsNullOrWhiteSpace(konu)) sorunlar.Add($"{ad}: konu etiketi boş");
             if (zorluk < 1 || zorluk > 3) sorunlar.Add($"{ad}: zorluk {zorluk} (1-3 olmalı)");
-            if (string.IsNullOrWhiteSpace(bilesik)) sorunlar.Add($"{ad}: ilgili bileşik boş");
+
+            // İlgili bileşik BOŞ OLABİLİR: her soru bir bileşiğe bağlanmıyor
+            // (ör. "katalizör nedir" bir kavram sorusu). Boş bırakılanlar
+            // loglanır ki gözden kaçarak çoğalmasınlar; konu etiketi ise
+            // her soruda zorunlu, Faz 5 süzmesi onun üzerinden yapılacak.
+            if (string.IsNullOrWhiteSpace(bilesik)) bilesiksiz.Add(ad);
+            else if (bilesik != bilesik.Trim()) sorunlar.Add($"{ad}: ilgili bileşikte baş/son boşluk");
 
             if (!string.IsNullOrWhiteSpace(konu)) konular[konu] = konular.TryGetValue(konu, out int k) ? k + 1 : 1;
             if (zorluk >= 1 && zorluk <= 3)
@@ -155,6 +162,9 @@ public class QuizBankTests
             Debug.Log($"{Tag}_ZORLUK: {p.Key} -> {p.Value} soru");
         foreach (KeyValuePair<string, int> p in konular.OrderBy(p => p.Key))
             Debug.Log($"{Tag}_KONU: {p.Key,-26} -> {p.Value} soru");
+
+        Debug.Log($"{Tag}_BILESIKSIZ: {bilesiksiz.Count} soru " +
+                  $"({string.Join(", ", bilesiksiz)})");
 
         Assert.IsEmpty(sorunlar, "banka kusurları: " + string.Join(" | ", sorunlar));
         yield return null;
