@@ -52,7 +52,7 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 ## 1b. Ürün dönemi (Faz 0 ve Faz 1)
 
 **Faz 0 — altyapı**
-- **SaveService** (`Assets/Scripts/Save`, `Nexum.Save` asmdef): şemalı, sürümlü tek kayıt katmanı. Eski `PlayerPrefs` anahtarlarından göç, alan bazında onarım, kirli bayrakla yazma. `PlayerPrefs` yalnızca bu dosyada kullanılabilir (validator zorunlu kılar); testler için `ExportRaw` / `ImportRaw` kapısı var. **Güncel sürüm: 2.**
+- **SaveService** (`Assets/Scripts/Save`, `Nexum.Save` asmdef): şemalı, sürümlü tek kayıt katmanı. Eski `PlayerPrefs` anahtarlarından göç, alan bazında onarım, kirli bayrakla yazma. `PlayerPrefs` yalnızca bu dosyada kullanılabilir (validator zorunlu kılar); testler için `ExportRaw` / `ImportRaw` kapısı var. **Güncel sürüm: 3** (sürüm 3: quiz yanlış cevap havuzu; eski kayda geriye dönük doldurma YAPILMAZ).
 - **Lokalizasyon** (`Assets/Scripts/Localization`, `Nexum.Localization` asmdef): JSON sözlük (`Assets/Data/Localization/tr.json`, `en.json`) → `LocalizationTable` asset'i; `Loc.Get` / `Loc.Format`, `LocalizedText` bileşeni, dil değişince olay. Sözlükte **100 anahtar**; İngilizce çeviri Faz 6'ya bırakıldı (anahtarlar var, metinler Türkçe tohum).
 - **UIBuilder** (`Assets/Editor/UIBuilder`): sahne yapısı elle YAML ile değil idempotent kurucularla kurulur. Kayıt dosyası `managed.json`, `-dryRun` desteği, oluşturulan/güncellenen/dokunulmayan raporu. Nokta anchor'lı objelerde **`SetFixed(anchor, size, anchoredPosition)`** kullanılır; `SetFixed` + `SetRectPosition` ikilisi dosyayı değiştirmese de her koşuda "güncellendi" raporluyordu.
 - **Tema tokenları:** `NexumTheme` asset'i → `UITokens` → kurucular. Renk/punto/boşluk doğrudan yazılmaz.
@@ -63,6 +63,7 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **Tek kaynak kuralı:** `ReactionText` — denklem gösterimi, tarif defteri ve ansiklopedi kartı aynı kalıbı ve aynı sprite'ı kullanır. Kalıplar sözlükte (`reaction.inputs`, `reaction.equation`).
 - **Tarif defteri** (Adım 2): 21 tarifin listesi, keşif sayacı, ilerleme halkası; keşfedilmemiş satırlarda `? + ? → ?` + kilit ikonu (`Tools/generate_lock.py`). Erişim ana menüden ve duraklat menüsünden. Keşif ilk birleşmede kaydedilir; mevcut oyunculara **geriye dönük doldurma** üretim grafiğinden türetilir (bir bileşiği tek bir tarif üretiyorsa o tarif zorunludur; birden fazla üretici varsa hiçbiri sayılmaz).
 - **Sistem bildirimi** artık kombo bandını kullanmıyor: yeni tarif keşfi ile kombo yazısı aynı karede doğduğu için bildirim tahtanın altındaki kendi bandına alındı.
+- **Quiz öğrenme katmanı** (Adım 1.5): 36 sorunun tamamında açıklama (sözlükte, anahtar asset adından türetilir); doğru cevap panelinde başlık + açıklama + "dokun" ipucu, bekleme en az 2 sn / dokununca / en çok 10 sn. Yanlış cevaplanan sorular `SaveData.quizWrongPool`'a girer ve sonraki quizlerde **1/3 oranında** öncelik kazanır (`QuizSelector`); aynı soru üst üste sorulmaz, havuz yalnızca kesinleşmiş cevapla değişir. Banka 16 → **36 soru** (`NexumQuizBank`, idempotent), etiketli (konu · zorluk · ilgili bileşik) — etiketler Faz 5 soru modu için, o mod kurulmadı. Soru puntosu pişirildi (auto-size kapalı, 46). **Bilgi Kartları ayarı** duraklat kartındaki "BİLİYOR MUYDUN?" bölümüne bağlandı. Kimya doğruluğu `docs/QUIZ_REVIEW.md` tablosunda onay bekliyor.
 
 ---
 
@@ -114,7 +115,7 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **Joker / revive silme hatası** — `DOKill` ile iptal olan `Destroy`.
 - **Entropi uyarısının yanlış metne yazılması.**
 - **İstatistiklerin anlamı** — "TEORİK BAŞARI" yalnızca ikinci şans quizi cevaplanınca değişiyor; "LABORATUVAR KAZASI" oyuncuya ne anlattığı tasarım kararı bekliyor.
-- **İçerik işleri** — flashcard ve mentor ipucu özellikleri, ek quiz soruları, ansiklopedi metinlerinin genişletilmesi.
+- **İçerik işleri** — mentor ipucu özelliği ve ansiklopedi metinlerinin genişletilmesi. (Bilgi kartları ayarı 1.5'te bağlandı, quiz bankası 36 soruya çıktı.)
 
 ### (c) Yayın
 - **Play Console adımları** — mağaza listesi, içerik derecelendirme anketi, Data safety formu, hedef kitle ve reklam beyanı, gizlilik politikası URL'si. Tüm adımlar `docs/RELEASE_CHECKLIST.md` bölüm 2'de.
