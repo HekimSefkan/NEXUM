@@ -20,3 +20,6 @@ MonoBehaviour:
   - He
   - H
   correctAnswerIndex: 3
+  topic: Yanma
+  difficulty: 1
+  relatedCompound: H2

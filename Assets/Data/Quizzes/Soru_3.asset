@@ -20,3 +20,6 @@ MonoBehaviour:
   - "Metalik Ba\u011F"
   - "Hidrojen Ba\u011F\u0131"
   correctAnswerIndex: 1
+  topic: "Ba\u011Flar"
+  difficulty: 1
+  relatedCompound: H2

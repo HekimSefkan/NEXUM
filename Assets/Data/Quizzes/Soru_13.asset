@@ -20,3 +20,6 @@ MonoBehaviour:
   - Saf Su
   - Deniz Suyu
   correctAnswerIndex: 2
+  topic: "Saf madde ve kar\u0131\u015F\u0131m"
+  difficulty: 2
+  relatedCompound: H2O

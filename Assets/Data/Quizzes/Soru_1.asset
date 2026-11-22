@@ -19,3 +19,6 @@ MonoBehaviour:
   - NaCl
   - H<sub>2</sub>O
   correctAnswerIndex: 1
+  topic: Asit-baz
+  difficulty: 1
+  relatedCompound: HCl

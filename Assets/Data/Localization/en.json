@@ -399,8 +399,160 @@
             "value": "E-posta bağlanmadı"
         },
         {
+            "key": "quiz.continue_hint",
+            "value": "Devam etmek için ekrana dokun"
+        },
+        {
             "key": "quiz.correct",
             "value": "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun!"
+        },
+        {
+            "key": "quiz.correct_explained",
+            "value": "{0}\n\n<size=72%>{1}</size>\n\n<size=58%><color=#ADB5BD>{2}</color></size>"
+        },
+        {
+            "key": "quiz.soru_1.explain",
+            "value": "HCl suda H+ iyonu verdiği için asittir; NaOH baz, NaCl tuz, H<sub>2</sub>O ise nötrdür."
+        },
+        {
+            "key": "quiz.soru_10.explain",
+            "value": "Oksijenin bağ yapmayan elektron çiftleri bağları iter; açı 104,5 dereceye düşer ve molekül açısal olur."
+        },
+        {
+            "key": "quiz.soru_11.explain",
+            "value": "Demir havadaki oksijenle yavaşça yükseltgenir; pas bir demir oksittir (Fe<sub>2</sub>O<sub>3</sub>)."
+        },
+        {
+            "key": "quiz.soru_12.explain",
+            "value": "Çekirdekte proton ve nötron bulunur; elektronlar çekirdeğin çevresindeki katmanlarda yer alır."
+        },
+        {
+            "key": "quiz.soru_13.explain",
+            "value": "Saf su tek tür molekülden oluşur, yani saf maddedir; hava, çelik ve deniz suyu karışımdır."
+        },
+        {
+            "key": "quiz.soru_14.explain",
+            "value": "Kezzap, derişik nitrik asittir (HNO<sub>3</sub>); sülfürik asit ise zaç yağı adıyla bilinir."
+        },
+        {
+            "key": "quiz.soru_15.explain",
+            "value": "Soygazların son katmanı tamdır ve kolay tepkime vermezler; klor ise bir elektron alıp tuz oluşturur."
+        },
+        {
+            "key": "quiz.soru_16.explain",
+            "value": "Hidrojen oksijenle patlayarak yanar ve su oluşur; karbondioksit, helyum ve azot bu koşulda yanmaz."
+        },
+        {
+            "key": "quiz.soru_17.explain",
+            "value": "Stratosferdeki ozon tabakası Güneş'ten gelen ultraviyole ışınların büyük bölümünü tutar."
+        },
+        {
+            "key": "quiz.soru_18.explain",
+            "value": "Kireç taşı, mermer ve yumurta kabuğu ağırlıkla kalsiyum karbonattır (CaCO<sub>3</sub>)."
+        },
+        {
+            "key": "quiz.soru_19.explain",
+            "value": "Kalsiyum oksite (CaO) sönmemiş kireç denir; suyla tepkimesinde ısı açığa çıkar ve sönmüş kireç oluşur."
+        },
+        {
+            "key": "quiz.soru_2.explain",
+            "value": "Elektronu kendine en güçlü çeken element flordur; elektronegatiflik periyodik tabloda sağa ve yukarı doğru artar."
+        },
+        {
+            "key": "quiz.soru_20.explain",
+            "value": "Kireç taşı ısıtılınca CaO ve CO<sub>2</sub>'ye ayrışır; kireç fırınları bu tepkimeyle çalışır."
+        },
+        {
+            "key": "quiz.soru_21.explain",
+            "value": "Karbondioksit suda çözününce karbonik asit (H<sub>2</sub>CO<sub>3</sub>) oluşur; gazlı içeceklerin ekşiliği buradan gelir."
+        },
+        {
+            "key": "quiz.soru_22.explain",
+            "value": "Oksijen -2 değerlikli olduğundan iki demirin toplam yükü +6 olmalıdır; demir başına +3 düşer."
+        },
+        {
+            "key": "quiz.soru_23.explain",
+            "value": "Katıda iyonlar örgüde sabittir; su içinde Na+ ve Cl- serbest kalıp yükü taşır ve çözelti iletken olur."
+        },
+        {
+            "key": "quiz.soru_24.explain",
+            "value": "Amonyak suda hidroksit iyonu oluşturur, yani çözeltisi baziktir; temizlik ürünlerinde bu yüzden kullanılır."
+        },
+        {
+            "key": "quiz.soru_25.explain",
+            "value": "Haber-Bosch yönteminde azot ve hidrojen yüksek basınçta katalizörle amonyağa dönüşür; gübre üretiminin temelidir."
+        },
+        {
+            "key": "quiz.soru_26.explain",
+            "value": "Kuru havanın hacimce yaklaşık yüzde 78'i azot, yüzde 21'i oksijendir."
+        },
+        {
+            "key": "quiz.soru_27.explain",
+            "value": "İki azot atomu arasında üçlü bağ vardır; bu güçlü bağ azot gazını oda koşullarında çok tepkimesiz kılar."
+        },
+        {
+            "key": "quiz.soru_28.explain",
+            "value": "Motor içindeki yüksek sıcaklıkta havanın azotu ve oksijeni birleşip azot monoksit verir; bu gaz havada yükseltgenerek kirliliğe yol açar."
+        },
+        {
+            "key": "quiz.soru_29.explain",
+            "value": "Karbonmonoksit hemoglobine oksijenden çok daha güçlü bağlanır; kan oksijen taşıyamaz hâle gelir."
+        },
+        {
+            "key": "quiz.soru_3.explain",
+            "value": "İki ametal elektronlarını ortaklaşa kullanır. Elektron alışverişi olsaydı iyonik bağ oluşurdu."
+        },
+        {
+            "key": "quiz.soru_30.explain",
+            "value": "Oksijen yeterliyse karbondioksit, yetersizse zehirli karbonmonoksit oluşur; sobalı ortamlar bu yüzden havalandırılır."
+        },
+        {
+            "key": "quiz.soru_31.explain",
+            "value": "Su molekülleri arasındaki hidrojen bağları güçlüdür; onları koparmak için yüksek sıcaklık gerekir."
+        },
+        {
+            "key": "quiz.soru_32.explain",
+            "value": "Her su molekülünde iki hidrojen, bir oksijen vardır; elektrolizde gazlar da 2'ye 1 hacim oranında çıkar."
+        },
+        {
+            "key": "quiz.soru_33.explain",
+            "value": "Klor güçlü bir yükseltgendir; sudaki bakteri ve virüsleri etkisiz hâle getirdiği için dezenfeksiyonda kullanılır."
+        },
+        {
+            "key": "quiz.soru_34.explain",
+            "value": "Sodyum nemle şiddetli tepkime verip hidrojen açığa çıkarır; bu yüzden havayla temas etmeyecek şekilde gazyağında saklanır."
+        },
+        {
+            "key": "quiz.soru_35.explain",
+            "value": "İkisi de yalnızca oksijen atomlarından oluşur ama atom sayıları farklıdır; aynı elementin bu tür yapılarına allotrop denir."
+        },
+        {
+            "key": "quiz.soru_36.explain",
+            "value": "Kemik ve dişin sertliğini kalsiyum tuzları sağlar; kalsiyum insan vücudunda en bol bulunan metaldir."
+        },
+        {
+            "key": "quiz.soru_4.explain",
+            "value": "Cıva oda sıcaklığında sıvı olan tek metaldir; galyum yaklaşık 30 °C'de erir, brom ise metal değildir."
+        },
+        {
+            "key": "quiz.soru_5.explain",
+            "value": "pH 7'nin üstü bazik demektir; 14'e yaklaştıkça bazlık artar, yani 13 kuvvetli bazdır."
+        },
+        {
+            "key": "quiz.soru_6.explain",
+            "value": "Organik bileşikler karbon-hidrojen iskeletine dayanır; metan (CH<sub>4</sub>) bunun en basit örneğidir."
+        },
+        {
+            "key": "quiz.soru_7.explain",
+            "value": "Elmasta her karbon dört komşusuna kovalent bağlıdır, bu yüzden çok serttir; grafitte katmanlar birbiri üzerinde kayar."
+        },
+        {
+            "key": "quiz.soru_8.explain",
+            "value": "Sirke, suda çözünmüş asetik asittir; ekşi tat asidin verdiği H+ iyonlarından gelir."
+        },
+        {
+            "key": "quiz.soru_9.explain",
+            "value": "Katalizör aktifleşme enerjisini düşürür ve tepkimeden değişmeden çıkar; inhibitör ise tepkimeyi yavaşlatır."
         },
         {
             "key": "quiz.wrong",
@@ -566,7 +718,45 @@
         "profile.default_name",
         "profile.invalid_email",
         "profile.no_email",
+        "quiz.continue_hint",
         "quiz.correct",
+        "quiz.correct_explained",
+        "quiz.soru_1.explain",
+        "quiz.soru_10.explain",
+        "quiz.soru_11.explain",
+        "quiz.soru_12.explain",
+        "quiz.soru_13.explain",
+        "quiz.soru_14.explain",
+        "quiz.soru_15.explain",
+        "quiz.soru_16.explain",
+        "quiz.soru_17.explain",
+        "quiz.soru_18.explain",
+        "quiz.soru_19.explain",
+        "quiz.soru_2.explain",
+        "quiz.soru_20.explain",
+        "quiz.soru_21.explain",
+        "quiz.soru_22.explain",
+        "quiz.soru_23.explain",
+        "quiz.soru_24.explain",
+        "quiz.soru_25.explain",
+        "quiz.soru_26.explain",
+        "quiz.soru_27.explain",
+        "quiz.soru_28.explain",
+        "quiz.soru_29.explain",
+        "quiz.soru_3.explain",
+        "quiz.soru_30.explain",
+        "quiz.soru_31.explain",
+        "quiz.soru_32.explain",
+        "quiz.soru_33.explain",
+        "quiz.soru_34.explain",
+        "quiz.soru_35.explain",
+        "quiz.soru_36.explain",
+        "quiz.soru_4.explain",
+        "quiz.soru_5.explain",
+        "quiz.soru_6.explain",
+        "quiz.soru_7.explain",
+        "quiz.soru_8.explain",
+        "quiz.soru_9.explain",
         "quiz.wrong",
         "reaction.equation",
         "reaction.equation_fallback",

@@ -15,8 +15,11 @@ MonoBehaviour:
   questionText: "Sirkenin yap\u0131s\u0131nda bulunan ve ona ek\u015Fi tad\u0131n\u0131
     veren asit hangisidir?"
   options:
-  - Siktik Asit
+  - Sitrik Asit
   - Asetik Asit
-  - 'Laktik Asit '
+  - Laktik Asit
   - Nitrik Asit
   correctAnswerIndex: 1
+  topic: "G\xFCnl\xFCk kimya"
+  difficulty: 1
+  relatedCompound: CH3COOH

@@ -95,6 +95,13 @@ public static class CodeStrings
     public const string QuizCorrect = "quiz.correct";
     public const string QuizWrong = "quiz.wrong";
 
+    // Doğru cevap panelinin açıklamalı hâli (1.5). Kalıp sözlükte: başlık,
+    // açıklama ve "dokun" ipucu farklı puntolarda dizilir, böylece çeviri
+    // sırasında dizilim de ayarlanabilir. Açıklama METNİ soru başına ayrı
+    // anahtardadır (QuizStrings, "quiz.soru_7.explain").
+    public const string QuizCorrectExplained = "quiz.correct_explained";
+    public const string QuizContinueHint = "quiz.continue_hint";
+
     // --- Katalizör --------------------------------------------------------
     public const string CatalystReadyLabel = "catalyst.ready_label";
     public const string CatalystChargeLabel = "catalyst.charge_label";
@@ -170,6 +177,8 @@ public static class CodeStrings
 
         [QuizCorrect] = "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun!",
         [QuizWrong] = "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi.",
+        [QuizCorrectExplained] = "{0}\n\n<size=72%>{1}</size>\n\n<size=58%><color=#ADB5BD>{2}</color></size>",
+        [QuizContinueHint] = "Devam etmek için ekrana dokun",
 
         [CatalystReadyLabel] = "<color=#2ECC71>BEDAVA PARÇALAMA ×{0}</color>",
         [CatalystChargeLabel] = "KATALİZÖR ŞARJI {0}/{1}",

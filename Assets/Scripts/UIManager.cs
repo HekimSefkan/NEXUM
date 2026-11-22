@@ -401,6 +401,25 @@ public class UIManager : MonoBehaviour
     [Tooltip("Duraklat kartı açıkken gizlenecek HUD objeleri (UIBuilder bağlar).")]
     public GameObject[] hudHiddenWhilePaused;
 
+    // Bilgi kartı = duraklat kartındaki "BİLİYOR MUYDUN?" alt başlığı + bilgi
+    // metni. Ayar kapalıyken ikisi de gizlenir; kartın kendisi, başlığı ve üç
+    // butonu yerinde kalır. Listeyi UIBuilder doldurur
+    // (RecipeBookBuilder.BuildPauseEntry).
+    [Tooltip("\"BİLİYOR MUYDUN?\" kartının parçaları; Bilgi Kartları ayarı " +
+             "kapalıyken gizlenir (UIBuilder bağlar).")]
+    public GameObject[] flashcardObjects;
+
+    /// <summary>Bilgi kartı parçalarını gösterir/gizler.</summary>
+    private void SetFlashcardsVisible(bool visible)
+    {
+        if (flashcardObjects == null) return;
+
+        foreach (GameObject go in flashcardObjects)
+        {
+            if (go != null) go.SetActive(visible);
+        }
+    }
+
     public void TogglePause(bool isPaused)
     {
         PlayButtonSound();   // PausePanel'deki "Devam Et" butonunun OnClick'inde ses yok
@@ -409,7 +428,15 @@ public class UIManager : MonoBehaviour
         {
             Time.timeScale = 0f;
             pausePanel.SetActive(true);
-            if (allFacts != null && allFacts.Count > 0) factTextUI.text = allFacts[Random.Range(0, allFacts.Count)].factText;
+
+            // BİLGİ KARTLARI AYARI (1.5): kapalıysa "BİLİYOR MUYDUN?" kartı
+            // hiç görünmez; duraklat menüsünün gerisi (başlık, Devam Et,
+            // Ana Menü, Tarif Defteri) değişmez.
+            bool bilgiKartlari = SaveService.Data.flashcardsOn == 1;
+            SetFlashcardsVisible(bilgiKartlari);
+
+            if (bilgiKartlari && allFacts != null && allFacts.Count > 0)
+                factTextUI.text = allFacts[Random.Range(0, allFacts.Count)].factText;
         }
         else { Time.timeScale = 1f; pausePanel.SetActive(false); }
 

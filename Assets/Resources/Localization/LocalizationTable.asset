@@ -370,11 +370,223 @@ MonoBehaviour:
   - key: profile.no_email
     turkish: "E-posta ba\u011Flanmad\u0131"
     english: "E-posta ba\u011Flanmad\u0131"
+  - key: quiz.continue_hint
+    turkish: "Devam etmek i\xE7in ekrana dokun"
+    english: "Devam etmek i\xE7in ekrana dokun"
   - key: quiz.correct
     turkish: "<color=green>TEBR\u0130KLER! DO\u011ERU CEVAP.</color>\nMatris temizleniyor,
       laboratuvara geri d\xF6n\xFCyorsun!"
     english: "<color=green>TEBR\u0130KLER! DO\u011ERU CEVAP.</color>\nMatris temizleniyor,
       laboratuvara geri d\xF6n\xFCyorsun!"
+  - key: quiz.correct_explained
+    turkish: '{0}
+
+
+      <size=72%>{1}</size>
+
+
+      <size=58%><color=#ADB5BD>{2}</color></size>'
+    english: '{0}
+
+
+      <size=72%>{1}</size>
+
+
+      <size=58%><color=#ADB5BD>{2}</color></size>'
+  - key: quiz.soru_1.explain
+    turkish: "HCl suda H+ iyonu verdi\u011Fi i\xE7in asittir; NaOH baz, NaCl tuz,
+      H<sub>2</sub>O ise n\xF6trd\xFCr."
+    english: "HCl suda H+ iyonu verdi\u011Fi i\xE7in asittir; NaOH baz, NaCl tuz,
+      H<sub>2</sub>O ise n\xF6trd\xFCr."
+  - key: quiz.soru_10.explain
+    turkish: "Oksijenin ba\u011F yapmayan elektron \xE7iftleri ba\u011Flar\u0131
+      iter; a\xE7\u0131 104,5 dereceye d\xFC\u015Fer ve molek\xFCl a\xE7\u0131sal
+      olur."
+    english: "Oksijenin ba\u011F yapmayan elektron \xE7iftleri ba\u011Flar\u0131
+      iter; a\xE7\u0131 104,5 dereceye d\xFC\u015Fer ve molek\xFCl a\xE7\u0131sal
+      olur."
+  - key: quiz.soru_11.explain
+    turkish: "Demir havadaki oksijenle yava\u015F\xE7a y\xFCkseltgenir; pas bir demir
+      oksittir (Fe<sub>2</sub>O<sub>3</sub>)."
+    english: "Demir havadaki oksijenle yava\u015F\xE7a y\xFCkseltgenir; pas bir demir
+      oksittir (Fe<sub>2</sub>O<sub>3</sub>)."
+  - key: quiz.soru_12.explain
+    turkish: "\xC7ekirdekte proton ve n\xF6tron bulunur; elektronlar \xE7ekirde\u011Fin
+      \xE7evresindeki katmanlarda yer al\u0131r."
+    english: "\xC7ekirdekte proton ve n\xF6tron bulunur; elektronlar \xE7ekirde\u011Fin
+      \xE7evresindeki katmanlarda yer al\u0131r."
+  - key: quiz.soru_13.explain
+    turkish: "Saf su tek t\xFCr molek\xFClden olu\u015Fur, yani saf maddedir; hava,
+      \xE7elik ve deniz suyu kar\u0131\u015F\u0131md\u0131r."
+    english: "Saf su tek t\xFCr molek\xFClden olu\u015Fur, yani saf maddedir; hava,
+      \xE7elik ve deniz suyu kar\u0131\u015F\u0131md\u0131r."
+  - key: quiz.soru_14.explain
+    turkish: "Kezzap, deri\u015Fik nitrik asittir (HNO<sub>3</sub>); s\xFClf\xFCrik
+      asit ise za\xE7 ya\u011F\u0131 ad\u0131yla bilinir."
+    english: "Kezzap, deri\u015Fik nitrik asittir (HNO<sub>3</sub>); s\xFClf\xFCrik
+      asit ise za\xE7 ya\u011F\u0131 ad\u0131yla bilinir."
+  - key: quiz.soru_15.explain
+    turkish: "Soygazlar\u0131n son katman\u0131 tamd\u0131r ve kolay tepkime vermezler;
+      klor ise bir elektron al\u0131p tuz olu\u015Fturur."
+    english: "Soygazlar\u0131n son katman\u0131 tamd\u0131r ve kolay tepkime vermezler;
+      klor ise bir elektron al\u0131p tuz olu\u015Fturur."
+  - key: quiz.soru_16.explain
+    turkish: "Hidrojen oksijenle patlayarak yanar ve su olu\u015Fur; karbondioksit,
+      helyum ve azot bu ko\u015Fulda yanmaz."
+    english: "Hidrojen oksijenle patlayarak yanar ve su olu\u015Fur; karbondioksit,
+      helyum ve azot bu ko\u015Fulda yanmaz."
+  - key: quiz.soru_17.explain
+    turkish: "Stratosferdeki ozon tabakas\u0131 G\xFCne\u015F'ten gelen ultraviyole
+      \u0131\u015F\u0131nlar\u0131n b\xFCy\xFCk b\xF6l\xFCm\xFCn\xFC tutar."
+    english: "Stratosferdeki ozon tabakas\u0131 G\xFCne\u015F'ten gelen ultraviyole
+      \u0131\u015F\u0131nlar\u0131n b\xFCy\xFCk b\xF6l\xFCm\xFCn\xFC tutar."
+  - key: quiz.soru_18.explain
+    turkish: "Kire\xE7 ta\u015F\u0131, mermer ve yumurta kabu\u011Fu a\u011F\u0131rl\u0131kla
+      kalsiyum karbonatt\u0131r (CaCO<sub>3</sub>)."
+    english: "Kire\xE7 ta\u015F\u0131, mermer ve yumurta kabu\u011Fu a\u011F\u0131rl\u0131kla
+      kalsiyum karbonatt\u0131r (CaCO<sub>3</sub>)."
+  - key: quiz.soru_19.explain
+    turkish: "Kalsiyum oksite (CaO) s\xF6nmemi\u015F kire\xE7 denir; suyla tepkimesinde
+      \u0131s\u0131 a\xE7\u0131\u011Fa \xE7\u0131kar ve s\xF6nm\xFC\u015F kire\xE7
+      olu\u015Fur."
+    english: "Kalsiyum oksite (CaO) s\xF6nmemi\u015F kire\xE7 denir; suyla tepkimesinde
+      \u0131s\u0131 a\xE7\u0131\u011Fa \xE7\u0131kar ve s\xF6nm\xFC\u015F kire\xE7
+      olu\u015Fur."
+  - key: quiz.soru_2.explain
+    turkish: "Elektronu kendine en g\xFC\xE7l\xFC \xE7eken element flordur; elektronegatiflik
+      periyodik tabloda sa\u011Fa ve yukar\u0131 do\u011Fru artar."
+    english: "Elektronu kendine en g\xFC\xE7l\xFC \xE7eken element flordur; elektronegatiflik
+      periyodik tabloda sa\u011Fa ve yukar\u0131 do\u011Fru artar."
+  - key: quiz.soru_20.explain
+    turkish: "Kire\xE7 ta\u015F\u0131 \u0131s\u0131t\u0131l\u0131nca CaO ve CO<sub>2</sub>'ye
+      ayr\u0131\u015F\u0131r; kire\xE7 f\u0131r\u0131nlar\u0131 bu tepkimeyle \xE7al\u0131\u015F\u0131r."
+    english: "Kire\xE7 ta\u015F\u0131 \u0131s\u0131t\u0131l\u0131nca CaO ve CO<sub>2</sub>'ye
+      ayr\u0131\u015F\u0131r; kire\xE7 f\u0131r\u0131nlar\u0131 bu tepkimeyle \xE7al\u0131\u015F\u0131r."
+  - key: quiz.soru_21.explain
+    turkish: "Karbondioksit suda \xE7\xF6z\xFCn\xFCnce karbonik asit (H<sub>2</sub>CO<sub>3</sub>)
+      olu\u015Fur; gazl\u0131 i\xE7eceklerin ek\u015Fili\u011Fi buradan gelir."
+    english: "Karbondioksit suda \xE7\xF6z\xFCn\xFCnce karbonik asit (H<sub>2</sub>CO<sub>3</sub>)
+      olu\u015Fur; gazl\u0131 i\xE7eceklerin ek\u015Fili\u011Fi buradan gelir."
+  - key: quiz.soru_22.explain
+    turkish: "Oksijen -2 de\u011Ferlikli oldu\u011Fundan iki demirin toplam y\xFCk\xFC
+      +6 olmal\u0131d\u0131r; demir ba\u015F\u0131na +3 d\xFC\u015Fer."
+    english: "Oksijen -2 de\u011Ferlikli oldu\u011Fundan iki demirin toplam y\xFCk\xFC
+      +6 olmal\u0131d\u0131r; demir ba\u015F\u0131na +3 d\xFC\u015Fer."
+  - key: quiz.soru_23.explain
+    turkish: "Kat\u0131da iyonlar \xF6rg\xFCde sabittir; su i\xE7inde Na+ ve Cl-
+      serbest kal\u0131p y\xFCk\xFC ta\u015F\u0131r ve \xE7\xF6zelti iletken olur."
+    english: "Kat\u0131da iyonlar \xF6rg\xFCde sabittir; su i\xE7inde Na+ ve Cl-
+      serbest kal\u0131p y\xFCk\xFC ta\u015F\u0131r ve \xE7\xF6zelti iletken olur."
+  - key: quiz.soru_24.explain
+    turkish: "Amonyak suda hidroksit iyonu olu\u015Fturur, yani \xE7\xF6zeltisi baziktir;
+      temizlik \xFCr\xFCnlerinde bu y\xFCzden kullan\u0131l\u0131r."
+    english: "Amonyak suda hidroksit iyonu olu\u015Fturur, yani \xE7\xF6zeltisi baziktir;
+      temizlik \xFCr\xFCnlerinde bu y\xFCzden kullan\u0131l\u0131r."
+  - key: quiz.soru_25.explain
+    turkish: "Haber-Bosch y\xF6nteminde azot ve hidrojen y\xFCksek bas\u0131n\xE7ta
+      kataliz\xF6rle amonya\u011Fa d\xF6n\xFC\u015F\xFCr; g\xFCbre \xFCretiminin
+      temelidir."
+    english: "Haber-Bosch y\xF6nteminde azot ve hidrojen y\xFCksek bas\u0131n\xE7ta
+      kataliz\xF6rle amonya\u011Fa d\xF6n\xFC\u015F\xFCr; g\xFCbre \xFCretiminin
+      temelidir."
+  - key: quiz.soru_26.explain
+    turkish: "Kuru havan\u0131n hacimce yakla\u015F\u0131k y\xFCzde 78'i azot, y\xFCzde
+      21'i oksijendir."
+    english: "Kuru havan\u0131n hacimce yakla\u015F\u0131k y\xFCzde 78'i azot, y\xFCzde
+      21'i oksijendir."
+  - key: quiz.soru_27.explain
+    turkish: "\u0130ki azot atomu aras\u0131nda \xFC\xE7l\xFC ba\u011F vard\u0131r;
+      bu g\xFC\xE7l\xFC ba\u011F azot gaz\u0131n\u0131 oda ko\u015Fullar\u0131nda
+      \xE7ok tepkimesiz k\u0131lar."
+    english: "\u0130ki azot atomu aras\u0131nda \xFC\xE7l\xFC ba\u011F vard\u0131r;
+      bu g\xFC\xE7l\xFC ba\u011F azot gaz\u0131n\u0131 oda ko\u015Fullar\u0131nda
+      \xE7ok tepkimesiz k\u0131lar."
+  - key: quiz.soru_28.explain
+    turkish: "Motor i\xE7indeki y\xFCksek s\u0131cakl\u0131kta havan\u0131n azotu
+      ve oksijeni birle\u015Fip azot monoksit verir; bu gaz havada y\xFCkseltgenerek
+      kirlili\u011Fe yol a\xE7ar."
+    english: "Motor i\xE7indeki y\xFCksek s\u0131cakl\u0131kta havan\u0131n azotu
+      ve oksijeni birle\u015Fip azot monoksit verir; bu gaz havada y\xFCkseltgenerek
+      kirlili\u011Fe yol a\xE7ar."
+  - key: quiz.soru_29.explain
+    turkish: "Karbonmonoksit hemoglobine oksijenden \xE7ok daha g\xFC\xE7l\xFC ba\u011Flan\u0131r;
+      kan oksijen ta\u015F\u0131yamaz h\xE2le gelir."
+    english: "Karbonmonoksit hemoglobine oksijenden \xE7ok daha g\xFC\xE7l\xFC ba\u011Flan\u0131r;
+      kan oksijen ta\u015F\u0131yamaz h\xE2le gelir."
+  - key: quiz.soru_3.explain
+    turkish: "\u0130ki ametal elektronlar\u0131n\u0131 ortakla\u015Fa kullan\u0131r.
+      Elektron al\u0131\u015Fveri\u015Fi olsayd\u0131 iyonik ba\u011F olu\u015Furdu."
+    english: "\u0130ki ametal elektronlar\u0131n\u0131 ortakla\u015Fa kullan\u0131r.
+      Elektron al\u0131\u015Fveri\u015Fi olsayd\u0131 iyonik ba\u011F olu\u015Furdu."
+  - key: quiz.soru_30.explain
+    turkish: "Oksijen yeterliyse karbondioksit, yetersizse zehirli karbonmonoksit
+      olu\u015Fur; sobal\u0131 ortamlar bu y\xFCzden havaland\u0131r\u0131l\u0131r."
+    english: "Oksijen yeterliyse karbondioksit, yetersizse zehirli karbonmonoksit
+      olu\u015Fur; sobal\u0131 ortamlar bu y\xFCzden havaland\u0131r\u0131l\u0131r."
+  - key: quiz.soru_31.explain
+    turkish: "Su molek\xFClleri aras\u0131ndaki hidrojen ba\u011Flar\u0131 g\xFC\xE7l\xFCd\xFCr;
+      onlar\u0131 koparmak i\xE7in y\xFCksek s\u0131cakl\u0131k gerekir."
+    english: "Su molek\xFClleri aras\u0131ndaki hidrojen ba\u011Flar\u0131 g\xFC\xE7l\xFCd\xFCr;
+      onlar\u0131 koparmak i\xE7in y\xFCksek s\u0131cakl\u0131k gerekir."
+  - key: quiz.soru_32.explain
+    turkish: "Her su molek\xFCl\xFCnde iki hidrojen, bir oksijen vard\u0131r; elektrolizde
+      gazlar da 2'ye 1 hacim oran\u0131nda \xE7\u0131kar."
+    english: "Her su molek\xFCl\xFCnde iki hidrojen, bir oksijen vard\u0131r; elektrolizde
+      gazlar da 2'ye 1 hacim oran\u0131nda \xE7\u0131kar."
+  - key: quiz.soru_33.explain
+    turkish: "Klor g\xFC\xE7l\xFC bir y\xFCkseltgendir; sudaki bakteri ve vir\xFCsleri
+      etkisiz h\xE2le getirdi\u011Fi i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
+    english: "Klor g\xFC\xE7l\xFC bir y\xFCkseltgendir; sudaki bakteri ve vir\xFCsleri
+      etkisiz h\xE2le getirdi\u011Fi i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
+  - key: quiz.soru_34.explain
+    turkish: "Sodyum nemle \u015Fiddetli tepkime verip hidrojen a\xE7\u0131\u011Fa
+      \xE7\u0131kar\u0131r; bu y\xFCzden havayla temas etmeyecek \u015Fekilde gazya\u011F\u0131nda
+      saklan\u0131r."
+    english: "Sodyum nemle \u015Fiddetli tepkime verip hidrojen a\xE7\u0131\u011Fa
+      \xE7\u0131kar\u0131r; bu y\xFCzden havayla temas etmeyecek \u015Fekilde gazya\u011F\u0131nda
+      saklan\u0131r."
+  - key: quiz.soru_35.explain
+    turkish: "\u0130kisi de yaln\u0131zca oksijen atomlar\u0131ndan olu\u015Fur ama
+      atom say\u0131lar\u0131 farkl\u0131d\u0131r; ayn\u0131 elementin bu t\xFCr
+      yap\u0131lar\u0131na allotrop denir."
+    english: "\u0130kisi de yaln\u0131zca oksijen atomlar\u0131ndan olu\u015Fur ama
+      atom say\u0131lar\u0131 farkl\u0131d\u0131r; ayn\u0131 elementin bu t\xFCr
+      yap\u0131lar\u0131na allotrop denir."
+  - key: quiz.soru_36.explain
+    turkish: "Kemik ve di\u015Fin sertli\u011Fini kalsiyum tuzlar\u0131 sa\u011Flar;
+      kalsiyum insan v\xFCcudunda en bol bulunan metaldir."
+    english: "Kemik ve di\u015Fin sertli\u011Fini kalsiyum tuzlar\u0131 sa\u011Flar;
+      kalsiyum insan v\xFCcudunda en bol bulunan metaldir."
+  - key: quiz.soru_4.explain
+    turkish: "C\u0131va oda s\u0131cakl\u0131\u011F\u0131nda s\u0131v\u0131 olan
+      tek metaldir; galyum yakla\u015F\u0131k 30 \xB0C'de erir, brom ise metal de\u011Fildir."
+    english: "C\u0131va oda s\u0131cakl\u0131\u011F\u0131nda s\u0131v\u0131 olan
+      tek metaldir; galyum yakla\u015F\u0131k 30 \xB0C'de erir, brom ise metal de\u011Fildir."
+  - key: quiz.soru_5.explain
+    turkish: "pH 7'nin \xFCst\xFC bazik demektir; 14'e yakla\u015Ft\u0131k\xE7a bazl\u0131k
+      artar, yani 13 kuvvetli bazd\u0131r."
+    english: "pH 7'nin \xFCst\xFC bazik demektir; 14'e yakla\u015Ft\u0131k\xE7a bazl\u0131k
+      artar, yani 13 kuvvetli bazd\u0131r."
+  - key: quiz.soru_6.explain
+    turkish: "Organik bile\u015Fikler karbon-hidrojen iskeletine dayan\u0131r; metan
+      (CH<sub>4</sub>) bunun en basit \xF6rne\u011Fidir."
+    english: "Organik bile\u015Fikler karbon-hidrojen iskeletine dayan\u0131r; metan
+      (CH<sub>4</sub>) bunun en basit \xF6rne\u011Fidir."
+  - key: quiz.soru_7.explain
+    turkish: "Elmasta her karbon d\xF6rt kom\u015Fusuna kovalent ba\u011Fl\u0131d\u0131r,
+      bu y\xFCzden \xE7ok serttir; grafitte katmanlar birbiri \xFCzerinde kayar."
+    english: "Elmasta her karbon d\xF6rt kom\u015Fusuna kovalent ba\u011Fl\u0131d\u0131r,
+      bu y\xFCzden \xE7ok serttir; grafitte katmanlar birbiri \xFCzerinde kayar."
+  - key: quiz.soru_8.explain
+    turkish: "Sirke, suda \xE7\xF6z\xFCnm\xFC\u015F asetik asittir; ek\u015Fi tat
+      asidin verdi\u011Fi H+ iyonlar\u0131ndan gelir."
+    english: "Sirke, suda \xE7\xF6z\xFCnm\xFC\u015F asetik asittir; ek\u015Fi tat
+      asidin verdi\u011Fi H+ iyonlar\u0131ndan gelir."
+  - key: quiz.soru_9.explain
+    turkish: "Kataliz\xF6r aktifle\u015Fme enerjisini d\xFC\u015F\xFCr\xFCr ve tepkimeden
+      de\u011Fi\u015Fmeden \xE7\u0131kar; inhibit\xF6r ise tepkimeyi yava\u015Flat\u0131r."
+    english: "Kataliz\xF6r aktifle\u015Fme enerjisini d\xFC\u015F\xFCr\xFCr ve tepkimeden
+      de\u011Fi\u015Fmeden \xE7\u0131kar; inhibit\xF6r ise tepkimeyi yava\u015Flat\u0131r."
   - key: quiz.wrong
     turkish: "<color=red>MAALESEF YANLI\u015E CEVAP!</color>\nLaboratuvar tamamen
       kilitlendi."

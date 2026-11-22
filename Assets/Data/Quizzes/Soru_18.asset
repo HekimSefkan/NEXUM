@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f261e93a975a0ad4f99ebed1e624a3cc, type: 3}
+  m_Name: Soru_18
+  m_EditorClassIdentifier: 
+  questionText: "Kire\xE7 ta\u015F\u0131 ve mermerin yap\u0131s\u0131ndaki ana bile\u015Fik
+    hangisidir?"
+  options:
+  - NaCl
+  - CaO
+  - CaCO<sub>3</sub>
+  - Fe<sub>2</sub>O<sub>3</sub>
+  correctAnswerIndex: 2
+  topic: "Bile\u015Fikler"
+  difficulty: 1
+  relatedCompound: CaCO3
