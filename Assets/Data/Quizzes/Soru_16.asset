@@ -16,9 +16,9 @@ MonoBehaviour:
     patlayarak yanar?"
   options:
   - CO<sub>2</sub>
-  - N
+  - N<sub>2</sub>
   - He
-  - H
+  - H<sub>2</sub>
   correctAnswerIndex: 3
   topic: Yanma
   difficulty: 1

@@ -67,7 +67,7 @@ public static class NexumQuizBank
         ["Soru_6"] = new Etiket("Organik kimya", 1, "CH4"),
         ["Soru_7"] = new Etiket("Allotropi", 2, "C"),
         ["Soru_8"] = new Etiket("Günlük kimya", 1, "CH3COOH"),
-        ["Soru_9"] = new Etiket("Tepkime hızı", 2, "Katalizör"),
+        ["Soru_9"] = new Etiket("Tepkime hızı", 2, ""),   // kavram sorusu: bileşiği yok
         ["Soru_10"] = new Etiket("Molekül geometrisi", 3, "H2O"),
         ["Soru_11"] = new Etiket("Tepkime türleri", 2, "Fe2O3"),
         ["Soru_12"] = new Etiket("Atomun yapısı", 1, "H"),
@@ -101,6 +101,38 @@ public static class NexumQuizBank
     {
         new Duzeltme("Soru_8", 0, "Siktik Asit", "Sitrik Asit"),
         new Duzeltme("Soru_12", 2, "Proten ve Nötron", "Proton ve Nötron"),
+
+        // Gazlar iki atomludur: tek harf yazımı kimyasal olarak yanlıştı
+        // (kullanıcı onayı, docs/QUIZ_REVIEW.md §5).
+        new Duzeltme("Soru_16", 1, "N", "N<sub>2</sub>"),
+        new Duzeltme("Soru_16", 3, "H", "H<sub>2</sub>"),
+    };
+
+    private struct GovdeDuzeltme
+    {
+        public string asset;
+        public string eski;
+        public string yeni;
+
+        public GovdeDuzeltme(string asset, string eski, string yeni)
+        {
+            this.asset = asset;
+            this.eski = eski;
+            this.yeni = yeni;
+        }
+    }
+
+    /// <summary>
+    /// Soru GÖVDESİ düzeltmeleri. Şık düzeltmeleriyle aynı kural: eski metin
+    /// birebir eşleşmezse hiçbir şey yazılmaz, hata raporlanır.
+    /// </summary>
+    private static readonly GovdeDuzeltme[] GovdeDuzeltmeleri =
+    {
+        // "kimyasal karışım" müfredatta olmayan bir terim (kullanıcı onayı,
+        // docs/QUIZ_REVIEW.md §5).
+        new GovdeDuzeltme("Soru_13",
+            "Aşağıdakilerden hangisi kimyasal bir karışım değildir?",
+            "Aşağıdakilerden hangisi bir karışım değildir?"),
     };
 
     /// <summary>1.5'te eklenen 20 soru. Oyundaki taş ve tariflere bağlı.</summary>
@@ -285,6 +317,27 @@ public static class NexumQuizBank
             }
 
             q.options[d.sik] = d.yeni;
+            EditorUtility.SetDirty(q);
+            if (!guncellenen.Contains(d.asset)) guncellenen.Add(d.asset);
+        }
+
+        // --- 3b) soru gövdeleri
+        foreach (GovdeDuzeltme d in GovdeDuzeltmeleri)
+        {
+            string yol = QuizDir + "/" + d.asset + ".asset";
+            ChemistryQuiz q = AssetDatabase.LoadAssetAtPath<ChemistryQuiz>(yol);
+            if (q == null) { hatalar.Add("gövde düzeltmesi uygulanamadı (soru yok): " + d.asset); continue; }
+
+            string simdiki = q.questionText != null ? q.questionText.Trim() : "";
+            if (simdiki == d.yeni) { dokunulmayan++; continue; }
+            if (simdiki != d.eski)
+            {
+                hatalar.Add($"gövde düzeltmesi eşleşmedi: {d.asset} = \"{simdiki}\" " +
+                            $"(beklenen \"{d.eski}\"); DOKUNULMADI");
+                continue;
+            }
+
+            q.questionText = d.yeni;
             EditorUtility.SetDirty(q);
             if (!guncellenen.Contains(d.asset)) guncellenen.Add(d.asset);
         }

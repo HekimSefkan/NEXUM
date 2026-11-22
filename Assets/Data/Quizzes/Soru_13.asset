@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f261e93a975a0ad4f99ebed1e624a3cc, type: 3}
   m_Name: Soru_13
   m_EditorClassIdentifier: 
-  questionText: "A\u015Fa\u011F\u0131dakilerden hangisi kimyasal bir kar\u0131\u015F\u0131m
+  questionText: "A\u015Fa\u011F\u0131dakilerden hangisi bir kar\u0131\u015F\u0131m
     de\u011Fildir?"
   options:
   - Hava

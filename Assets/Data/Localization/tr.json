@@ -420,7 +420,7 @@
         },
         {
             "key": "quiz.soru_11.explain",
-            "value": "Demir havadaki oksijenle yavaşça yükseltgenir; pas bir demir oksittir (Fe<sub>2</sub>O<sub>3</sub>)."
+            "value": "Paslanma için oksijen ve nem birlikte gerekir; oluşan pas sulu demir(III) oksittir."
         },
         {
             "key": "quiz.soru_12.explain",
@@ -464,11 +464,11 @@
         },
         {
             "key": "quiz.soru_21.explain",
-            "value": "Karbondioksit suda çözününce karbonik asit (H<sub>2</sub>CO<sub>3</sub>) oluşur; gazlı içeceklerin ekşiliği buradan gelir."
+            "value": "Karbondioksit suda çözününce karbonik asit (H<sub>2</sub>CO<sub>3</sub>) oluşur; gazlı içeceklerdeki hafif ekşi tadın bir kısmı buradan gelir."
         },
         {
             "key": "quiz.soru_22.explain",
-            "value": "Oksijen -2 değerlikli olduğundan iki demirin toplam yükü +6 olmalıdır; demir başına +3 düşer."
+            "value": "Oksijenin yükseltgenme basamağı -2'dir; üç oksijen -6 verince iki demirin toplamı +6 olmalıdır, yani demir başına +3 düşer."
         },
         {
             "key": "quiz.soru_23.explain",
@@ -512,7 +512,7 @@
         },
         {
             "key": "quiz.soru_32.explain",
-            "value": "Her su molekülünde iki hidrojen, bir oksijen vardır; elektrolizde gazlar da 2'ye 1 hacim oranında çıkar."
+            "value": "Dengeli denklemde 2H<sub>2</sub>O'dan 2H<sub>2</sub> ve 1O<sub>2</sub> oluşur; aynı sıcaklık ve basınçta gaz hacimleri mol sayısıyla orantılı olduğundan oran 2'ye 1'dir."
         },
         {
             "key": "quiz.soru_33.explain",

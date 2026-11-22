@@ -43,7 +43,7 @@ public static class QuizStrings
         ["quiz.soru_10.explain"] =
             "Oksijenin bağ yapmayan elektron çiftleri bağları iter; açı 104,5 dereceye düşer ve molekül açısal olur.",
         ["quiz.soru_11.explain"] =
-            "Demir havadaki oksijenle yavaşça yükseltgenir; pas bir demir oksittir (Fe<sub>2</sub>O<sub>3</sub>).",
+            "Paslanma için oksijen ve nem birlikte gerekir; oluşan pas sulu demir(III) oksittir.",
         ["quiz.soru_12.explain"] =
             "Çekirdekte proton ve nötron bulunur; elektronlar çekirdeğin çevresindeki katmanlarda yer alır.",
         ["quiz.soru_13.explain"] =
@@ -65,9 +65,9 @@ public static class QuizStrings
         ["quiz.soru_20.explain"] =
             "Kireç taşı ısıtılınca CaO ve CO<sub>2</sub>'ye ayrışır; kireç fırınları bu tepkimeyle çalışır.",
         ["quiz.soru_21.explain"] =
-            "Karbondioksit suda çözününce karbonik asit (H<sub>2</sub>CO<sub>3</sub>) oluşur; gazlı içeceklerin ekşiliği buradan gelir.",
+            "Karbondioksit suda çözününce karbonik asit (H<sub>2</sub>CO<sub>3</sub>) oluşur; gazlı içeceklerdeki hafif ekşi tadın bir kısmı buradan gelir.",
         ["quiz.soru_22.explain"] =
-            "Oksijen -2 değerlikli olduğundan iki demirin toplam yükü +6 olmalıdır; demir başına +3 düşer.",
+            "Oksijenin yükseltgenme basamağı -2'dir; üç oksijen -6 verince iki demirin toplamı +6 olmalıdır, yani demir başına +3 düşer.",
         ["quiz.soru_23.explain"] =
             "Katıda iyonlar örgüde sabittir; su içinde Na+ ve Cl- serbest kalıp yükü taşır ve çözelti iletken olur.",
         ["quiz.soru_24.explain"] =
@@ -87,7 +87,7 @@ public static class QuizStrings
         ["quiz.soru_31.explain"] =
             "Su molekülleri arasındaki hidrojen bağları güçlüdür; onları koparmak için yüksek sıcaklık gerekir.",
         ["quiz.soru_32.explain"] =
-            "Her su molekülünde iki hidrojen, bir oksijen vardır; elektrolizde gazlar da 2'ye 1 hacim oranında çıkar.",
+            "Dengeli denklemde 2H<sub>2</sub>O'dan 2H<sub>2</sub> ve 1O<sub>2</sub> oluşur; aynı sıcaklık ve basınçta gaz hacimleri mol sayısıyla orantılı olduğundan oran 2'ye 1'dir.",
         ["quiz.soru_33.explain"] =
             "Klor güçlü bir yükseltgendir; sudaki bakteri ve virüsleri etkisiz kıldığı için dezenfeksiyonda kullanılır.",
         ["quiz.soru_34.explain"] =

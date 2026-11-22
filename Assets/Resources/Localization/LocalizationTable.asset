@@ -406,10 +406,10 @@ MonoBehaviour:
       iter; a\xE7\u0131 104,5 dereceye d\xFC\u015Fer ve molek\xFCl a\xE7\u0131sal
       olur."
   - key: quiz.soru_11.explain
-    turkish: "Demir havadaki oksijenle yava\u015F\xE7a y\xFCkseltgenir; pas bir demir
-      oksittir (Fe<sub>2</sub>O<sub>3</sub>)."
-    english: "Demir havadaki oksijenle yava\u015F\xE7a y\xFCkseltgenir; pas bir demir
-      oksittir (Fe<sub>2</sub>O<sub>3</sub>)."
+    turkish: "Paslanma i\xE7in oksijen ve nem birlikte gerekir; olu\u015Fan pas sulu
+      demir(III) oksittir."
+    english: "Paslanma i\xE7in oksijen ve nem birlikte gerekir; olu\u015Fan pas sulu
+      demir(III) oksittir."
   - key: quiz.soru_12.explain
     turkish: "\xC7ekirdekte proton ve n\xF6tron bulunur; elektronlar \xE7ekirde\u011Fin
       \xE7evresindeki katmanlarda yer al\u0131r."
@@ -464,14 +464,18 @@ MonoBehaviour:
       ayr\u0131\u015F\u0131r; kire\xE7 f\u0131r\u0131nlar\u0131 bu tepkimeyle \xE7al\u0131\u015F\u0131r."
   - key: quiz.soru_21.explain
     turkish: "Karbondioksit suda \xE7\xF6z\xFCn\xFCnce karbonik asit (H<sub>2</sub>CO<sub>3</sub>)
-      olu\u015Fur; gazl\u0131 i\xE7eceklerin ek\u015Fili\u011Fi buradan gelir."
+      olu\u015Fur; gazl\u0131 i\xE7eceklerdeki hafif ek\u015Fi tad\u0131n bir k\u0131sm\u0131
+      buradan gelir."
     english: "Karbondioksit suda \xE7\xF6z\xFCn\xFCnce karbonik asit (H<sub>2</sub>CO<sub>3</sub>)
-      olu\u015Fur; gazl\u0131 i\xE7eceklerin ek\u015Fili\u011Fi buradan gelir."
+      olu\u015Fur; gazl\u0131 i\xE7eceklerdeki hafif ek\u015Fi tad\u0131n bir k\u0131sm\u0131
+      buradan gelir."
   - key: quiz.soru_22.explain
-    turkish: "Oksijen -2 de\u011Ferlikli oldu\u011Fundan iki demirin toplam y\xFCk\xFC
-      +6 olmal\u0131d\u0131r; demir ba\u015F\u0131na +3 d\xFC\u015Fer."
-    english: "Oksijen -2 de\u011Ferlikli oldu\u011Fundan iki demirin toplam y\xFCk\xFC
-      +6 olmal\u0131d\u0131r; demir ba\u015F\u0131na +3 d\xFC\u015Fer."
+    turkish: "Oksijenin y\xFCkseltgenme basama\u011F\u0131 -2'dir; \xFC\xE7 oksijen
+      -6 verince iki demirin toplam\u0131 +6 olmal\u0131d\u0131r, yani demir ba\u015F\u0131na
+      +3 d\xFC\u015Fer."
+    english: "Oksijenin y\xFCkseltgenme basama\u011F\u0131 -2'dir; \xFC\xE7 oksijen
+      -6 verince iki demirin toplam\u0131 +6 olmal\u0131d\u0131r, yani demir ba\u015F\u0131na
+      +3 d\xFC\u015Fer."
   - key: quiz.soru_23.explain
     turkish: "Kat\u0131da iyonlar \xF6rg\xFCde sabittir; su i\xE7inde Na+ ve Cl-
       serbest kal\u0131p y\xFCk\xFC ta\u015F\u0131r ve \xE7\xF6zelti iletken olur."
@@ -529,10 +533,12 @@ MonoBehaviour:
     english: "Su molek\xFClleri aras\u0131ndaki hidrojen ba\u011Flar\u0131 g\xFC\xE7l\xFCd\xFCr;
       onlar\u0131 koparmak i\xE7in y\xFCksek s\u0131cakl\u0131k gerekir."
   - key: quiz.soru_32.explain
-    turkish: "Her su molek\xFCl\xFCnde iki hidrojen, bir oksijen vard\u0131r; elektrolizde
-      gazlar da 2'ye 1 hacim oran\u0131nda \xE7\u0131kar."
-    english: "Her su molek\xFCl\xFCnde iki hidrojen, bir oksijen vard\u0131r; elektrolizde
-      gazlar da 2'ye 1 hacim oran\u0131nda \xE7\u0131kar."
+    turkish: "Dengeli denklemde 2H<sub>2</sub>O'dan 2H<sub>2</sub> ve 1O<sub>2</sub>
+      olu\u015Fur; ayn\u0131 s\u0131cakl\u0131k ve bas\u0131n\xE7ta gaz hacimleri
+      mol say\u0131s\u0131yla orant\u0131l\u0131 oldu\u011Fundan oran 2'ye 1'dir."
+    english: "Dengeli denklemde 2H<sub>2</sub>O'dan 2H<sub>2</sub> ve 1O<sub>2</sub>
+      olu\u015Fur; ayn\u0131 s\u0131cakl\u0131k ve bas\u0131n\xE7ta gaz hacimleri
+      mol say\u0131s\u0131yla orant\u0131l\u0131 oldu\u011Fundan oran 2'ye 1'dir."
   - key: quiz.soru_33.explain
     turkish: "Klor g\xFC\xE7l\xFC bir y\xFCkseltgendir; sudaki bakteri ve vir\xFCsleri
       etkisiz k\u0131ld\u0131\u011F\u0131 i\xE7in dezenfeksiyonda kullan\u0131l\u0131r."
