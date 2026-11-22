@@ -272,14 +272,79 @@ public class UIManager : MonoBehaviour
         }
 
         quizPanel.SetActive(true);
-        int randomIndex = Random.Range(0, allQuizzes.Count);
-        ChemistryQuiz selectedQuiz = allQuizzes[randomIndex];
+
+        // Seçim kuralı QuizSelector'da (yanlış cevap havuzu, oran tavanı,
+        // üst üste tekrar yasağı). Burada düz Random.Range YOKTUR.
+        ChemistryQuiz selectedQuiz = QuizSelector.Pick(allQuizzes);
+        if (selectedQuiz == null)
+        {
+            Debug.LogError("UIManager: quiz bankası boş, panel kapatılıyor");
+            quizPanel.SetActive(false);
+            return;
+        }
+
+        currentQuiz = selectedQuiz;
         questionTextUI.text = selectedQuiz.questionText;
         currentCorrectIndex = selectedQuiz.correctAnswerIndex;
         for (int i = 0; i < optionTexts.Length; i++) optionTexts[i].text = selectedQuiz.options[i];
     }
 
     public void CheckAnswer(int selectedIndex) { StartCoroutine(ProvideFeedbackRoutine(selectedIndex)); }
+
+    // --- Doğru cevap paneli: açıklama (1.5) ------------------------------
+    // Eski hâl: "DOĞRU CEVAP" yazısı 2 saniye durup kapanıyordu. Artık
+    // altında sorunun AÇIKLAMASI var (sözlükten, soru asset'inden türetilen
+    // anahtarla). 2 saniye 1-2 cümleyi okumaya yetmiyor; bu yüzden bekleme
+    // "en az 2 sn, dokununca kapanır, en çok 10 sn" oldu. Akış değişmedi:
+    // panel yine kendiliğinden kapanıp ApplyReviveBonus'a gidiyor.
+    private const float QuizWrongHold = 2f;        // yanlış cevap: eski süre
+    private const float QuizMinHold = 2f;          // dokunuş kabul edilmeden önce
+    private const float QuizMaxHold = 10f;         // dokunulmazsa kendiliğinden
+
+    private ChemistryQuiz currentQuiz;
+
+    /// <summary>Başlık + açıklama + "dokun" ipucu (hepsi sözlükten).</summary>
+    private static string BuildCorrectFeedback(ChemistryQuiz quiz)
+    {
+        string basligi = Loc.Get(CodeStrings.QuizCorrect);
+        if (quiz == null) return basligi;
+
+        string aciklama = Loc.Get(quiz.ExplanationKey);
+        return Loc.Format(CodeStrings.QuizCorrectExplained, basligi, aciklama,
+                          Loc.Get(CodeStrings.QuizContinueHint));
+    }
+
+    /// <summary>En az QuizMinHold bekler; sonra dokunuşu ya da QuizMaxHold'u.</summary>
+    private static System.Collections.IEnumerator ReadHold()
+    {
+        float gecen = 0f;
+        while (gecen < QuizMinHold)
+        {
+            gecen += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        while (gecen < QuizMaxHold && !DokunusVar())
+        {
+            gecen += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Ham girdi okunur: quiz paneli açıkken GameManager'ın girdisi zaten
+    /// kilitli (IsModalPanelOpen), yani bu dokunuş kaydırmaya dönüşmez.
+    /// </summary>
+    private static bool DokunusVar()
+    {
+        if (Input.GetMouseButtonDown(0)) return true;
+
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            if (Input.GetTouch(i).phase == TouchPhase.Began) return true;
+        }
+        return false;
+    }
 
     private System.Collections.IEnumerator ProvideFeedbackRoutine(int selectedIndex)
     {
@@ -295,7 +360,13 @@ public class UIManager : MonoBehaviour
         int totalAttempts = SaveService.Data.quizAttempts + 1;
         SaveService.Data.quizAttempts = totalAttempts;
 
-        if (selectedIndex == currentCorrectIndex)
+        bool dogru = selectedIndex == currentCorrectIndex;
+
+        // KESİNLEŞMİŞ cevap: yanlış cevap havuzu burada (ve yalnızca burada)
+        // değişir. Quiz cevabının geri alınması yok.
+        QuizSelector.RecordAnswer(currentQuiz, dogru);
+
+        if (dogru)
         {
             if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.quizCorrectClip);
             
@@ -303,8 +374,8 @@ public class UIManager : MonoBehaviour
             SaveService.Data.quizCorrect = totalCorrect;
             SaveService.SaveNow();
 
-            questionTextUI.text = Loc.Get(CodeStrings.QuizCorrect);
-            yield return new WaitForSeconds(2f); 
+            questionTextUI.text = BuildCorrectFeedback(currentQuiz);
+            yield return ReadHold();
             quizPanel.SetActive(false); 
             GridManager.Instance.ApplyReviveBonus(); 
         }
@@ -314,7 +385,7 @@ public class UIManager : MonoBehaviour
             SaveService.SaveNow(); 
             
             questionTextUI.text = Loc.Get(CodeStrings.QuizWrong);
-            yield return new WaitForSeconds(2f); 
+            yield return new WaitForSeconds(QuizWrongHold); 
             quizPanel.SetActive(false);
             ShowGameOver(); 
         }
