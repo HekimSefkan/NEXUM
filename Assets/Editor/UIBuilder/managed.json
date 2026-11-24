@@ -873,6 +873,186 @@
             "builder": "RecipeBook"
         },
         {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/DualRow",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/DualRow/DailyPuzzleCard",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/DualRow/DailyPuzzleCard/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/DualRow/LevelSelectCard",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/DualRow/LevelSelectCard/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/DualRow/LevelSelectCard/StatusText",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/HowToPlayButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/HowToPlayButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/MentorButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/MentorButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/SettingButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/SettingButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/SoundButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/IconStrip/SoundButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/InfoRow",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/InfoRow/EncyclopediaButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/InfoRow/EncyclopediaButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/InfoRow/RecipeBookButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/InfoRow/RecipeBookButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/InfoRow/RecipeBookButton/StatusText",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/Logo",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow/BoilingPointCard",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow/BoilingPointCard/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow/EndlessLabCard",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow/EndlessLabCard/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow/WeeklyExperimentCard",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ModeRow/WeeklyExperimentCard/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton/HeroStars",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton/HeroStars/Star0",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton/HeroStars/Star1",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton/HeroStars/Star2",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton/HeroStatusText",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/PlayButton/Label",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/PlayerNameText",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/ProfileButton",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/RankXpGroup",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/RankXpGroup/RankText",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/RankXpGroup/XpBar",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/StreakBadge",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/StreakBadge/StreakText",
+            "builder": "MenuHub"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/Logo",
             "builder": "MenuRole"
         },
@@ -883,6 +1063,10 @@
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/PlayButton/Label",
             "builder": "RecipeBook"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/ProfileButton",
+            "builder": "MenuHub"
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/ProfileButton/PortraitMask",

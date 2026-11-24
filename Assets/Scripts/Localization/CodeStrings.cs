@@ -71,6 +71,19 @@ public static class CodeStrings
     public const string MenuLevelSelect = "menu.level_select";
     public const string MenuComingSoon = "menu.coming_soon";
 
+    // --- Ana menü hub (1.7) ----------------------------------------------
+    // Durum satırları GERÇEK KAYITTAN gelir; sahte değer yok.
+    public const string HubHero = "hub.hero";
+    public const string HubHeroStatus = "hub.hero_status";
+    public const string HubLevelStatus = "hub.level_status";
+    public const string HubRecipeStatus = "hub.recipe_status";
+    public const string HubRecipeBook = "hub.recipe_book";
+    public const string HubEncyclopedia = "hub.encyclopedia";
+    public const string HubSettings = "hub.settings";
+    public const string HubHowToPlay = "hub.how_to_play";
+    public const string HubMentor = "hub.mentor";
+    public const string HubSound = "hub.sound";
+
     // --- Ansiklopedi -------------------------------------------------------
     public const string EncyclopediaSynthesis = "encyclopedia.synthesis";
     public const string EncyclopediaBasicElement = "encyclopedia.basic_element";
@@ -172,6 +185,16 @@ public static class CodeStrings
 
         [HudTipButton] = "İPUCU",
 
+        [HubHero] = "DENEYİ BAŞLAT",
+        [HubHeroStatus] = "Bölüm {0} · kaldığın yerden",
+        [HubLevelStatus] = "{0} / {1} açık",
+        [HubRecipeStatus] = "{0} / {1} tepkime",
+        [HubRecipeBook] = "TARİF DEFTERİ",
+        [HubEncyclopedia] = "ANSİKLOPEDİ",
+        [HubSettings] = "Ayarlar",
+        [HubHowToPlay] = "Nasıl Oynanır",
+        [HubMentor] = "Mentor",
+        [HubSound] = "Ses",
         [MenuBoilingPoint] = "KAYNAMA NOKTASI",
         [MenuBoilingPointStatus] = "En iyi: {0}/{1} doğru",
         [MenuDailyPuzzle] = "GÜNLÜK BULMACA",
