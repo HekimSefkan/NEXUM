@@ -30,7 +30,9 @@ public class MenuHubTests
     private static readonly Dictionary<string, string[]> BeklenenBaglar =
         new Dictionary<string, string[]>
     {
-        { "PlayButton",         new[] { "OpenLevelSelection" } },
+        // Kahraman kart artık haritayı AÇMIYOR, sıradaki bölümü başlatıyor
+        // (kullanıcı onayı, PR #30 eki). Harita Bölüm Seçimi kartında.
+        { "PlayButton",         new[] { "StartNextLevel" } },
         { "HowToPlayButton",    new[] { "OpenHowToPlay" } },
         { "EncyclopediaButton", new[] { "OpenEncyclopedia" } },
         { "RecipeBookButton",   new[] { "OpenRecipeBook" } },
@@ -246,6 +248,56 @@ public class MenuHubTests
         Assert.AreNotEqual(level, level2, "bölüm seçimi satırı kayıttan bağımsız");
         Assert.AreNotEqual(book, book2, "tarif defteri satırı kayıttan bağımsız");
         Assert.AreEqual("Otto", isim2);
+    }
+
+    // ------------------------------------------- kahraman kart hangi bölümü açar
+
+    /// <summary>
+    /// Kartın YAZDIĞI bölüm ile AÇTIĞI bölüm aynı olmalı. İkisi ayrı
+    /// hesaplansaydı sessizce ayrışırlardı: oyuncu "Bölüm 4" okur, Bölüm 3
+    /// açılır ve bunu kimse fark etmez.
+    /// </summary>
+    [UnityTest]
+    public IEnumerator KahramanKartYazdigiBolumuAciyor()
+    {
+        int bolumSayisi = Reflect.Call<int>("MenuHub", "LevelCount");
+        Assert.Greater(bolumSayisi, 1, "bölüm sayısı okunamadı");
+
+        List<string> dokum = new List<string>();
+
+        // Hiç oynamamış oyuncudan son bölüme kadar
+        foreach (int unlocked in new[] { 0, 1, 3, bolumSayisi - 1, bolumSayisi + 5 })
+        {
+            SaveService.Data.unlockedLevel = unlocked;
+            SaveService.Data.selectedLevel = -1;
+
+            Reflect.Call(hub, "Apply");
+            yield return null;
+
+            string yazan = Reflect.Get<TextMeshProUGUI>(hub, "heroStatusText").text;
+            int indeks = Reflect.Get<int>(hub, "NextLevelIndex");
+
+            // Kart neyi açıyor? LoadLevel sahne yüklüyor, bu yüzden
+            // selectedLevel'a yazdığı değer ölçülür.
+            SaveService.Data.selectedLevel = indeks;
+
+            int beklenen = Mathf.Clamp(unlocked, 0, bolumSayisi - 1);
+            dokum.Add($"unlockedLevel={unlocked} -> \"{yazan}\" indeks={indeks}");
+
+            Assert.AreEqual(beklenen, indeks,
+                $"unlockedLevel={unlocked} için açılacak bölüm yanlış");
+            StringAssert.Contains((indeks + 1).ToString(), yazan,
+                "kartın yazdığı bölüm ile açacağı bölüm ayrışmış");
+        }
+
+        foreach (string s in dokum) Debug.Log($"{Tag}_KAHRAMAN: {s}");
+
+        // Hiç oynamamış oyuncu: Bölüm 1
+        SaveService.Data.unlockedLevel = 0;
+        Reflect.Call(hub, "Apply");
+        yield return null;
+        Assert.AreEqual(0, Reflect.Get<int>(hub, "NextLevelIndex"),
+            "hiç oynamamış oyuncu için sıradaki bölüm 1 değil");
     }
 
     // ------------------------------------------------------------------ ses

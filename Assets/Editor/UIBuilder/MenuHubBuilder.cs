@@ -305,6 +305,33 @@ public static class MenuHubBuilder
             Button levelButton = levelCard != null ? levelCard.GetComponent<Button>() : null;
             if (menu != null && levelButton != null) Bagla(levelButton, menu, menu.OpenLevelSelection);
 
+            // KAHRAMAN KART: bölüm haritasını açmak yerine sıradaki bölümü
+            // doğrudan başlatır (kullanıcı onayı, PR #30 eki). Harita için
+            // ayrı kart var; ikisi aynı hedefe gidiyordu ve kart
+            // "kaldığın yerden" sözünü tutmuyordu.
+            Button heroButton = hero != null ? hero.GetComponent<Button>() : null;
+            if (hub != null && heroButton != null)
+            {
+                // b.Apply üzerinden: kalıcı çağrı listesi Button'ın
+                // serileştirilmiş hâlinin parçası, yani değişiklik
+                // "güncellendi" olarak sayılır ve sahne KAYDEDİLİR.
+                // Doğrudan çağrılsaydı kurucu 0 değişiklik raporlar,
+                // End() sahneyi kaydetmez ve düzeltme hiç diske inmezdi
+                // (1.7 negatif kontrolünde bu tuzağa düşüldü).
+                b.Apply(hero, heroButton, btn =>
+                {
+                    Degistir(btn, "OpenLevelSelection", hub, hub.StartNextLevel);
+
+                    // BackToMainMenu da düşer: panel geçiş döneminden kalma
+                    // ve artık GERÇEKTEN çalışıyor. Eskiden OpenLevelSelection
+                    // önce koşup IsSwitching'i kaldırdığı için engelleniyordu;
+                    // kahraman artık panel değiştirmiyor, sahne yüklüyor.
+                    // Sahne yüklenmeden hemen önce panel tween'i başlatmanın
+                    // anlamı yok.
+                    Sil(btn, "BackToMainMenu");
+                });
+            }
+
             Button soundButton = sound != null ? sound.GetComponent<Button>() : null;
             if (hub != null && soundButton != null) Bagla(soundButton, hub, hub.ToggleMute);
         }
@@ -608,6 +635,54 @@ public static class MenuHubBuilder
     private static TextMeshProUGUI Tmp(GameObject go)
     {
         return go != null ? go.GetComponent<TextMeshProUGUI>() : null;
+    }
+
+    /// <summary>
+    /// Var olan bir kalıcı çağrıyı BAŞKASIYLA değiştirir. Eski çağrı
+    /// kaldırılır, yenisi aynı yere eklenir; listenin geri kalanına
+    /// dokunulmaz.
+    ///
+    /// Not: <c>onClick.RemoveAllListeners()</c> burada İŞE YARAMAZ —
+    /// o yalnızca çalışma zamanı dinleyicilerini siler, sahneye kaydedilmiş
+    /// (persistent) çağrılara dokunmaz (1.7 negatif kontrolünde ölçüldü).
+    /// </summary>
+    private static void Degistir(Button button, string eskiMetot, Object yeniHedef,
+                                 UnityEngine.Events.UnityAction yeniAction)
+    {
+        bool zatenVar = false;
+        for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
+        {
+            if (button.onClick.GetPersistentTarget(i) == yeniHedef &&
+                button.onClick.GetPersistentMethodName(i) == yeniAction.Method.Name)
+            {
+                zatenVar = true;
+                break;
+            }
+        }
+
+        for (int i = button.onClick.GetPersistentEventCount() - 1; i >= 0; i--)
+        {
+            if (button.onClick.GetPersistentMethodName(i) != eskiMetot) continue;
+            UnityEditor.Events.UnityEventTools.RemovePersistentListener(button.onClick, i);
+        }
+
+        if (!zatenVar)
+        {
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(button.onClick, yeniAction);
+        }
+
+        // SetDirty YOK: çağrı b.Apply içinden geliyor, kirletmeyi ve
+        // dry-run'da geri almayı o yönetiyor.
+    }
+
+    /// <summary>Adı verilen kalıcı çağrıyı listeden çıkarır.</summary>
+    private static void Sil(Button button, string metot)
+    {
+        for (int i = button.onClick.GetPersistentEventCount() - 1; i >= 0; i--)
+        {
+            if (button.onClick.GetPersistentMethodName(i) != metot) continue;
+            UnityEditor.Events.UnityEventTools.RemovePersistentListener(button.onClick, i);
+        }
     }
 
     private static void Bagla(Button button, Object target, UnityEngine.Events.UnityAction action)

@@ -101,6 +101,48 @@ public class MenuHub : MonoBehaviour
         if (go != null && go.activeSelf != visible) go.SetActive(visible);
     }
 
+    // ----------------------------------------------------- sıradaki bölüm
+
+    /// <summary>
+    /// Oynanacak sıradaki bölümün indeksi: açık ve TAMAMLANMAMIŞ en yüksek
+    /// bölüm. Hepsi tamamlandıysa son bölüm.
+    ///
+    /// <c>unlockedLevel</c> zaten "şu an oynanacak bölüm" anlamında
+    /// tutuluyor (<c>LevelMenuManager</c> onu "güncel", altındakileri
+    /// "tamamlanmış", üstündekileri "kilitli" sayıyor), bu yüzden burada
+    /// yeni bir ilerleme kavramı UYDURULMUYOR; aynı alan bölüm sayısına
+    /// kırpılıyor.
+    ///
+    /// <b>TEK KAYNAK:</b> kahraman kartın alt satırındaki "Bölüm N" de,
+    /// karta basınca açılan bölüm de buradan gelir. Kart ne yazıyorsa onu
+    /// açar — ikisi ayrı hesaplansaydı sessizce ayrışabilirlerdi.
+    /// </summary>
+    public int NextLevelIndex
+    {
+        get
+        {
+            int bolumSayisi = LevelCount();
+            if (bolumSayisi <= 0) return 0;
+            return Mathf.Clamp(SaveService.Data.unlockedLevel, 0, bolumSayisi - 1);
+        }
+    }
+
+    /// <summary>
+    /// Kahraman kart: sıradaki bölümü DOĞRUDAN başlatır (bölüm haritasını
+    /// açmaz). Harita için ayrı bir kart var.
+    /// </summary>
+    public void StartNextLevel()
+    {
+        MainMenuManager menu = FindObjectOfType<MainMenuManager>();
+        if (menu == null)
+        {
+            Debug.LogError("MenuHub: MainMenuManager yok, bölüm başlatılamadı");
+            return;
+        }
+
+        menu.LoadLevel(NextLevelIndex);
+    }
+
     // --------------------------------------------------------- durum satırları
 
     private void ApplyStatus()
@@ -118,11 +160,8 @@ public class MenuHub : MonoBehaviour
 
         if (heroStatusText != null)
         {
-            // "kaldığın yer" = oynanabilir en ileri bölüm.
-            int bolum = bolumSayisi > 0
-                ? Mathf.Clamp(data.unlockedLevel, 0, bolumSayisi - 1) + 1
-                : 1;
-            heroStatusText.text = Loc.Format(CodeStrings.HubHeroStatus, bolum);
+            // Yazılan bölüm ile AÇILAN bölüm aynı kaynaktan (NextLevelIndex).
+            heroStatusText.text = Loc.Format(CodeStrings.HubHeroStatus, NextLevelIndex + 1);
         }
 
         if (levelSelectStatusText != null)

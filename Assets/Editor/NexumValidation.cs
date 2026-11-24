@@ -57,6 +57,7 @@ public static class NexumValidation
         "UIManager.RestartGame",
         "UIManager.GoToMainMenu",
         "UIManager.NextLevel",
+        "MenuHub.StartNextLevel",
     };
 
     // Resources altında kalmasına izin verilen (kod tarafından yüklenen) girdiler
