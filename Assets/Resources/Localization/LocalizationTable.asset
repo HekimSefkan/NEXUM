@@ -651,6 +651,51 @@ MonoBehaviour:
   - key: registration.no_mentor_chosen
     turkish: "<color=#ADB5BD>Mentor se\xE7ilmedi...</color>"
     english: "<color=#ADB5BD>Mentor se\xE7ilmedi...</color>"
+  - key: result.goal_amount
+    turkish: x{0}
+    english: x{0}
+  - key: result.goals_label
+    turkish: "\xDCRET\u0130LEN"
+    english: "\xDCRET\u0130LEN"
+  - key: result.level
+    turkish: "B\xD6L\xDCM {0} \xB7 {1}"
+    english: "B\xD6L\xDCM {0} \xB7 {1}"
+  - key: result.level_only
+    turkish: "B\xD6L\xDCM {0}"
+    english: "B\xD6L\xDCM {0}"
+  - key: result.menu
+    turkish: "ANA MEN\xDC"
+    english: "ANA MEN\xDC"
+  - key: result.more_reactions
+    turkish: +{0} tepkime daha
+    english: +{0} tepkime daha
+  - key: result.moves_label
+    turkish: HAMLE
+    english: HAMLE
+  - key: result.next
+    turkish: "SONRAK\u0130 B\xD6L\xDCM"
+    english: "SONRAK\u0130 B\xD6L\xDCM"
+  - key: result.no_reactions
+    turkish: "Bu b\xF6l\xFCmde yeni tepkime ke\u015Ffetmedin."
+    english: "Bu b\xF6l\xFCmde yeni tepkime ke\u015Ffetmedin."
+  - key: result.reactions_label
+    turkish: "YEN\u0130 TEPK\u0130MELER"
+    english: "YEN\u0130 TEPK\u0130MELER"
+  - key: result.restart
+    turkish: TEKRAR OYNA
+    english: TEKRAR OYNA
+  - key: result.score_label
+    turkish: KAZANILAN PUAN
+    english: KAZANILAN PUAN
+  - key: result.share
+    turkish: "PAYLA\u015E"
+    english: "PAYLA\u015E"
+  - key: share.subject
+    turkish: NEXUM
+    english: NEXUM
+  - key: share.text
+    turkish: "NEXUM laboratuvar\u0131nda bir b\xF6l\xFCm\xFC tamamlad\u0131m!"
+    english: "NEXUM laboratuvar\u0131nda bir b\xF6l\xFCm\xFC tamamlad\u0131m!"
   - key: system.matrix_reshuffled
     turkish: "MATR\u0130S YEN\u0130DEN D\xDCZENLEND\u0130"
     english: "MATR\u0130S YEN\u0130DEN D\xDCZENLEND\u0130"

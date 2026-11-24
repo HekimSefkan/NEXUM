@@ -41,6 +41,166 @@
             "builder": "Background"
         },
         {
+            "path": "Game::Canvas/LevelCompletePanel/MainMenuButton",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/NextLevelButton",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsLabel",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal0",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal0/AmountText",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal0/Icon",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal0/Icon/Symbol",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal1",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal1/AmountText",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal1/Icon",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal1/Icon/Symbol",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal2",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal2/AmountText",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal2/Icon",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/GoalsRow/Goal2/Icon/Symbol",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/LevelText",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/MainMenuButton",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/MainMenuButton/Text (TMP)",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/MovesBox",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/MovesBox/Label",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/MovesBox/Value",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/NextLevelButton",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/NextLevelButton/Text (TMP)",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ReactionsLabel",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ReactionsText",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/RestartButton",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/RestartButton/Label",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ScoreBox",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ScoreBox/Label",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ScoreBox/Value",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ShareButton",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ShareButton/Label",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarsRow",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarsRow/Star0",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarsRow/Star1",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarsRow/Star2",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/TitleText",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/TitleText",
+            "builder": "ResultCard"
+        },
+        {
             "path": "Game::Canvas/PausePanel",
             "builder": "RecipeBookPauseEntry"
         },

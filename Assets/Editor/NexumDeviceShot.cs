@@ -51,6 +51,10 @@ public static class NexumDeviceShot
         // duraklat kartı bilgi kartları kapalıyken de alınır.
         public int quiz;                  // 0 yok, 1 soru, 2 açıklamalı cevap
         public bool bilgiKartlariKapali;
+
+        // 1.6b: bölüm sonu sonuç kartı. 0 yok, 1 yeni tepkimeli bölüm,
+        // 2 yeni tepkime keşfedilmemiş bölüm (ikisi farklı metin gösterir).
+        public int sonucKarti;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -158,6 +162,22 @@ public static class NexumDeviceShot
                                    "AssistantPanel", "SafeAreaRoot/RecipeBookPanel" },
                     tahtayiDoldur = true },
 
+        new Ekran { ad = "sonuc-karti", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "LevelCompletePanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ElementDetailPanel" },
+                    tahtayiDoldur = true, sonucKarti = 1 },
+
+        new Ekran { ad = "sonuc-karti-tepkimesiz", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "LevelCompletePanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ElementDetailPanel" },
+                    tahtayiDoldur = true, sonucKarti = 2 },
+
         new Ekran { ad = "duraklat-bilgi-kapali", scene = "Assets/Scenes/Game.unity",
                     ac = new[] { "PausePanel" },
                     kapa = new[] { "QuizPanel", "GameOverPanel", "LevelCompletePanel",
@@ -189,6 +209,7 @@ public static class NexumDeviceShot
                 if (e.ansiklopediyiDoldur) AnsiklopediyiDoldur(canvasGo.transform);
                 if (e.geriBildirim) GeriBildirimiDoldur(canvasGo.transform);
                 if (e.quiz > 0) QuiziDoldur(canvasGo.transform, e.quiz == 2);
+                if (e.sonucKarti > 0) SonucKartiniDoldur(e.sonucKarti == 1);
                 BilgiKartiniAyarla(canvasGo.transform, e.bilgiKartlariKapali);
 
                 string yol = $"{OutDir}/{e.ad}_{boy.x}x{boy.y}.png";
@@ -360,6 +381,49 @@ public static class NexumDeviceShot
 
         Debug.Log($"{Tag}_QUIZ: cevap hâli -> {enUzun.name} " +
                   $"(açıklama {Loc.Get(enUzun.ExplanationKey).Length} krk)");
+    }
+
+    /// <summary>
+    /// Sonuç kartı: değerleri ÇALIŞMA ZAMANINDA doluyor, edit mode'da kart
+    /// boş görünürdü. Görüntü GERÇEK KOD YOLUNDAN üretilir —
+    /// <c>ResultCard.Fill</c> çağrılır, yalnızca girdileri (bölüm, sayaçlar)
+    /// burada kurulur. Böylece görüntü, oyuncunun göreceğinin ta kendisidir.
+    /// </summary>
+    public static void SonucKartiniDoldur(bool tepkimeli)
+    {
+        ResultCard card = Object.FindObjectOfType<ResultCard>(true);
+        if (card == null) { Debug.LogError($"{Tag}: ResultCard yok"); return; }
+
+        // Fill() LevelManager.Instance'ı okuyor; edit mode'da Awake koşmadığı
+        // için elle bağlanır.
+        LevelManager lm = Object.FindObjectOfType<LevelManager>(true);
+        if (lm == null) { Debug.LogError($"{Tag}: LevelManager yok"); return; }
+
+        LevelManager.Instance = lm;
+        lm.currentLevelIndex = Mathf.Clamp(2, 0, Mathf.Max(0, lm.levels.Count - 1));
+
+        LevelRun.Reset();
+        LevelRun.AddScore(1240);
+        for (int i = 0; i < 37; i++) LevelRun.CountMove();
+
+        if (tepkimeli)
+        {
+            RecipeCatalog catalog = RecipeCatalog.Load();
+            int eklenen = 0;
+            if (catalog != null)
+            {
+                foreach (RecipeCatalog.Entry entry in catalog.entries)
+                {
+                    if (entry == null || string.IsNullOrEmpty(entry.key)) continue;
+                    LevelRun.NoteDiscovery(entry.key);
+                    if (++eklenen >= 5) break;      // 4 satır + "+1 daha"
+                }
+            }
+        }
+
+        card.Fill();
+        Debug.Log($"{Tag}_SONUC: bölüm={lm.currentLevelIndex + 1} puan={LevelRun.EarnedScore} " +
+                  $"hamle={LevelRun.Moves} tepkime={LevelRun.NewRecipes.Count}");
     }
 
     /// <summary>
