@@ -107,3 +107,15 @@ de yanında getirir.
 
 Şık kutuları ve soru puntosu 1.5'te düzeltildi; panelin kendi zemini
 (`QuizPanel/Image`) hâlâ eski gri yüzey, kit `modal_normal`'a geçmedi.
+
+---
+
+## 1.6a: kurucu sapması kapatıldı
+
+1.5'te kayda geçen `RecipeBookBuilder` sapması çözüldü ve tarama bütün
+kurucuları kapsayacak şekilde kalıcı kapıya bağlandı
+(`NexumBuilderSweep` → `NexumValidation`). Dört kök sebep ve çözümleri
+PR "1.6a — kurucu sapması" açıklamasında.
+
+Bu turda **kurucuların görünür çıktısı değişmedi**: 34 cihaz görüntüsü
+öncesi/sonrası piksel piksel aynı (0 farklı piksel).

@@ -83,6 +83,31 @@ public class UIBuilder
         AssetDatabase.ImportAsset(RegistryPath);
     }
 
+    // --------------------------------------------------------------- tarama
+    // Kurucu sapması taraması (1.6): NexumBuilderSweep bütün kurucuları
+    // DRY-RUN koşturur ve her birinin kayıtlı sahneyi aynen üretip
+    // üretmediğine bakar. Rapor loga değil buraya yazılır; log ayrıştırmak
+    // kırılgan.
+    //
+    // Neden burada: her kurucu End() çağırıyor, yani tek nokta. Kurucuların
+    // kendisine dokunmadan hepsi taranabiliyor.
+
+    /// <summary>Tarama açıkken her <see cref="End"/> buraya bir satır yazar.</summary>
+    public static bool SweepActive;
+
+    public class SweepEntry
+    {
+        public string builder;
+        public string scene;
+        public List<string> created = new List<string>();
+        public List<string> updated = new List<string>();
+        public List<string> errors = new List<string>();
+
+        public int Changes { get { return created.Count + updated.Count; } }
+    }
+
+    public static readonly List<SweepEntry> SweepLog = new List<SweepEntry>();
+
     // ------------------------------------------------------------------ durum
 
     private readonly string builderName;
@@ -253,6 +278,26 @@ public class UIBuilder
     /// Bileşeni yapılandırır. Dry-run'da DEĞER YAZILMAZ: kopya üzerinde denenir
     /// ve yalnızca fark olup olmadığı raporlanır.
     /// </summary>
+    /// <summary>
+    /// Bileşeni yapılandırır, DEĞİŞTİ Mİ diye bakar, dry-run'da geri alır.
+    ///
+    /// <b>Neden <c>EditorJsonUtility</c>:</b> <c>JsonUtility</c> çekirdek
+    /// motor tiplerini (CanvasGroup, Canvas, Camera…) ne yazabiliyor ne
+    /// okuyabiliyor — "Engine types cannot be overwritten from JSON" diye
+    /// patlıyor. uGUI (Image, AspectRatioFitter) ve TMP yönetilen paketlerde
+    /// olduğu için sorun yalnızca motor tiplerinde çıkıyordu ve iki ayrı
+    /// biçimde görünüyordu:
+    ///
+    ///   1. Dry-run'da geri alma PATLIYORDU. <c>InvalidMergeBuilder</c> ilk
+    ///      satırında <c>CanvasGroup</c> kurduğu için hiç dry-run
+    ///      koşulamıyordu; sapma taraması o kurucuyu atlıyordu (1.6a).
+    ///   2. Değişiklik algısı YANLIŞTI. <c>Snapshot</c> JSON üretemeyince
+    ///      her çağrıda rastgele bir değer dönüyor, bileşen DEĞERLERİ AYNI
+    ///      KALSA BİLE "güncellendi" sayılıyordu — yani sahte sapma.
+    ///
+    /// <c>EditorJsonUtility</c> ikisini de doğru yapar; editör tarafında
+    /// olduğumuz için kullanılabilir.
+    /// </summary>
     public void Apply<T>(GameObject go, T component, Action<T> configure) where T : Component
     {
         if (component == null || configure == null) return;
@@ -269,26 +314,44 @@ public class UIBuilder
         }
 
         updated.Add(label);
-        if (dryRun)
-        {
-            // Değişikliği geri al: dry-run hiçbir şeyi değiştirmemeli
-            JsonUtility.FromJsonOverwrite(before, component);
-        }
-        else
+
+        if (!dryRun)
         {
             EditorUtility.SetDirty(component);
+            return;
+        }
+
+        // Dry-run hiçbir şeyi değiştirmemeli
+        try
+        {
+            EditorJsonUtility.FromJsonOverwrite(before, component);
+        }
+        catch (Exception e)
+        {
+            // SESSİZ KALMA: dry-run sahneyi kaydetmiyor, yani dosyaya bir şey
+            // sızmaz; ama bu bileşenin sonraki ölçümleri yanıltabilir.
+            Debug.LogWarning($"{Tag}: dry-run geri alınamadı -> {label}: {e.Message}");
         }
     }
 
+    /// <summary>
+    /// Bileşenin serileştirilmiş hâli. <c>EditorJsonUtility</c> motor
+    /// tiplerinde de çalışır; <c>JsonUtility</c> çalışmıyordu ve her
+    /// karşılaştırma "değişti" diyordu (bkz. <see cref="Apply"/>).
+    /// </summary>
     private static string Snapshot(Component component)
     {
         try
         {
-            return JsonUtility.ToJson(component);
+            return EditorJsonUtility.ToJson(component);
         }
-        catch
+        catch (Exception e)
         {
-            return Guid.NewGuid().ToString();   // karşılaştırılamıyorsa "değişti" say
+            // Burası artık beklenmiyor: sessizce "değişti" saymak sahte
+            // sapma üretiyordu, o yüzden duyurulur.
+            Debug.LogWarning($"{Tag}: anlık görüntü alınamadı " +
+                             $"({component.GetType().Name}): {e.Message}");
+            return Guid.NewGuid().ToString();
         }
     }
 
@@ -431,6 +494,18 @@ public class UIBuilder
             EditorSceneManager.SaveScene(scene);
             SaveRegistry(registry);
             AssetDatabase.SaveAssets();
+        }
+
+        if (SweepActive)
+        {
+            SweepLog.Add(new SweepEntry
+            {
+                builder = builderName,
+                scene = scenePath,
+                created = new List<string>(created),
+                updated = new List<string>(updated),
+                errors = new List<string>(errors),
+            });
         }
 
         string mode = dryRun ? "DRY-RUN" : "UYGULANDI";

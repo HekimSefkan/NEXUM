@@ -29,7 +29,32 @@ public static class BackgroundBuilder
 {
     private const string Tag = "NEXUM_ARKAPLAN";
 
-    private const string BackgroundPath = "Assets/Art/Backgrounds/nexum_background.png";
+    public const string BackgroundPath = "Assets/Art/Backgrounds/nexum_background.png";
+
+    // ------------------------------------------------- kurucular için kapı
+    // Arka plan görseli ve oranı BURADA tanımlıdır; başka kurucu kendi
+    // yolunu/oranını yazmaz. 3c/5'te tek arka plana geçilirken
+    // RecipeBookBuilder eski görseli yazmaya devam etmiş ve her koşuda
+    // zemini geri almıştı (1.6a).
+
+    /// <summary>Projedeki tek arka plan görseli.</summary>
+    public static Sprite ArkaPlanSprite
+    {
+        get { return AssetDatabase.LoadAssetAtPath<Sprite>(BackgroundPath); }
+    }
+
+    /// <summary>
+    /// AspectRatioFitter oranı. Sabit YAZILMAZ, görselden hesaplanır —
+    /// görsel değişirse oran kendiliğinden doğru kalır.
+    /// </summary>
+    public static float ArkaPlanOrani
+    {
+        get
+        {
+            Sprite s = ArkaPlanSprite;
+            return s != null ? s.rect.width / s.rect.height : 1f;
+        }
+    }
     private const string VignettePath = "Assets/Art/UI/bg_vignette.png";
     private const string GridPath = "Assets/Art/UI/bg_grid.png";
     private const string StripPath = "Assets/Art/UI/panel_md_normal.png";
