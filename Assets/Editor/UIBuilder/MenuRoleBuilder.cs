@@ -40,8 +40,21 @@ public static class MenuRoleBuilder
     private const string ScenePath = "Assets/Scenes/MainMenu.unity";
     private const string PanelPath = "Canvas/SafeAreaRoot/MainMenuPanel";
 
-    private const string PrimaryPath = "Assets/Art/UI/btn_primary_normal.png";
-    private const string SecondaryPath = "Assets/Art/UI/btn_secondary_normal.png";
+    public const string PrimaryPath = "Assets/Art/UI/btn_primary_normal.png";
+    public const string SecondaryPath = "Assets/Art/UI/btn_secondary_normal.png";
+
+    // ------------------------------------------------- kurucular için kapı
+    // Menü butonunun ROLÜ (birincil / ikincil) burada tanımlıdır. Başka bir
+    // kurucu menü butonu kurarken kendi sprite'ını seçmez, bunu sorar:
+    // RecipeBookBuilder beş butonun hepsine ikincil çerçeveyi yazıyor, bu
+    // kurucu sonra OYNA'yı birincile çeviriyordu; ikisi her koşuda birbirini
+    // geri alıyordu (1.6a).
+
+    /// <summary>Verilen menü butonunun çerçeve görseli (rolüne göre).</summary>
+    public static string CerceveYolu(string butonAdi)
+    {
+        return butonAdi == Primary ? PrimaryPath : SecondaryPath;
+    }
 
     /// <summary>Birincil eylem: tek.</summary>
     private const string Primary = "PlayButton";

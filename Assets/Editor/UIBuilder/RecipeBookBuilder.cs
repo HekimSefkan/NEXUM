@@ -133,22 +133,26 @@ public static class RecipeBookBuilder
         if (panel == null) { b.End(); return; }
         b.SetStretch(panel, UITokens.Zero, UITokens.One);
 
-        // --- zemin: ANA MENÜ ile aynı arka plan (tek kaynak, yeni görsel yok).
-        // AspectRatioFitter Envelope Parent: dolgu görseli gerilmez, kırpılır
-        // (CLAUDE.md "Arka planlar" kuralı).
+        // --- zemin: projedeki TEK arka plan. Görsel ve oran BURADA
+        // TANIMLANMAZ, BackgroundBuilder'dan gelir — 3c/5'te tek arka plana
+        // geçilirken sahne elle güncellenmiş, bu kurucu ise eski
+        // background_c_main.png'yi yazmaya devam ediyordu ve her koşuda
+        // zemini geri alıyordu (1.6a'da ölçüldü).
         GameObject backdrop = b.Ensure(PanelPath, "Backdrop");
         b.SetStretch(backdrop, UITokens.Zero, UITokens.One);
         b.EnsureComponent<Image>(backdrop, image =>
         {
-            image.sprite = LoadSprite(MenuBackgroundPath);
+            image.sprite = BackgroundBuilder.ArkaPlanSprite;
+            image.type = Image.Type.Simple;
             image.color = Color.white;
             image.preserveAspect = false;
             image.raycastTarget = true;     // arkadaki panele tıklama geçmesin
         });
         b.EnsureComponent<AspectRatioFitter>(backdrop, fitter =>
         {
+            fitter.enabled = true;
             fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            fitter.aspectRatio = MenuBackgroundAspect;
+            fitter.aspectRatio = BackgroundBuilder.ArkaPlanOrani;
         });
 
         // --- logo: Game sahnesindeki NEXUM logosunun aynısı, aynı üst bant
@@ -285,10 +289,15 @@ public static class RecipeBookBuilder
             // Keşfedilmemiş satırın kilidi; panel açılınca açılıp kapanır
             GameObject lockIcon = b.Ensure(ContentPath + "/Row" + i, "LockIcon");
             b.SetFixed(lockIcon, new Vector2(1f, 0.5f), LockSize, new Vector2(-LockSize.x, 0f));
+            // Simge AİLEDEN gelir (NexumIconBinder tek kaynak). Eskiden
+            // burada lock_icon.png + textSecondary tinti yazılıyor, simge
+            // bağlayıcı sonra icon_lock_normal + beyaza çeviriyordu; iki
+            // araç 21 satırı her koşuda ileri geri alıyordu (1.6a).
             b.EnsureComponent<Image>(lockIcon, image =>
             {
-                image.sprite = LoadSprite("Assets/Art/Figures/lock_icon.png");
-                image.color = theme.palette.textSecondary;
+                image.sprite = NexumIconBinder.SimgeEski("lock_icon");
+                image.type = Image.Type.Simple;
+                image.color = NexumIconBinder.SimgeTinti;
                 image.preserveAspect = true;
                 image.raycastTarget = false;
             });
@@ -299,8 +308,9 @@ public static class RecipeBookBuilder
         b.SetFixed(back, new Vector2(0.12f, 0.955f), new Vector2(120f, 120f));
         b.EnsureComponent<Image>(back, image =>
         {
-            image.sprite = LoadSprite("Assets/Art/Figures/geri.png");
-            image.color = theme.palette.textPrimary;
+            image.sprite = NexumIconBinder.SimgeYuva("BackButton");
+            image.type = Image.Type.Simple;
+            image.color = NexumIconBinder.SimgeTinti;
             image.preserveAspect = true;
         });
         b.EnsureComponent<Button>(back, button => button.transition = Selectable.Transition.ColorTint);
@@ -445,9 +455,12 @@ public static class RecipeBookBuilder
         Vector2 olcu = boyut == default(Vector2) ? MenuButtonSize : boyut;
         b.SetFixed(btn, UITokens.Center, olcu, new Vector2(0f, y));
 
+        // Çerçeve ROLDEN gelir (MenuRoleBuilder tek kaynak): OYNA birincil,
+        // diğer dördü ikincil. Burada hepsine ikincil yazılırsa rol kurucusu
+        // her koşuda OYNA'yı geri almak zorunda kalıyor (1.6a).
         b.EnsureComponent<Image>(btn, image =>
         {
-            image.sprite = LoadSprite(MenuButtonFramePath);
+            image.sprite = LoadSprite(MenuRoleBuilder.CerceveYolu(ad));
             image.type = Image.Type.Sliced;
             image.fillCenter = true;
             image.color = Color.white;

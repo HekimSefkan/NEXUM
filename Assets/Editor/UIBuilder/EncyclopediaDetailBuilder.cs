@@ -71,11 +71,15 @@ public static class EncyclopediaDetailBuilder
 
         GameObject close = b.Ensure(PanelPath, "CloseButton");
         b.SetFixed(close, UITokens.Center, CloseSize, new Vector2(359f, 625f));
+        // Simge AİLEDEN gelir (NexumIconBinder tek kaynak). Eskiden burada
+        // kendi kapatma görseli yazılıyor, simge bağlayıcı sonra
+        // icon_close_normal'a çeviriyordu; ikisi her koşuda birbirini geri
+        // alıyordu (1.6a).
         b.EnsureComponent<Image>(close, image =>
         {
-            image.sprite = LoadSprite(ClosePath);
+            image.sprite = NexumIconBinder.SimgeYuva("CloseButton");
             image.type = Image.Type.Simple;
-            image.color = Color.white;
+            image.color = NexumIconBinder.SimgeTinti;
             image.preserveAspect = true;
             image.raycastTarget = true;
         });

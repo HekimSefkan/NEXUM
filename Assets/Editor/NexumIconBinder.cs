@@ -283,6 +283,36 @@ public static class NexumIconBinder
         return t.parent != null && t.parent.GetComponent<Scrollbar>() != null;
     }
 
+    // ------------------------------------------------- kurucular için kapı
+    // Kurucular simgeyi KENDİ tablolarından değil buradan alır. Aksi hâlde
+    // sahne iki kaynaklı olur: kurucu eski rasteri (geri.png, lock_icon.png,
+    // x.png) yazar, bu araç sonra aile simgesine çevirir ve her kurucu
+    // koşusunda görünüm ileri geri gider (1.6a'da ölçüldü: 25 + 1 obje).
+
+    /// <summary>
+    /// Yuva adına göre aile simgesi ("BackButton" -> icon_back_normal).
+    /// Yuva tabloda yoksa null döner.
+    /// </summary>
+    public static Sprite SimgeYuva(string objeAdi)
+    {
+        return Slots.TryGetValue(objeAdi, out string ad) ? Yukle(ad) : null;
+    }
+
+    /// <summary>
+    /// Eski raster adına göre aile simgesi ("lock_icon" -> icon_lock_normal).
+    /// Tabloda yoksa null döner.
+    /// </summary>
+    public static Sprite SimgeEski(string eskiRasterAdi)
+    {
+        return Replace.TryGetValue(eskiRasterAdi, out string ad) ? Yukle(ad) : null;
+    }
+
+    /// <summary>
+    /// Aile simgesinin tint'i: kit kendi rengini taşır, üzerine renk
+    /// basılmaz. <see cref="Run"/> de aynı değeri yazıyor.
+    /// </summary>
+    public static Color SimgeTinti { get { return Color.white; } }
+
     private static Sprite Yukle(string ad)
     {
         Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>($"{IconDir}/{ad}_normal.png");
