@@ -127,7 +127,10 @@ public static class MenuHubBuilder
                                     new Vector2(-150f, 0f), theme.typography.label,
                                     theme.palette.textSecondary, TextAlignmentOptions.Left);
         GameObject xpBar = b.Ensure(RootPath + "/ProfileStrip/RankXpGroup", "XpBar");
-        b.SetFixed(xpBar, UITokens.Center, new Vector2(240f, 20f), new Vector2(60f, 0f));
+        // 20 birim yükseklik progress_fill_selected'ın 17+17 kenarlığına
+        // SIĞMIYOR: orta alan negatife düşüyor, 9-dilim çöküyor
+        // (SlicedCollapseTests ölçtü). 56 birimde orta alan 22.
+        b.SetFixed(xpBar, UITokens.Center, new Vector2(240f, 56f), new Vector2(60f, 0f));
         b.EnsureComponent<Image>(xpBar, i =>
         {
             i.sprite = LoadSprite(BarPath);
@@ -187,7 +190,8 @@ public static class MenuHubBuilder
         Yatay(b, dual, 24f);
 
         GameObject daily = Kart(b, theme, dual, "DailyPuzzleCard", CodeStrings.MenuDailyPuzzle, null);
-        Gizle(b, daily);
+        // Satır 920 geniş, iki kart + 24 aralık -> 448x230
+        Gizle(b, daily, new Vector2(448f, 230f));
 
         GameObject levelCard = Kart(b, theme, dual, "LevelSelectCard",
                                     CodeStrings.MenuLevelSelect, CodeStrings.HubLevelStatus);
@@ -208,7 +212,9 @@ public static class MenuHubBuilder
                                   CodeStrings.MenuEndlessLab, null, modEtiket, true);
         GameObject weekly = Kart(b, theme, modes, "WeeklyExperimentCard",
                                  CodeStrings.MenuWeeklyExperiment, null, modEtiket, true);
-        Gizle(b, boiling); Gizle(b, endless); Gizle(b, weekly);
+        // Üç kart + iki 20 aralık -> 293x180
+        Vector2 modOlcu = new Vector2(293f, 180f);
+        Gizle(b, boiling, modOlcu); Gizle(b, endless, modOlcu); Gizle(b, weekly, modOlcu);
         Gizle(b, modes);
 
         // --- 6) bilgi satırı: ansiklopedi + tarif defteri (eşit ağırlık)
@@ -263,7 +269,7 @@ public static class MenuHubBuilder
 
         GameObject mentor = b.Ensure(Yol(icons), "MentorButton");
         Simge(b, theme, mentor, icons, "icon_person", CodeStrings.HubMentor);
-        Gizle(b, mentor);
+        Gizle(b, mentor, IconSize);
 
         GameObject sound = b.Ensure(Yol(icons), "SoundButton");
         Simge(b, theme, sound, icons, "icon_sound_on", CodeStrings.HubSound);
@@ -516,13 +522,27 @@ public static class MenuHubBuilder
     /// tek karar yeri <c>MenuHub.Apply</c>; burada kapalı başlatılmasının
     /// nedeni, bayrak kapalıyken ilk karede görünüp kaybolmaması.
     /// </summary>
-    private static void Gizle(UIBuilder b, GameObject go)
+    private static void Gizle(UIBuilder b, GameObject go, Vector2 etkinOlcu = default)
     {
+        if (go == null) return;
+
         // ignoreLayout KURULMAZ: bayrak açılınca giriş layout akışına
         // girmeli. 1.7'de ignoreLayout kalınca üç mod kartı da açıldıkları
         // anda sıfır boyutta ekranın ortasında üst üste bindi (tüm
         // bayraklar açık görüntüsünde ölçüldü).
-        if (go != null && go.activeSelf) go.SetActive(false);
+
+        // Kapalı objeyi layout SÜRMEZ, yani rect'i oluşturulduğu hâlde
+        // (100x100) kalır. Dokunma hedefi taraması kapalı objeleri de
+        // ölçtüğü için bu "grafik çok küçük" diye rapor ediliyordu.
+        // Etkinleşince alacağı ölçü şimdiden yazılır; layout zaten üzerine
+        // yazacak, yani çakışma olmaz.
+        if (etkinOlcu != default(Vector2))
+        {
+            RectTransform rt = go.transform as RectTransform;
+            if (rt != null && rt.sizeDelta != etkinOlcu) rt.sizeDelta = etkinOlcu;
+        }
+
+        if (go.activeSelf) go.SetActive(false);
     }
 
     private static void Cerceve(UIBuilder b, GameObject go, string path)
