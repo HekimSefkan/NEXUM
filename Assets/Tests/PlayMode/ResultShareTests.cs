@@ -150,6 +150,62 @@ public class ResultShareTests
         Assert.IsEmpty(sizinti, "paylaşım görselinde kişisel veri: " + string.Join(" | ", sizinti));
     }
 
+    // ------------------------------------------------------- dayanıklılık
+
+    [UnityTest]
+    public IEnumerator PaylasimDuserseOyunCokmez()
+    {
+        var card = Object.FindObjectsOfType<MonoBehaviour>(true)
+            .FirstOrDefault(m => m != null && m.GetType().Name == "ResultCard");
+        Assert.IsNotNull(card, "ResultCard yok");
+
+        GameObject panel = card.transform.parent.gameObject;
+        panel.SetActive(true);
+        Reflect.Call(card, "Fill");
+        yield return null;
+
+        TextMeshProUGUI mesaj = Reflect.Get<TextMeshProUGUI>(card, "shareMessageText");
+        Assert.IsNotNull(mesaj, "shareMessageText bağlanmamış");
+        Assert.IsFalse(mesaj.gameObject.activeSelf, "mesaj satırı başta görünür durumda");
+
+        // Paylaşımı zorla düşür. Hata YAKALANMALI, dışarı sızmamalı.
+        Reflect.SetField("ResultShare", "ForceFailureForTests", true);
+        LogAssert.Expect(LogType.Warning,
+            new System.Text.RegularExpressions.Regex("paylaşım başarısız"));
+
+        string sonuc = null;
+        try
+        {
+            sonuc = Reflect.Call<string>("ResultShare", "Share", card);
+        }
+        catch (System.Exception e)
+        {
+            Assert.Fail("paylaşım hatası dışarı sızdı, oyun çökerdi: " + e.Message);
+        }
+        finally
+        {
+            Reflect.SetField("ResultShare", "ForceFailureForTests", false);
+        }
+
+        yield return null;
+
+        Debug.Log($"{Tag}: düşen paylaşım -> sonuc={(sonuc == null ? "null" : sonuc)} " +
+                  $"mesaj=\"{mesaj.text}\" kartAcik={panel.activeSelf}");
+
+        Assert.IsNull(sonuc, "başarısız paylaşım yol döndürdü");
+        Assert.IsTrue(panel.activeSelf, "paylaşım düşünce sonuç kartı kapandı");
+        Assert.IsTrue(mesaj.gameObject.activeSelf, "oyuncuya hiçbir şey gösterilmedi");
+        Assert.AreEqual(Loc.Get(CodeStrings.ShareFailed), mesaj.text,
+            "gösterilen metin sözlükten gelmiyor");
+
+        // Mesaj da sığmalı: tek satır, genişliğin %85'ini geçmemeli
+        float genislik = LayoutCheck.FillRatioWidth(mesaj, mesaj.text);
+        int satir = LayoutCheck.LineCount(mesaj, mesaj.text);
+        Debug.Log($"{Tag}: mesaj genişlik %{genislik * 100f:F0} satır={satir}");
+        Assert.LessOrEqual(genislik, LayoutCheck.MaxFillRatio, "hata mesajı kutusuna sığmıyor");
+        Assert.AreEqual(1, satir, "hata mesajı birden fazla satıra kırıldı");
+    }
+
     private static string Yol(Transform t)
     {
         string yol = t.name;

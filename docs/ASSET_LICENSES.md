@@ -23,8 +23,10 @@ MIT. Doğrulandı:
 - İlk satır: `MIT License`
 - Telif satırı: `Copyright (c) 2017 Süleyman Yasir KULA`
 
-Paketin içinde lisans dosyası GELMİYOR; metin yukarıdaki adresten
-doğrulandı ve bu kayıt onun yerine geçiyor.
+Paketin `.unitypackage`'i lisans dosyası GETİRMİYOR. Metin yukarıdaki
+adresten doğrulandı ve **depoya elle kondu**:
+`Assets/Plugins/NativeShare/LICENSE.txt`. Üst kaynak arşivlenmiş olduğu
+için lisansın yalnızca GitHub'da durması yeterli değil.
 
 ### Sürüm sabitleme
 - Etiket: **v1.5.5** (deponun en son sürümü)
@@ -34,7 +36,14 @@ doğrulandı ve bu kayıt onun yerine geçiyor.
 - Boyut: 38.912 bayt
 - SHA-256: `64db169d8c60a7c31f07c0a3c6bf13ea037421d4b497bc696070f3726ee42191`
 
-Paket depoya **açılmış hâliyle** girdi (`Assets/Plugins/NativeShare`);
+### Dış bağımlılık YOK (doğrulandı)
+Paket depoya **açılmış hâliyle** girdi (vendor): 10 kaynak dosyanın hepsi
+`Assets/Plugins/NativeShare` altında ve git'te izleniyor.
+`Packages/manifest.json` içinde NativeShare girdisi, git URL'si, yerel yol
+ya da `scopedRegistries` **yok** (41 bağımlılığın hepsi sürüm numaralı UPM
+paketi). Yani build hiçbir dış depoya bağlı değil; üst kaynak yarın
+kaybolsa da proje derlenir.
+
 `.unitypackage` dosyası depoda tutulmuyor. Yeniden indirilmesi gerekirse
 yukarıdaki adres ve özet değeri kullanılır.
 

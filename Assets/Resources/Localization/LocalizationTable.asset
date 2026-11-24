@@ -690,6 +690,9 @@ MonoBehaviour:
   - key: result.share
     turkish: "PAYLA\u015E"
     english: "PAYLA\u015E"
+  - key: share.failed
+    turkish: "Payla\u015F\u0131m a\xE7\u0131lamad\u0131. Daha sonra tekrar dene."
+    english: "Payla\u015F\u0131m a\xE7\u0131lamad\u0131. Daha sonra tekrar dene."
   - key: share.subject
     turkish: NEXUM
     english: NEXUM

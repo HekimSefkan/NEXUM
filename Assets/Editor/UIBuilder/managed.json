@@ -177,6 +177,10 @@
             "builder": "ResultCard"
         },
         {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/ShareMessage",
+            "builder": "ResultCard"
+        },
+        {
             "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarsRow",
             "builder": "ResultCard"
         },

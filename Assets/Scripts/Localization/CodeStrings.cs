@@ -110,6 +110,11 @@ public static class CodeStrings
     public const string ShareSubject = "share.subject";
     public const string ShareText = "share.text";
 
+    // Paylaşım başarısız olursa oyuncuya gösterilen satır. Teknik ayrıntı
+    // VERMEZ (paket adı, yığın izi); oyuncunun yapabileceği tek şey
+    // tekrar denemek.
+    public const string ShareFailed = "share.failed";
+
     // --- Quiz -------------------------------------------------------------
     public const string QuizCorrect = "quiz.correct";
     public const string QuizWrong = "quiz.wrong";
@@ -209,6 +214,7 @@ public static class CodeStrings
         [ResultMenu] = "ANA MENÜ",
         [ShareSubject] = "NEXUM",
         [ShareText] = "NEXUM laboratuvarında bir bölümü tamamladım!",
+        [ShareFailed] = "Paylaşım açılamadı. Daha sonra tekrar dene.",
 
         [QuizCorrect] = "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun!",
         [QuizWrong] = "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi.",

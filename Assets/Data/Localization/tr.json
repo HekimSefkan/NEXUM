@@ -679,6 +679,10 @@
             "value": "PAYLAŞ"
         },
         {
+            "key": "share.failed",
+            "value": "Paylaşım açılamadı. Daha sonra tekrar dene."
+        },
+        {
             "key": "share.subject",
             "value": "NEXUM"
         },

@@ -137,21 +137,60 @@ public static class ResultShare
     }
 
     /// <summary>
+    /// TEST KAPISI: paylaşım adımını zorla düşürür; oyun kodu ÇAĞIRMAZ.
+    /// Gerçek başarısızlık (paketin hata atması, cihazda paylaşım hedefi
+    /// olmaması) laboratuvarda üretilemiyor, bu yüzden dayanıklılık bu
+    /// kapıdan ölçülüyor — <c>SaveService.ImportRaw</c> ile aynı mantık.
+    /// </summary>
+    public static bool ForceFailureForTests;
+
+    /// <summary>
     /// Görseli üretir, diske yazar ve cihazın paylaşım menüsünü açar.
     /// Dönen değer dosya yolu; üretilemezse null.
+    ///
+    /// <b>ÇÖKMEZ.</b> Paylaşım üçüncü taraf bir pakete ve cihazın paylaşım
+    /// hedeflerine bağlı; ikisi de bizim denetimimizde değil ve paket
+    /// ARŞİVLENMİŞ (düzeltme gelmeyecek). Her türlü hata yakalanır,
+    /// oyuncuya kısa bir satır gösterilir ve <b>kart açık kalır</b> —
+    /// bölüm sonu ekranını kaybetmek, paylaşamamaktan çok daha kötü.
     /// </summary>
     public static string Share(ResultCard card)
     {
-        Texture2D png = Render();
-        if (png == null) return null;
+        Texture2D png = null;
+        try
+        {
+            if (ForceFailureForTests)
+            {
+                throw new System.InvalidOperationException("test: paylaşım zorla düşürüldü");
+            }
 
-        string yol = Save(png);
-        Object.Destroy(png);
+            png = Render();
+            if (png == null) return Basarisiz(card, "görsel üretilemedi");
 
-        if (string.IsNullOrEmpty(yol)) return null;
+            string yol = Save(png);
+            if (string.IsNullOrEmpty(yol)) return Basarisiz(card, "görsel diske yazılamadı");
 
-        Paylas(yol);
-        return yol;
+            Paylas(yol);
+            return yol;
+        }
+        catch (System.Exception e)
+        {
+            return Basarisiz(card, e.GetType().Name + ": " + e.Message);
+        }
+        finally
+        {
+            if (png != null) Object.Destroy(png);
+        }
+    }
+
+    /// <summary>
+    /// Oyuncuya kısa satır, log'a ayrıntı. Kart kapatılmaz.
+    /// </summary>
+    private static string Basarisiz(ResultCard card, string neden)
+    {
+        Debug.LogWarning($"{Tag}: paylaşım başarısız -> {neden}");
+        if (card != null) card.ShowMessage(Loc.Get(CodeStrings.ShareFailed));
+        return null;
     }
 
     /// <summary>
@@ -162,6 +201,9 @@ public static class ResultShare
 #if UNITY_EDITOR
         Debug.Log($"{Tag}: editörde paylaşım menüsü yok; görsel üretildi -> {yol}");
 #else
+        // Hata BURADA yakalanmaz: Share() sarmalıyor ve oyuncuya mesajı o
+        // gösteriyor. İki yerde yakalamak, hatanın sessizce yutulmasına
+        // ve oyuncunun hiçbir şey görmemesine yol açardı.
         new NativeShare()
             .AddFile(yol)
             .SetSubject(Loc.Get(CodeStrings.ShareSubject))

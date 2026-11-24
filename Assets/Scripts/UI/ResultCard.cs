@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -46,6 +47,13 @@ public class ResultCard : MonoBehaviour
     public GameObject nextLevelButton;
     public GameObject restartButton;
 
+    [Header("Paylaşım geri bildirimi")]
+    [Tooltip("Paylaşım açılamazsa gösterilen satır; normalde gizli.")]
+    public TextMeshProUGUI shareMessageText;
+
+    [Tooltip("Mesajın ekranda kalma süresi (saniye).")]
+    public float shareMessageSeconds = 3.5f;
+
     /// <summary>"Sonraki bölüm" gizlendiğinde "Tekrar oyna" buraya kayar.</summary>
     [Tooltip("Sonraki bölüm gizliyken Tekrar oyna'nın x konumu (0 = ortada).")]
     public float restartSoloX;
@@ -84,6 +92,9 @@ public class ResultCard : MonoBehaviour
 
         if (starsRow != null) starsRow.SetActive(starsEnabled);
 
+        // Eski paylaşım mesajı yeni kartta durmasın
+        if (shareMessageText != null) shareMessageText.gameObject.SetActive(false);
+
         // Son bölümde sonraki yok; tek kalan buton ortaya alınır ki kartta
         // boşluk kalmasın.
         bool sonBolum = count > 0 && index >= count - 1;
@@ -103,6 +114,43 @@ public class ResultCard : MonoBehaviour
                 rt.anchoredPosition = new Vector2(x, rt.anchoredPosition.y);
             }
         }
+    }
+
+    // ------------------------------------------------------ paylaşım mesajı
+
+    private Coroutine messageRoutine;
+
+    /// <summary>
+    /// Kartın üstünde kısa bir bilgi satırı gösterir. KART AÇIK KALIR —
+    /// paylaşım başarısız olduğunda oyuncu kartı kaybetmemeli, tekrar
+    /// deneyebilmeli.
+    ///
+    /// Sistem bildirimi bandı KULLANILAMAZ: o bant SafeAreaRoot altında ve
+    /// LevelCompletePanel ondan SONRA çiziliyor, yani mesaj kartın arkasında
+    /// kalırdı (sahne çocuk sırası ölçüldü).
+    /// </summary>
+    public void ShowMessage(string message)
+    {
+        if (shareMessageText == null) return;
+
+        shareMessageText.text = message;
+        shareMessageText.gameObject.SetActive(true);
+
+        if (messageRoutine != null) StopCoroutine(messageRoutine);
+        if (isActiveAndEnabled) messageRoutine = StartCoroutine(HideMessageAfterDelay());
+    }
+
+    private IEnumerator HideMessageAfterDelay()
+    {
+        float gecen = 0f;
+        while (gecen < shareMessageSeconds)
+        {
+            gecen += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (shareMessageText != null) shareMessageText.gameObject.SetActive(false);
+        messageRoutine = null;
     }
 
     // ----------------------------------------------------------- hedefler

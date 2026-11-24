@@ -63,6 +63,16 @@ public static class ResultCardBuilder
     private const float ButtonRow1Y = -430f;
     private const float ButtonRow2Y = -590f;
 
+    /// <summary>
+    /// Paylaşım hata satırı: buton satırlarının ALTINDA, kartın içinde.
+    /// Sistem bildirimi bandı kullanılamıyor — o bant SafeAreaRoot altında,
+    /// LevelCompletePanel ondan sonra çiziliyor, mesaj kartın arkasında
+    /// kalırdı (sahne çocuk sırası ölçüldü: SafeAreaRoot 1, kart 9).
+    /// Buton dokunma alanı -662'de bitiyor, kartın iç kenarı -750.
+    /// </summary>
+    private const float ShareMessageY = -700f;
+    private static readonly Vector2 ShareMessageSize = new Vector2(820f, 46f);
+
     private static readonly Vector2 ButtonSize = new Vector2(420f, 120f);
     private const float ButtonX = 225f;
 
@@ -232,6 +242,11 @@ public static class ResultCardBuilder
         if (menu != null) KurButon(b, theme, menu, new Vector2(ButtonX, ButtonRow2Y),
                                    CodeStrings.ResultMenu, MenuRoleBuilder.SecondaryPath);
 
+        // --- paylaşım hata satırı (normalde gizli)
+        GameObject shareMessage = Metin(b, theme, card, "ShareMessage", ShareMessageSize,
+                                        ShareMessageY, theme.typography.label,
+                                        theme.palette.warning);
+
         // --- denetleyici
         ResultCard controller = b.EnsureComponent<ResultCard>(card, rc =>
         {
@@ -248,6 +263,7 @@ public static class ResultCardBuilder
             rc.nextLevelButton = next;
             rc.restartButton = restart;
             rc.restartSoloX = 0f;
+            rc.shareMessageText = Tmp(shareMessage);
         });
 
         if (!dryRun)
@@ -265,6 +281,7 @@ public static class ResultCardBuilder
             }
 
             if (stars != null && stars.activeSelf) stars.SetActive(false);
+            if (shareMessage != null && shareMessage.activeSelf) shareMessage.SetActive(false);
         }
 
         b.End();
