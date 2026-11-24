@@ -1033,6 +1033,10 @@
             "builder": "MenuHub"
         },
         {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/ProfileButton/PortraitMask",
+            "builder": "MenuRole"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/RankXpGroup",
             "builder": "MenuHub"
         },
