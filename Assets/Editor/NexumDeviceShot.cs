@@ -131,6 +131,33 @@ public static class NexumDeviceShot
                                    "AssistantPanel" },
                     tahtayiDoldur = true },
 
+        // 1.6a: kurucu sapması düzeltilirken "görünür sonuç değişmedi"
+        // iddiası bu üç ekranın piksel karşılaştırmasıyla kanıtlanıyor.
+        // Sapan kurucuların dokunduğu her obje bu karelerde görünüyor:
+        // Backdrop + 21 LockIcon + BackButton (tarif defteri, iki sahne) ve
+        // CloseButton (ansiklopedi ayrıntı kartı, iki sahne).
+        new Ekran { ad = "tarif-defteri-oyun", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "SafeAreaRoot/RecipeBookPanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel", "LevelCompletePanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/ElementDetailPanel" },
+                    tahtayiDoldur = true },
+
+        new Ekran { ad = "ansiklopedi-detay", scene = "Assets/Scenes/MainMenu.unity",
+                    ac = new[] { "SafeAreaRoot/EncyclopediaPanel",
+                                 "SafeAreaRoot/EncyclopediaPanel/ElementDetailPanel" },
+                    kapa = new[] { "SafeAreaRoot/MainMenuPanel", "SafeAreaRoot/SettingsPanel",
+                                   "SafeAreaRoot/HowToPlayPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ProfilePanel", "SafeAreaRoot/LevelSelectionPanel" },
+                    ansiklopediyiDoldur = true },
+
+        new Ekran { ad = "ansiklopedi-detay-oyun", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "SafeAreaRoot/ElementDetailPanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel", "LevelCompletePanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/RecipeBookPanel" },
+                    tahtayiDoldur = true },
+
         new Ekran { ad = "duraklat-bilgi-kapali", scene = "Assets/Scenes/Game.unity",
                     ac = new[] { "PausePanel" },
                     kapa = new[] { "QuizPanel", "GameOverPanel", "LevelCompletePanel",

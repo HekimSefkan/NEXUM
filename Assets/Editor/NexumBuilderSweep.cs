@@ -80,8 +80,19 @@ public static class NexumBuilderSweep
                 }
                 catch (Exception e)
                 {
+                    // Yığın izi OLMADAN bu satır işe yaramaz: "patladı" bilgisi
+                    // hangi çağrıda patladığını söylemiyor (1.6a'da ölçüldü).
                     Exception ic = e.InnerException ?? e;
-                    sapanlar.Add($"{m.DeclaringType.Name}: koşarken patladı -> {ic.Message}");
+                    string iz = ic.StackTrace != null
+                        ? string.Join(" << ", ic.StackTrace
+                            .Split('\n')
+                            .Select(x => x.Trim())
+                            .Where(x => x.Length > 0)
+                            .Take(4))
+                        : "(yığın izi yok)";
+
+                    sapanlar.Add($"{m.DeclaringType.Name}: koşarken patladı -> " +
+                                 $"{ic.GetType().Name}: {ic.Message} || {iz}");
                     continue;
                 }
 
