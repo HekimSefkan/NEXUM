@@ -286,10 +286,14 @@ public static class ResultCardBuilder
             image.raycastTarget = false;
         });
 
+        // Etiket textPrimary: sayı kutusunun yüzeyi (panel_sm, #4C4F5A)
+        // kartın zemininden AÇIK, orada textSecondary 3,93:1'de kalıyordu
+        // (ContrastTests ölçtü). Beyazla 8:1'in üstünde. Hiyerarşi renkle
+        // değil punto ve konumla kuruluyor: etiket 30, değer 60 punto.
         GameObject label = b.Ensure(CardPath + "/" + ad, "Label");
         b.SetFixed(label, UITokens.Center, new Vector2(360f, 40f), new Vector2(0f, 44f));
         b.EnsureComponent<TextMeshProUGUI>(label, tmp => ApplyText(
-            tmp, theme, theme.typography.label, theme.palette.textSecondary));
+            tmp, theme, theme.typography.label, theme.palette.textPrimary));
         EnsureLocalized(b, label, locKey);
 
         // 60 punto değer 72 birimlik kutuya SIĞMIYOR: ölçüm %105 dedi
