@@ -155,6 +155,7 @@ public static class NexumValidation
         CheckTextureRules(warnings);
         CheckAndroidIcons(warnings);
         CheckReleaseReadiness(warnings);
+        CheckBuilderDrift(problems);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
         foreach (string warning in warnings) Debug.Log($"{WarnTag}: {warning}");
@@ -170,6 +171,43 @@ public static class NexumValidation
             Debug.Log($"{ResultTag}: FAIL {string.Join(" | ", problems)}");
             EditorApplication.Exit(1);
         }
+    }
+
+    /// <summary>
+    /// KURUCU SAPMASI (1.6a). Her UIBuilder kurucusu dry-run koşulur; depodaki
+    /// sahneyi AYNEN üretmeyen kurucu FAIL'dir.
+    ///
+    /// Neden FAIL, neden uyarı değil: sapan bir kurucu "zararsız" durmuyor —
+    /// onu çağıran herhangi bir iş, ilgisiz 25 objeyi de yanında getiriyor
+    /// (1.5'te yaşandı). Sapmanın bedeli onu bulan turun üstüne kalıyor.
+    ///
+    /// "İkinci koşu boş diff" ölçüsü bunu YAKALAMAZ: o yalnızca kurucunun
+    /// kendi çıktısıyla tutarlı olduğunu söyler. Buradaki ölçü daha sert —
+    /// İLK koşu da boş olmalı.
+    ///
+    /// Bu kontrol en SONA konur: kurucular sahne açıp kapatıyor, önceki
+    /// kontrollerin açtığı sahneyi bozmasın.
+    /// </summary>
+    private static void CheckBuilderDrift(List<string> problems)
+    {
+        List<string> sapanlar;
+        int kurucuSayisi;
+        List<string> dokum;
+
+        try
+        {
+            sapanlar = NexumBuilderSweep.Tara(out kurucuSayisi, out dokum);
+        }
+        catch (System.Exception e)
+        {
+            problems.Add($"Kurucu sapma taraması çalıştırılamadı: {e.Message}");
+            return;
+        }
+
+        foreach (string satir in dokum) Debug.Log($"{NexumBuilderSweep.Tag}_SATIR: {satir}");
+        Debug.Log($"{NexumBuilderSweep.Tag}: {kurucuSayisi} kurucu tarandı, sapan {sapanlar.Count}");
+
+        foreach (string s in sapanlar) problems.Add("Kurucu sapması -> " + s);
     }
 
     // Kontrol edilen kalıcı UnityEvent çağrısı sayısını döndürür
