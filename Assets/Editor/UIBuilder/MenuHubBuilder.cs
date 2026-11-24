@@ -162,17 +162,23 @@ public static class MenuHubBuilder
             GameObject heroLabel = DevralCocuk(b, hero, "Label");
             if (heroLabel != null)
             {
-                b.SetFixed(heroLabel, UITokens.Center, new Vector2(700f, 70f), new Vector2(-70f, 70f));
+                // 50 punto 70 birimlik kutuda %90 dolduruyordu (ölçüldü)
+                // Yıldızlar 130..430'u tutuyor; metin kutuları onlara
+                // giriyordu (ölçüldü: 1500 ve 7200 birim² çakışma).
+                // Kart 1000 geniş (-500..500). Yıldızlar sağda 220..460'ı
+                // tutuyor; metin kutuları 200'de bitiyor, 20 birim pay var.
+                // (Ölçüm: 570x-145 kutusu 140'a taşıp yıldızlara giriyordu.)
+                b.SetFixed(heroLabel, UITokens.Center, new Vector2(640f, 90f), new Vector2(-120f, 70f));
                 Yazi(b, theme, heroLabel, theme.typography.title, theme.palette.textPrimary,
                      TextAlignmentOptions.Left);
                 Yerellestir(b, heroLabel, CodeStrings.HubHero);
             }
 
-            heroStatus = Metin(b, theme, hero, "HeroStatusText", new Vector2(700f, 48f),
-                               new Vector2(-70f, -10f), theme.typography.body,
+            heroStatus = Metin(b, theme, hero, "HeroStatusText", new Vector2(640f, 48f),
+                               new Vector2(-120f, -10f), theme.typography.body,
                                theme.palette.primaryBright, TextAlignmentOptions.Left);
 
-            heroStars = Yildizlar(b, hero, "HeroStars", new Vector2(280f, -10f));
+            heroStars = Yildizlar(b, hero, "HeroStars", new Vector2(340f, -10f));
             Gizle(b, heroStars);
         }
 
@@ -193,13 +199,15 @@ public static class MenuHubBuilder
         // Üç kart 920'yi paylaşıyor: her biri ~293 geniş. Etiket kutusu
         // kartın içinde kalmalı, uzun adlar iki satıra kırılır
         // ("KAYNAMA NOKTASI" tek satırda kartı 380'de taşırıyordu).
-        Vector2 modEtiket = new Vector2(250f, 96f);
+        // 40 puntoda "HAFTANIN DENEYİ" iki satırda %146 dolduruyordu
+        // (ölçüldü). Mod kartlarının etiketi 30 punto, kutu 250x120.
+        Vector2 modEtiket = new Vector2(250f, 120f);
         GameObject boiling = Kart(b, theme, modes, "BoilingPointCard",
-                                  CodeStrings.MenuBoilingPoint, null, modEtiket);
+                                  CodeStrings.MenuBoilingPoint, null, modEtiket, true);
         GameObject endless = Kart(b, theme, modes, "EndlessLabCard",
-                                  CodeStrings.MenuEndlessLab, null, modEtiket);
+                                  CodeStrings.MenuEndlessLab, null, modEtiket, true);
         GameObject weekly = Kart(b, theme, modes, "WeeklyExperimentCard",
-                                 CodeStrings.MenuWeeklyExperiment, null, modEtiket);
+                                 CodeStrings.MenuWeeklyExperiment, null, modEtiket, true);
         Gizle(b, boiling); Gizle(b, endless); Gizle(b, weekly);
         Gizle(b, modes);
 
@@ -331,7 +339,8 @@ public static class MenuHubBuilder
 
     /// <summary>Başlık + (varsa) durum satırı taşıyan kart.</summary>
     private static GameObject Kart(UIBuilder b, NexumTheme theme, GameObject row, string ad,
-                                   string baslikKey, string durumKey, Vector2 etiketOlcusu = default)
+                                   string baslikKey, string durumKey, Vector2 etiketOlcusu = default,
+                                   bool kucukPunto = false)
     {
         if (row == null) return null;
 
@@ -347,8 +356,9 @@ public static class MenuHubBuilder
 
         GameObject label = b.Ensure(Yol(row) + "/" + ad, "Label");
         b.SetFixed(label, UITokens.Center, olcu, new Vector2(0f, durumVar ? 26f : 0f));
-        Yazi(b, theme, label, theme.typography.subtitle, theme.palette.textPrimary,
-             TextAlignmentOptions.Center);
+        Yazi(b, theme, label,
+             kucukPunto ? theme.typography.label : theme.typography.subtitle,
+             theme.palette.textPrimary, TextAlignmentOptions.Center);
         Yerellestir(b, label, baslikKey);
 
         if (durumVar)
@@ -395,11 +405,11 @@ public static class MenuHubBuilder
         GameObject row = b.Ensure(Yol(parent), ad);
         if (row == null) return null;
 
-        b.SetFixed(row, UITokens.Center, new Vector2(300f, 90f), pos);
+        b.SetFixed(row, UITokens.Center, new Vector2(240f, 90f), pos);
         for (int i = 0; i < 3; i++)
         {
             GameObject star = b.Ensure(Yol(parent) + "/" + ad, "Star" + i);
-            b.SetFixed(star, UITokens.Center, new Vector2(84f, 84f), new Vector2((i - 1) * 100f, 0f));
+            b.SetFixed(star, UITokens.Center, new Vector2(72f, 72f), new Vector2((i - 1) * 84f, 0f));
             b.EnsureComponent<Image>(star, img =>
             {
                 img.sprite = LoadSprite(StarEmptyPath);
