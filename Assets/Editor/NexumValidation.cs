@@ -156,6 +156,7 @@ public static class NexumValidation
         CheckAndroidIcons(warnings);
         CheckReleaseReadiness(warnings);
         CheckBuilderDrift(problems);
+        CheckTestGates(problems);
 
         foreach (string problem in problems) Debug.Log($"{IssueTag}: {problem}");
         foreach (string warning in warnings) Debug.Log($"{WarnTag}: {warning}");
@@ -171,6 +172,31 @@ public static class NexumValidation
             Debug.Log($"{ResultTag}: FAIL {string.Join(" | ", problems)}");
             EditorApplication.Exit(1);
         }
+    }
+
+    /// <summary>
+    /// TEST KAPILARI (1.7): kaydı ham yazan ve paylaşımı düşüren üyeler
+    /// yayın derlemesine girmemeli. Ayrıntı: <see cref="NexumTestGates"/>.
+    /// </summary>
+    private static void CheckTestGates(List<string> problems)
+    {
+        List<string> sorunlar;
+        List<string> dokum;
+
+        try
+        {
+            sorunlar = NexumTestGates.Denetle(out dokum);
+        }
+        catch (System.Exception e)
+        {
+            problems.Add($"Test kapısı denetimi çalıştırılamadı: {e.Message}");
+            return;
+        }
+
+        foreach (string satir in dokum) Debug.Log($"{NexumTestGates.Tag}_SATIR: {satir}");
+        Debug.Log($"{NexumTestGates.Tag}: sorun {sorunlar.Count}");
+
+        foreach (string s in sorunlar) problems.Add("Test kapısı -> " + s);
     }
 
     /// <summary>

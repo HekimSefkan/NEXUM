@@ -163,6 +163,23 @@ Set-Location "C:\Projects\NEXUM"; python Tools\generate_icons.py
 & "C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -nographics -quit -projectPath "C:\Projects\NEXUM" -executeMethod NexumIconSetup.Apply -logFile "C:\Projects\NEXUM\Logs\icons.log" | Out-Null
 ```
 
+## 6. Oyun içi "Açık kaynak lisansları" bölümü
+
+Yayından önce oyunun içinde (Ayarlar altında) bir **Açık kaynak
+lisansları** bölümü bulunmalı. `docs/ASSET_LICENSES.md`'deki **tüm**
+girdiler orada listelenecek:
+
+- **NativeShare** (yasirkula) — MIT
+- **Oxanium**, **Orbitron** — SIL Open Font License (OFL)
+- **LiberationSans** (TMP varsayılanı) — SIL Open Font License (OFL)
+- **DOTween** (Demigiant) — kendi lisansı
+
+Kural: `ASSET_LICENSES.md`'ye yeni bir girdi eklendiğinde oyun içindeki
+liste de güncellenir; iki yerin ayrışmaması için liste tek kaynaktan
+üretilmeli.
+
+---
+
 ## ⚠️ Varlık lisansı — kapatılmadan yayın yok
 
 `Assets/Art/Figures/hint_assistant.png` Vecteezy kaynaklı (varlık no

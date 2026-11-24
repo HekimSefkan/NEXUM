@@ -142,7 +142,15 @@ public static class ResultShare
     /// olmaması) laboratuvarda üretilemiyor, bu yüzden dayanıklılık bu
     /// kapıdan ölçülüyor — <c>SaveService.ImportRaw</c> ile aynı mantık.
     /// </summary>
+    // Yalnızca EDİTÖRDE var. UNITY_INCLUDE_TESTS kapı sembolü olarak
+    // KULLANILMAZ: bu projenin player derlemelerinde de tanımlı (ölçüldü,
+    // NexumTestGates). PlayMode testleri editörde koşuyor.
+#if UNITY_EDITOR
     public static bool ForceFailureForTests;
+#else
+    // Yayın derlemesinde bayrak YOK: sabit false, derleyici dalı atar.
+    private const bool ForceFailureForTests = false;
+#endif
 
     /// <summary>
     /// Görseli üretir, diske yazar ve cihazın paylaşım menüsünü açar.

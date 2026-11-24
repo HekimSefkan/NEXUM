@@ -184,6 +184,17 @@ public static class SaveService
     // sürüm kaydı yazması ve testin kendi yedeğini alması gerektiği için ham
     // okuma/yazma da buradan sunulur; oyun kodu bunları ÇAĞIRMAZ.
 
+    // YAYINA GİRMEZ: bu iki üye yalnızca EDİTÖRDE derlenir. Oyuncunun
+    // elindeki pakette kayıt dosyasını ham hâliyle okuyup yazan bir kapı
+    // BULUNMAZ — testlerin kolaylığı, yayındaki saldırı yüzeyine
+    // dönüşmemeli.
+    //
+    // Neden yalnızca UNITY_EDITOR: UNITY_INCLUDE_TESTS bu projenin PLAYER
+    // derlemelerinde de TANIMLI (ölçüldü, NexumTestGates). Onu kapı
+    // sembolü saymak koruma görüntüsü verip hiçbir şeyi kapatmazdı.
+    // PlayMode testleri editörde koştuğu için UNITY_EDITOR testlere yetiyor.
+#if UNITY_EDITOR
+
     /// <summary>Diskteki ham JSON (yedekleme için). Kayıt yoksa boş dizi.</summary>
     public static string ExportRaw()
     {
@@ -203,6 +214,8 @@ public static class SaveService
         PlayerPrefs.Save();
         Unload();
     }
+
+#endif   // UNITY_EDITOR
 
     /// <summary>Test ve "ilerlemeyi sıfırla" için: bellekteki kaydı unut.</summary>
     public static void Unload()
