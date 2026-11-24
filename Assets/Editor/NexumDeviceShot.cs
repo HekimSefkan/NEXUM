@@ -218,8 +218,39 @@ public static class NexumDeviceShot
         }
 
         TahtaKesiti();
+        PaylasimGorseli();
         Debug.Log($"{Tag}: {alinan} görüntü -> {OutDir}");
         Debug.Log($"{Tag}: OK");
+    }
+
+    /// <summary>
+    /// PAYLAŞIM GÖRSELİ (1.6b): oyuncunun paylaşacağı dosyanın ta kendisi.
+    ///
+    /// Ayrı bir çizim yolu DEĞİL — <c>ResultShare.Render</c> çağrılır, yani
+    /// PR'a eklenen görsel ile cihazda üretilen görsel aynı koddan çıkar.
+    /// Kart edit mode'da <see cref="SonucKartiniDoldur"/> ile gerçek
+    /// değerlerle dolduruluyor.
+    /// </summary>
+    private static void PaylasimGorseli()
+    {
+        Scene scene = EditorSceneManager.OpenScene("Assets/Scenes/Game.unity", OpenSceneMode.Single);
+        GameObject canvasGo = scene.GetRootGameObjects().FirstOrDefault(g => g.name == "Canvas");
+        if (canvasGo == null) { Debug.LogError($"{Tag}: Canvas yok"); return; }
+
+        Ekran e = Ekranlar.First(x => x.ad == "sonuc-karti");
+        Hazirla(canvasGo.transform, e);
+        TahtayiDoldur(scene);
+        HedefleriDoldur();
+        SonucKartiniDoldur(true);
+
+        Texture2D png = ResultShare.Render();
+        if (png == null) { Debug.LogError($"{Tag}: paylaşım görseli üretilemedi"); return; }
+
+        string yol = $"{OutDir}/paylasim_{png.width}x{png.height}.png";
+        File.WriteAllBytes(yol, png.EncodeToPNG());
+        Object.DestroyImmediate(png);
+
+        Debug.Log($"{Tag}: {yol}  {ResultShare.Width}x{ResultShare.Height} (ResultShare.Render)");
     }
 
     /// <summary>
