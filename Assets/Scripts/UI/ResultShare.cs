@@ -98,12 +98,16 @@ public static class ResultShare
             canvas.worldCamera = eskiKamera;
             canvas.planeDistance = eskiMesafe;
 
+            // SIRA ÖNEMLİ: kameraya bağlıyken serbest bırakmak Unity'de
+            // hata logluyor ("Releasing render texture that is set as
+            // Camera.targetTexture"). Önce kamera gider, sonra doku.
+            Object.DestroyImmediate(kameraGo);
+
             if (rt != null)
             {
                 rt.Release();
                 Object.DestroyImmediate(rt);
             }
-            Object.DestroyImmediate(kameraGo);
         }
 
         return png;

@@ -43,11 +43,11 @@ public class ResultCardTests
         yield return null;
         yield return new WaitForSeconds(0.5f);
 
-        ui = Object.FindObjectsOfType<MonoBehaviour>()
+        ui = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "UIManager");
         Assert.IsNotNull(ui, "UIManager yok");
 
-        card = Object.FindObjectsOfType<MonoBehaviour>()
+        card = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "ResultCard");
         Assert.IsNotNull(card, "ResultCard sahnede yok (ResultCardBuilder koşuldu mu?)");
         cardGo = ((MonoBehaviour)card).gameObject;
@@ -95,11 +95,11 @@ public class ResultCardTests
     [UnityTest]
     public IEnumerator SkorKazanilanPuandirKalanDegil()
     {
-        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "GameManager");
         Assert.IsNotNull(gm, "GameManager yok");
 
-        Reflect.Call<int>("LevelRun", "Reset");
+        Reflect.Call("LevelRun", "Reset");
         Reflect.Call(gm, "AddScore", 500);
         Reflect.Call(gm, "AddScore", 300);
 
@@ -123,20 +123,20 @@ public class ResultCardTests
     [UnityTest]
     public IEnumerator GeriAlmaKartiSisirmez()
     {
-        var grid = Object.FindObjectsOfType<MonoBehaviour>()
+        var grid = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "GridManager");
         Assert.IsNotNull(grid, "GridManager yok");
 
-        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>()
+        MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "GameManager");
 
-        Reflect.Call<int>("LevelRun", "Reset");
+        Reflect.Call("LevelRun", "Reset");
 
         // Dört kaydırma: her biri anlık görüntü alır. Sonra hepsini geri al.
         List<string> iz = new List<string>();
         for (int i = 0; i < 4; i++)
         {
-            Reflect.Call(grid, "Shift", Vector2Int.up);
+            Reflect.Call(grid, "Shift", Vector2.up);
             yield return new WaitForSeconds(0.35f);
             iz.Add($"{Reflect.Prop<int>("LevelRun", "EarnedScore")}/{Reflect.Prop<int>("LevelRun", "Moves")}");
         }
@@ -172,7 +172,7 @@ public class ResultCardTests
     [UnityTest]
     public IEnumerator YeniTepkimeSayisiDogru()
     {
-        Reflect.Call<int>("LevelRun", "Reset");
+        Reflect.Call("LevelRun", "Reset");
 
         object catalog = Reflect.Call("RecipeCatalog", "Load");
         Assert.IsNotNull(catalog, "RecipeCatalog yok");
@@ -184,9 +184,9 @@ public class ResultCardTests
         string a = Reflect.Get<string>(entries[0], "key");
         string bKey = Reflect.Get<string>(entries[1], "key");
 
-        Reflect.Call<int>("LevelRun", "NoteDiscovery", a);
-        Reflect.Call<int>("LevelRun", "NoteDiscovery", bKey);
-        Reflect.Call<int>("LevelRun", "NoteDiscovery", a);   // yineleme
+        Reflect.Call("LevelRun", "NoteDiscovery", a);
+        Reflect.Call("LevelRun", "NoteDiscovery", bKey);
+        Reflect.Call("LevelRun", "NoteDiscovery", a);   // yineleme
 
         var liste = Reflect.Prop("LevelRun", "NewRecipes") as IEnumerable;
         int sayi = liste.Cast<object>().Count();
@@ -207,7 +207,7 @@ public class ResultCardTests
     [UnityTest]
     public IEnumerator TepkimeYokkenAciklayiciMetin()
     {
-        Reflect.Call<int>("LevelRun", "Reset");
+        Reflect.Call("LevelRun", "Reset");
         Reflect.Call(card, "Fill");
         yield return null;
 
@@ -222,7 +222,7 @@ public class ResultCardTests
     [UnityTest]
     public IEnumerator SonBolumdeSonrakiButonuYok()
     {
-        var lm = Object.FindObjectsOfType<MonoBehaviour>()
+        var lm = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "LevelManager");
         Assert.IsNotNull(lm, "LevelManager yok");
 

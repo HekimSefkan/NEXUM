@@ -292,8 +292,10 @@ public static class ResultCardBuilder
             tmp, theme, theme.typography.label, theme.palette.textSecondary));
         EnsureLocalized(b, label, locKey);
 
+        // 60 punto değer 72 birimlik kutuya SIĞMIYOR: ölçüm %105 dedi
+        // (ResultCardFitTests). Kutu 92'ye çıkarıldı -> %82.
         valueObject = b.Ensure(CardPath + "/" + ad, "Value");
-        b.SetFixed(valueObject, UITokens.Center, new Vector2(360f, 72f), new Vector2(0f, -28f));
+        b.SetFixed(valueObject, UITokens.Center, new Vector2(360f, 92f), new Vector2(0f, -26f));
         b.EnsureComponent<TextMeshProUGUI>(valueObject, tmp => ApplyText(
             tmp, theme, theme.typography.value, theme.palette.primaryBright));
     }
