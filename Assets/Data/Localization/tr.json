@@ -627,6 +627,70 @@
             "value": "<color=#ADB5BD>Mentor seçilmedi...</color>"
         },
         {
+            "key": "result.goal_amount",
+            "value": "x{0}"
+        },
+        {
+            "key": "result.goals_label",
+            "value": "ÜRETİLEN"
+        },
+        {
+            "key": "result.level",
+            "value": "BÖLÜM {0} · {1}"
+        },
+        {
+            "key": "result.level_only",
+            "value": "BÖLÜM {0}"
+        },
+        {
+            "key": "result.menu",
+            "value": "ANA MENÜ"
+        },
+        {
+            "key": "result.more_reactions",
+            "value": "+{0} tepkime daha"
+        },
+        {
+            "key": "result.moves_label",
+            "value": "HAMLE"
+        },
+        {
+            "key": "result.next",
+            "value": "SONRAKİ BÖLÜM"
+        },
+        {
+            "key": "result.no_reactions",
+            "value": "Bu bölümde yeni tepkime keşfetmedin."
+        },
+        {
+            "key": "result.reactions_label",
+            "value": "YENİ TEPKİMELER"
+        },
+        {
+            "key": "result.restart",
+            "value": "TEKRAR OYNA"
+        },
+        {
+            "key": "result.score_label",
+            "value": "KAZANILAN PUAN"
+        },
+        {
+            "key": "result.share",
+            "value": "PAYLAŞ"
+        },
+        {
+            "key": "share.failed",
+            "value": "Paylaşım açılamadı. Daha sonra tekrar dene."
+        },
+        {
+            "key": "share.subject",
+            "value": "NEXUM"
+        },
+        {
+            "key": "share.text",
+            "value": "NEXUM laboratuvarında bir bölümü tamamladım!"
+        },
+        {
             "key": "system.matrix_reshuffled",
             "value": "MATRİS YENİDEN DÜZENLENDİ"
         },

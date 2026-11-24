@@ -136,6 +136,11 @@ public class GameManager : MonoBehaviour
     public void AddScore(int amount)
     {
         currentScore += amount;
+
+        // Sonuç kartı KAZANILAN puanı gösterir, kalanı değil: harcamalar
+        // (geri alma, Joker) currentScore'dan düşer ama buradan düşmez.
+        LevelRun.AddScore(amount);
+
         UpdateScoreUI();
     }
 

@@ -541,10 +541,30 @@ public class UIManager : MonoBehaviour
         seq.SetUpdate(true).OnComplete(() => Destroy(floatingObj));
     }
 
+    // Bölüm sonu sonuç kartı (1.6b). Kartı ResultCardBuilder kurar ve bu
+    // alanı bağlar; dolduran ResultCard.Fill.
+    [Tooltip("Bölüm sonu sonuç kartı (UIBuilder bağlar).")]
+    public ResultCard resultCard;
+
+    /// <summary>
+    /// Sonuç kartındaki PAYLAŞ butonu. Görseli üretip Android paylaşım
+    /// menüsünü açar; işin tamamı <see cref="ResultShare"/> içinde.
+    /// </summary>
+    public void ShareResultCard()
+    {
+        PlayButtonSound();
+        ResultShare.Share(resultCard);
+    }
+
     public void ShowWinScreen()
     {
         if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.winClip);
         winPanel.SetActive(true);
+
+        // Kart KESİNLEŞMİŞ durumdan doldurulur: LevelRun sayaçları geri
+        // almayla birlikte geri gidiyor, hedef sayaçları da öyle.
+        if (resultCard != null) resultCard.Fill();
+
         winPanel.transform.localScale = Vector3.zero;
         winPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
 

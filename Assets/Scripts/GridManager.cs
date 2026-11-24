@@ -28,6 +28,7 @@ public class GridSnapshot
     public int savedFreeJokerCharges;   // bedava Joker hakkı
     public int savedMovesSinceSpawn;    // melez spawn sayacı
     public int savedTotalSynthesis;     // profildeki toplam sentez
+    public LevelRun.Snapshot savedRun;  // bu oynanışın kazanılan puanı ve hamle sayısı
 }
 
 public class GridManager : MonoBehaviour
@@ -131,6 +132,10 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
+        // Sonuç kartının sayaçları bölüm başında sıfırlanır (yeniden başlat,
+        // sonraki bölüm ve menüden giriş hepsi sahne yüklemesi).
+        LevelRun.Reset();
+
         foreach (Transform child in gridBoard) 
         {
             cells.Add(child);
@@ -372,6 +377,7 @@ public class GridManager : MonoBehaviour
         snapshot.savedFreeJokerCharges = freeJokerCharges;
         snapshot.savedMovesSinceSpawn = movesSinceSpawn;
         snapshot.savedTotalSynthesis = SaveService.Data.totalSynthesis;
+        snapshot.savedRun = LevelRun.Capture();
 
         var savedGoals = LevelManager.Instance.levels[LevelManager.Instance.currentLevelIndex].levelGoals;
         snapshot.savedGoalAmounts = new int[savedGoals.Count];
@@ -540,6 +546,7 @@ public class GridManager : MonoBehaviour
                     string recipeKey = RecipeCatalog.MakeKey(recipe.element1.name, recipe.element2.name);
                     if (RecipeBook.Discover(recipeKey))
                     {
+                        LevelRun.NoteDiscovery(recipeKey);
                         UIManager.Instance.ShowSystemMessage(Loc.Get(CodeStrings.RecipeDiscovered), 1.6f);
 
                         // Keşif, birleşmenin üstüne yazılır (aynı süre).
@@ -637,6 +644,10 @@ public class GridManager : MonoBehaviour
             // yoksa geçersiz hamleler geri alma yığınını şişiriyor.
             if (historyStack.Count > 0) historyStack.Pop();
         }
+
+        // Hamle sayacı anlık görüntüyle AYNI koşula bağlı: tahtayı
+        // değiştirmeyen kaydırma ne yığına girer ne sayılır.
+        if (actionHappened || moveHappened) LevelRun.CountMove();
 
         if (pendingSpawns > 0)
         {
@@ -840,6 +851,11 @@ public class GridManager : MonoBehaviour
 
         SaveService.Data.totalSynthesis = lastState.savedTotalSynthesis;
         SaveService.MarkDirty();
+
+        // Sonuç kartının sayaçları da hamle öncesine döner. Keşfedilen
+        // tarifler DÖNMEZ (bilgi geri alınamaz; discoveredRecipes ile
+        // aynı istisna).
+        LevelRun.Restore(lastState.savedRun);
 
         foreach (Transform cell in cells)
         {

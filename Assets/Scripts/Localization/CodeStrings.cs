@@ -91,6 +91,30 @@ public static class CodeStrings
     // --- Geri alma --------------------------------------------------------
     public const string UndoExplain = "undo.explain";
 
+    // --- Bölüm sonu sonuç kartı (1.6b) ------------------------------------
+    public const string ResultLevelLine = "result.level";
+    public const string ResultLevelOnly = "result.level_only";
+    public const string ResultScoreLabel = "result.score_label";
+    public const string ResultMovesLabel = "result.moves_label";
+    public const string ResultGoalsLabel = "result.goals_label";
+    public const string ResultGoalAmount = "result.goal_amount";
+    public const string ResultReactionsLabel = "result.reactions_label";
+    public const string ResultNoReactions = "result.no_reactions";
+    public const string ResultMoreReactions = "result.more_reactions";
+    public const string ResultNext = "result.next";
+    public const string ResultRestart = "result.restart";
+    public const string ResultShare = "result.share";
+    public const string ResultMenu = "result.menu";
+
+    // Paylaşım metni. KİŞİSEL VERİ TAŞIMAZ: oyuncu adı, e-posta, bağlantı yok.
+    public const string ShareSubject = "share.subject";
+    public const string ShareText = "share.text";
+
+    // Paylaşım başarısız olursa oyuncuya gösterilen satır. Teknik ayrıntı
+    // VERMEZ (paket adı, yığın izi); oyuncunun yapabileceği tek şey
+    // tekrar denemek.
+    public const string ShareFailed = "share.failed";
+
     // --- Quiz -------------------------------------------------------------
     public const string QuizCorrect = "quiz.correct";
     public const string QuizWrong = "quiz.wrong";
@@ -174,6 +198,23 @@ public static class CodeStrings
         [RegAnonymous] = "Gözlemci Kaydı (İsimsiz Ağ)",
 
         [UndoExplain] = "Kimyada bazı reaksiyonlar geri döndürülebilir. Bu işlem matrisi bir önceki hamleye geri alır.\n\nBedeli: <color={0}>{1} Puan</color>\nKalan Hakkın: <color={2}>{3}</color>",
+
+        [ResultLevelLine] = "BÖLÜM {0} · {1}",
+        [ResultLevelOnly] = "BÖLÜM {0}",
+        [ResultScoreLabel] = "KAZANILAN PUAN",
+        [ResultMovesLabel] = "HAMLE",
+        [ResultGoalsLabel] = "ÜRETİLEN",
+        [ResultGoalAmount] = "x{0}",
+        [ResultReactionsLabel] = "YENİ TEPKİMELER",
+        [ResultNoReactions] = "Bu bölümde yeni tepkime keşfetmedin.",
+        [ResultMoreReactions] = "+{0} tepkime daha",
+        [ResultNext] = "SONRAKİ BÖLÜM",
+        [ResultRestart] = "TEKRAR OYNA",
+        [ResultShare] = "PAYLAŞ",
+        [ResultMenu] = "ANA MENÜ",
+        [ShareSubject] = "NEXUM",
+        [ShareText] = "NEXUM laboratuvarında bir bölümü tamamladım!",
+        [ShareFailed] = "Paylaşım açılamadı. Daha sonra tekrar dene.",
 
         [QuizCorrect] = "<color=green>TEBRİKLER! DOĞRU CEVAP.</color>\nMatris temizleniyor, laboratuvara geri dönüyorsun!",
         [QuizWrong] = "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi.",

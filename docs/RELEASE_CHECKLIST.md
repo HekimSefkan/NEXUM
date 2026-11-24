@@ -91,6 +91,15 @@ Bu paketler **Play'e yüklenmez**; yalnızca ölçüm içindir.
 - Bir bölüm baştan sona oynanıyor; kazanma ve oyun sonu ekranları çalışıyor.
 - Ses açma/kapama, ilerleme sıfırlama çalışıyor.
 - Profil ekranındaki sayaçlar güncelleniyor.
+- **Bölüm sonu PAYLAŞ butonu HEDEF API SEVİYESİNDE gerçek cihazda test
+  edilecek** — paylaşım menüsü açılıyor mu, görsel doğru mu, hedef
+  uygulamaya gidiyor mu? Menü açılmazsa oyun çökmemeli, kart açık kalıp
+  "Paylaşım açılamadı" satırını göstermeli.
+  > Bu madde neden ayrı: paylaşımı **NativeShare v1.5.5** yapıyor ve paket
+  > 10 Mayıs 2026'da **arşivlendi** — Android'in paylaşım/`<queries>`
+  > davranışı yeni bir API seviyesinde değişirse **üstten düzeltme
+  > gelmeyecek**, düzeltmek bize kalır (MIT, kaynak depoda:
+  > `Assets/Plugins/NativeShare`). Ayrıntı: `docs/ASSET_LICENSES.md`.
 
 ---
 
