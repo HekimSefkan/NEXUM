@@ -42,6 +42,30 @@ public class SaveData
     [Tooltip("En son sorulan sorunun asset adı; aynı soru üst üste sorulmaz.")]
     public string quizLastAsked = "";
 
+    // --- İlerleme: XP, rütbe, rozet (Faz 2 / 2.1) ------------------------
+    [Tooltip("Toplam deneyim puanı. KAZANILAN puandan beslenir, kalan skordan değil.")]
+    public int xp;
+
+    [Tooltip("Bölüm başına bugüne kadar ÖDENEN XP (çiftlik koruması). " +
+             "İndeks = bölüm indeksi.")]
+    public List<int> levelXpGranted = new List<int>();
+
+    [Tooltip("XP ödemiş quiz sorularının asset adları. Bir soru ömründe bir kez öder.")]
+    public List<string> quizXpAwarded = new List<string>();
+
+    [Tooltip("Ödenmiş quiz ödülü sayısı. Soru adı kaydedilmemiş eski kayıtların " +
+             "geriye dönük hesabı bu sayacı doldurur; toplam ödül banka boyutunu aşamaz.")]
+    public int quizXpPaid;
+
+    [Tooltip("Kazanılan rozet anahtarları (Badges tablosu).")]
+    public List<string> badges = new List<string>();
+
+    [Tooltip("Kutlaması GÖSTERİLMİŞ en yüksek rütbe indeksi. Kutlama bir kez çıkar.")]
+    public int rankCelebrated;
+
+    [Tooltip("XP'nin geriye dönük hesabı bir kez çalışır.")]
+    public int xpBackfillDone;
+
     // --- İstatistik -------------------------------------------------------
     public int totalScore;
     public int totalSynthesis;
@@ -62,9 +86,6 @@ public class SaveData
     // listeleniyor; eklendiklerinde CurrentVersion artırılıp Upgrade'e
     // karşılık gelen adım yazılacak.
     //
-    // public int xp;                              // deneyim puanı
-    // public int rankIndex;                       // rütbe (XP'den türetilebilir)
-    // public List<string> badges;                 // kazanılan rozetler
     // public int streakDays;                      // üst üste oynanan gün sayısı
     // public string lastPlayedDate;               // seri hesabı için (ISO 8601)
     // public List<string> discoveredRecipes;      // keşfedilen tarifler
@@ -88,11 +109,21 @@ public class SaveData
 public static class SaveService
 {
     public const string SaveKey = "NEXUM_SAVE";
-    public const int CurrentVersion = 3;
+    public const int CurrentVersion = 4;
     private const string Tag = "NEXUM_SAVE";
 
     /// <summary>Ad listelerinde kabul edilen en fazla girdi (bozuk veri koruması).</summary>
     private const int NameListMax = 256;
+
+    /// <summary>Sayı listelerinde kabul edilen en fazla girdi (bozuk veri koruması).</summary>
+    private const int IntListMax = 64;
+
+    /// <summary>
+    /// <c>rankCelebrated</c> için akıl dışı değer sınırı. Gerçek sınır rütbe
+    /// tablosunun boyu, ama o tablo başka bir derlemede; burada yalnızca
+    /// bozuk veri kırpılır.
+    /// </summary>
+    private const int RankCelebratedMax = 31;
 
     private static SaveData data;
     private static bool dirty;
@@ -247,12 +278,23 @@ public static class SaveService
         if (d.discoveredRecipes == null) { d.discoveredRecipes = new List<string>(); Log("discoveredRecipes"); repaired++; }
         if (d.quizLastAsked == null) { d.quizLastAsked = ""; Log("quizLastAsked"); repaired++; }
         repaired += RepairNameList(ref d.quizWrongPool, "quizWrongPool");
+        repaired += RepairNameList(ref d.quizXpAwarded, "quizXpAwarded");
+        repaired += RepairNameList(ref d.badges, "badges");
+        repaired += RepairIntList(ref d.levelXpGranted, "levelXpGranted");
 
         repaired += ClampMin(ref d.avatarIndex, 0, "avatarIndex");
         repaired += ClampMin(ref d.selectedLevel, 0, "selectedLevel");
         repaired += ClampRange(ref d.gameMode, 0, 2, "gameMode");
         repaired += ClampMin(ref d.unlockedLevel, 0, "unlockedLevel");
         repaired += ClampMin(ref d.maxLevelUnlocked, 0, "maxLevelUnlocked");
+        repaired += ClampMin(ref d.xp, 0, "xp");
+        repaired += ClampMin(ref d.quizXpPaid, 0, "quizXpPaid");
+        // Rütbe tablosu Nexum.Progression içinde ve bu derleme onu GÖRMEZ
+        // (kayıt katmanı hiçbir şeye bağlı değil). Burada yalnızca akıl dışı
+        // değer kırpılır; gerçek tabloya kırpma ProgressionService.CelebratedRank
+        // içinde yapılır.
+        repaired += ClampRange(ref d.rankCelebrated, 0, RankCelebratedMax, "rankCelebrated");
+        repaired += ClampRange(ref d.xpBackfillDone, 0, 1, "xpBackfillDone");
         repaired += ClampMin(ref d.totalScore, 0, "totalScore");
         repaired += ClampMin(ref d.totalSynthesis, 0, "totalSynthesis");
         repaired += ClampMin(ref d.totalAccidents, 0, "totalAccidents");
@@ -310,6 +352,42 @@ public static class SaveService
         return 1;
     }
 
+    /// <summary>
+    /// Sayı listesi onarımı: null, negatif girdi ve akıl dışı uzunluk.
+    ///
+    /// <c>levelXpGranted</c> indeksle anlam taşıyor (indeks = bölüm), bu
+    /// yüzden girdi ATILMAZ — negatif değer 0'a çekilir, liste yalnızca
+    /// uzunluk sınırından kesilir. Girdi atmak bütün bölümleri kaydırırdı.
+    /// </summary>
+    private static int RepairIntList(ref List<int> list, string field)
+    {
+        if (list == null)
+        {
+            list = new List<int>();
+            Log(field);
+            return 1;
+        }
+
+        bool degisti = false;
+
+        if (list.Count > IntListMax)
+        {
+            Log($"{field} ({list.Count} -> {IntListMax})");
+            list.RemoveRange(IntListMax, list.Count - IntListMax);
+            degisti = true;
+        }
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i] >= 0) continue;
+            Log($"{field}[{i}] = {list[i]}");
+            list[i] = 0;
+            degisti = true;
+        }
+
+        return degisti ? 1 : 0;
+    }
+
     private static int ClampMin(ref int value, int min, string field)
     {
         if (value >= min) return 0;
@@ -365,6 +443,22 @@ public static class SaveService
             if (d.quizWrongPool == null) d.quizWrongPool = new List<string>();
             if (d.quizLastAsked == null) d.quizLastAsked = "";
             d.saveVersion = 3;
+            steps++;
+        }
+
+        // Sürüm 4: XP, rütbe ve rozet (Faz 2 / 2.1). Eski kayıtta bu alanlar
+        // yok. GERİYE DÖNÜK HESAP BURADA YAPILMAZ: XP tablosu ve rütbe
+        // eşikleri Nexum.Progression içinde ve kayıt katmanı hiçbir derlemeye
+        // bağlı değil (tarif defterinde de aynı desen kullanıldı). Burada
+        // yalnızca bayrak kurulur; hesabı ProgressionService.RunBackfillOnce
+        // yapar ve ProgressionBootstrap ilk sahne yüklenmeden önce çağırır.
+        if (d.saveVersion < 4)
+        {
+            if (d.levelXpGranted == null) d.levelXpGranted = new List<int>();
+            if (d.quizXpAwarded == null) d.quizXpAwarded = new List<string>();
+            if (d.badges == null) d.badges = new List<string>();
+            d.xpBackfillDone = 0;     // ilk fırsatta hesaplansın
+            d.saveVersion = 4;
             steps++;
         }
 

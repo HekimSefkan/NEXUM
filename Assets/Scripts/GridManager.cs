@@ -547,6 +547,11 @@ public class GridManager : MonoBehaviour
                     if (RecipeBook.Discover(recipeKey))
                     {
                         LevelRun.NoteDiscovery(recipeKey);
+
+                        // XP: keşif KESİNLEŞMİŞ bir olaydır (discoveredRecipes
+                        // geri alınmıyor), bu yüzden burada hemen ödenir ve
+                        // geri alma onu geri yazmaz.
+                        ProgressionService.AwardRecipeDiscovery(recipeKey);
                         UIManager.Instance.ShowSystemMessage(Loc.Get(CodeStrings.RecipeDiscovered), 1.6f);
 
                         // Keşif, birleşmenin üstüne yazılır (aynı süre).

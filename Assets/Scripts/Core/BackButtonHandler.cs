@@ -29,6 +29,7 @@ namespace Nexum.Core
         /// <summary>Geri basışını işler. Uygulamadan çıkış istendiyse true döner.</summary>
         public static bool HandleBackPress()
         {
+            if (HandleRankUp()) return false;
             if (HandleGameScene()) return false;
             if (HandleRegistration()) return false;
             if (HandleMainMenu()) return false;
@@ -64,6 +65,25 @@ namespace Nexum.Core
 
                 if (HandleBackPress()) Application.Quit();
             }
+        }
+
+        // ---------- Rütbe kutlaması (iki sahnede de en üstteki katman) ----------
+
+        /// <summary>
+        /// Kutlama paneli açıksa geri basışı önce onu kapatır — hem oyunda
+        /// (sonuç kartının üstünde) hem ana menüde (geriye dönük hesabın
+        /// ardından) en üstte duran katman odur.
+        ///
+        /// Kapanış <c>MarkCelebrationShown</c> çağırır, yani geri tuşu
+        /// dokunmakla AYNI yoldan geçer: kutlama bir daha açılmaz.
+        /// </summary>
+        private static bool HandleRankUp()
+        {
+            RankUpPanel panel = RankUpPanel.Instance;
+            if (panel == null || !panel.IsOpen) return false;
+
+            panel.Close();
+            return true;
         }
 
         // ---------- Oyun sahnesi ----------

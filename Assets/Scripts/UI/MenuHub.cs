@@ -24,6 +24,12 @@ public class MenuHub : MonoBehaviour
     public TextMeshProUGUI playerNameText;
     [Tooltip("Rütbe + XP (Faz 2): HubFeatures.RankAndXp ile yönetilir.")]
     public GameObject rankXpGroup;
+
+    [Tooltip("Rütbe adı (2.1). Metin sözlükten, rütbe ProgressionService'ten.")]
+    public TextMeshProUGUI rankText;
+
+    [Tooltip("XP çubuğunun DOLAN parçası. Genişlik anchorMax.x ile sürülür.")]
+    public RectTransform xpFill;
     [Tooltip("Gün serisi rozeti (Faz 3): HubFeatures.Streak ile yönetilir.")]
     public GameObject streakBadge;
 
@@ -65,6 +71,7 @@ public class MenuHub : MonoBehaviour
         ApplyVisibility();
         ApplyStatus();
         RefreshSoundIcon();
+        TryCelebrate();
     }
 
     // ------------------------------------------------------------ görünürlük
@@ -176,6 +183,54 @@ public class MenuHub : MonoBehaviour
             int toplam = RecipeCount();
             recipeBookStatusText.text = Loc.Format(CodeStrings.HubRecipeStatus, kesfedilen, toplam);
         }
+
+        ApplyRank();
+    }
+
+    /// <summary>
+    /// Rütbe adı ve XP çubuğu (2.1).
+    ///
+    /// <b>SAYI YAZILMAZ, ÇUBUK GÖSTERİR.</b> Şeritte rütbe adının yanında
+    /// 190 birimlik bir çubuk var; "1736/2400" o kutuda 30 puntoda %88
+    /// doluluk demek, yani %85 kuralının üstü. Kesin XP sayısı profil
+    /// panelinin işi (2.3); kutlama da toplamı yazıyor. Çubuk ilerlemeyi
+    /// anlatmaya yetiyor.
+    ///
+    /// Çubuğun dolan parçası <c>anchorMax.x</c> ile sürülür, <c>fillAmount</c>
+    /// ile DEĞİL: dolgu 9-dilim bir sprite ve <c>Image.Type.Filled</c>
+    /// 9-dilimi kapatır.
+    /// </summary>
+    private void ApplyRank()
+    {
+        if (rankText != null)
+        {
+            rankText.text = Loc.Get(ProgressionService.RankNameKey);
+        }
+
+        if (xpFill != null)
+        {
+            float oran = ProgressionService.RankProgress01;
+            Vector2 max = xpFill.anchorMax;
+            xpFill.anchorMax = new Vector2(oran, max.y);
+            xpFill.offsetMax = new Vector2(0f, xpFill.offsetMax.y);
+        }
+    }
+
+    /// <summary>
+    /// Bekleyen rütbe kutlaması. Ana menüde GEREKLİ: geriye dönük hesapla
+    /// rütbe atlayan oyuncu kutlamayı bir kez burada görür (oyun sahnesine
+    /// girmesi gerekmez).
+    ///
+    /// Koşulu panelin kendisi biliyor; burada ikinci bir kural YOK. Bayrak
+    /// kapalıyken (rütbe henüz oyuncuya gösterilmiyorsa) kutlama da
+    /// gösterilmez — tek kaynak <see cref="HubFeatures.RankAndXp"/>.
+    /// </summary>
+    private void TryCelebrate()
+    {
+        if (!HubFeatures.RankAndXp) return;
+
+        RankUpPanel panel = RankUpPanel.Instance;
+        if (panel != null) panel.ShowIfPending();
     }
 
     /// <summary>Bölüm sayısı katalogdan (ana menüde LevelManager yok).</summary>

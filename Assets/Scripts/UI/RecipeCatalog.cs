@@ -59,6 +59,15 @@ public class RecipeCatalog : ScriptableObject
     [Tooltip("Oyundaki tüm taşlar (temel element + bileşik).")]
     public List<TileInfo> tiles = new List<TileInfo>();
 
+    /// <summary>
+    /// Quiz bankasındaki soru sayısı (2.1). Banka <c>UIManager.allQuizzes</c>
+    /// içinde, yani YALNIZCA Game sahnesinde; XP'nin geriye dönük hesabı ise
+    /// ilk sahne yüklenmeden önce koşuyor. Sayı buraya kopyalanıyor ki hesap
+    /// bankanın gerçek boyunu bilsin — ikinci bir sabit yazılmasın.
+    /// </summary>
+    [Tooltip("Quiz bankasındaki soru sayısı (UIManager.allQuizzes).")]
+    public int quizCount;
+
     private static RecipeCatalog cached;
 
     public static RecipeCatalog Load()

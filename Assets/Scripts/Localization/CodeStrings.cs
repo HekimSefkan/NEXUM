@@ -152,6 +152,40 @@ public static class CodeStrings
     // --- Android geri tuşu ------------------------------------------------
     public const string BackPressAgain = "back.press_again";
 
+    // --- Rütbe (Faz 2 / 2.1) ---------------------------------------------
+    // Yedi rütbenin adı. Sıra ve eşikler ProgressionTable'da; metin yalnızca
+    // burada. İsim DEĞİŞTİRİLECEKSE tek yer burasıdır.
+    public const string Rank0 = "rank.apprentice";
+    public const string Rank1 = "rank.trainee";
+    public const string Rank2 = "rank.technician";
+    public const string Rank3 = "rank.researcher";
+    public const string Rank4 = "rank.chemist";
+    public const string Rank5 = "rank.chief";
+    public const string Rank6 = "rank.nobel";
+
+    public const string RankUpTitle = "rank.up_title";
+    public const string RankUpHint = "rank.up_hint";
+
+    /// <summary>Kutlamada gösterilen toplam XP.</summary>
+    public const string RankXpTotal = "rank.xp_total";
+
+    /// <summary>Sonuç kartındaki deneyim satırı.</summary>
+    public const string ResultXpLabel = "result.xp_label";
+    public const string ResultXpValue = "result.xp_value";
+
+    // --- Rozetler (Faz 2 / 2.1) ------------------------------------------
+    // Verisi bugün OLMAYAN rozetlerin adı da burada: rozet tablosu tek
+    // kaynak olsun, veri geldiğinde yalnızca bayrak açılsın.
+    public const string BadgeFirstSynthesis = "badge.first_synthesis";
+    public const string BadgeAllReactions = "badge.all_reactions";
+    public const string BadgeFlawlessLevel = "badge.flawless_level";
+    public const string BadgeStreak7 = "badge.streak_7";
+    public const string BadgeStreak30 = "badge.streak_30";
+    public const string BadgeStreak100 = "badge.streak_100";
+    public const string BadgeEncyclopedia = "badge.encyclopedia";
+    public const string BadgeThreeStars = "badge.three_stars";
+    public const string BadgeDailyPuzzle10 = "badge.daily_puzzle_10";
+
     /// <summary>Sözlük tohumu: anahtar → Türkçe metin.</summary>
     public static readonly Dictionary<string, string> All = new Dictionary<string, string>
     {
@@ -253,5 +287,32 @@ public static class CodeStrings
         [Combo3] = "ZİNCİRLEME REAKSİYON!",
 
         [BackPressAgain] = "Çıkmak için tekrar basın",
+
+        // Rütbe adları — ONAY BEKLİYOR (bkz. docs/DESIGN_TOKENS.md 11.2).
+        [Rank0] = "Çırak",
+        [Rank1] = "Stajyer",
+        [Rank2] = "Laborant",
+        [Rank3] = "Araştırmacı",
+        [Rank4] = "Kimyager",
+        [Rank5] = "Baş Kimyager",
+        [Rank6] = "Nobel Adayı",
+
+        [RankUpTitle] = "RÜTBE ATLADIN",
+        [RankUpHint] = "Devam etmek için dokun",
+
+        [RankXpTotal] = "{0} XP",
+
+        [ResultXpLabel] = "DENEYİM",
+        [ResultXpValue] = "+{0} XP",
+
+        [BadgeFirstSynthesis] = "İlk Sentez",
+        [BadgeAllReactions] = "Tüm Tepkimeler",
+        [BadgeFlawlessLevel] = "Kazasız Bölüm",
+        [BadgeStreak7] = "7 Gün Seri",
+        [BadgeStreak30] = "30 Gün Seri",
+        [BadgeStreak100] = "100 Gün Seri",
+        [BadgeEncyclopedia] = "Ansiklopedi Kurdu",
+        [BadgeThreeStars] = "Üç Yıldızlı Bölüm",
+        [BadgeDailyPuzzle10] = "Günlük Bulmaca x10",
     };
 }
