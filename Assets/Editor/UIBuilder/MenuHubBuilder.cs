@@ -46,6 +46,7 @@ public static class MenuHubBuilder
     private const string RingPath = "Assets/Art/UI/compound_ring_normal.png";
     private const string StarEmptyPath = "Assets/Art/UI/star_empty_normal.png";
     private const string BarPath = "Assets/Art/UI/progress_fill_selected.png";
+    private const string TrackPath = "Assets/Art/UI/progress_track_normal.png";
 
     // --- dikey ritim ------------------------------------------------------
     // Hepsi açıkken toplam: 130+150+300+230+180+190+190 = 1370, 6 aralık
@@ -118,20 +119,45 @@ public static class MenuHubBuilder
                                     theme.palette.textPrimary, TextAlignmentOptions.Left);
         LayoutDisi(b, nameText);
 
+        // --- rütbe + XP (2.1'de AÇILDI)
+        // Şerit 1000 geniş (-500..500; kök 1080, dikey düzenin yan dolgusu
+        // 2x40). Avatar solda -476..-356, seri rozeti sağda 284..484.
+        // Gruba kalan açıklık -356..284; grup 580 birim, iki yana 36 ve 24
+        // birim pay bırakıyor.
         GameObject rankXp = b.Ensure(RootPath + "/ProfileStrip", "RankXpGroup");
-        // Şerit 920 geniş (-460..460). Seri rozeti sağda 244..444'ü tutuyor;
-        // grup ve çubuk onun soluna sığacak şekilde ölçüldü.
-        b.SetFixed(rankXp, UITokens.Center, new Vector2(460f, 56f), new Vector2(-30f, -30f));
-        Gizle(b, rankXp);
-        GameObject rankText = Metin(b, theme, rankXp, "RankText", new Vector2(200f, 40f),
-                                    new Vector2(-150f, 0f), theme.typography.label,
-                                    theme.palette.textSecondary, TextAlignmentOptions.Left);
-        GameObject xpBar = b.Ensure(RootPath + "/ProfileStrip/RankXpGroup", "XpBar");
+        b.SetFixed(rankXp, UITokens.Center, new Vector2(580f, 56f), new Vector2(-30f, -30f));
+        Gorunurluk(b, rankXp, HubFeatures.RankAndXp);
+
+        // Rütbe adı textPrimary: şeridin yüzeyi panel_sm ve orada
+        // textSecondary 4,5:1'in altında kalıyor (sonuç kartının sayı
+        // kutusunda ölçüldü, 3,93:1). Hiyerarşi renkle değil PUNTOYLA
+        // kuruluyor: oyuncu adı 40, rütbe 30.
+        GameObject rankText = Metin(b, theme, rankXp, "RankText", new Vector2(300f, 44f),
+                                    new Vector2(-135f, 0f), theme.typography.label,
+                                    theme.palette.textPrimary, TextAlignmentOptions.Left);
+
+        // Çubuk İKİ parçalı: iz + dolgu. Tek sprite'la "ne kadar dolu"
+        // anlatılamıyordu. Dolgunun genişliği anchorMax.x ile sürülür
+        // (MenuHub.ApplyRank); Image.Type.Filled KULLANILMAZ, 9-dilimi
+        // kapatır.
+        //
         // 20 birim yükseklik progress_fill_selected'ın 17+17 kenarlığına
         // SIĞMIYOR: orta alan negatife düşüyor, 9-dilim çöküyor
         // (SlicedCollapseTests ölçtü). 56 birimde orta alan 22.
-        b.SetFixed(xpBar, UITokens.Center, new Vector2(240f, 56f), new Vector2(60f, 0f));
+        GameObject xpBar = b.Ensure(RootPath + "/ProfileStrip/RankXpGroup", "XpBar");
+        b.SetFixed(xpBar, UITokens.Center, new Vector2(200f, 56f), new Vector2(155f, 0f));
         b.EnsureComponent<Image>(xpBar, i =>
+        {
+            i.sprite = LoadSprite(TrackPath);
+            i.type = Image.Type.Sliced;
+            i.color = Color.white;
+            i.raycastTarget = false;
+        });
+
+        GameObject xpFill = b.Ensure(RootPath + "/ProfileStrip/RankXpGroup/XpBar", "Fill");
+        // Sol kenara yapışık, genişliği 0: çalışma zamanında oran yazılır.
+        b.SetBand(xpFill, 0f, 0f, 0f, 1f);
+        b.EnsureComponent<Image>(xpFill, i =>
         {
             i.sprite = LoadSprite(BarPath);
             i.type = Image.Type.Sliced;
@@ -279,6 +305,8 @@ public static class MenuHubBuilder
         {
             h.playerNameText = Tmp(nameText);
             h.rankXpGroup = rankXp;
+            h.rankText = Tmp(rankText);
+            h.xpFill = xpFill != null ? xpFill.transform as RectTransform : null;
             h.streakBadge = streak;
             h.heroStatusText = Tmp(heroStatus);
             h.heroStars = heroStars;
@@ -551,6 +579,21 @@ public static class MenuHubBuilder
     /// </summary>
     private static void Gizle(UIBuilder b, GameObject go, Vector2 etkinOlcu = default)
     {
+        Gorunurluk(b, go, false, etkinOlcu);
+    }
+
+    /// <summary>
+    /// Bayrakla yönetilen girişin sahnedeki hâlini BAYRAĞA eşitler.
+    ///
+    /// 1.7'de bütün bayraklar kapalıydı ve giriş her koşuda kapalı
+    /// kaydediliyordu. 2.1'de <see cref="HubFeatures.RankAndXp"/> açıldı:
+    /// sahne hâlâ kapalı kaydedilseydi sahnenin kayıtlı hâli ile çalışma
+    /// zamanı ayrışırdı (bir kare boş şerit; editörde alınan görüntüde
+    /// hiç görünmez). Tek kaynak bayrak; kurucu sahneyi ona eşitler.
+    /// </summary>
+    private static void Gorunurluk(UIBuilder b, GameObject go, bool gorunur,
+                                   Vector2 etkinOlcu = default)
+    {
         if (go == null) return;
 
         // ignoreLayout KURULMAZ: bayrak açılınca giriş layout akışına
@@ -569,7 +612,7 @@ public static class MenuHubBuilder
             if (rt != null && rt.sizeDelta != etkinOlcu) rt.sizeDelta = etkinOlcu;
         }
 
-        if (go.activeSelf) go.SetActive(false);
+        if (go.activeSelf != gorunur) go.SetActive(gorunur);
     }
 
     private static void Cerceve(UIBuilder b, GameObject go, string path)

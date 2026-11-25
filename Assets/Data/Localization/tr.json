@@ -7,6 +7,42 @@
             "value": "Çıkmak için tekrar basın"
         },
         {
+            "key": "badge.all_reactions",
+            "value": "Tüm Tepkimeler"
+        },
+        {
+            "key": "badge.daily_puzzle_10",
+            "value": "Günlük Bulmaca x10"
+        },
+        {
+            "key": "badge.encyclopedia",
+            "value": "Ansiklopedi Kurdu"
+        },
+        {
+            "key": "badge.first_synthesis",
+            "value": "İlk Sentez"
+        },
+        {
+            "key": "badge.flawless_level",
+            "value": "Kazasız Bölüm"
+        },
+        {
+            "key": "badge.streak_100",
+            "value": "100 Gün Seri"
+        },
+        {
+            "key": "badge.streak_30",
+            "value": "30 Gün Seri"
+        },
+        {
+            "key": "badge.streak_7",
+            "value": "7 Gün Seri"
+        },
+        {
+            "key": "badge.three_stars",
+            "value": "Üç Yıldızlı Bölüm"
+        },
+        {
             "key": "catalyst.charge_label",
             "value": "KATALİZÖR ŞARJI {0}/{1}"
         },
@@ -599,6 +635,46 @@
             "value": "<color=red>MAALESEF YANLIŞ CEVAP!</color>\nLaboratuvar tamamen kilitlendi."
         },
         {
+            "key": "rank.apprentice",
+            "value": "Çırak"
+        },
+        {
+            "key": "rank.chemist",
+            "value": "Kimyager"
+        },
+        {
+            "key": "rank.chief",
+            "value": "Baş Kimyager"
+        },
+        {
+            "key": "rank.nobel",
+            "value": "Nobel Adayı"
+        },
+        {
+            "key": "rank.researcher",
+            "value": "Araştırmacı"
+        },
+        {
+            "key": "rank.technician",
+            "value": "Laborant"
+        },
+        {
+            "key": "rank.trainee",
+            "value": "Stajyer"
+        },
+        {
+            "key": "rank.up_hint",
+            "value": "Devam etmek için dokun"
+        },
+        {
+            "key": "rank.up_title",
+            "value": "RÜTBE ATLADIN"
+        },
+        {
+            "key": "rank.xp_total",
+            "value": "{0} XP"
+        },
+        {
             "key": "reaction.equation",
             "value": "{0} <sprite=\"NexumSymbols\" name=\"arrow\"> {1}"
         },
@@ -717,6 +793,14 @@
         {
             "key": "result.share",
             "value": "PAYLAŞ"
+        },
+        {
+            "key": "result.xp_label",
+            "value": "DENEYİM"
+        },
+        {
+            "key": "result.xp_value",
+            "value": "+{0} XP"
         },
         {
             "key": "share.failed",

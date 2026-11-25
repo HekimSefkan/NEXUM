@@ -58,8 +58,11 @@ public class RankUpPanel : MonoBehaviour
     [Tooltip("Yeni çerçeve: rozet madalya çerçevesi.")]
     public Image rankFrame;
 
-    [Tooltip("Rütbe numarası (\"5 / 7\").")]
-    public TextMeshProUGUI rankStepText;
+    [Tooltip("Toplam XP (\"1736 XP\").")]
+    public TextMeshProUGUI xpTotalText;
+
+    [Tooltip("Rütbe sırası, çerçevenin içinde (\"5\").")]
+    public TextMeshProUGUI rankOrdinalText;
 
     [Header("Süre (temadan)")]
     [Tooltip("Kartın ölçek tween süresi. NexumTheme.motion.durationMedium.")]
@@ -94,9 +97,14 @@ public class RankUpPanel : MonoBehaviour
             rankNameText.text = Loc.Get(ProgressionService.RankNameKey);
         }
 
-        if (rankStepText != null)
+        if (xpTotalText != null)
         {
-            rankStepText.text = Loc.Format(CodeStrings.RankXpTotal, ProgressionService.Xp);
+            xpTotalText.text = Loc.Format(CodeStrings.RankXpTotal, ProgressionService.Xp);
+        }
+
+        if (rankOrdinalText != null)
+        {
+            rankOrdinalText.text = (ProgressionService.RankIndex + 1).ToString();
         }
 
         gameObject.SetActive(true);
