@@ -73,6 +73,10 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `Progression/ProgressionTable` | XP miktarları, yedi rütbe ve eşikleri; `XpSources` bayrak tablosu |
 | `Progression/ProgressionService` | XP muhasebesi: kazanç, çiftlik koruması, kutlama bayrağı, geriye dönük hesap |
 | `Progression/BadgeTable` | Dokuz rozet, koşulları ve "kazanılabilir mi" bayrağı |
+| `Progression/StarRules` | Üç yıldızın koşulları ve bölüm başına hamle sınırları |
+| `Progression/StarService` | Yıldız muhasebesi: en iyi sonuç, yıldız XP'si, geriye dönük hesap |
+| `UI/LevelNodeStars` | Bölüm haritası düğümündeki üç yıldız (kayıttan doldurur) |
+| `Editor/UIBuilder/LevelMapStarsBuilder` | Harita düğümlerine yıldız satırı kurar |
 | `UI/RankUpPanel` | Rütbe atlama kutlaması (iki sahnede kurulu, dokununca kapanır, bir kez) |
 | `Editor/UIBuilder/RankUpPanelBuilder` | Kutlama panelini MainMenu ve Game sahnelerine kurar |
 
@@ -360,6 +364,25 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
   `baseHintCost` / `currentUndoLimit` / `CatalystChargeLimit` /
   `startingTileCount` değerlerine bağlayacağı için oyun hissini
   değiştirir: kendi analiz + onay turunu ister.
+- **Üç yıldız (2.2):** kurallar `StarRules`, muhasebe `StarService`.
+  - **Yıldızlar BİT MASKESİ, sayı DEĞİL.** ★2 kaçıp ★3 kazanılabilir;
+    sayı tutmak hangi yıldızın alındığını kaybeder ve ekranda yanlış
+    yuvayı doldurur. Yeni bir yıldız eklenirse maskeye bit eklenir.
+  - **Katalizörün BEDAVA Joker hakkı ★3'ü BOZMAZ** (ödül cezaya
+    dönmemeli); yalnızca ücretli Joker bozar. **Geri alma bozmaz:**
+    hamle sayısı geri gider, yardım bayrakları GİTMEZ.
+  - **Serbest modda yıldız YOK** ve bu sessiz bir varsayıma
+    bırakılmadı: çağrı `starsAllowed` parametresini açıkça geçer.
+  - **Çiftlik koruması maskeden gelir:** XP yalnızca YENİ bitler için
+    ödenir (`yeni & ~eski`), ikinci bir sayaç yazılmaz.
+  - **Hamle sınırları ÖLÇÜMLE kalibre edilir** (`Tools/sim_stars.py`):
+    kazanan oyunların %75'i, yükseltmesiz zeminde. Sınır değişecekse
+    araç yeniden koşturulup `docs/DESIGN_TOKENS.md` 13.3 güncellenir.
+    Tablo **kullanıcı onayına tabidir**.
+  - Ölçüm: `StarTests`, `StarWiringTests`, `StarFitTests`.
+- **`Tools/sim_stars.py`:** yıldız hamle sınırlarını ölçer (bölüm başına
+  N tohum, kazanan oyunların hamle dağılımı). `sim_core_loop` üzerine
+  kurulu, onun çıktısını değiştirmez.
 - **`Tools/sim_xp.py`:** kazanılan puanı ölçer (`sim_core_loop`'u
   kullanır, çıktısını değiştirmez). Rütbe eşiklerinin gerekçesi bu
   ölçümdür; eşik değişirse araç yeniden koşturulup
