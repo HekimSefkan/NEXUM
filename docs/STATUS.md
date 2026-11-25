@@ -151,21 +151,30 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **`totalScore` hâlâ ÖLÜ-KAYIT.** `SaveService.AddLevelScore` yazıyor, hiçbir ekran göstermiyor. XP ondan beslenmiyor. `docs/ECONOMY_PROPOSAL.md` kaldırılmasını ve yerini Araştırma Puanı'nın almasını öneriyor (bkz. `docs/STATS_INVENTORY.md`).
 - **L4–L7 denge verisi.** Ölçüm 13. turda alındı ve duruyor: Na ağırlığını yarıya indirmek L4'ü %13→%30, L6'yı %11→%20 çıkarıyor; Ca'yı yarıya indirmek L6'yı %11→%20 çıkarırken L5'i %30→%27 düşürüyor. Uygulanmadı; denge turu bu veriyle başlayabilir.
 
-**2.1'den ONAY BEKLEYENLER (cihaz testi + karar):**
+**2.1'de ONAYLANAN (25 Kasım 2026):**
 - **Rütbe adları ve eşikleri** — `docs/DESIGN_TOKENS.md` 12.1 / 12.2.
-  Üç çelişki çözüm önerisiyle birlikte orada: "Baş Kimyager" hem varsayılan
-  oyuncu adı hem 6. rütbe (cihaz görüntüsünde yan yana görünüyor),
-  "Doçent" merdivene alınmadı, "Stajyer Kimyager" ölçüm sonucu "Stajyer"e
-  kısaldı.
+  Çırak 0 · Stajyer 150 · Laborant 400 · Araştırmacı 800 · Kimyager 1400 ·
+  Baş Kimyager 2400 · Nobel Adayı 4000. Üç çelişki de karara bağlandı:
+  "Baş Kimyager" merdivende kaldı, "Doçent" alınmadı, "Stajyer Kimyager"
+  ölçüm sonucu "Stajyer"e kısaldı.
+
+**2.1'den ONAY BEKLEYENLER:**
 - **Rozet görselleri** — `docs/ui-kit/badges.png`.
 - **Araştırma Puanı önerisi** — `docs/ECONOMY_PROPOSAL.md` sonundaki üç
   açık soru.
+- **Cihaz testi** — PR #31 hâlâ birleştirilmedi; ekranı etkileyen
+  değişiklikler cihazda görülmedi.
 
 **2.2'ye devredilenler:** yıldızlar (yer kurulu, XP ve rozet tanımlı,
 bayraklar kapalı).
 
 **2.3'e devredilenler:** profil panelinin yeniden yapımı (rozet duvarı,
-kesin XP sayısı, varsayılan oyuncu adının düzeltilmesi).
+kesin XP sayısı, **varsayılan oyuncu adının düzeltilmesi**).
+Sonuncusu artık bir AÇIK MADDE, tasarım sorusu değil: rütbe merdiveni
+"Baş Kimyager"i içerecek şekilde onaylandı, `CodeStrings.ProfileDefaultName`
+ise hâlâ aynı metni varsayılan oyuncu adı olarak kullanıyor; adsız
+oyuncuda ikisi şeritte alt alta görünüyor
+(`docs/device-shots/ana-menu_1080x1920.png`).
 
 **Faz 3'e devredilenler:** günlük bulmaca kartı ve gün serisi rozeti (kurulu, `HubFeatures.DailyPuzzle` / `Streak` ile gizli). Günlük bulmaca, `docs/ECONOMY_PROPOSAL.md`'ye göre Araştırma Puanı'nın tek YENİLENEBİLİR kaynağı olacak.
 

@@ -323,6 +323,12 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
      XP verilmez. Rozetler için aynısı `Badges.Badge.available`.
   Rütbe/rozet metinleri yalnızca `CodeStrings`'te; tablo yalnızca
   `ProgressionTable.Ranks` / `Badges.All` içinde. **Rozet XP vermez.**
+  **Rütbe adları ve eşikleri %s'da ONAYLANDI** (Çırak 0 · Stajyer 150 ·
+  Laborant 400 · Araştırmacı 800 · Kimyager 1400 · Baş Kimyager 2400 ·
+  Nobel Adayı 4000); değiştirilecekse `Tools/sim_xp.py` yeniden
+  koşturulup `docs/DESIGN_TOKENS.md` 12.2 güncellenir. **Açık madde:**
+  `ProfileDefaultName` de "Baş Kimyager" — adsız oyuncuda ad ve rütbe
+  şeritte alt alta çakışıyor, varsayılan ad 2.3'te değişecek.
   Ölçüm: `ProgressionTests`, `RankTableTests`, `BadgeTests`,
   `ProgressionMigrationTests`, `ProgressionWiringTests`,
   `ProgressionFitTests`.

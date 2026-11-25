@@ -696,30 +696,39 @@ belgeler). Bulunanlar:
 | plan (2.1 brifi) | Çırak → Stajyer Kimyager → Laborant → Araştırmacı → Kimyager → Baş Kimyager → Nobel Adayı | yedi basamaklı rütbe merdiveni |
 | mockup'lar | "Stajyer", "Doçent" | tasarım görselleri |
 
-**Üç çelişki ve çözümleri:**
+**Üç çelişki ve çözümleri — hepsi ONAYLANDI (25 Kasım 2026):**
 
 1. **"Baş Kimyager" hem varsayılan oyuncu adı hem 6. rütbe.** Oyuncu adını
    boş bırakan biri, daha ilk gün ekranda "Baş Kimyager" yazarken rütbesi
-   "Çırak" olacaktı. *Çözüm önerisi:* rütbe merdiveninde "Baş Kimyager"
-   KALIR (planın sırası), varsayılan oyuncu adı değiştirilir. Bu tur
-   değiştirmedi — varsayılan ad kayıt ekranının işi ve 2.3'te profil
-   paneli yeniden yapılırken ele alınacak. **ONAY BEKLİYOR.**
+   "Çırak" oluyordu. *Karar:* rütbe merdiveninde **"Baş Kimyager" KALIR**
+   (planın sırası); çakışmayı **varsayılan oyuncu adı** çözecek.
+   **AÇIK MADDE (2.3):** `CodeStrings.ProfileDefaultName` hâlâ
+   "Baş Kimyager" ve cihaz görüntüsünde şeritte rütbenin hemen üstünde
+   duruyor (`docs/device-shots/ana-menu_1080x1920.png`). Varsayılan ad
+   kayıt ekranının işi; profil paneli 2.3'te yeniden yapılırken
+   değişecek. **Rütbe tarafı bu maddeyi beklemiyor.**
 2. **"Doçent" yalnızca mockup'ta var.** Akademik bir unvan; merdivenin
    geri kalanı laboratuvar kariyeri (çırak → laborant → araştırmacı →
-   kimyager). *Çözüm:* merdivene alınmadı. **ONAY BEKLİYOR.**
+   kimyager). *Karar:* merdivene **alınmadı**.
 3. **"Stajyer Kimyager" mi "Stajyer" mi?** Plan uzun hâli, mockup kısa
    hâli yazıyor. Ölçüm karar verdi: profil şeridindeki rütbe kutusu 300
    birim, 30 punto; "Stajyer Kimyager" %99 dolduruyor (%85 kuralının
-   üstü), "Stajyer" %53. *Çözüm:* **"Stajyer"**. **ONAY BEKLİYOR.**
+   üstü), "Stajyer" %53. *Karar:* **"Stajyer"**.
 
 **Tek tablo artık tek yerde:** `ProgressionTable.Ranks` sırayı ve eşiği,
 `CodeStrings.Rank0..Rank6` metni tutuyor. Başka hiçbir yerde rütbe adı
 yazılı değil.
 
-## 12.2 Rütbe tablosu — ONAY BEKLİYOR
+## 12.2 Rütbe tablosu — ONAYLANDI (25 Kasım 2026)
 
 Eşikler uydurulmadı: `Tools/sim_xp.py` kazanılan puanı ölçtü,
 `RankTableTests` tabloyu o ölçümle doğruluyor.
+
+> **Bu tablo artık bir KARAR, öneri değil.** Bir ad ya da eşik
+> değişecekse: `ProgressionTable` / `CodeStrings` düzenlenir,
+> `Tools/sim_xp.py` yeniden koşturulur, aşağıdaki tablo güncellenir ve
+> `RankTableTests` yeşil kalmalıdır (aralıkların büyümesi ve ilk
+> atlamanın ilk oturumda gelmesi testle zorunlu).
 
 | # | rütbe | eşik (XP) | aralık | bugün ulaşılır mı | tahmini ulaşma |
 |---|---|---|---|---|---|

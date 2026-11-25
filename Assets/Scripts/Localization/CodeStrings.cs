@@ -288,7 +288,9 @@ public static class CodeStrings
 
         [BackPressAgain] = "Çıkmak için tekrar basın",
 
-        // Rütbe adları — ONAY BEKLİYOR (bkz. docs/DESIGN_TOKENS.md 11.2).
+        // Rütbe adları — ONAYLANDI (25 Kasım 2026; bkz. docs/DESIGN_TOKENS.md 12.2).
+        // "Stajyer" bilerek kısa: uzun hâli ("Stajyer Kimyager") profil
+        // şeridindeki 300 birimlik kutuyu %99 dolduruyor (sınır %85).
         [Rank0] = "Çırak",
         [Rank1] = "Stajyer",
         [Rank2] = "Laborant",

@@ -69,11 +69,15 @@ public static class ProgressionTable
     ///
     ///  - İlk atlama İLK OTURUMDA gelir: L1'i bitirmek 60 + 11 puan XP'si +
     ///    en az iki tarif keşfi (2x30) = 131 XP; L1 + L2 = 232 > 150.
-    ///  - Bugünkü içeriğin tavanı ÖLÇÜLDÜ: 7 bölüm (420) + puan payı (~254)
-    ///    + 21 tarif (630) + 36 soru (432) = ~1736 XP, yani 5. rütbe
-    ///    (Kimyager). Son iki rütbe Faz 3-5 içeriği için ayrıldı.
+    ///  - Bugünkü içeriğin tavanı ÖLÇÜLDÜ (RankTableTests): 7 bölüm 677
+    ///    (420 sabit + 257 puan payı) + 21 tarif 630 + 36 soru 432 =
+    ///    1739 XP, yani 5. rütbe (Kimyager). Son iki rütbe Faz 3-5
+    ///    içeriği için ayrıldı.
     ///
-    /// ADLAR VE EŞİKLER KULLANICI ONAYINA TABİDİR.
+    /// ADLAR VE EŞİKLER ONAYLANDI (25 Kasım 2026, bkz. docs/DESIGN_TOKENS.md 12.2).
+    /// Değiştirilecekse Tools/sim_xp.py yeniden koşturulur ve o tablo
+    /// güncellenir; RankTableTests aralıkların büyümesini ve ilk atlamanın
+    /// ilk oturumda gelmesini zorunlu kılıyor.
     /// </summary>
     public static readonly Rank[] Ranks =
     {
