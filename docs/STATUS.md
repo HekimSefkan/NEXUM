@@ -157,9 +157,12 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
   Baş Kimyager 2400 · Nobel Adayı 4000. Üç çelişki de karara bağlandı:
   "Baş Kimyager" merdivende kaldı, "Doçent" alınmadı, "Stajyer Kimyager"
   ölçüm sonucu "Stajyer"e kısaldı.
+- **Rozet listesi ve görselleri** — `docs/ui-kit/badges.png`,
+  `docs/DESIGN_TOKENS.md` 12.4. Dokuz rozet; üçü açık, altısı tanımlı ama
+  kazanılamaz. Glifler `Tools/ui-kit/badges/` altında, **Assets'e 2.3'te
+  alınacak** (bugün rozeti gösteren ekran yok).
 
 **2.1'den ONAY BEKLEYENLER:**
-- **Rozet görselleri** — `docs/ui-kit/badges.png`.
 - **Araştırma Puanı önerisi** — `docs/ECONOMY_PROPOSAL.md` sonundaki üç
   açık soru.
 - **Cihaz testi** — PR #31 hâlâ birleştirilmedi; ekranı etkileyen
@@ -170,6 +173,10 @@ bayraklar kapalı).
 
 **2.3'e devredilenler:** profil panelinin yeniden yapımı (rozet duvarı,
 kesin XP sayısı, **varsayılan oyuncu adının düzeltilmesi**).
+Rozet duvarı için üç somut adım `docs/DESIGN_TOKENS.md` 12.4 sonunda:
+glifleri `NexumKitImport` ile içeri al, `NexumAtlasBuilder` listesine
+ekle, çerçeve zaten içeride. Rozetler 2.1'den beri sessizce kazanılıyor,
+yani duvar açıldığında geçmiş hazır.
 Sonuncusu artık bir AÇIK MADDE, tasarım sorusu değil: rütbe merdiveni
 "Baş Kimyager"i içerecek şekilde onaylandı, `CodeStrings.ProfileDefaultName`
 ise hâlâ aynı metni varsayılan oyuncu adı olarak kullanıyor; adsız

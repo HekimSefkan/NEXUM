@@ -18,6 +18,13 @@ using System.Collections.Generic;
 /// sayılıdır; rozet bir ANIYI işaretler, ikinci bir XP musluğu değil. Rozete
 /// XP bağlanırsa "Tüm Tepkimeler" rozeti tarif keşfi XP'sinin üstüne ikinci
 /// kez ödeme yapardı.
+///
+/// <b>Liste ve görseller ONAYLANDI (25 Kasım 2026)</b> — bkz.
+/// docs/DESIGN_TOKENS.md 12.4 ve docs/ui-kit/badges.png. Glif dosyaları
+/// Tools/ui-kit/badges/ altında; <b>Assets'e 2.3'te alınacak</b>, çünkü
+/// 2.1'de rozeti gösteren bir ekran yok. Rozetler yine de BUGÜNDEN
+/// kazanılıyor ve kayda yazılıyor: 2.3'teki duvar gerçek geçmişi
+/// göstersin diye.
 /// </summary>
 public static class Badges
 {

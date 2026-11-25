@@ -329,6 +329,13 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
   koşturulup `docs/DESIGN_TOKENS.md` 12.2 güncellenir. **Açık madde:**
   `ProfileDefaultName` de "Baş Kimyager" — adsız oyuncuda ad ve rütbe
   şeritte alt alta çakışıyor, varsayılan ad 2.3'te değişecek.
+  **Rozet listesi ve görselleri de 25 Kasım 2026'da ONAYLANDI**
+  (`docs/ui-kit/badges.png`). Glifler `Tools/ui-kit/badges/` altında ve
+  **bilerek `Assets` dışında**: 2.1'de rozeti gösteren ekran yok,
+  kullanılmayan sprite build'e girmez. Rozet duvarı 2.3'te kurulurken
+  glifler `NexumKitImport` ve `NexumAtlasBuilder` listelerine eklenir
+  (adımlar `docs/DESIGN_TOKENS.md` 12.4 sonunda). Rozetler bugünden
+  kazanılıp kayda yazılıyor.
   Ölçüm: `ProgressionTests`, `RankTableTests`, `BadgeTests`,
   `ProgressionMigrationTests`, `ProgressionWiringTests`,
   `ProgressionFitTests`.

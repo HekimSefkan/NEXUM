@@ -770,7 +770,7 @@ Kapalı kaynaklar `XpSources` bayrak tablosunda; miktarları TANIMLI ama
 ekranındaki ikinci şans akışından açılıyor, yani XP'sini almak için
 KAYBETMEK gerekiyor. Tarif keşfi (630) quizden (432) önde tutuldu.
 
-## 12.4 Rozetler — ONAY BEKLİYOR
+## 12.4 Rozetler — ONAYLANDI (25 Kasım 2026)
 
 Görseller: `docs/ui-kit/badges.png`. Çerçeve kitteki madalya çerçevesi
 (`badge_frame_normal`, 9-slice), glif simge ailesinden
@@ -790,9 +790,27 @@ Kapalı rozetler **tanımlı ama kazanılamaz**: `Badges.TryEarn` onları
 reddediyor ve hata logluyor (`BadgeTests` ölçüyor). Rozet **XP vermez** —
 ikinci bir XP musluğu açılmadı.
 
-Glifler bugün `Assets`'e ALINMADI: 2.1'de ekranda rozet duvarı yok
-(profil panelinin yeniden yapımı 2.3). Kullanılmayan sprite build'e
-girmiyor.
+**Glifler onaylandı ama `Assets`'e ALINMADI** — bu bir eksik değil,
+karar: 2.1'de rozeti gösteren hiçbir ekran yok (rozet duvarı profil
+panelinin işi, 2.3), kullanılmayan sprite build'e girmemeli. Onaylanan
+görseller `Tools/ui-kit/badges/` altında duruyor (12 dosya: altı glif ×
+kazanılmış/kilitli), yani üreteci tekrar koşturmak gerekmeyecek.
+
+**2.3'ün yapacağı iş, hatırlanmaya bırakılmadı:**
+1. `NexumKitImport` listesine `Tools/ui-kit/badges/*_384.png` eklenir →
+   `Assets/Art/Icons/Badges/`. Import kuralı: rozet 160 birimde çiziliyor,
+   1440 genişlikte 213 piksel, ×1,5 = 320 → `maxTextureSize` 512; kaynak
+   384 olduğu için ayar kaynağı kısıtlamıyor (validator uyarmaz).
+2. Yeni sprite'lar `NexumAtlasBuilder` listesine de girer (rozet duvarı
+   aynı anda birden çok rozet gösteriyor; atlas draw call kazandırır).
+3. Çerçeve zaten içeride: `badge_frame_normal` 1.x'te alınmıştı.
+
+**Rozetler bugün SESSİZCE kazanılıyor.** Üç açık rozet gerçekten
+veriliyor ve `SaveData.badges`'e yazılıyor; oyuncu henüz görmüyor. Bu
+bilinçli: veri ilk günden doğru biriktiği için 2.3'teki duvar gerçek
+geçmişi gösterecek, geriye dönük uydurma gerekmeyecek. ("Kazasız Bölüm"
+geriye dönük verilemiyor — hangi bölümün kazasız bitirildiği 2.1
+öncesinde kaydedilmedi.)
 
 ## 12.5 Kutlama ölçülü
 
