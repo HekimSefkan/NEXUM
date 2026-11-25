@@ -248,6 +248,52 @@ yapıyor. Yanlış ilk seçimin bedeli küçük tutuldu.
 6. Faz 3'ün günlük bulmaca turuna kabul kriteri: **arz ve yeni maddeler
    birlikte** gelir (bkz. 2.4, madde 3).
 
+### 3.1 Yıldızlardan gelen iki şart (2.2'de eklendi)
+
+Üç yıldız sistemi (Faz 2 / 2.2) yükseltmelerin uygulanmasına iki şart
+koyuyor. İkisi de **uygulama turunun kabul kriteridir**.
+
+**Şart 1 — Yıldız sınırları yükseltmesiz zeminde kalibre edildi;
+yükseltmeler ★3'ü önemsizleştirmemeli.**
+
+`docs/DESIGN_TOKENS.md` 13.3'teki hamle sınırları (8 / 11 / 15 / 33 /
+29 / 28 / 37) **yükseltme yokken** ölçüldü. Listedeki dört oynanış
+yükseltmesinin üçü doğrudan yıldız ölçütlerine dokunuyor:
+
+| yükseltme | ★2'ye etkisi | ★3'e etkisi |
+|---|---|---|
+| Asistan ödeneği (ipucu 25 → 15) | dolaylı: ipucu ucuzlayınca daha çok alınır | **doğrudan tehdit**: ★3 "ipucu kullanma" diyor, ucuz ipucu ★3'ü terk ettirir |
+| Yedek numune (+1 geri alma) | geri alma hamleyi geri aldığı için **sınırı kolaylaştırır** | yok (geri alma ★3'ü bozmuyor) |
+| Katalizör verimi (5 → 4 sentez) | yok | **doğrudan tehdit**: bedava Joker ★3'ü bozmuyor, eşik düşünce ★3 bedavaya yaklaşır |
+| Fazladan reaktif (+1 başlangıç taşı) | **sınırı kolaylaştırır** (daha az hamlede zincir kurulur) | yok |
+
+Uygulama turu şunu göstermek zorunda: her yükseltme basamağı açıkken
+`Tools/sim_stars.py` yeniden koşturulur ve **★2 oranı kazanan oyunlarda
+%90'ı aşmaz**. Aşıyorsa ya sınır ya yükseltme ayarlanır — ikisinden
+hangisi değişirse değişsin, 13.3 tablosu güncellenir.
+
+★3 için ayrı bir ölçüm gerekmiyor: ★3 oyuncunun KARARI (yardım
+almamak), yükseltme onu kolaylaştırmaz. Tehdit tersinden geliyor —
+yardım ucuzlayınca ★3'ü hedeflemek anlamsızlaşır. Bu bir denge değil
+**tasarım** sorusu ve uygulama turunda açıkça cevaplanmalı.
+
+**Şart 2 — Sınav modunda (ve Faz 5'teki KAYNAMA NOKTASI'nda) kalıcı
+yükseltmeler DEVRE DIŞI.**
+
+Sınav modu "kendi bilgine güven" sözü veriyor: ipucu zaten engelli ve
+puan ×2. Kalıcı yükseltmeler orada da çalışsaydı, mod kendi sözünü
+tutmazdı — oyuncu dışarıda biriktirdiği avantajla "yardımsız" moda
+girerdi. Aynı mantık Faz 5'in KAYNAMA NOKTASI'na da uygulanır (o mod
+bir bilgi sınavı; satın alınmış avantaj ölçümü bozar).
+
+Bu, yükseltmelerin okunduğu tek yerde (yükseltme basamağını veren
+yardımcı) mod kontrolüyle uygulanır; `baseHintCost` ve arkadaşlarının
+her çağrı yerine dağıtılmaz.
+
+**Şart 3 — Uygulama sırası: 2.2'den SONRA.** Yıldızlar yükseltmelerden
+önce yerleşti ki sınırlar temiz bir zeminde ölçülebilsin. Tersi olsaydı
+"sınır mı yükseltme mi kolaylaştırdı" sorusu ayrıştırılamazdı.
+
 ---
 
 ## 4. Kararlar (25 Kasım 2026)

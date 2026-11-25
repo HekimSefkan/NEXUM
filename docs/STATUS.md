@@ -203,6 +203,32 @@ Bölüm" rozeti kazanılabilir oldu. Hamle sınırları 8 / 11 / 15 / 33 /
 
 **2.3'e devredilenler:** profil panelinin yeniden yapımı (rozet duvarı,
 kesin XP sayısı, **varsayılan oyuncu adının düzeltilmesi**).
+
+**2.3 için açık maddeler (2.2'de kayda geçirildi):**
+
+1. **Varsayılan oyuncu adı** `CodeStrings.ProfileDefaultName`:
+   "Baş Kimyager" → **"Gözlemci"**. Gerekçe: "Baş Kimyager" 6. rütbenin
+   adı; adsız oyuncuda profil şeridinde ad ve rütbe alt alta çakışıyor
+   (`docs/device-shots/ana-menu_1080x1920.png`). "Gözlemci" kayıt
+   ekranındaki "Gözlemci Kaydı (İsimsiz Ağ)" metniyle de tutarlı.
+2. **Rozet düzeltmeleri** (`Tools/generate_icons_family.py` →
+   `docs/ui-kit/badges.png`):
+   - "Tüm Tepkimeler" ile "Ansiklopedi Kurdu" **aynı defter glifini**
+     kullanıyor; ikisi yan yana ayırt edilemiyor. "Tüm Tepkimeler"
+     tepkime/ok glifi almalı (ok sembolü zaten
+     `Tools/generate_arrow.py` ile çizili).
+   - Seri rozetlerinin glifi damla gibi okunuyor; **Bunsen alevi**
+     olmalı.
+   - 7 / 30 / 100 gün kademeleri aynı görünüyor; **bronz / gümüş /
+     altın çerçeveyle** ayrışmalı.
+   - Glifler çerçeveye göre küçük kalıyor; **büyütülmeli**.
+   - Sözlükteki rozet adlarında **Türkçe harfler doğrulanmalı**
+     (kanıt sayfası ASCII çiziyor, oyundaki TMP etiketi değil).
+3. **Rozet görünürlük kuralı:** özelliği henüz olmayan rozetler (gün
+   serisi, günlük bulmaca, ansiklopedi) oyunda **GİZLİ** — hub'daki
+   "uygulanmamış giriş tamamen gizli" kuralıyla aynı. Kazanılabilir
+   ama henüz kazanılmamış olanlar **siluet** gösterilir. (Kanıt sayfası
+   hepsini gösteriyor; o bir tasarım belgesi, oyun ekranı değil.)
 Rozet duvarı için üç somut adım `docs/DESIGN_TOKENS.md` 12.4 sonunda:
 glifleri `NexumKitImport` ile içeri al, `NexumAtlasBuilder` listesine
 ekle, çerçeve zaten içeride. Rozetler 2.1'den beri sessizce kazanılıyor,
