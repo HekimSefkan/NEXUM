@@ -2,10 +2,12 @@
 
 **Tarih:** 25 Kasım 2026 · **Dal:** `progression` (Faz 2 / Adım 2.1, PR açık — birleştirilmedi)
 
-> **FAZ 2 / 2.1 AÇIK PR.** XP, rütbe ve rozet sistemi kuruldu; rütbe adları,
-> eşikler ve rozet görselleri **kullanıcı onayı bekliyor**
-> (`docs/DESIGN_TOKENS.md` bölüm 12, `docs/ui-kit/badges.png`).
-> Araştırma Puanı yalnızca ÖNERİ: `docs/ECONOMY_PROPOSAL.md`, kod yazılmadı.
+> **FAZ 2 / 2.1 AÇIK PR.** XP, rütbe ve rozet sistemi kuruldu. Rütbe
+> adları/eşikleri, rozet listesi/görselleri ve Araştırma Puanı tasarımı
+> **25 Kasım 2026'da ONAYLANDI** (`docs/DESIGN_TOKENS.md` bölüm 12,
+> `docs/ui-kit/badges.png`, `docs/ECONOMY_PROPOSAL.md` bölüm 4).
+> Araştırma Puanı için **kod yazılmadı** — uygulama ayrı bir adım.
+> Bekleyen tek şey **cihaz testi**; PR #31 birleştirilmedi.
 >
 > **FAZ 1 TAMAMLANDI.** Oyuncunun gördüğü bilgi katmanı bitti: tepkime denklemi, tarif defteri, geçersiz birleştirme geri bildirimi, istatistik onarımı, quiz öğrenme katmanı, bölüm sonu sonuç kartı + paylaşım ve ana menü hub'ı.
 
@@ -161,10 +163,15 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
   `docs/DESIGN_TOKENS.md` 12.4. Dokuz rozet; üçü açık, altısı tanımlı ama
   kazanılamaz. Glifler `Tools/ui-kit/badges/` altında, **Assets'e 2.3'te
   alınacak** (bugün rozeti gösteren ekran yok).
+- **Araştırma Puanı tasarımı** — `docs/ECONOMY_PROPOSAL.md` bölüm 4.
+  Üç karar: kozmetik kapsamda ama yalnızca kitten üretilebilenler
+  (mentor portre seti listeden düştü), **iade yok**, ve liste bugünkü
+  arza sığar (arz 491 RP, liste 470 RP). **KOD YAZILMADI** — uygulama
+  ayrı bir adım ve oyun hissini değiştiren kısmı (ipucu bedeli, geri
+  alma hakkı, katalizör eşiği, başlangıç taşı yükseltmelere bağlanıyor)
+  kendi analiz + onay turunu ister.
 
-**2.1'den ONAY BEKLEYENLER:**
-- **Araştırma Puanı önerisi** — `docs/ECONOMY_PROPOSAL.md` sonundaki üç
-  açık soru.
+**2.1'den ONAY BEKLEYEN TEK ŞEY:**
 - **Cihaz testi** — PR #31 hâlâ birleştirilmedi; ekranı etkileyen
   değişiklikler cihazda görülmedi.
 
@@ -183,7 +190,7 @@ ise hâlâ aynı metni varsayılan oyuncu adı olarak kullanıyor; adsız
 oyuncuda ikisi şeritte alt alta görünüyor
 (`docs/device-shots/ana-menu_1080x1920.png`).
 
-**Faz 3'e devredilenler:** günlük bulmaca kartı ve gün serisi rozeti (kurulu, `HubFeatures.DailyPuzzle` / `Streak` ile gizli). Günlük bulmaca, `docs/ECONOMY_PROPOSAL.md`'ye göre Araştırma Puanı'nın tek YENİLENEBİLİR kaynağı olacak.
+**Faz 3'e devredilenler:** günlük bulmaca kartı ve gün serisi rozeti (kurulu, `HubFeatures.DailyPuzzle` / `Streak` ile gizli). Günlük bulmaca, `docs/ECONOMY_PROPOSAL.md`'ye göre Araştırma Puanı'nın tek YENİLENEBİLİR kaynağı olacak. **Kabul kriteri (2.1'de karara bağlandı):** günlük bulmaca turu RP ARZINI ve YENİ YÜKSELTME MADDELERİNİ birlikte getirir. Tek başına arz eklemek, %100 tamamlayan oyuncuda zaten susan para birimini daha hızlı biriktirmek demek olur (ECONOMY_PROPOSAL 2.4, madde 3).
 
 **Faz 5'e devredilenler:** KAYNAMA NOKTASI · SONSUZ LAB · HAFTANIN DENEYİ mod kartları ve mentor ikonu (kurulu, gizli). Quiz bankasındaki 36 sorunun etiketleri (konu · zorluk · ilgili bileşik) KAYNAMA NOKTASI'nın süzme verisi olarak hazır.
 

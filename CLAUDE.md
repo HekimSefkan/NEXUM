@@ -323,7 +323,7 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
      XP verilmez. Rozetler için aynısı `Badges.Badge.available`.
   Rütbe/rozet metinleri yalnızca `CodeStrings`'te; tablo yalnızca
   `ProgressionTable.Ranks` / `Badges.All` içinde. **Rozet XP vermez.**
-  **Rütbe adları ve eşikleri %s'da ONAYLANDI** (Çırak 0 · Stajyer 150 ·
+  **Rütbe adları ve eşikleri 25 Kasım 2026'da ONAYLANDI** (Çırak 0 · Stajyer 150 ·
   Laborant 400 · Araştırmacı 800 · Kimyager 1400 · Baş Kimyager 2400 ·
   Nobel Adayı 4000); değiştirilecekse `Tools/sim_xp.py` yeniden
   koşturulup `docs/DESIGN_TOKENS.md` 12.2 güncellenir. **Açık madde:**
@@ -345,6 +345,21 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
   temadan. Kendiliğinden kapanmaz, dokununca kapanır ve bir kez
   gösterilir (`rankCelebrated`). Oyunun ortasında açılmaz: yalnızca
   sonuç kartından sonra ve ana menüde.
+- **Araştırma Puanı (tasarım 25 Kasım 2026'da ONAYLANDI, KOD YOK):**
+  `docs/ECONOMY_PROPOSAL.md`. Üç bağlayıcı karar: (1) **bölüm skoru
+  bölüm içi cüzdan olarak KALIR** — ipucu/geri al/Joker bedelleri
+  değişmez; RP yalnızca KALICI yükseltmelerin para birimidir.
+  (2) **İade yok** (denge ölçülebilir kalsın); karşılığında her
+  yükseltmenin etkisi ekranda somut yazılır ve ilk basamaklar ucuz
+  tutulur. (3) **Yükseltme listesi bugünkü arzın altında kalır**
+  (arz 491 RP, liste 470 RP) — hub'daki "uygulanmamış giriş tamamen
+  gizli" kuralı yükseltme ekranında da geçerli, erişilemez madde
+  gösterilmez. Bunun bedeli %100 tamamlayan oyuncuda para biriminin
+  susması; bu yüzden **Faz 3'ün günlük bulmaca turu arzı ve yeni
+  maddeleri BİRLİKTE getirmek zorunda**. Uygulama turu, yükseltmeleri
+  `baseHintCost` / `currentUndoLimit` / `CatalystChargeLimit` /
+  `startingTileCount` değerlerine bağlayacağı için oyun hissini
+  değiştirir: kendi analiz + onay turunu ister.
 - **`Tools/sim_xp.py`:** kazanılan puanı ölçer (`sim_core_loop`'u
   kullanır, çıktısını değiştirmez). Rütbe eşiklerinin gerekçesi bu
   ölçümdür; eşik değişirse araç yeniden koşturulup

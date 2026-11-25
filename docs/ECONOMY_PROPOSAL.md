@@ -1,12 +1,15 @@
-# NEXUM — Araştırma Puanı önerisi (Faz 2 / 2.1 eki)
+# NEXUM — Araştırma Puanı (Faz 2 / 2.1 eki)
 
-**Durum: ÖNERİ. Kod yazılmadı, hiçbir bedel değiştirilmedi.**
-Kullanıcı onayından sonra ayrı bir adımda uygulanacak.
+**Durum: TASARIM ONAYLANDI (25 Kasım 2026). Kod YAZILMADI,
+hiçbir bedel değiştirilmedi.** Uygulama ayrı bir adımda yapılacak ve
+oyun hissini değiştiren kısımları (bölüm 3, madde 3) kendi analiz +
+onay turunu ister.
 
-Bu belge üç şeyi yapar:
+Bu belge dört şeyi yapar:
 1. Bugünkü ekonomiyi **ölçer** (ne, neyle, kaça ödeniyor).
-2. Araştırma Puanı'nın kazanım ve harcama yerlerini önerir.
-3. Enflasyon analizini ve öncesi/sonrası tabloyu verir.
+2. Araştırma Puanı'nın kazanım ve harcama yerlerini tanımlar.
+3. Arz/talep dengesini ve öncesi/sonrası tabloyu verir.
+4. Verilen kararları ve gerekçelerini kaydeder (bölüm 4).
 
 ---
 
@@ -92,7 +95,7 @@ yardım alabilirsin" demek.
 
 ---
 
-## 2. Araştırma Puanı (ÖNERİ)
+## 2. Araştırma Puanı
 
 ### 2.1 Temel karar: iç döngüye DOKUNMA, meta katman ekle
 
@@ -137,7 +140,11 @@ ve soru başına bir kez). İkinci bir muhasebe yazılmaz.
 | ansiklopedi kartı okuma (Faz 4) | 2 | 26 × 2 = 52 | kart başına bir kez |
 
 **Bugünkü tavan: ≈ 491 RP** (105 + 50 + 168 + 108 + 60).
-Faz 3'ün günlük bulmacası gelene kadar arz **sonlu**; bu bilinçli.
+
+Günlük bulmaca dışındaki **her kaynak sonlu**: 7 bölüm, 21 tarif, 36 soru,
+3 rozet. Süresiz akan tek musluk Faz 3'ün günlük bulmacası olacak —
+denge bozulursa nerede arayacağımız bu yüzden belli. Harcama listesi bu
+tavana göre ölçüldü (2.4) ve **tavanın altında** tutuldu (karar 4.3).
 
 ### 2.3 Harcama yerleri (kalıcı yükseltmeler)
 
@@ -146,52 +153,65 @@ bölüm içinde tüketilmiyor, yani "harcadım, kayboldu" duygusu yok.
 
 | yükseltme | etki | basamaklar | bedel | toplam |
 |---|---|---|---|---|
-| **Asistan ödeneği** | ipucu taban bedeli 25 → 20 → 15 | 2 | 60 / 90 | 150 |
-| **Yedek numune** | bölüm başına +1 geri alma hakkı | 2 | 70 / 110 | 180 |
-| **Katalizör verimi** | bedava Joker eşiği 5 → 4 sentez | 1 | 120 | 120 |
-| **Fazladan reaktif** | bölüm 1 fazla taşla başlar | 1 | 90 | 90 |
+| **Asistan ödeneği** | ipucu taban bedeli 25 → 20 → 15 | 2 | 55 / 80 | 135 |
+| **Yedek numune** | bölüm başına +1 geri alma hakkı | 2 | 60 / 90 | 150 |
+| **Katalizör verimi** | bedava Joker eşiği 5 → 4 sentez | 1 | 80 | 80 |
+| **Fazladan reaktif** | bölüm 1 fazla taşla başlar | 1 | 65 | 65 |
 | **Defter imzası** (kozmetik) | tarif defterinde oyuncu adı ve rütbesi | 1 | 40 | 40 |
-| **Mentor portresi** (kozmetik) | ikinci portre seti | 1 | 60 | 60 |
-| | | | **toplam** | **640** |
+| | | | **toplam** | **470** |
 
-Kozmetikler bilerek listede: oyuncunun RP'yi oyun hissini değiştirmeden
-harcayabileceği bir yer olmalı, yoksa "her şeyi aldım" noktasından sonra
-kaynak anlamsızlaşır.
+**Kozmetik listede ama yalnızca KİTTEN ÜRETİLEBİLEN kozmetik**
+(karar, bkz. 4.1). Defter imzası mevcut çerçeve + bir TMP etiketi, yani
+yeni varlık gerektirmiyor. Önceki taslakta duran "mentor portresi" (60 RP)
+**çıkarıldı**: dokuz yeni avatar demekti, yani bir çizim turu — üstelik
+mevcut avatarlar zaten "kaynak çözünürlüğü yetersiz" listesinde
+(`docs/STATUS.md`). Faz 6'nın görsel turuna bırakıldı.
 
-### 2.4 Enflasyon analizi
+**İlk basamaklar bilerek ucuz** (40–80 RP, arzın %8–16'sı). Gerekçe
+4.2'de: iade yok, yani oyuncu ilk seçimini L4–L7 duvarını hiç görmeden
+yapıyor. Yanlış ilk seçimin bedeli küçük tutuldu.
+
+### 2.4 Arz / talep dengesi
 
 | | RP |
 |---|---|
 | bugünkü arz tavanı (%100 tamamlama) | **491** |
-| yükseltme listesinin toplamı | **640** |
-| **fark** | **−149** |
+| yükseltme listesinin toplamı | **470** |
+| **fark** | **+21** |
 
-Arz talebin **%77'si**. Yani bugünkü içerikle oyuncu listeyi
-bitiremez — kasten. Üç sonucu var:
+**Liste bugünkü arza SIĞIYOR** (karar, bkz. 4.3). Üç sonucu var:
 
-1. **Seçim gerçek olur.** Oyuncu 491 RP ile hangi yükseltmeyi alacağına
-   karar vermek zorunda; hepsini alabiliyorsa karar yoktur.
-2. **Faz 3 bir anlam kazanır.** Günlük bulmaca (10 RP/gün) tek
-   yenilenebilir kaynak: 15 günde kalan 149 RP kapanır. Günlük bulmacanın
-   "neden her gün gireyim" sorusu böyle cevaplanır.
-3. **Enflasyon riski tek bir yerde toplanır.** Diğer kaynakların hepsi
-   sonlu (bölüm, tarif, soru, rozet, ansiklopedi); süresiz akan tek
-   musluk günlük bulmaca. Dengeyi bozacak bir şey olursa nerede
-   arayacağımız bellidir.
+1. **Ekranda görünen her madde ULAŞILABİLİR.** Hub'da verilen karar
+   ("uygulanmamış giriş tamamen gizli; kilitli kutu, 'yakında' rozeti,
+   soluk buton YOK") yükseltme ekranında da geçerli olur. Listenin
+   arzdan uzun olduğu bir tasarımda, oyuncuya *neden* erişemediğini
+   söyleyemezdik: Faz 3 henüz yok.
+2. **Seçim SIRA seçimidir, dışlama değil.** Yolculuğun tamamını
+   bitiren oyuncu (7 bölüm + 21 tarif + 36 soru) listenin tamamını
+   alabilir, 21 RP artar. Ama oraya varmak uzun: bot ölçümünde L7
+   kazanma oranı %3, L4 %13. Yolun büyük kısmında oyuncu "önce hangisi"
+   diye karar veriyor, ve bu karar iade edilemediği için gerçek.
+3. **%100'de para birimi SUSAR — ve bu Faz 3'e bir ŞART bırakır.**
+   Her şeyi bitiren oyuncunun RP'si birikmeye devam eder ama alacak bir
+   şey kalmaz. Bu, listeyi kısaltma kararının bedeli ve kabul edildi.
+   Karşılığında **Faz 3 arzı ve maddeleri BİRLİKTE getirmek zorunda**:
+   günlük bulmaca (10 RP/gün) tek başına eklenirse ölü para birimini
+   daha hızlı biriktirmiş oluruz. Günlük bulmaca turunun kabul
+   kriterine bu madde yazılmalı.
 
 **Kaçınılan iki hata:**
 
-- *Sentez başına RP vermek.* Serbest mod sınırsız oynanıyor; sentez başına
-  ödeme sınırsız RP demekti. Ölçüm: L7 ortalama 32 hamlede ~430 puan, yani
-  sentez başına 1 RP bile saatte dört haneli üretirdi.
+- *Sentez başına RP vermek.* Serbest mod sınırsız oynanıyor; sentez
+  başına ödeme sınırsız RP demekti. Ölçüm: L7 ortalama 32 hamlede ~430
+  puan, yani sentez başına 1 RP bile saatte dört haneli üretirdi.
 - *Tekrar tamamlamaya tam RP vermek.* L1 ortalama **6 hamlede** bitiyor
   (ölçüm). Tam ödeme olsaydı dakikada ~2 tamamlama × 15 RP = saatte
   ~1800 RP; bütün liste 20 dakikada alınırdı. XP'deki "en iyi sonuç"
-  defteri aynen uygulanıyor.
+  defteri (`levelXpGranted` deseni) aynen uygulanıyor.
 
 ### 2.5 Öncesi / sonrası
 
-| | bugün | öneri sonrası |
+| | bugün | uygulanınca |
 |---|---|---|
 | bölüm içi cüzdan | bölüm skoru | **değişmedi** |
 | ipucu bedeli | 25 / 50 / 75 | **değişmedi** (yükseltmeyle 20 / 40 / 60, sonra 15 / 30 / 45) |
@@ -200,7 +220,7 @@ bitiremez — kasten. Üç sonucu var:
 | Joker bedeli | taşın `jokerCost`'u | **değişmedi** |
 | katalizör eşiği | 5 sentez | aynı, yükseltmeyle 4 |
 | kalıcı para birimi | yok (`totalScore` ölü kayıt) | **Araştırma Puanı** |
-| kalıcı harcama yeri | yok | 6 yükseltme (4 oynanış + 2 kozmetik) |
+| kalıcı harcama yeri | yok | 5 yükseltme (4 oynanış + 1 kozmetik), 470 RP |
 | `totalScore` | ölü kayıt | **kaldırılır** — anlamı yanlış (kalan skorların toplamı), yerini RP alır |
 
 ---
@@ -210,24 +230,74 @@ bitiremez — kasten. Üç sonucu var:
 1. `SaveData.researchPoints` + yükseltme basamakları (`List<int>`),
    `saveVersion` 5 ve göç. Geriye dönük RP, XP'nin geriye dönük hesabıyla
    **aynı veriden** türetilir (uydurma yok).
-2. `ProgressionService` ile aynı dosyada bir `ResearchPoints` muhasebesi:
-   kazanç olayları ortak, böylece iki sayaç ayrışamaz.
+2. `ProgressionService` ile aynı derlemede bir `ResearchPoints`
+   muhasebesi: kazanç olayları ortak, böylece iki sayaç ayrışamaz.
+   Çiftlik korumaları XP ile aynı (bölüm başına "en iyi sonuç" defteri,
+   tarif ve soru başına bir kez).
 3. Yükseltmelerin oyun tarafına bağlanması: `baseHintCost`,
    `currentUndoLimit`, `CatalystChargeLimit`, `startingTileCount` artık
    sabit değil, yükseltme basamağından okunur. **Bu, oyun hissini
    değiştiren bir değişikliktir**: ayrı analiz + onay turu ister.
-4. Yükseltme ekranı (yeni panel) — hangi sahnelerden açılacağı baştan
+4. Yükseltme ekranı (yeni panel). Hangi sahnelerden açılacağı baştan
    kararlaştırılır ve o sahnelerin HEPSİNE kurulur (CLAUDE.md panel
-   erişimi kuralı).
+   erişimi kuralı). Ekranda **her yükseltmenin etkisi somut yazılır**
+   ("ipucu 25 → 20 puan"), çünkü iade yok ve oyuncunun seçimini bilgiyle
+   yapması gerekiyor (karar 4.2).
 5. `Tools/sim_core_loop.py`'ye yükseltme senaryoları: her basamağın
    L4–L7 kazanma oranına etkisi ölçülür, tahmin edilmez.
+6. Faz 3'ün günlük bulmaca turuna kabul kriteri: **arz ve yeni maddeler
+   birlikte** gelir (bkz. 2.4, madde 3).
 
-## 4. Açık sorular (kullanıcıya)
+---
 
-- Kozmetik yükseltmeler kapsamda mı, yoksa RP yalnızca oynanışa mı
-  harcanmalı?
-- Yükseltmeler **geri alınabilir** olsun mu (RP iadesi)? Bugünkü öneri:
-  hayır — iade, "dene-geri al" ile denge ölçümünü imkânsız kılar.
-- Faz 3 gelene kadar arzın sonlu kalması kabul mü, yoksa bugünden
-  yenilenebilir bir kaynak (ör. günde bir kez bölüm tekrarına küçük RP)
-  gerekli mi?
+## 4. Kararlar (25 Kasım 2026)
+
+### 4.1 Kozmetik yükseltmeler kapsamda — ama yalnızca kitten üretilebilenler
+
+*Soru:* RP yalnızca oynanışa mı harcanmalı?
+
+*Karar:* **Kozmetik kapsamda, ama yeni çizim gerektirenler değil.**
+
+*Gerekçe:* kozmetik olmadan oyuncu oynanış listesini bitirdiği an RP
+**ölü para birimi** olur — her yeni tarif keşfi, her doğru quiz cevabı
+hiçbir şeye yaramayan bir sayıyı artırır. Kozmetik, para biriminin
+ömrünü uzatan tek sink. Ama maliyetleri eşit değil: defter imzası
+mevcut çerçeve + TMP etiketi, mentor portre seti dokuz yeni avatar.
+İkincisi listeden düştü.
+
+### 4.2 İade YOK
+
+*Soru:* satın alınan yükseltme geri alınabilsin mi (RP iadesi)?
+
+*Karar:* **Hayır.**
+
+*Gerekçe:* iade varsa oyuncu her bölümde yükseltme takas edebilir ve
+"şu yükseltmeyle L4–L7 nasıl hissettiriyor" sorusunun kararlı bir
+cevabı kalmaz — denge turu ölçemez hâle gelir.
+
+*Bedeli ve karşılığı:* oyuncu ilk satın almasını L4–L7 duvarını hiç
+görmeden, yani bilgisizce yapıyor. Bu iadeyle değil **bilgiyle**
+çözülür: (a) her yükseltmenin etkisi ekranda somut yazılır
+("ipucu 25 → 20 puan"), (b) her yükseltmenin ilk basamağı ucuz tutulur
+(40–80 RP, arzın %8–16'sı), böylece yanlış ilk seçim pahalı olmaz.
+
+### 4.3 Liste bugünkü arza sığar
+
+*Soru:* arz (491 RP) talebin altında kalsın mı?
+
+*Karar:* **Hayır — liste arza sığar (470 RP).**
+
+*Gerekçe:* önceki taslak "arz talebin %77'si, bu kasten" diyordu ve bu,
+**projenin kendi kuralıyla çelişiyordu**: hub'da "uygulanmamış giriş
+tamamen gizli, 'yakında' rozeti yok" kararı var. Yükseltme ekranında
+149 RP'lik erişilemez madde göstermek tam olarak o kuralın yasakladığı
+şey; üstelik oyuncuya neden erişemediğini söyleyemiyorduk, çünkü Faz 3
+henüz yok.
+
+*Bedeli:* %100 tamamlayan oyuncuda para birimi susar (bkz. 2.4,
+madde 3). Karşılığında Faz 3 arzı ve maddeleri birlikte getirmek
+zorunda — bu, günlük bulmaca turunun kabul kriterine yazıldı.
+
+*Elenen seçenek:* "bugünden yenilenebilir bir kaynak ekle" (ör. günde
+bir kez bölüm tekrarına küçük RP). Yeni bir musluk, yeni bir çiftlik
+yüzeyi ve Faz 3'ün günlük bulmacasıyla çakışan bir mekanik demekti.
