@@ -61,6 +61,14 @@ public static class NexumDeviceShot
 
         // 2.1: rütbe atlama kutlaması (sonuç kartının üstünde).
         public bool kutlama;
+
+        // 2.2: sonuç kartındaki yıldız senaryosu.
+        //   0 varsayılan (sınır aşıldı, yardımsız -> 1. ve 3. yıldız)
+        //   1 üç yıldız, 2 yalnızca birinci yıldız (sınır aşıldı + ipucu)
+        public int yildiz;
+
+        // 2.2: bölüm haritası yıldızları doldurulsun mu?
+        public bool haritaYildiz;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -194,6 +202,33 @@ public static class NexumDeviceShot
                                    "SafeAreaRoot/ElementDetailPanel" },
                     tahtayiDoldur = true, sonucKarti = 2 },
 
+        // 2.2: sonuç kartının üç yıldız hâli. Varsayılan görüntü
+        // (sonuc-karti) zaten 1. ve 3. yıldızı gösteriyor — yıldızların
+        // BAĞIMSIZ olduğunu en iyi o anlatıyor.
+        new Ekran { ad = "sonuc-karti-uc-yildiz", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "LevelCompletePanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ElementDetailPanel" },
+                    tahtayiDoldur = true, sonucKarti = 1, yildiz = 1 },
+
+        new Ekran { ad = "sonuc-karti-tek-yildiz", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "LevelCompletePanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ElementDetailPanel" },
+                    tahtayiDoldur = true, sonucKarti = 1, yildiz = 2 },
+
+        // 2.2: bölüm haritası düğümlerindeki yıldızlar.
+        new Ekran { ad = "bolum-haritasi", scene = "Assets/Scenes/MainMenu.unity",
+                    ac = new[] { "SafeAreaRoot/LevelSelectionPanel" },
+                    kapa = new[] { "SafeAreaRoot/MainMenuPanel", "SafeAreaRoot/SettingsPanel",
+                                   "SafeAreaRoot/HowToPlayPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ProfilePanel", "SafeAreaRoot/EncyclopediaPanel" },
+                    haritaYildiz = true },
+
         // 2.1: rütbe atlama anı. Kutlama sonuç kartının ÜSTÜNDE duruyor;
         // görüntü ikisini birlikte gösteriyor ki perdenin kartı nasıl
         // örttüğü görülebilsin.
@@ -236,7 +271,8 @@ public static class NexumDeviceShot
                 if (e.ansiklopediyiDoldur) AnsiklopediyiDoldur(canvasGo.transform);
                 if (e.geriBildirim) GeriBildirimiDoldur(canvasGo.transform);
                 if (e.quiz > 0) QuiziDoldur(canvasGo.transform, e.quiz == 2);
-                if (e.sonucKarti > 0) SonucKartiniDoldur(e.sonucKarti == 1);
+                if (e.sonucKarti > 0) SonucKartiniDoldur(e.sonucKarti == 1, e.yildiz);
+                if (e.haritaYildiz) HaritaYildizlariniDoldur();
                 if (e.hub > 0) HubuDoldur(e.hub == 2);
                 if (e.kutlama) KutlamayiDoldur();
                 BilgiKartiniAyarla(canvasGo.transform, e.bilgiKartlariKapali);
@@ -270,7 +306,7 @@ public static class NexumDeviceShot
         Hazirla(canvasGo.transform, e);
         TahtayiDoldur(scene);
         HedefleriDoldur();
-        SonucKartiniDoldur(true);
+        SonucKartiniDoldur(true, 0);
 
         Texture2D png = ResultShare.Render();
         if (png == null) { Debug.LogError($"{Tag}: paylaşım görseli üretilemedi"); return; }
@@ -486,7 +522,7 @@ public static class NexumDeviceShot
     /// <c>ResultCard.Fill</c> çağrılır, yalnızca girdileri (bölüm, sayaçlar)
     /// burada kurulur. Böylece görüntü, oyuncunun göreceğinin ta kendisidir.
     /// </summary>
-    public static void SonucKartiniDoldur(bool tepkimeli)
+    public static void SonucKartiniDoldur(bool tepkimeli, int yildizSenaryo)
     {
         ResultCard card = Object.FindObjectOfType<ResultCard>(true);
         if (card == null) { Debug.LogError($"{Tag}: ResultCard yok"); return; }
@@ -501,7 +537,18 @@ public static class NexumDeviceShot
 
         LevelRun.Reset();
         LevelRun.AddScore(1240);
-        for (int i = 0; i < 37; i++) LevelRun.CountMove();
+
+        // 2.2: YILDIZ SENARYOSU. Hamle sayısı ve yardım bayrakları
+        // kuruluyor, maske GERÇEK KURALDAN (StarRules) hesaplanıyor —
+        // görüntüdeki yıldızlar oyunun verdiğiyle aynı.
+        int sinir = StarRules.MoveLimit(lm.currentLevelIndex);
+        int hamle = yildizSenaryo == 1 ? Mathf.Max(1, sinir - 4) : 37;
+        for (int i = 0; i < hamle; i++) LevelRun.CountMove();
+
+        if (yildizSenaryo == 2) LevelRun.NoteHint();
+
+        LevelRun.NoteStars(StarRules.Evaluate(lm.currentLevelIndex, hamle,
+                                              LevelRun.HintUsed, LevelRun.PaidJokerUsed, true));
 
         if (tepkimeli)
         {
@@ -526,8 +573,48 @@ public static class NexumDeviceShot
 
         card.Fill();
         Debug.Log($"{Tag}_SONUC: bölüm={lm.currentLevelIndex + 1} puan={LevelRun.EarnedScore} " +
-                  $"hamle={LevelRun.Moves} tepkime={LevelRun.NewRecipes.Count} " +
-                  $"xp={LevelRun.XpAwarded}");
+                  $"hamle={LevelRun.Moves}/{sinir} tepkime={LevelRun.NewRecipes.Count} " +
+                  $"xp={LevelRun.XpAwarded} yildiz={StarRules.CountOf(LevelRun.Stars)}/3 " +
+                  $"(maske {LevelRun.Stars})");
+    }
+
+    /// <summary>
+    /// Bölüm haritası yıldızları: her düğüm kendini kayıttan doldurur
+    /// (<c>LevelNodeStars.Apply</c>), ama edit mode'da OnEnable koşmaz.
+    /// GERÇEK KOD YOLU çağrılır; yalnızca girdi (temsilî kayıt) kurulur
+    /// ve KAYIT GERİ YÜKLENİR.
+    /// </summary>
+    public static void HaritaYildizlariniDoldur()
+    {
+        LevelNodeStars[] dugumler = Object.FindObjectsOfType<LevelNodeStars>(true);
+        if (dugumler.Length == 0) { Debug.LogError($"{Tag}: LevelNodeStars yok"); return; }
+
+        string yedek = SaveService.ExportRaw();
+        try
+        {
+            // Temsilî ilerleme: ilk bölüm kusursuz, sonrakiler eksik.
+            SaveService.Data.levelStars = new System.Collections.Generic.List<int>
+            {
+                StarRules.All,
+                StarRules.Complete | StarRules.NoHelp,
+                StarRules.Complete | StarRules.UnderMoveLimit,
+                StarRules.Complete,
+            };
+            SaveService.Data.unlockedLevel = 4;
+            SaveService.Data.maxLevelUnlocked = 5;
+
+            LevelMenuManager menu = Object.FindObjectOfType<LevelMenuManager>(true);
+            if (menu != null) menu.UpdateLevelButtons();
+
+            foreach (LevelNodeStars d in dugumler) d.Apply();
+
+            Debug.Log($"{Tag}_HARITA: {dugumler.Length} dugum, temsili kayit " +
+                      $"(L1 3 yildiz, L2 1+3, L3 1+2, L4 1)");
+        }
+        finally
+        {
+            SaveService.ImportRaw(yedek);
+        }
     }
 
     /// <summary>
