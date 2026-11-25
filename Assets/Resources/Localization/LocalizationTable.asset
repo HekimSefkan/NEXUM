@@ -759,6 +759,9 @@ MonoBehaviour:
   - key: result.moves_label
     turkish: HAMLE
     english: HAMLE
+  - key: result.moves_with_limit
+    turkish: '{0}/{1}'
+    english: '{0}/{1}'
   - key: result.next
     turkish: "SONRAK\u0130 B\xD6L\xDCM"
     english: "SONRAK\u0130 B\xD6L\xDCM"
@@ -777,6 +780,15 @@ MonoBehaviour:
   - key: result.share
     turkish: "PAYLA\u015E"
     english: "PAYLA\u015E"
+  - key: result.star_need_moves
+    turkish: "Hamle s\u0131n\u0131r\u0131 {0} \u2014 sen {1} hamlede bitirdin"
+    english: "Hamle s\u0131n\u0131r\u0131 {0} \u2014 sen {1} hamlede bitirdin"
+  - key: result.star_need_nohelp
+    turkish: "Yard\u0131ms\u0131z bitir: ipucu ve \xFCcretli Joker yok"
+    english: "Yard\u0131ms\u0131z bitir: ipucu ve \xFCcretli Joker yok"
+  - key: result.star_perfect
+    turkish: "\xDC\xE7 y\u0131ld\u0131z! Kusursuz sentez."
+    english: "\xDC\xE7 y\u0131ld\u0131z! Kusursuz sentez."
   - key: result.xp_label
     turkish: "DENEY\u0130M"
     english: "DENEY\u0130M"

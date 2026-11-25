@@ -66,6 +66,17 @@ public class SaveData
     [Tooltip("XP'nin geriye dönük hesabı bir kez çalışır.")]
     public int xpBackfillDone;
 
+    // --- Yıldızlar (Faz 2 / 2.2) -----------------------------------------
+    [Tooltip("Bölüm başına KAZANILMIŞ yıldızların bit maskesi (StarRules). " +
+             "İndeks = bölüm indeksi. Birikir: kazanılan yıldız geri alınmaz.")]
+    public List<int> levelStars = new List<int>();
+
+    [Tooltip("Bölüm başına EN İYİ hamle sayısı; 0 = hiç bitirilmedi.")]
+    public List<int> levelBestMoves = new List<int>();
+
+    [Tooltip("Yıldızların geriye dönük hesabı bir kez çalışır.")]
+    public int starBackfillDone;
+
     // --- İstatistik -------------------------------------------------------
     public int totalScore;
     public int totalSynthesis;
@@ -109,7 +120,7 @@ public class SaveData
 public static class SaveService
 {
     public const string SaveKey = "NEXUM_SAVE";
-    public const int CurrentVersion = 4;
+    public const int CurrentVersion = 5;
     private const string Tag = "NEXUM_SAVE";
 
     /// <summary>Ad listelerinde kabul edilen en fazla girdi (bozuk veri koruması).</summary>
@@ -281,6 +292,8 @@ public static class SaveService
         repaired += RepairNameList(ref d.quizXpAwarded, "quizXpAwarded");
         repaired += RepairNameList(ref d.badges, "badges");
         repaired += RepairIntList(ref d.levelXpGranted, "levelXpGranted");
+        repaired += RepairIntList(ref d.levelStars, "levelStars");
+        repaired += RepairIntList(ref d.levelBestMoves, "levelBestMoves");
 
         repaired += ClampMin(ref d.avatarIndex, 0, "avatarIndex");
         repaired += ClampMin(ref d.selectedLevel, 0, "selectedLevel");
@@ -295,6 +308,8 @@ public static class SaveService
         // içinde yapılır.
         repaired += ClampRange(ref d.rankCelebrated, 0, RankCelebratedMax, "rankCelebrated");
         repaired += ClampRange(ref d.xpBackfillDone, 0, 1, "xpBackfillDone");
+        repaired += ClampRange(ref d.starBackfillDone, 0, 1, "starBackfillDone");
+        repaired += RepairStarMasks(d);
         repaired += ClampMin(ref d.totalScore, 0, "totalScore");
         repaired += ClampMin(ref d.totalSynthesis, 0, "totalSynthesis");
         repaired += ClampMin(ref d.totalAccidents, 0, "totalAccidents");
@@ -388,6 +403,32 @@ public static class SaveService
         return degisti ? 1 : 0;
     }
 
+    /// <summary>
+    /// Yıldız maskelerinde tanımsız bit bırakmaz. Maske üç bitlik
+    /// (<c>StarRules.All</c> = 7) ama o tablo başka bir derlemede;
+    /// burada sayı olarak kırpılır, anlamı <c>StarRules.Sanitize</c>
+    /// okuma tarafında bir kez daha uygular.
+    /// </summary>
+    private static int RepairStarMasks(SaveData d)
+    {
+        if (d.levelStars == null) return 0;
+
+        const int tumBitler = 7;      // StarRules.All
+        int onarilan = 0;
+
+        for (int i = 0; i < d.levelStars.Count; i++)
+        {
+            int temiz = d.levelStars[i] & tumBitler;
+            if (temiz == d.levelStars[i]) continue;
+
+            Log($"levelStars[{i}] = {d.levelStars[i]}");
+            d.levelStars[i] = temiz;
+            onarilan++;
+        }
+
+        return onarilan > 0 ? 1 : 0;
+    }
+
     private static int ClampMin(ref int value, int min, string field)
     {
         if (value >= min) return 0;
@@ -459,6 +500,21 @@ public static class SaveService
             if (d.badges == null) d.badges = new List<string>();
             d.xpBackfillDone = 0;     // ilk fırsatta hesaplansın
             d.saveVersion = 4;
+            steps++;
+        }
+
+        // Sürüm 5: üç yıldız (Faz 2 / 2.2). Eski kayıtta yıldız yok.
+        // GERİYE DÖNÜK HESAP BURADA YAPILMAZ: yıldız tablosu ve XP
+        // miktarı Nexum.Progression içinde, kayıt katmanı hiçbir
+        // derlemeye bağlı değil (tarif defteri ve XP ile aynı desen).
+        // Hesabı StarService.RunBackfillOnce yapar; ProgressionBootstrap
+        // sırayı kurar.
+        if (d.saveVersion < 5)
+        {
+            if (d.levelStars == null) d.levelStars = new List<int>();
+            if (d.levelBestMoves == null) d.levelBestMoves = new List<int>();
+            d.starBackfillDone = 0;     // ilk fırsatta hesaplansın
+            d.saveVersion = 5;
             steps++;
         }
 

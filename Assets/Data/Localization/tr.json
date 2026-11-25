@@ -771,6 +771,10 @@
             "value": "HAMLE"
         },
         {
+            "key": "result.moves_with_limit",
+            "value": "{0}/{1}"
+        },
+        {
             "key": "result.next",
             "value": "SONRAKİ BÖLÜM"
         },
@@ -793,6 +797,18 @@
         {
             "key": "result.share",
             "value": "PAYLAŞ"
+        },
+        {
+            "key": "result.star_need_moves",
+            "value": "Hamle sınırı {0} — sen {1} hamlede bitirdin"
+        },
+        {
+            "key": "result.star_need_nohelp",
+            "value": "Yardımsız bitir: ipucu ve ücretli Joker yok"
+        },
+        {
+            "key": "result.star_perfect",
+            "value": "Üç yıldız! Kusursuz sentez."
         },
         {
             "key": "result.xp_label",

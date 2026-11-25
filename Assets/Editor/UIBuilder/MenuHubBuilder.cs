@@ -45,6 +45,7 @@ public static class MenuHubBuilder
     private const string StripFramePath = "Assets/Art/UI/panel_sm_normal.png";
     private const string RingPath = "Assets/Art/UI/compound_ring_normal.png";
     private const string StarEmptyPath = "Assets/Art/UI/star_empty_normal.png";
+    private const string StarFullPath = "Assets/Art/UI/star_full_normal.png";
     private const string BarPath = "Assets/Art/UI/progress_fill_selected.png";
     private const string TrackPath = "Assets/Art/UI/progress_track_normal.png";
 
@@ -190,6 +191,7 @@ public static class MenuHubBuilder
         // --- 3) kahraman kart: mevcut OYNA eylemi
         GameObject hero = Devral(b, "PlayButton");
         GameObject heroStatus = null, heroStars = null;
+        List<Image> heroStarImages = new List<Image>();
         if (hero != null)
         {
             Tasi(hero, root);
@@ -215,8 +217,8 @@ public static class MenuHubBuilder
                                new Vector2(-120f, -10f), theme.typography.body,
                                theme.palette.primaryBright, TextAlignmentOptions.Left);
 
-            heroStars = Yildizlar(b, hero, "HeroStars", new Vector2(340f, -10f));
-            Gizle(b, heroStars);
+            heroStars = Yildizlar(b, hero, "HeroStars", new Vector2(340f, -10f), heroStarImages);
+            Gorunurluk(b, heroStars, HubFeatures.Stars);
         }
 
         // --- 4) ikili kart
@@ -318,6 +320,9 @@ public static class MenuHubBuilder
             h.streakBadge = streak;
             h.heroStatusText = Tmp(heroStatus);
             h.heroStars = heroStars;
+            h.heroStarImages = heroStarImages.ToArray();
+            h.starFullSprite = LoadSprite(StarFullPath);
+            h.starEmptySprite = LoadSprite(StarEmptyPath);
             h.levelSelectCard = levelCard;
             h.levelSelectStatusText = Tmp(levelStatus);
             h.dailyPuzzleCard = daily;
@@ -469,7 +474,8 @@ public static class MenuHubBuilder
         Yerellestir(b, label, locKey);
     }
 
-    private static GameObject Yildizlar(UIBuilder b, GameObject parent, string ad, Vector2 pos)
+    private static GameObject Yildizlar(UIBuilder b, GameObject parent, string ad, Vector2 pos,
+                                        List<Image> toplanan = null)
     {
         GameObject row = b.Ensure(Yol(parent), ad);
         if (row == null) return null;
@@ -479,14 +485,18 @@ public static class MenuHubBuilder
         {
             GameObject star = b.Ensure(Yol(parent) + "/" + ad, "Star" + i);
             b.SetFixed(star, UITokens.Center, new Vector2(72f, 72f), new Vector2((i - 1) * 84f, 0f));
-            b.EnsureComponent<Image>(star, img =>
+            Image img = b.EnsureComponent<Image>(star, i2 =>
             {
-                img.sprite = LoadSprite(StarEmptyPath);
-                img.type = Image.Type.Simple;
-                img.color = Color.white;
-                img.preserveAspect = true;
-                img.raycastTarget = false;
+                // Sahnede BOŞ kaydedilir; dolu hâli çalışma zamanında
+                // MenuHub yazar (kayıttan okunur).
+                i2.sprite = LoadSprite(StarEmptyPath);
+                i2.type = Image.Type.Simple;
+                i2.color = Color.white;
+                i2.preserveAspect = true;
+                i2.raycastTarget = false;
             });
+
+            if (toplanan != null && img != null) toplanan.Add(img);
         }
         return row;
     }

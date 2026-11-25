@@ -35,8 +35,17 @@ public class MenuHub : MonoBehaviour
 
     [Header("Kahraman kart")]
     public TextMeshProUGUI heroStatusText;
-    [Tooltip("3 yıldız (Faz 2): HubFeatures.Stars ile yönetilir.")]
+    [Tooltip("3 yıldız (2.2): HubFeatures.Stars ile yönetilir.")]
     public GameObject heroStars;
+
+    [Tooltip("Kahraman karttaki üç yuva, soldan sağa (StarRules bit sırası).")]
+    public Image[] heroStarImages;
+
+    [Tooltip("Kazanılmış yıldız görseli.")]
+    public Sprite starFullSprite;
+
+    [Tooltip("Kazanılmamış yıldız görseli.")]
+    public Sprite starEmptySprite;
 
     [Header("İkili kart")]
     public GameObject levelSelectCard;
@@ -185,6 +194,28 @@ public class MenuHub : MonoBehaviour
         }
 
         ApplyRank();
+        ApplyHeroStars();
+    }
+
+    /// <summary>
+    /// Kahraman karttaki yıldızlar: SIRADAKİ bölümün en iyi sonucu
+    /// (<see cref="NextLevelIndex"/> — kartın yazdığı ve açtığı bölümle
+    /// aynı kaynak). Hiç oynanmadıysa üçü de boş; sahte değer yok.
+    /// </summary>
+    private void ApplyHeroStars()
+    {
+        if (heroStarImages == null) return;
+
+        int mask = StarService.StarsFor(NextLevelIndex);
+
+        for (int i = 0; i < heroStarImages.Length; i++)
+        {
+            if (heroStarImages[i] == null) continue;
+
+            bool dolu = StarRules.Has(mask, StarRules.StarAt(i));
+            Sprite hedef = dolu ? starFullSprite : starEmptySprite;
+            if (hedef != null) heroStarImages[i].sprite = hedef;
+        }
     }
 
     /// <summary>

@@ -228,6 +228,24 @@ public static class ProgressionService
         return verilen;
     }
 
+    // ======================================================== KAYNAK: YILDIZ
+
+    /// <summary>
+    /// YENİ kazanılan yıldızların XP'si (2.2). Çağıran yalnızca YENİ
+    /// bit sayısını verir; "aynı yıldızı tekrar alma" ayıklaması
+    /// <c>StarService</c>'teki maskede yapılıyor — çiftlik koruması
+    /// bölüm defteriyle aynı desen, ikinci bir sayaç yok.
+    /// </summary>
+    public static int AwardStars(int newStarCount)
+    {
+        if (!XpSources.Stars) return 0;
+        if (newStarCount <= 0) return 0;
+
+        int verilen = Add(newStarCount * ProgressionTable.StarXp);
+        Debug.Log($"{Tag}: {newStarCount} yeni yildiz -> +{verilen} XP, toplam {Xp}");
+        return verilen;
+    }
+
     // ========================================================= KAYNAK: QUIZ
 
     /// <summary>

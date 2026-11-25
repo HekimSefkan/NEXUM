@@ -43,6 +43,12 @@ public static class ProgressionBootstrap
         // 2) XP'nin geriye dönük hesabı (kendi bayrağıyla korunur)
         ProgressionService.RunBackfillOnce(LevelCount(), RecipeCount(), QuizCount());
 
+        // 2b) Yıldızların geriye dönük hesabı (kendi bayrağıyla korunur).
+        //     XP hesabından SONRA: ikisi de XP ödüyor ve kutlama bayrağı
+        //     toplam XP'ye bakıyor; sıra sabit olmazsa aynı açılışta
+        //     hangi rütbede durulduğu değişebilirdi.
+        StarService.RunBackfillOnce(LevelCount());
+
         // 3) Bugün kazanılabilir rozetler: eski kayıtta "İlk Sentez" ve
         //    "Tüm Tepkimeler" çoktan hak edilmiş olabilir. "Kazasız Bölüm"
         //    geriye dönük verilemez — hangi bölümün kazasız bitirildiği

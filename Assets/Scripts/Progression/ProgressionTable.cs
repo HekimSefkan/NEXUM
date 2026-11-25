@@ -151,7 +151,7 @@ public static class XpSources
         LevelComplete = true;       // 2.1
         RecipeDiscovery = true;     // 2.1
         QuizCorrect = true;         // 2.1
-        Stars = false;              // 2.2
+        Stars = true;               // 2.2 UYGULANDI
         DailyPuzzle = false;        // Faz 3
         EncyclopediaRead = false;   // Faz 4
     }

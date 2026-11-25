@@ -173,6 +173,15 @@ public static class CodeStrings
     public const string ResultXpLabel = "result.xp_label";
     public const string ResultXpValue = "result.xp_value";
 
+    // --- Yıldızlar (Faz 2 / 2.2) -----------------------------------------
+    /// <summary>Hamle kutusu: "37/33" (sınır varsa).</summary>
+    public const string ResultMovesWithLimit = "result.moves_with_limit";
+
+    /// <summary>Sonuç kartında yıldız durumu: tek satır, TEK sonraki adım.</summary>
+    public const string ResultStarPerfect = "result.star_perfect";
+    public const string ResultStarNeedMoves = "result.star_need_moves";
+    public const string ResultStarNeedNoHelp = "result.star_need_nohelp";
+
     // --- Rozetler (Faz 2 / 2.1) ------------------------------------------
     // Verisi bugün OLMAYAN rozetlerin adı da burada: rozet tablosu tek
     // kaynak olsun, veri geldiğinde yalnızca bayrak açılsın.
@@ -306,6 +315,11 @@ public static class CodeStrings
 
         [ResultXpLabel] = "DENEYİM",
         [ResultXpValue] = "+{0} XP",
+
+        [ResultMovesWithLimit] = "{0}/{1}",
+        [ResultStarPerfect] = "Üç yıldız! Kusursuz sentez.",
+        [ResultStarNeedMoves] = "Hamle sınırı {0} — sen {1} hamlede bitirdin",
+        [ResultStarNeedNoHelp] = "Yardımsız bitir: ipucu ve ücretli Joker yok",
 
         [BadgeFirstSynthesis] = "İlk Sentez",
         [BadgeAllReactions] = "Tüm Tepkimeler",

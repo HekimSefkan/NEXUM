@@ -41,10 +41,22 @@ public class ResultCard : MonoBehaviour
     [Tooltip("Yuvalar arası yatay hatve; kullanılan yuvalar buna göre ortalanır.")]
     public float goalSpacing = 190f;
 
-    [Header("Yıldızlar (Faz 2)")]
-    [Tooltip("Faz 2'ye kadar KAPALI. Açılınca satır görünür, yerleşim değişmez.")]
+    [Header("Yıldızlar (2.2)")]
+    [Tooltip("2.2'de AÇILDI. Kapatılırsa satır gizlenir, yerleşim değişmez.")]
     public bool starsEnabled;
     public GameObject starsRow;
+
+    [Tooltip("Üç yuvanın görselleri, soldan sağa (StarRules bit sırası).")]
+    public Image[] starImages;
+
+    [Tooltip("Kazanılmış yıldız görseli.")]
+    public Sprite starFullSprite;
+
+    [Tooltip("Kazanılmamış yıldız görseli.")]
+    public Sprite starEmptySprite;
+
+    [Tooltip("Hangi koşulun kaçtığını söyleyen tek satır.")]
+    public TextMeshProUGUI starHintText;
 
     [Header("Butonlar")]
     public GameObject nextLevelButton;
@@ -88,14 +100,14 @@ public class ResultCard : MonoBehaviour
         }
 
         if (scoreValueText != null) scoreValueText.text = LevelRun.EarnedScore.ToString();
-        if (movesValueText != null) movesValueText.text = LevelRun.Moves.ToString();
-
+        FillMoves(index);
+        FillStars(index);
         FillXp();
 
         FillGoals(data);
         FillReactions();
 
-        if (starsRow != null) starsRow.SetActive(starsEnabled);
+
 
         // Eski paylaşım mesajı yeni kartta durmasın
         if (shareMessageText != null) shareMessageText.gameObject.SetActive(false);
@@ -119,6 +131,73 @@ public class ResultCard : MonoBehaviour
                 rt.anchoredPosition = new Vector2(x, rt.anchoredPosition.y);
             }
         }
+    }
+
+    // -------------------------------------------------------------- yıldız
+
+    /// <summary>
+    /// Hamle kutusu. Sınır VARSA "37/33" yazılır: ikinci yıldızın
+    /// ölçütü tam da bu sayı, ve kutuda göstermek ayrı bir satıra
+    /// gerek bırakmıyor. Sınırı olmayan bölümde yalnızca hamle yazılır.
+    /// </summary>
+    private void FillMoves(int levelIndex)
+    {
+        if (movesValueText == null) return;
+
+        int limit = starsEnabled ? StarRules.MoveLimit(levelIndex) : -1;
+        movesValueText.text = limit > 0
+            ? Loc.Format(CodeStrings.ResultMovesWithLimit, LevelRun.Moves, limit)
+            : LevelRun.Moves.ToString();
+    }
+
+    /// <summary>
+    /// Üç yuva + TEK satırlık yönlendirme.
+    ///
+    /// Yuvalar BAĞIMSIZ doluyor: ikinci yıldız kaçıp üçüncü kazanılmışsa
+    /// ortadaki boş, sağdaki dolu olur (<c>StarRules</c> bit maskesi).
+    ///
+    /// Satır TEK bir sonraki adım söyler. İki koşul birden kaçtıysa
+    /// hamle satırı yazılır: ikisini birden yazmak hem kutuyu zorluyor
+    /// hem de oyuncuya iki iş veriyor. Kart hesap YAPMAZ; maske
+    /// <c>LevelRun.Stars</c>'tan gelir.
+    /// </summary>
+    private void FillStars(int levelIndex)
+    {
+        if (starsRow != null) starsRow.SetActive(starsEnabled);
+        if (starHintText != null) starHintText.gameObject.SetActive(starsEnabled);
+        if (!starsEnabled) return;
+
+        int mask = LevelRun.Stars;
+
+        if (starImages != null)
+        {
+            for (int i = 0; i < starImages.Length; i++)
+            {
+                if (starImages[i] == null) continue;
+                bool dolu = StarRules.Has(mask, StarRules.StarAt(i));
+                Sprite hedef = dolu ? starFullSprite : starEmptySprite;
+                if (hedef != null) starImages[i].sprite = hedef;
+            }
+        }
+
+        if (starHintText == null) return;
+
+        if (StarRules.Has(mask, StarRules.UnderMoveLimit) && StarRules.Has(mask, StarRules.NoHelp))
+        {
+            starHintText.text = Loc.Get(CodeStrings.ResultStarPerfect);
+            return;
+        }
+
+        if (!StarRules.Has(mask, StarRules.UnderMoveLimit))
+        {
+            int limit = StarRules.MoveLimit(levelIndex);
+            starHintText.text = limit > 0
+                ? Loc.Format(CodeStrings.ResultStarNeedMoves, limit, LevelRun.Moves)
+                : Loc.Get(CodeStrings.ResultStarNeedNoHelp);
+            return;
+        }
+
+        starHintText.text = Loc.Get(CodeStrings.ResultStarNeedNoHelp);
     }
 
     // ------------------------------------------------------------------- XP

@@ -51,6 +51,28 @@ public static class LevelRun
     /// </summary>
     public static int XpAwarded { get; private set; }
 
+    /// <summary>
+    /// Bu oynanışta İPUCU kullanıldı mı? Üçüncü yıldızın iki
+    /// ölçütünden biri. GERİ ALINMAZ: ipucu gösterildiyse gösterilmiştir,
+    /// geri alma tahtayı döndürür ama görüleni görülmemiş yapmaz
+    /// (<see cref="AccidentHappened"/> ile aynı istisna).
+    /// </summary>
+    public static bool HintUsed { get; private set; }
+
+    /// <summary>
+    /// Bu oynanışta ÜCRETLİ Joker kullanıldı mı? Katalizörün BEDAVA
+    /// Joker hakkı buraya GİRMEZ: katalizör bir ödül olarak
+    /// tasarlandı, üçüncü yıldızı bozan bir cezaya dönmemeli
+    /// (2.2 kararı).
+    /// </summary>
+    public static bool PaidJokerUsed { get; private set; }
+
+    /// <summary>
+    /// Bu oynanışta kazanılan yıldızların bit maskesi
+    /// (<c>StarRules</c>). Sonuç kartı bunu okur; kart hesap YAPMAZ.
+    /// </summary>
+    public static int Stars { get; private set; }
+
     /// <summary>Bölüm başlangıcı: sayaçlar sıfırlanır.</summary>
     public static void Reset()
     {
@@ -59,6 +81,27 @@ public static class LevelRun
         newRecipes.Clear();
         AccidentHappened = false;
         XpAwarded = 0;
+        HintUsed = false;
+        PaidJokerUsed = false;
+        Stars = 0;
+    }
+
+    /// <summary>İpucu gösterildi (üçüncü yıldız kaçtı).</summary>
+    public static void NoteHint()
+    {
+        HintUsed = true;
+    }
+
+    /// <summary>ÜCRETLİ Joker kullanıldı (üçüncü yıldız kaçtı).</summary>
+    public static void NotePaidJoker()
+    {
+        PaidJokerUsed = true;
+    }
+
+    /// <summary>Bölüm bitişinde kazanılan yıldızlar (yalnızca rapor için).</summary>
+    public static void NoteStars(int mask)
+    {
+        Stars = mask;
     }
 
     /// <summary>Oyun sonu ekranı açıldı (kaza sayıldı).</summary>
