@@ -46,7 +46,7 @@ public static class RankUpPanelBuilder
     private static readonly Vector2 CardSize = new Vector2(760f, 620f);
 
     // Kart merkezine göre bantlar (kart yarı yüksekliği 310):
-    //   başlık      265..195
+    //   başlık      275..185
     //   çerçeve     160..-40
     //   rütbe adı   -78..-142
     //   toplam XP   -158..-202
@@ -116,7 +116,9 @@ public static class RankUpPanelBuilder
             image.raycastTarget = false;
         });
 
-        GameObject title = Metin(b, theme, "TitleText", new Vector2(680f, 70f), TitleY,
+        // 50 punto 70 birimlik kutuda %90 dolduruyordu (ProgressionFitTests);
+        // 90 birimde %67.
+        GameObject title = Metin(b, theme, "TitleText", new Vector2(680f, 90f), TitleY,
                                  theme.typography.title, theme.palette.primaryBright);
         EnsureLocalized(b, title, CodeStrings.RankUpTitle);
 
