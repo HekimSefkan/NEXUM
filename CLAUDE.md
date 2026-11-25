@@ -29,6 +29,7 @@ Assets/
     DOTweenSettings.asset  (DOTween kendi yükler)
   Scenes/            MainMenu, Game, SampleScene
   Scripts/           Oyun scriptleri (aşağıda)
+    Progression/     Nexum.Progression asmdef: XP, rütbe, rozet kuralları
   TextMesh Pro/      TMP Essentials
 Tools/               Unity dışı araçlar
   generate_icons.py  Uygulama ikonu + mağaza görselleri üreteci (Python + Pillow)
@@ -68,6 +69,12 @@ NEXUM stuff/         Ham kaynaklar, APK, PDF'ler (git'te ignore edilir, Unity d�
 | `Core/AppBootstrap` | Sahneye eklenmeden çalışır: 60 FPS, sahne yüklenince timeScale=1, arka planda PlayerPrefs.Save |
 | `Core/SafeArea` | RectTransform'u Screen.safeArea'ya göre anchor'lar (sahneye Editor'de eklenir) |
 | `Core/BackButtonHandler` | Sahneye eklenmez: Android geri tuşunu (Escape) tüm ekranlarda yönetir |
+| `Core/ProgressionBootstrap` | Sahneye eklenmez: XP kurallarını oyun içeriğine bağlar (defter doldurması → XP hesabı → rozetler) |
+| `Progression/ProgressionTable` | XP miktarları, yedi rütbe ve eşikleri; `XpSources` bayrak tablosu |
+| `Progression/ProgressionService` | XP muhasebesi: kazanç, çiftlik koruması, kutlama bayrağı, geriye dönük hesap |
+| `Progression/BadgeTable` | Dokuz rozet, koşulları ve "kazanılabilir mi" bayrağı |
+| `UI/RankUpPanel` | Rütbe atlama kutlaması (iki sahnede kurulu, dokununca kapanır, bir kez) |
+| `Editor/UIBuilder/RankUpPanelBuilder` | Kutlama panelini MainMenu ve Game sahnelerine kurar |
 
 ## Durum notu
 Projenin bugünkü hâli, tamamlananlar ve açık maddeler (teknik / kapsam dışı oyun mantığı / yayın) **`docs/STATUS.md`** içindedir. Yeni bir oturuma bu dosyayla başlanır; ara verilip dönüldüğünde önce orası okunur ve tur sonunda güncellenir.
@@ -256,7 +263,7 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
 - **`SaveService` ham erişim:** `PlayerPrefs` yalnızca `SaveService.cs` içinde kullanılabilir (validator FAIL verir). Testlerin eski sürüm kaydı yazması ve kendi yedeğini alması için **`ExportRaw` / `ImportRaw`** kapısı vardır; oyun kodu bunları çağırmaz. Yeni test yazarken `PlayerPrefs`'e doğrudan dokunma.
 - **UIBuilder nokta anchor'ı:** `SetFixed(anchor, size)` + `SetRectPosition(pos)` ikilisini KULLANMA — ilk çağrı konumu sıfırlar, ikincisi geri yazar; dosya değişmese bile kurucu her koşuda "güncellendi" raporlar ve idempotans kanıtı okunamaz hâle gelir. Tek çağrı: `SetFixed(anchor, size, anchoredPosition)`.
 - **Test derlemesi ve yansıma:** `Assets/Tests/PlayMode` kendi asmdef'inde; önceden derlenen `Assembly-CSharp` asmdef'leri referans alır, **tersi olmaz**. Bu yüzden oyun tiplerine (GridManager, ReactionText, RecipeBook, RecipeCatalog, panel scriptleri) `Assets/Tests/PlayMode/Reflect.cs` üzerinden erişilir. `SaveService` ve `Loc` kendi asmdef'lerinde olduğu için doğrudan kullanılır.
-- **TotalScore:** `Assets/Scripts/Core/TotalScoreService.cs` toplam skorun tek sahibi; bölüm kazanılınca o bölümün skoru eklenir (PlayerPrefs). **Hiçbir ekranda gösterilmiyor** — gösterim kararı Faz 2 profil işinde verilecek. Kalıcı depolama değişirse yalnızca bu sınıfın içi değişir.
+- **TotalScore:** `SaveService.AddLevelScore` toplam skorun tek yazıcısı; bölüm kazanılınca o bölümün KALAN skoru ekleniyor (`GridManager.CheckWinCondition`). **Hiçbir ekranda gösterilmiyor ve hiçbir şey harcamıyor — ölü kayıt.** XP ondan BESLENMEZ (XP `LevelRun.EarnedScore`'dan gelir). `docs/ECONOMY_PROPOSAL.md` alanın kaldırılıp yerini Araştırma Puanı'nın almasını öneriyor. (Not: 13. turda anılan `Core/TotalScoreService.cs` dosyası projede yok; iş `SaveService` içinde duruyor.)
 - **Çekirdek döngü regresyon testi:** `Assets/Tests/PlayMode/CoreLoopTests.cs` (kazanma bir kez, geri alma sayaçları, duvara kadar kayma, aynı hamlede tekrar birleşmeme, melez spawn sıklığı, serbest modda ceza yok, TotalScore birikimi). `Assets/Tests/PlayMode/ShiftBehaviorTests.cs` kaydırma davranışının parmak izini loglar: **`Shift()` refactor'lerinde önce/sonra imza birebir aynı kalmalı** (davranış bilerek değişiyorsa commit mesajına yeni imza yazılır).
 - **Ölçüm aracı:** `Tools/sim_core_loop.py` tarifleri, spawn havuzlarını ve hedefleri `Game.unity`'den okur. `python Tools/sim_core_loop.py [oyun_sayisi] [derinlik]`; `NEXUM_SCENE` ortam değişkeniyle başka bir sahne dosyası (ör. depodan çıkarılmış eski sürüm) okunabilir. Derin bot ileriye bakarken spawn'i yok sayar; **mutlak kazanma oranı değil, senaryolar arası fark anlamlıdır**.
 - **Terminal komutları:** Kullanıcıya verilen tüm komutlar **Windows PowerShell** uyumlu olmalı (`&` çağrı operatörü, Windows yolları, `$env:` değişkenleri). Bash/POSIX sözdizimi kullanma. Batch mode Unity komutlarının sonuna `| Out-Null` eklenir.
@@ -293,6 +300,70 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
 - **Quiz soru puntosu pişirildi:** Game sahnesindeki `QuizPanel` soru metninde auto-size KAPALI, punto **46**. Auto-size açıkken TMP metni kutuya sığdırdığı için doluluk her metinde %100 çıkıyor, yani %85 kuralı ölçülemez hâle geliyordu. 46, dört canvas boyutunda ve iki dilde %85 sınırını geçen en büyük punto (en kötü soru %73, en kötü cevap %70). Merdiven ölçümü: `QuizFitTests.PuntoMerdiveniOlculuyor`.
 - **Bilgi Kartları ayarı (`flashcardsOn`):** duraklat kartındaki "BİLİYOR MUYDUN?" alt başlığı ile bilgi metnini yönetir; kapalıyken ikisi gizlenir, kartın kendisi/başlığı/üç butonu yerinde kalır. Parçalar `UIManager.flashcardObjects` dizisinde, sahneye `Assets/Editor/NexumFlashcardBind.cs` ile bağlı (yalnızca alan DEĞERİ yazılır; `RecipeBookBuilder` bugün sahnenin kayıtlı hâlini üretmediği için oradan bağlanmadı — bkz. `docs/NEXT_3B.md`). Ölçüm: `FlashcardSettingTests`.
 - **Soru bankası (`Assets/Data/Quizzes`):** 36 soru, tek kurucu `Assets/Editor/NexumQuizBank.cs` (idempotent; menü *NEXUM → Quiz Bankasını Kur*, batch `-executeMethod NexumQuizBank.Run`). Kurucu soruları, etiketleri (konu · zorluk 1-3 · ilgili bileşik) ve `UIManager.allQuizzes` listesini yazar. Mevcut soruların şık ve gövde düzeltmeleri de kurucudadır (`YazimDuzeltmeleri` / `GovdeDuzeltmeleri`): eski metin birebir eşleşmezse hiçbir şey yazılmaz, hata raporlanır. **`relatedCompound` boş olabilir** (kavram sorusu); `topic` her soruda zorunlu. Etiketler Faz 5'in "KAYNAMA NOKTASI" modu için; o mod KURULMADI. Kimya doğruluğu `docs/QUIZ_REVIEW.md` tablosunda satır satır onaylanır — yeni soru eklenirse tabloya da eklenir.
+
+- **XP, rütbe ve rozet (2.1):** kurallar `Assets/Scripts/Progression`
+  (`Nexum.Progression` asmdef) içinde ve **hiçbir oyun tipine bağlı
+  değil** — bölüm, tarif ve quiz sayıları `ProgressionBootstrap`
+  üzerinden parametre olarak gelir. Dört kesin kural:
+  1. **XP KAZANILAN puandan beslenir** (`LevelRun.EarnedScore`), kalan
+     skordan (`GameManager.currentScore`, `SaveData.totalScore`) değil.
+  2. **Geri alınan hamle XP bırakmaz** — anlık görüntüyle değil YAPIYLA:
+     XP'nin hiçbir yazıcısı geri alınabilir bir ana bağlı değildir
+     (bölüm XP'si kazanma ekranında, tarif XP'si kesinleşmiş keşifte,
+     quiz XP'si değerlendirilmiş cevapta ödenir). **Yeni bir XP kaynağı
+     eklenirken önce bu sorulur**; cevabı "evet, geri alınabilir" ise
+     kaynak oraya bağlanmaz.
+  3. **Çiftlik yok:** bölüm XP'si `levelXpGranted[i]` defteriyle "en iyi
+     sonuç" muhasebesidir; aynı bölümü tekrar bitirmek 0 XP verir, daha
+     iyi bitirmek yalnızca farkı verir. Quiz bir soruya ömründe bir kez
+     öder (`quizXpAwarded`) ve toplam ödül banka boyunu aşamaz
+     (`quizXpPaid`).
+  4. **Yeni bir XP kaynağı `XpSources` bayrak tablosuna yazılır**;
+     miktarı `ProgressionTable`'da tanımlı olsa bile bayrak kapalıyken
+     XP verilmez. Rozetler için aynısı `Badges.Badge.available`.
+  Rütbe/rozet metinleri yalnızca `CodeStrings`'te; tablo yalnızca
+  `ProgressionTable.Ranks` / `Badges.All` içinde. **Rozet XP vermez.**
+  **Rütbe adları ve eşikleri 25 Kasım 2026'da ONAYLANDI** (Çırak 0 · Stajyer 150 ·
+  Laborant 400 · Araştırmacı 800 · Kimyager 1400 · Baş Kimyager 2400 ·
+  Nobel Adayı 4000); değiştirilecekse `Tools/sim_xp.py` yeniden
+  koşturulup `docs/DESIGN_TOKENS.md` 12.2 güncellenir. **Açık madde:**
+  `ProfileDefaultName` de "Baş Kimyager" — adsız oyuncuda ad ve rütbe
+  şeritte alt alta çakışıyor, varsayılan ad 2.3'te değişecek.
+  **Rozet listesi ve görselleri de 25 Kasım 2026'da ONAYLANDI**
+  (`docs/ui-kit/badges.png`). Glifler `Tools/ui-kit/badges/` altında ve
+  **bilerek `Assets` dışında**: 2.1'de rozeti gösteren ekran yok,
+  kullanılmayan sprite build'e girmez. Rozet duvarı 2.3'te kurulurken
+  glifler `NexumKitImport` ve `NexumAtlasBuilder` listelerine eklenir
+  (adımlar `docs/DESIGN_TOKENS.md` 12.4 sonunda). Rozetler bugünden
+  kazanılıp kayda yazılıyor.
+  Ölçüm: `ProgressionTests`, `RankTableTests`, `BadgeTests`,
+  `ProgressionMigrationTests`, `ProgressionWiringTests`,
+  `ProgressionFitTests`.
+- **Kutlama ölçülü olmalı:** rütbe atlama paneli tam ekran parlama,
+  hale ya da yanıp sönme KULLANMAZ; zemin sabit alfalı düz bir perde
+  (`palette.scrim`), tek hareket bir seferlik ölçek tween'i, süresi
+  temadan. Kendiliğinden kapanmaz, dokununca kapanır ve bir kez
+  gösterilir (`rankCelebrated`). Oyunun ortasında açılmaz: yalnızca
+  sonuç kartından sonra ve ana menüde.
+- **Araştırma Puanı (tasarım 25 Kasım 2026'da ONAYLANDI, KOD YOK):**
+  `docs/ECONOMY_PROPOSAL.md`. Üç bağlayıcı karar: (1) **bölüm skoru
+  bölüm içi cüzdan olarak KALIR** — ipucu/geri al/Joker bedelleri
+  değişmez; RP yalnızca KALICI yükseltmelerin para birimidir.
+  (2) **İade yok** (denge ölçülebilir kalsın); karşılığında her
+  yükseltmenin etkisi ekranda somut yazılır ve ilk basamaklar ucuz
+  tutulur. (3) **Yükseltme listesi bugünkü arzın altında kalır**
+  (arz 491 RP, liste 470 RP) — hub'daki "uygulanmamış giriş tamamen
+  gizli" kuralı yükseltme ekranında da geçerli, erişilemez madde
+  gösterilmez. Bunun bedeli %100 tamamlayan oyuncuda para biriminin
+  susması; bu yüzden **Faz 3'ün günlük bulmaca turu arzı ve yeni
+  maddeleri BİRLİKTE getirmek zorunda**. Uygulama turu, yükseltmeleri
+  `baseHintCost` / `currentUndoLimit` / `CatalystChargeLimit` /
+  `startingTileCount` değerlerine bağlayacağı için oyun hissini
+  değiştirir: kendi analiz + onay turunu ister.
+- **`Tools/sim_xp.py`:** kazanılan puanı ölçer (`sim_core_loop`'u
+  kullanır, çıktısını değiştirmez). Rütbe eşiklerinin gerekçesi bu
+  ölçümdür; eşik değişirse araç yeniden koşturulup
+  `docs/DESIGN_TOKENS.md` 12.2 tablosu güncellenir.
 
 ## YAML düzenleme kuralları
 - Düzenlemeden önce Unity Editor'ün **kapalı** olduğunu kullanıcıya sorarak teyit et.

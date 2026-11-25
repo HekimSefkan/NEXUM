@@ -41,16 +41,34 @@ public static class ResultCardBuilder
     private const string StarEmptyPath = "Assets/Art/UI/star_empty_normal.png";
     private const string TileSlotPath = "Assets/Art/UI/compound_ring_normal.png";
 
-    private static readonly Vector2 CardSize = new Vector2(920f, 1500f);
+    /// <summary>
+    /// Kart 2.1'de 1500'den 1600'e BÜYÜDÜ: "+N XP" satırı için bant açıldı.
+    ///
+    /// 1.6'da yalnızca YILDIZ satırının yeri ayrılmıştı (498..402); XP
+    /// satırının yeri ayrılmamıştı ve kartın dikey ritminde 56 birimlik boş
+    /// bir bant yoktu — bantlar arası en büyük açıklık 18 birim (sayı
+    /// kutuları 245 ile "ÜRETİLEN" 227 arası). Üç seçenek vardı: tepkime
+    /// kutusunu kısmak (4 satır 173 birim istiyor, kutu 260'tan 206'ya
+    /// inerdi ve %85 sınırına dayanırdı), sayı kutularını üçe çıkarmak
+    /// ("KAZANILAN PUAN" etiketi 260 birimlik kutuya sığmıyor) ya da kartı
+    /// büyütmek. Üçüncüsü seçildi: ÜST YARI HİÇ DEĞİŞMİYOR, yalnızca buton
+    /// satırları 60 birim aşağı kaydı.
+    ///
+    /// Güvenli alan payı: kart ±800, tasarım yüksekliği en az 1920 (±960),
+    /// yani her kenarda 160 birim pay (önceki kartta 210).
+    /// </summary>
+    private static readonly Vector2 CardSize = new Vector2(920f, 1600f);
 
-    // Dikey ritim (kart merkezine göre). Kart yarı yüksekliği 750.
+    // Dikey ritim (kart merkezine göre). Kart yarı yüksekliği 800.
     // Bantlar ÖLÇÜLDÜ, üst üste binmiyor:
     //   başlık      665..575      bölüm satırı 570..510
     //   yıldızlar   498..402      (gizli, yeri ayrılı)
     //   sayı kutuları 395..245
     //   "ÜRETİLEN"  227..183      hedef satırı 195..-5
-    //   "YENİ TEP." -18..-62      tepkime kutusu -60..-320
-    //   buton sat.1 -358..-502    buton sat.2 -518..-662
+    //   "YENİ TEP." -18..-62      tepkime kutusu -60..-280
+    //   "+N XP"     -334..-390      (2.1'de eklendi)
+    //   buton sat.1 -418..-562    buton sat.2 -578..-722
+    //   paylaşım satırı -732..-778    kart iç kenarı -800
     private const float TitleY = 620f;
     private const float LevelY = 540f;
     private const float StarsY = 450f;
@@ -58,19 +76,33 @@ public static class ResultCardBuilder
     private const float GoalsY = 95f;
     private const float GoalsLabelY = 205f;
     private const float ReactionsLabelY = -40f;
-    private const float ReactionsY = -190f;
-    private static readonly Vector2 ReactionsSize = new Vector2(820f, 260f);
-    private const float ButtonRow1Y = -430f;
-    private const float ButtonRow2Y = -590f;
+    private const float ReactionsY = -170f;
+
+    /// <summary>
+    /// Tepkime kutusu 260'tan 220'ye indi (2.1). Kutu 260 iken 4 satırlık
+    /// metin (172 birim) kutunun içinde ortalanıyor ve boyalı alt kenarı
+    /// -276'ya iniyordu; XP satırının üst kenarı -334, yani ikisi arasında
+    /// 58 birim kalıyordu ve cihaz görüntüsünde satırlar birbirine
+    /// yapışık okunuyordu. 220'de boyalı alan -256'da bitiyor, açıklık
+    /// 78 birim. Doluluk 172/220 = %78 (sınır %85).
+    /// </summary>
+    private static readonly Vector2 ReactionsSize = new Vector2(820f, 220f);
+
+    /// <summary>Deneyim satırı: tepkime kutusu (-320) ile buton satırı (-418) arası.</summary>
+    private const float XpRowY = -362f;
+    private static readonly Vector2 XpRowSize = new Vector2(820f, 56f);
+
+    private const float ButtonRow1Y = -490f;
+    private const float ButtonRow2Y = -650f;
 
     /// <summary>
     /// Paylaşım hata satırı: buton satırlarının ALTINDA, kartın içinde.
     /// Sistem bildirimi bandı kullanılamıyor — o bant SafeAreaRoot altında,
     /// LevelCompletePanel ondan sonra çiziliyor, mesaj kartın arkasında
     /// kalırdı (sahne çocuk sırası ölçüldü: SafeAreaRoot 1, kart 9).
-    /// Buton dokunma alanı -662'de bitiyor, kartın iç kenarı -750.
+    /// Buton dokunma alanı -722'de bitiyor, kartın iç kenarı -800.
     /// </summary>
-    private const float ShareMessageY = -700f;
+    private const float ShareMessageY = -755f;
     private static readonly Vector2 ShareMessageSize = new Vector2(820f, 46f);
 
     private static readonly Vector2 ButtonSize = new Vector2(420f, 120f);
@@ -227,6 +259,29 @@ public static class ResultCardBuilder
                                      ReactionsY, theme.typography.body,
                                      theme.palette.textPrimary);
 
+        // --- deneyim satırı: "DENEYİM" etiketi + "+N XP" değeri (2.1).
+        // Etiket ve değer AYNI bantta yan yana: iki satır olsaydı 112 birim
+        // isterdi ve kart 1600'e değil 1660'a çıkardı.
+        GameObject xpRow = b.Ensure(CardPath, "XpRow");
+        b.SetFixed(xpRow, UITokens.Center, XpRowSize, new Vector2(0f, XpRowY));
+
+        GameObject xpLabel = b.Ensure(CardPath + "/XpRow", "Label");
+        b.SetFixed(xpLabel, UITokens.Center, new Vector2(400f, 44f), new Vector2(-110f, 0f));
+        b.EnsureComponent<TextMeshProUGUI>(xpLabel, tmp =>
+        {
+            ApplyText(tmp, theme, theme.typography.label, theme.palette.textSecondary);
+            tmp.alignment = TextAlignmentOptions.Right;
+        });
+        EnsureLocalized(b, xpLabel, CodeStrings.ResultXpLabel);
+
+        GameObject xpValue = b.Ensure(CardPath + "/XpRow", "Value");
+        b.SetFixed(xpValue, UITokens.Center, new Vector2(260f, 52f), new Vector2(230f, 0f));
+        b.EnsureComponent<TextMeshProUGUI>(xpValue, tmp =>
+        {
+            ApplyText(tmp, theme, theme.typography.subtitle, theme.palette.warning);
+            tmp.alignment = TextAlignmentOptions.Left;
+        });
+
         // --- butonlar: üst satır sonraki/tekrar, alt satır paylaş/menü
         if (next != null) KurButon(b, theme, next, new Vector2(-ButtonX, ButtonRow1Y),
                                    CodeStrings.ResultNext, MenuRoleBuilder.PrimaryPath);
@@ -254,6 +309,7 @@ public static class ResultCardBuilder
             rc.scoreValueText = Tmp(scoreValue);
             rc.movesValueText = Tmp(movesValue);
             rc.reactionsText = Tmp(reactions);
+            rc.xpValueText = Tmp(xpValue);
             rc.goalIcons = goalIcons.ToArray();
             rc.goalSymbolTexts = goalSymbols.ToArray();
             rc.goalAmountTexts = goalAmounts.ToArray();

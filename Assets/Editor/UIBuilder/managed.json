@@ -201,6 +201,18 @@
             "builder": "ResultCard"
         },
         {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/XpRow",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/XpRow/Label",
+            "builder": "ResultCard"
+        },
+        {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/XpRow/Value",
+            "builder": "ResultCard"
+        },
+        {
             "path": "Game::Canvas/LevelCompletePanel/TitleText",
             "builder": "ResultCard"
         },
@@ -239,6 +251,38 @@
         {
             "path": "Game::Canvas/PausePanel/ContainerBox/TitleText",
             "builder": "RecipeBookPauseEntry"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card/HintText",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card/RankFrame",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card/RankFrame/OrdinalText",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card/RankNameText",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card/TitleText",
+            "builder": "RankUpGame"
+        },
+        {
+            "path": "Game::Canvas/RankUpPanel/Card/XpText",
+            "builder": "RankUpGame"
         },
         {
             "path": "Game::Canvas/SafeAreaRoot/ElementDetailPanel",
@@ -737,6 +781,38 @@
             "builder": "Background"
         },
         {
+            "path": "MainMenu::Canvas/RankUpPanel",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card/HintText",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card/RankFrame",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card/RankFrame/OrdinalText",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card/RankNameText",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card/TitleText",
+            "builder": "RankUpMenu"
+        },
+        {
+            "path": "MainMenu::Canvas/RankUpPanel/Card/XpText",
+            "builder": "RankUpMenu"
+        },
+        {
             "path": "MainMenu::Canvas/SafeAreaRoot/BackgroundTreatment",
             "builder": "Background"
         },
@@ -1046,6 +1122,10 @@
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/RankXpGroup/XpBar",
+            "builder": "MenuHub"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/HubRoot/ProfileStrip/RankXpGroup/XpBar/Fill",
             "builder": "MenuHub"
         },
         {

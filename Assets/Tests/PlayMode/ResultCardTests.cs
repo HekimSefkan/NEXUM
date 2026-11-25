@@ -130,6 +130,12 @@ public class ResultCardTests
         MonoBehaviour gm = Object.FindObjectsOfType<MonoBehaviour>(true)
             .FirstOrDefault(m => m != null && m.GetType().Name == "GameManager");
 
+        // TAHTA BELİRLİ KURULUR. Rastgele doğan üç taş zaten tepede
+        // olabiliyor; o zaman yukarı kaydırma hiçbir şeyi oynatmıyor, anlık
+        // görüntü alınmıyor ve geri alma hiç gerçekleşmiyor. Ölçüm o koşuda
+        // "anlamsız" diye düşüyordu ve düşüp düşmemesi doğma rastgeleliğine
+        // bağlıydı (2.1'de tam süit koşusunda yakalandı).
+        TahtayiKur(grid);
         Reflect.Call("LevelRun", "Reset");
 
         // Dört kaydırma: her biri anlık görüntü alır. Sonra hepsini geri al.
@@ -253,5 +259,38 @@ public class ResultCardTests
         Assert.IsFalse(next.activeSelf, "son bölümde Sonraki bölüm hâlâ görünüyor");
         Assert.AreNotEqual(ciftX, tekX, "tek kalan buton ortaya alınmadı, kartta boşluk kalır");
         Assert.AreEqual(0f, tekX, 0.5f, "tek kalan buton ortada değil");
+    }
+    /// <summary>
+    /// Tahtayı boşaltıp ALT SATIRA iki taş koyar: yukarı kaydırma kesinlikle
+    /// bir şey oynatır, yani anlık görüntü alınır.
+    /// </summary>
+    private static void TahtayiKur(MonoBehaviour grid)
+    {
+        List<Transform> cells = Reflect.Get<List<Transform>>(grid, "cells");
+        Assert.IsNotNull(cells, "grid hücreleri okunamadı");
+
+        foreach (Transform cell in cells)
+        {
+            for (int i = cell.childCount - 1; i >= 0; i--)
+            {
+                Transform child = cell.GetChild(i);
+                child.SetParent(null);
+                Object.DestroyImmediate(child.gameObject);
+            }
+        }
+
+        GameObject[] basics = Reflect.Get<GameObject[]>(grid, "basicElements");
+        GameObject prefab = basics.FirstOrDefault(b => b != null && b.name == "Tile_Fe");
+        Assert.IsNotNull(prefab, "Tile_Fe yok");
+
+        // İki taş AYRI sütuna konur: yukarı kaydırma birleşme değil YER
+        // DEĞİŞTİRME olsun (hedef sayacı kirlenmesin).
+        foreach (int index in new[] { 12, 14 })
+        {
+            GameObject tile = Object.Instantiate(prefab, cells[index]);
+            tile.name = prefab.name;
+            tile.transform.localScale = Vector3.one;
+            tile.transform.localPosition = Vector3.zero;
+        }
     }
 }

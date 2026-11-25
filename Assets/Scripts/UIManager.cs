@@ -100,7 +100,8 @@ public class UIManager : MonoBehaviour
                 || IsPanelOpen(hypothesisPanel)
                 || IsPanelOpen(undoPanel)
                 || IsPanelOpen(recipeBookPanel)
-                || IsPanelOpen(elementDetailPanel);
+                || IsPanelOpen(elementDetailPanel)
+                || IsPanelOpen(rankUpPanel);
         }
     }
 
@@ -374,6 +375,12 @@ public class UIManager : MonoBehaviour
             
             int totalCorrect = SaveService.Data.quizCorrect + 1;
             SaveService.Data.quizCorrect = totalCorrect;
+
+            // XP: bir soru ömründe BİR KEZ öder (ProgressionService). "Bilerek
+            // yanlış yap, sonra doğru yap" döngüsü XP üretmez.
+            ProgressionService.AwardQuizCorrect(currentQuiz != null ? currentQuiz.name : null,
+                                                ProgressionBootstrap.QuizCount());
+
             SaveService.SaveNow();
 
             questionTextUI.text = BuildCorrectFeedback(currentQuiz);
@@ -480,6 +487,12 @@ public class UIManager : MonoBehaviour
             SaveService.SaveNow();
         }
 
+        // "Kazasız Bölüm" rozeti: bu oynanışta oyun sonu ekranı GÖRÜLDÜ.
+        // accidentCounted bayrağının DIŞINDA tutuluyor, çünkü o bayrak
+        // "sayaç arttı mı" sorusunu yanıtlıyor; rozetin sorusu "kaza oldu
+        // mu" ve ikinci şans sonrası tekrar açılışta da cevap aynı.
+        LevelRun.NoteAccident();
+
         gameOverPanel.SetActive(true);
         reviveButton.SetActive(!GridManager.Instance.hasUsedRevive);
     }
@@ -546,6 +559,11 @@ public class UIManager : MonoBehaviour
     [Tooltip("Bölüm sonu sonuç kartı (UIBuilder bağlar).")]
     public ResultCard resultCard;
 
+    // Rütbe atlama kutlaması (2.1). Panel iki sahnede de kurulu; bu alan
+    // yalnızca Game sahnesindeki örneği gösterir (RankUpPanelBuilder bağlar).
+    [Tooltip("Rütbe atlama kutlaması paneli (UIBuilder bağlar).")]
+    public GameObject rankUpPanel;
+
     /// <summary>
     /// Sonuç kartındaki PAYLAŞ butonu. Görseli üretip Android paylaşım
     /// menüsünü açar; işin tamamı <see cref="ResultShare"/> içinde.
@@ -561,12 +579,28 @@ public class UIManager : MonoBehaviour
         if(AudioManager.Instance != null) AudioManager.Instance.PlaySFX(AudioManager.Instance.winClip);
         winPanel.SetActive(true);
 
+        // XP: KAZANILAN puandan (LevelRun.EarnedScore), kalan skordan DEĞİL.
+        // Kart doldurulmadan ÖNCE ödenir ki "+N XP" satırı ödenen tutarı
+        // gösterebilsin. Verilen tutar 0 olabilir: aynı bölüm daha iyi
+        // oynanmadıysa XP verilmez (çiftlik koruması).
+        int levelIndex = LevelManager.Instance != null ? LevelManager.Instance.currentLevelIndex : 0;
+        LevelRun.NoteXp(ProgressionService.AwardLevelComplete(levelIndex, LevelRun.EarnedScore));
+
+        // Rozetler: "Kazasız Bölüm" YALNIZCA burada değerlendirilebilir
+        // (ölçüt bu oynanışta oyun sonu ekranının görülmemiş olması).
+        Badges.Evaluate(ProgressionBootstrap.RecipeCount(), !LevelRun.AccidentHappened);
+
         // Kart KESİNLEŞMİŞ durumdan doldurulur: LevelRun sayaçları geri
         // almayla birlikte geri gidiyor, hedef sayaçları da öyle.
         if (resultCard != null) resultCard.Fill();
 
         winPanel.transform.localScale = Vector3.zero;
-        winPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+
+        // Kutlama KARTTAN SONRA: kartın kendi ölçek tween'i bitince açılır,
+        // yeni bir zamanlama sabiti girmez. Bölüm ortasında hiçbir yoldan
+        // açılmaz.
+        winPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
+                .OnComplete(ShowRankUpIfPending);
 
         int currentLevelIndex = LevelManager.Instance.currentLevelIndex;
         int levelCount = LevelManager.Instance.levels.Count;
@@ -581,6 +615,18 @@ public class UIManager : MonoBehaviour
             SaveService.Data.maxLevelUnlocked = Mathf.Min(currentLevelIndex + 2, levelCount);
             SaveService.SaveNow(); 
         }
+    }
+
+    /// <summary>
+    /// Bekleyen rütbe atlaması varsa kutlamayı açar. Sonuç kartının ölçek
+    /// tween'i bittiğinde çağrılır; koşulu panelin kendisi biliyor
+    /// (<c>RankUpPanel.ShowIfPending</c>), burada ikinci bir kural yok.
+    /// </summary>
+    public void ShowRankUpIfPending()
+    {
+        RankUpPanel panel = rankUpPanel != null
+            ? rankUpPanel.GetComponent<RankUpPanel>() : RankUpPanel.Instance;
+        if (panel != null) panel.ShowIfPending();
     }
 
     // Sahne yükleyen üç metotta da ses koddan çalınır: PausePanel'deki "Ana Menü" ve

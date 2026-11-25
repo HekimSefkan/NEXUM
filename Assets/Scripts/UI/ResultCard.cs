@@ -29,6 +29,9 @@ public class ResultCard : MonoBehaviour
     public TextMeshProUGUI movesValueText;
     public TextMeshProUGUI reactionsText;
 
+    [Tooltip("Bu bölümde VERİLEN XP (\"+86 XP\"). Değer LevelRun.XpAwarded'dan gelir.")]
+    public TextMeshProUGUI xpValueText;
+
     [Header("Üretilen hedefler")]
     [Tooltip("Hedef yuvaları: taş görseli + üstünde sembol + altında adet.")]
     public Image[] goalIcons;
@@ -87,6 +90,8 @@ public class ResultCard : MonoBehaviour
         if (scoreValueText != null) scoreValueText.text = LevelRun.EarnedScore.ToString();
         if (movesValueText != null) movesValueText.text = LevelRun.Moves.ToString();
 
+        FillXp();
+
         FillGoals(data);
         FillReactions();
 
@@ -114,6 +119,24 @@ public class ResultCard : MonoBehaviour
                 rt.anchoredPosition = new Vector2(x, rt.anchoredPosition.y);
             }
         }
+    }
+
+    // ------------------------------------------------------------------- XP
+
+    /// <summary>
+    /// "+N XP" satırı. Kart HESAP YAPMAZ: tutarı <c>ProgressionService</c>
+    /// hesaplar, <c>UIManager.ShowWinScreen</c> ödeyip
+    /// <c>LevelRun.NoteXp</c> ile yazar, kart yalnızca okur. İkinci bir
+    /// hesap olsaydı kartta yazan ile kayda giren sessizce ayrışabilirdi.
+    ///
+    /// <b>0 XP de YAZILIR.</b> Aynı bölümü tekrar oynayan oyuncu
+    /// (çiftlik koruması) "+0 XP" görür; satırı gizlemek "XP sistemi
+    /// bozuldu" izlenimi verirdi.
+    /// </summary>
+    private void FillXp()
+    {
+        if (xpValueText == null) return;
+        xpValueText.text = Loc.Format(CodeStrings.ResultXpValue, LevelRun.XpAwarded);
     }
 
     // ------------------------------------------------------ paylaşım mesajı

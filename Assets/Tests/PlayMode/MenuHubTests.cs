@@ -122,8 +122,7 @@ public class MenuHubTests
 
         var gizliOlmali = new Dictionary<string, string>
         {
-            { "heroStars", "yıldızlar (Faz 2)" },
-            { "rankXpGroup", "rütbe + XP (Faz 2)" },
+            { "heroStars", "yıldızlar (2.2)" },
             { "streakBadge", "gün serisi (Faz 3)" },
             { "dailyPuzzleCard", "günlük bulmaca (Faz 3)" },
             { "boilingPointCard", "kaynama noktası (Faz 5)" },
@@ -141,8 +140,9 @@ public class MenuHubTests
             if (go.activeSelf) sorunlar.Add($"{p.Value} görünüyor");
         }
 
-        // Görünür kalması gerekenler
-        foreach (string alan in new[] { "levelSelectCard", "recipeBookCard" })
+        // Görünür kalması gerekenler. rankXpGroup 2.1'de UYGULANDI
+        // (HubFeatures.RankAndXp): artık gizli değil, görünür olmalı.
+        foreach (string alan in new[] { "levelSelectCard", "recipeBookCard", "rankXpGroup" })
         {
             GameObject go = Reflect.Get<GameObject>(hub, alan);
             Assert.IsNotNull(go, alan + " bağlanmamış");

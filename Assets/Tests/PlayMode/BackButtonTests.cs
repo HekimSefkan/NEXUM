@@ -37,16 +37,26 @@ public class BackButtonTests
 
     private string savedName;
     private bool hadName;
+    private string yedek;
 
     [UnitySetUp]
     public IEnumerator SetUp()
     {
+        yedek = SaveService.ExportRaw();
+
         // Kayıt ekranı açıkken geri tuşu bilerek yutuluyor (kaydı iptal etmesin diye).
         // Bu testler "kayıtlı oyuncu" durumunu ölçtüğü için kaydı önceden kuruyoruz.
         hadName = SaveService.HasProfile;
         savedName = SaveService.Data.playerName;
         SaveService.Data.playerName = "Test Kimyager";
         SaveService.Data.avatarIndex = 0;
+
+        // 2.1: BEKLEYEN BİR RÜTBE KUTLAMASI VARSA ana menüde panel açılır ve
+        // geri tuşu ÖNCE onu kapatır (doğru davranış: RankUpPanel zincirin en
+        // üstünde). Bu testler panel kapatmayı ölçüyor, kutlamayı değil;
+        // önkoşul belirli yapılıyor. Kutlamanın kendi ölçümü
+        // ProgressionWiringTests içinde.
+        ProgressionService.MarkCelebrationShown();
 
         System.Type type = System.AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
@@ -69,6 +79,13 @@ public class BackButtonTests
     [TearDown]
     public void TearDown()
     {
+        // Kaydın TAMAMI geri yüklenir: SetUp kutlama bayrağını da yazıyor.
+        if (!string.IsNullOrEmpty(yedek))
+        {
+            SaveService.ImportRaw(yedek);
+            return;
+        }
+
         SaveService.Data.playerName = hadName ? savedName : "";
         SaveService.SaveNow();
     }

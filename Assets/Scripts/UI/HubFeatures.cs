@@ -67,7 +67,7 @@ public static class HubFeatures
     public static void Varsayilana()
     {
         Stars = false;              // Faz 2
-        RankAndXp = false;          // Faz 2
+        RankAndXp = true;           // 2.1 UYGULANDI
         DailyPuzzle = false;        // Faz 3
         Streak = false;             // Faz 3
         BoilingPoint = false;       // Faz 5

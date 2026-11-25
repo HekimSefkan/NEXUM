@@ -36,6 +36,9 @@ public static class NexumPalette
     public static readonly Color PanelBackground = Hex(0x2E3240);
     public static readonly Color CardBackground = Hex(0x0B2A3D);
 
+    /// <summary>Modal perdesi (tam ekran karartma). Alfa kullanım yerinde.</summary>
+    public static readonly Color Scrim = Hex(0x050A12);
+
     /// <summary>Test için: rol adı → renk.</summary>
     public static Color ByRole(string role)
     {
@@ -53,6 +56,7 @@ public static class NexumPalette
             case "textOnLight": return TextOnLight;
             case "panelBackground": return PanelBackground;
             case "cardBackground": return CardBackground;
+            case "scrim": return Scrim;
             default: return Color.magenta;
         }
     }
@@ -62,6 +66,6 @@ public static class NexumPalette
     {
         "primary", "primaryBright", "secondary", "danger", "success", "warning",
         "textPrimary", "textSecondary", "textMuted", "textOnLight",
-        "panelBackground", "cardBackground",
+        "panelBackground", "cardBackground", "scrim",
     };
 }

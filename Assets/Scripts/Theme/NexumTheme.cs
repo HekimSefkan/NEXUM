@@ -57,6 +57,10 @@ public class NexumTheme : ScriptableObject
 
         [Tooltip("Kart arka planı.")]
         public Color cardBackground = Hex("#0B2A3D");
+
+        [Tooltip("Modal perdesi: tam ekran karartma katmanının rengi. " +
+                 "Alfası kullanım yerinde verilir; rol yalnızca TONU tanımlar.")]
+        public Color scrim = Hex("#050A12");
     }
 
     // ===================================================== TİPOGRAFİ
@@ -208,7 +212,7 @@ public class NexumTheme : ScriptableObject
                 palette.primary, palette.primaryBright, palette.secondary,
                 palette.danger, palette.success, palette.warning,
                 palette.textPrimary, palette.textSecondary, palette.textMuted,
-                palette.textOnLight,
+                palette.textOnLight, palette.scrim,
                 palette.panelBackground, palette.cardBackground,
             };
         }

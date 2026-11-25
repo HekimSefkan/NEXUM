@@ -36,12 +36,41 @@ public static class LevelRun
 
     private static readonly List<string> newRecipes = new List<string>();
 
+    /// <summary>
+    /// Bu oynanışta laboratuvar kazası (oyun sonu ekranı) oldu mu?
+    /// "Kazasız Bölüm" rozetinin tek ölçütü. GERİ ALINMAZ: kaza olduysa
+    /// olmuştur, geri alma tahtayı döndürür ama oyun sonu ekranını
+    /// görülmemiş yapmaz.
+    /// </summary>
+    public static bool AccidentHappened { get; private set; }
+
+    /// <summary>
+    /// Bu bölüm bitişinde VERİLEN XP. Sonuç kartındaki "+N XP" satırı bunu
+    /// okur; kart kendisi hesap YAPMAZ (tek kaynak ProgressionService).
+    /// 0 olabilir: aynı bölüm daha iyi oynanmadıysa XP verilmez.
+    /// </summary>
+    public static int XpAwarded { get; private set; }
+
     /// <summary>Bölüm başlangıcı: sayaçlar sıfırlanır.</summary>
     public static void Reset()
     {
         EarnedScore = 0;
         Moves = 0;
         newRecipes.Clear();
+        AccidentHappened = false;
+        XpAwarded = 0;
+    }
+
+    /// <summary>Oyun sonu ekranı açıldı (kaza sayıldı).</summary>
+    public static void NoteAccident()
+    {
+        AccidentHappened = true;
+    }
+
+    /// <summary>Bölüm bitişinde verilen XP kaydedilir (yalnızca rapor için).</summary>
+    public static void NoteXp(int amount)
+    {
+        XpAwarded = amount;
     }
 
     /// <summary>Sentezden puan kazanıldı. Harcama BURAYA GELMEZ.</summary>

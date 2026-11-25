@@ -16,6 +16,33 @@ MonoBehaviour:
   - key: back.press_again
     turkish: "\xC7\u0131kmak i\xE7in tekrar bas\u0131n"
     english: "\xC7\u0131kmak i\xE7in tekrar bas\u0131n"
+  - key: badge.all_reactions
+    turkish: "T\xFCm Tepkimeler"
+    english: "T\xFCm Tepkimeler"
+  - key: badge.daily_puzzle_10
+    turkish: "G\xFCnl\xFCk Bulmaca x10"
+    english: "G\xFCnl\xFCk Bulmaca x10"
+  - key: badge.encyclopedia
+    turkish: Ansiklopedi Kurdu
+    english: Ansiklopedi Kurdu
+  - key: badge.first_synthesis
+    turkish: "\u0130lk Sentez"
+    english: "\u0130lk Sentez"
+  - key: badge.flawless_level
+    turkish: "Kazas\u0131z B\xF6l\xFCm"
+    english: "Kazas\u0131z B\xF6l\xFCm"
+  - key: badge.streak_100
+    turkish: "100 G\xFCn Seri"
+    english: "100 G\xFCn Seri"
+  - key: badge.streak_30
+    turkish: "30 G\xFCn Seri"
+    english: "30 G\xFCn Seri"
+  - key: badge.streak_7
+    turkish: "7 G\xFCn Seri"
+    english: "7 G\xFCn Seri"
+  - key: badge.three_stars
+    turkish: "\xDC\xE7 Y\u0131ld\u0131zl\u0131 B\xF6l\xFCm"
+    english: "\xDC\xE7 Y\u0131ld\u0131zl\u0131 B\xF6l\xFCm"
   - key: catalyst.charge_label
     turkish: "KATAL\u0130Z\xD6R \u015EARJI {0}/{1}"
     english: "KATAL\u0130Z\xD6R \u015EARJI {0}/{1}"
@@ -628,6 +655,36 @@ MonoBehaviour:
       kilitlendi."
     english: "<color=red>MAALESEF YANLI\u015E CEVAP!</color>\nLaboratuvar tamamen
       kilitlendi."
+  - key: rank.apprentice
+    turkish: "\xC7\u0131rak"
+    english: "\xC7\u0131rak"
+  - key: rank.chemist
+    turkish: Kimyager
+    english: Kimyager
+  - key: rank.chief
+    turkish: "Ba\u015F Kimyager"
+    english: "Ba\u015F Kimyager"
+  - key: rank.nobel
+    turkish: "Nobel Aday\u0131"
+    english: "Nobel Aday\u0131"
+  - key: rank.researcher
+    turkish: "Ara\u015Ft\u0131rmac\u0131"
+    english: "Ara\u015Ft\u0131rmac\u0131"
+  - key: rank.technician
+    turkish: Laborant
+    english: Laborant
+  - key: rank.trainee
+    turkish: Stajyer
+    english: Stajyer
+  - key: rank.up_hint
+    turkish: "Devam etmek i\xE7in dokun"
+    english: "Devam etmek i\xE7in dokun"
+  - key: rank.up_title
+    turkish: "R\xDCTBE ATLADIN"
+    english: "R\xDCTBE ATLADIN"
+  - key: rank.xp_total
+    turkish: '{0} XP'
+    english: '{0} XP'
   - key: reaction.equation
     turkish: '{0} <sprite="NexumSymbols" name="arrow"> {1}'
     english: '{0} <sprite="NexumSymbols" name="arrow"> {1}'
@@ -720,6 +777,12 @@ MonoBehaviour:
   - key: result.share
     turkish: "PAYLA\u015E"
     english: "PAYLA\u015E"
+  - key: result.xp_label
+    turkish: "DENEY\u0130M"
+    english: "DENEY\u0130M"
+  - key: result.xp_value
+    turkish: +{0} XP
+    english: +{0} XP
   - key: share.failed
     turkish: "Payla\u015F\u0131m a\xE7\u0131lamad\u0131. Daha sonra tekrar dene."
     english: "Payla\u015F\u0131m a\xE7\u0131lamad\u0131. Daha sonra tekrar dene."

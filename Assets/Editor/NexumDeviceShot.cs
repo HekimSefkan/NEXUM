@@ -58,6 +58,9 @@ public static class NexumDeviceShot
 
         // 1.7: ana menü hub'ı. 0 yok, 1 bugünkü bayraklar, 2 hepsi açık.
         public int hub;
+
+        // 2.1: rütbe atlama kutlaması (sonuç kartının üstünde).
+        public bool kutlama;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -191,6 +194,17 @@ public static class NexumDeviceShot
                                    "SafeAreaRoot/ElementDetailPanel" },
                     tahtayiDoldur = true, sonucKarti = 2 },
 
+        // 2.1: rütbe atlama anı. Kutlama sonuç kartının ÜSTÜNDE duruyor;
+        // görüntü ikisini birlikte gösteriyor ki perdenin kartı nasıl
+        // örttüğü görülebilsin.
+        new Ekran { ad = "rutbe-atlama", scene = "Assets/Scenes/Game.unity",
+                    ac = new[] { "LevelCompletePanel", "RankUpPanel" },
+                    kapa = new[] { "PausePanel", "QuizPanel", "GameOverPanel",
+                                   "TutorialPanel", "HypothesisPanel", "UndoPanel", "FocusPanel",
+                                   "AssistantPanel", "SafeAreaRoot/RecipeBookPanel",
+                                   "SafeAreaRoot/ElementDetailPanel" },
+                    tahtayiDoldur = true, sonucKarti = 1, kutlama = true },
+
         new Ekran { ad = "duraklat-bilgi-kapali", scene = "Assets/Scenes/Game.unity",
                     ac = new[] { "PausePanel" },
                     kapa = new[] { "QuizPanel", "GameOverPanel", "LevelCompletePanel",
@@ -224,6 +238,7 @@ public static class NexumDeviceShot
                 if (e.quiz > 0) QuiziDoldur(canvasGo.transform, e.quiz == 2);
                 if (e.sonucKarti > 0) SonucKartiniDoldur(e.sonucKarti == 1);
                 if (e.hub > 0) HubuDoldur(e.hub == 2);
+                if (e.kutlama) KutlamayiDoldur();
                 BilgiKartiniAyarla(canvasGo.transform, e.bilgiKartlariKapali);
 
                 string yol = $"{OutDir}/{e.ad}_{boy.x}x{boy.y}.png";
@@ -442,10 +457,27 @@ public static class NexumDeviceShot
         if (tumBayraklar) HubFeatures.TumunuAc();
         else HubFeatures.Varsayilana();
 
-        hub.Apply();
-        HubFeatures.Varsayilana();   // sonraki ekranı etkilemesin
+        // 2.1: şerit artık rütbe ve XP çubuğu gösteriyor. Sıfır XP'li bir
+        // kayıtta çubuk boş çıkar ve görüntü hiçbir şey anlatmaz; bu yüzden
+        // TEMSİLİ bir ilerleme kuruluyor (tahta ve sonuç kartı da aynı
+        // şekilde dolduruluyor). KAYIT GERİ YÜKLENİR.
+        string yedek = SaveService.ExportRaw();
+        try
+        {
+            SaveService.Data.xp = 620;      // 3. rütbe (Laborant) ortası
+            hub.Apply();
+            Debug.Log($"{Tag}_HUB: tumBayraklar={tumBayraklar}, " +
+                      $"XP={ProgressionService.Xp} rutbe={ProgressionService.RankIndex} " +
+                      $"cubuk=%{ProgressionService.RankProgress01 * 100f:F0}");
+        }
+        finally
+        {
+            HubFeatures.Varsayilana();   // sonraki ekranı etkilemesin
+        }
 
-        Debug.Log($"{Tag}_HUB: tumBayraklar={tumBayraklar}");
+        // Kayıt geri yüklenir AMA şerit ekranda dolu kalır: Apply bir daha
+        // çağrılmıyor, yani metin ve çubuk render anına kadar duruyor.
+        SaveService.ImportRaw(yedek);
     }
 
     /// <summary>
@@ -486,9 +518,55 @@ public static class NexumDeviceShot
             }
         }
 
+        // 2.1: "+N XP" satırı. Tutar UYDURULMAZ, tablodan hesaplanır —
+        // kazanma ekranında ödenecek olanın aynısı (ProgressionService
+        // çağrılmıyor ki görüntü alma kaydı değiştirmesin).
+        LevelRun.NoteXp(ProgressionTable.LevelClearXp +
+                        ProgressionService.ScoreXp(LevelRun.EarnedScore));
+
         card.Fill();
         Debug.Log($"{Tag}_SONUC: bölüm={lm.currentLevelIndex + 1} puan={LevelRun.EarnedScore} " +
-                  $"hamle={LevelRun.Moves} tepkime={LevelRun.NewRecipes.Count}");
+                  $"hamle={LevelRun.Moves} tepkime={LevelRun.NewRecipes.Count} " +
+                  $"xp={LevelRun.XpAwarded}");
+    }
+
+    /// <summary>
+    /// Rütbe kutlaması: GERÇEK KOD YOLU çağrılır
+    /// (<c>RankUpPanel.ShowIfPending</c>), yalnızca girdisi (bekleyen bir
+    /// rütbe atlaması) kurulur. Kayıt yedeklenip geri yüklenir —
+    /// görüntü alma oyuncunun kaydını değiştirmez.
+    ///
+    /// Kartın ölçek tween'i edit mode'da İŞLEMEZ, yani kart 0 ölçekte
+    /// kalıp görünmez olurdu. Tween öldürülüp BİTİŞ durumu yazılıyor:
+    /// görüntü oyuncunun kutlamanın sonunda gördüğü karedir.
+    /// </summary>
+    public static void KutlamayiDoldur()
+    {
+        RankUpPanel panel = Object.FindObjectOfType<RankUpPanel>(true);
+        if (panel == null) { Debug.LogError($"{Tag}: RankUpPanel yok"); return; }
+
+        string yedek = SaveService.ExportRaw();
+        try
+        {
+            SaveService.Data.xp = ProgressionTable.Ranks[4].threshold;   // 5. rütbe
+            SaveService.Data.rankCelebrated = 3;
+
+            panel.gameObject.SetActive(true);
+            bool acildi = panel.ShowIfPending();
+
+            if (panel.card != null)
+            {
+                DG.Tweening.DOTween.Kill(panel.card.transform);
+                panel.card.transform.localScale = Vector3.one;
+            }
+
+            Debug.Log($"{Tag}_KUTLAMA: acildi={acildi} rutbe={ProgressionService.RankIndex + 1}" +
+                      $"/{ProgressionTable.Ranks.Length} xp={ProgressionService.Xp}");
+        }
+        finally
+        {
+            SaveService.ImportRaw(yedek);
+        }
     }
 
     /// <summary>

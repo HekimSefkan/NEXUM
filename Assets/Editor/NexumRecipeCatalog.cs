@@ -120,18 +120,37 @@ public static class NexumRecipeCatalog
             levelInfos.Add(info);
         }
 
-        bool changed = created || Differs(catalog, entries, levelInfos) || TilesDiffers(catalog, tiles);
+        // Quiz bankasinin boyu: TEK KAYNAK UIManager.allQuizzes. XP'nin geriye
+        // donuk hesabi ilk sahne yuklenmeden once kosuyor ve bankayi goremez;
+        // sayi buraya kopyalaniyor.
+        UIManager ui = Object.FindObjectOfType<UIManager>(true);
+        int quizCount = 0;
+        if (ui == null || ui.allQuizzes == null)
+        {
+            Debug.LogWarning($"{Tag}: Game sahnesinde UIManager/allQuizzes yok, quizCount 0 kaldi");
+        }
+        else
+        {
+            foreach (ChemistryQuiz q in ui.allQuizzes)
+            {
+                if (q != null) quizCount++;
+            }
+        }
+
+        bool changed = created || Differs(catalog, entries, levelInfos) || TilesDiffers(catalog, tiles)
+                       || catalog.quizCount != quizCount;
         if (changed)
         {
             catalog.entries = entries;
             catalog.levels = levelInfos;
             catalog.tiles = tiles;
+            catalog.quizCount = quizCount;
             EditorUtility.SetDirty(catalog);
             AssetDatabase.SaveAssets();
         }
 
-        Debug.Log($"{Tag}: tarif {entries.Count}, bolum {levelInfos.Count}, tas {tiles.Count} -> " +
-                  $"{(changed ? "yazildi" : "zaten guncel")}");
+        Debug.Log($"{Tag}: tarif {entries.Count}, bolum {levelInfos.Count}, tas {tiles.Count}, " +
+                  $"quiz {quizCount} -> {(changed ? "yazildi" : "zaten guncel")}");
         Debug.Log($"{Tag}: OK");
     }
 
