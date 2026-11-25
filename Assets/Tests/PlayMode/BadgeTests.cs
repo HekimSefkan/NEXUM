@@ -38,7 +38,9 @@ public class BadgeTests
     public void TabloTutarli()
     {
         Assert.AreEqual(9, Badges.All.Length, "plandaki dokuz rozet");
-        Assert.AreEqual(3, Badges.AvailableCount, "bugün kazanılabilir rozet sayısı");
+        // 2.1'de üç, 2.2'de dört: "Üç Yıldızlı Bölüm" yıldız sistemiyle
+        // kazanılabilir oldu.
+        Assert.AreEqual(4, Badges.AvailableCount, "bugün kazanılabilir rozet sayısı");
 
         HashSet<string> anahtarlar = new HashSet<string>();
         foreach (Badges.Badge b in Badges.All)
@@ -114,7 +116,7 @@ public class BadgeTests
     public void VerisiOlmayanRozetler_Kazanilamiyor()
     {
         string[] kapali = Badges.All.Where(b => !b.available).Select(b => b.key).ToArray();
-        Assert.AreEqual(6, kapali.Length, "kapalı rozet sayısı beklenenden farklı");
+        Assert.AreEqual(5, kapali.Length, "kapalı rozet sayısı beklenenden farklı");
 
         foreach (string key in kapali)
         {

@@ -1,13 +1,18 @@
 # NEXUM – Durum Notu
 
-**Tarih:** 25 Kasım 2026 · **Dal:** `progression` (Faz 2 / Adım 2.1, PR açık — birleştirilmedi)
+**Tarih:** 25 Kasım 2026 · **Dal:** `stars` (Faz 2 / Adım 2.2, PR açık — birleştirilmedi)
 
-> **FAZ 2 / 2.1 AÇIK PR.** XP, rütbe ve rozet sistemi kuruldu. Rütbe
+> **FAZ 2 / 2.2 AÇIK PR.** Üç yıldız sistemi kuruldu: kurallar, hamle
+> sınırları (ölçümle kalibre), kayıt sürüm 5, sonuç kartı · hub · bölüm
+> haritası. **Hamle sınırı tablosu KULLANICI ONAYI BEKLİYOR**
+> (`docs/DESIGN_TOKENS.md` 13.3). Zorluğa dokunulmadı; L4–L7 gözlemi
+> 13.5'te.
+>
+> **FAZ 2 / 2.1 BİRLEŞTİ (PR #31).** XP, rütbe ve rozet sistemi; rütbe
 > adları/eşikleri, rozet listesi/görselleri ve Araştırma Puanı tasarımı
-> **25 Kasım 2026'da ONAYLANDI** (`docs/DESIGN_TOKENS.md` bölüm 12,
-> `docs/ui-kit/badges.png`, `docs/ECONOMY_PROPOSAL.md` bölüm 4).
-> Araştırma Puanı için **kod yazılmadı** — uygulama ayrı bir adım.
-> Bekleyen tek şey **cihaz testi**; PR #31 birleştirilmedi.
+> 25 Kasım 2026'da onaylandı (`docs/DESIGN_TOKENS.md` 12,
+> `docs/ui-kit/badges.png`, `docs/ECONOMY_PROPOSAL.md` 4). Araştırma
+> Puanı için **kod yazılmadı** — uygulama ayrı bir adım.
 >
 > **FAZ 1 TAMAMLANDI.** Oyuncunun gördüğü bilgi katmanı bitti: tepkime denklemi, tarif defteri, geçersiz birleştirme geri bildirimi, istatistik onarımı, quiz öğrenme katmanı, bölüm sonu sonuç kartı + paylaşım ve ana menü hub'ı.
 
@@ -100,7 +105,23 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
     hub profil şeridinde rütbe adı + XP çubuğu.
   - **Rozet görselleri** `docs/ui-kit/badges.png` — kullanıcı onayı bekliyor;
     glifler henüz `Assets`'e alınmadı (rozet duvarı 2.3'ün işi).
-  - **Araştırma Puanı** `docs/ECONOMY_PROPOSAL.md` — yalnızca öneri.
+  - **Araştırma Puanı** `docs/ECONOMY_PROPOSAL.md` — tasarım onaylandı,
+    kod yazılmadı.
+- **Üç yıldız** (Adım 2.2, PR açık): `Progression/StarRules` (kural) +
+  `StarService` (muhasebe).
+  - **Bit maskesi, sayı değil:** ★2 kaçıp ★3 kazanılabiliyor ve ekranda
+    doğru yuva doluyor.
+  - Katalizörün **bedava** Joker hakkı ★3'ü bozmuyor; geri alma hamleyi
+    geri alıyor ama yardım bayrağını almıyor; **serbest modda yıldız yok**
+    (ölçüldü: orada kazanma ekranı zaten gelmiyor).
+  - **Hamle sınırları ölçümle** (`Tools/sim_stars.py`, 2000 tohum,
+    derinlik-2): kazanan oyunların %75'i. Botun gücü sınırı değiştirmiyor
+    (±1 hamle), yani çözücüye duyarsız.
+  - Kayıt sürüm 5: `levelStars` (OR ile birikir), `levelBestMoves` (MIN),
+    `starBackfillDone`. Geriye dönük hesap yalnızca ★1 verir.
+  - Yıldız XP'si yıldız başına bir kez (maskeden bedava çiftlik koruması).
+  - Görünür yerler: sonuç kartı (yıldızlar + "37/15" hamle kutusu + tek
+    satırlık yönlendirme), hub kahraman kart, bölüm haritası düğümleri.
 
 ---
 
@@ -171,15 +192,44 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
   alma hakkı, katalizör eşiği, başlangıç taşı yükseltmelere bağlanıyor)
   kendi analiz + onay turunu ister.
 
-**2.1'den ONAY BEKLEYEN TEK ŞEY:**
-- **Cihaz testi** — PR #31 hâlâ birleştirilmedi; ekranı etkileyen
-  değişiklikler cihazda görülmedi.
+2.1'de onay bekleyen bir şey KALMADI; PR #31 birleşti.
 
-**2.2'ye devredilenler:** yıldızlar (yer kurulu, XP ve rozet tanımlı,
-bayraklar kapalı).
+**2.2'de UYGULANDI:** üç yıldız. `HubFeatures.Stars`,
+`ResultCard.starsEnabled` ve `XpSources.Stars` açıldı; "Üç Yıldızlı
+Bölüm" rozeti kazanılabilir oldu. Hamle sınırları 8 / 11 / 15 / 33 /
+29 / 28 / 37 — **25 Kasım 2026'da ONAYLANDI**
+(`docs/DESIGN_TOKENS.md` 13.3).
+
+**2.2'den ONAY BEKLEYEN TEK ŞEY:** cihaz testi; PR #32 birleştirilmedi.
 
 **2.3'e devredilenler:** profil panelinin yeniden yapımı (rozet duvarı,
 kesin XP sayısı, **varsayılan oyuncu adının düzeltilmesi**).
+
+**2.3 için açık maddeler (2.2'de kayda geçirildi):**
+
+1. **Varsayılan oyuncu adı** `CodeStrings.ProfileDefaultName`:
+   "Baş Kimyager" → **"Gözlemci"**. Gerekçe: "Baş Kimyager" 6. rütbenin
+   adı; adsız oyuncuda profil şeridinde ad ve rütbe alt alta çakışıyor
+   (`docs/device-shots/ana-menu_1080x1920.png`). "Gözlemci" kayıt
+   ekranındaki "Gözlemci Kaydı (İsimsiz Ağ)" metniyle de tutarlı.
+2. **Rozet düzeltmeleri** (`Tools/generate_icons_family.py` →
+   `docs/ui-kit/badges.png`):
+   - "Tüm Tepkimeler" ile "Ansiklopedi Kurdu" **aynı defter glifini**
+     kullanıyor; ikisi yan yana ayırt edilemiyor. "Tüm Tepkimeler"
+     tepkime/ok glifi almalı (ok sembolü zaten
+     `Tools/generate_arrow.py` ile çizili).
+   - Seri rozetlerinin glifi damla gibi okunuyor; **Bunsen alevi**
+     olmalı.
+   - 7 / 30 / 100 gün kademeleri aynı görünüyor; **bronz / gümüş /
+     altın çerçeveyle** ayrışmalı.
+   - Glifler çerçeveye göre küçük kalıyor; **büyütülmeli**.
+   - Sözlükteki rozet adlarında **Türkçe harfler doğrulanmalı**
+     (kanıt sayfası ASCII çiziyor, oyundaki TMP etiketi değil).
+3. **Rozet görünürlük kuralı:** özelliği henüz olmayan rozetler (gün
+   serisi, günlük bulmaca, ansiklopedi) oyunda **GİZLİ** — hub'daki
+   "uygulanmamış giriş tamamen gizli" kuralıyla aynı. Kazanılabilir
+   ama henüz kazanılmamış olanlar **siluet** gösterilir. (Kanıt sayfası
+   hepsini gösteriyor; o bir tasarım belgesi, oyun ekranı değil.)
 Rozet duvarı için üç somut adım `docs/DESIGN_TOKENS.md` 12.4 sonunda:
 glifleri `NexumKitImport` ile içeri al, `NexumAtlasBuilder` listesine
 ekle, çerçeve zaten içeride. Rozetler 2.1'den beri sessizce kazanılıyor,

@@ -181,6 +181,10 @@
             "builder": "ResultCard"
         },
         {
+            "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarHintText",
+            "builder": "ResultCard"
+        },
+        {
             "path": "Game::Canvas/LevelCompletePanel/ResultCard/StarsRow",
             "builder": "ResultCard"
         },
@@ -931,6 +935,118 @@
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/BackgroundTreatment/Vignette",
             "builder": "Background"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level1/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level1/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level1/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level1/Stars/Star2",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level2/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level2/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level2/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level2/Stars/Star2",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level3/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level3/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level3/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level3/Stars/Star2",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level4/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level4/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level4/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level4/Stars/Star2",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level5/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level5/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level5/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level5/Stars/Star2",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level6/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level6/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level6/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level6/Stars/Star2",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level7/Stars",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level7/Stars/Star0",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level7/Stars/Star1",
+            "builder": "LevelMapStars"
+        },
+        {
+            "path": "MainMenu::Canvas/SafeAreaRoot/LevelSelectionPanel/LevelMap/MapBG/Level7/Stars/Star2",
+            "builder": "LevelMapStars"
         },
         {
             "path": "MainMenu::Canvas/SafeAreaRoot/MainMenuPanel/EncyclopediaButton",

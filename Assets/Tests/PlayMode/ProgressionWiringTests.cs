@@ -125,6 +125,8 @@ public class ProgressionWiringTests
 
     private static bool KazaOldu() { return Reflect.Prop<bool>("LevelRun", "AccidentHappened"); }
 
+    private static int YildizMaskesi() { return Reflect.Prop<int>("LevelRun", "Stars"); }
+
     /// <summary>Hedefi ulaşılamaz yapar: kazanma ekranı araya girmesin.</summary>
     private void HedefiUzaklastir()
     {
@@ -244,7 +246,13 @@ public class ProgressionWiringTests
         yield return null;
 
         int verilen = VerilenXp();
-        int beklenen = ProgressionTable.LevelClearXp + 500 / ProgressionTable.ScoreXpDivisor;
+
+        // 2.2: kazanma ekranı bölüm XP'sinin YANINA yıldız XP'sini de
+        // ödüyor. Beklenti sabit yazılmaz, kazanılan yıldızdan hesaplanır.
+        int yildizXp = StarRules.CountOf(YildizMaskesi()) * ProgressionTable.StarXp;
+        int beklenen = ProgressionTable.LevelClearXp
+                       + 500 / ProgressionTable.ScoreXpDivisor
+                       + yildizXp;
 
         MonoBehaviour card = Find("ResultCard");
         Assert.IsNotNull(card, "ResultCard yok");
@@ -253,7 +261,10 @@ public class ProgressionWiringTests
         Assert.IsNotNull(xpText, "kartta XP alanı bağlı değil");
 
         Debug.Log($"{Tag}_KAZANMA: XP {oncekiXp} -> {ProgressionService.Xp} " +
-                  $"(verilen {verilen}, beklenen {beklenen}), kartta \"{xpText.text}\"");
+                  $"(verilen {verilen}, beklenen {beklenen}, yildiz payi {yildizXp}), " +
+                  $"kartta \"{xpText.text}\"");
+
+        Assert.Greater(yildizXp, 0, "ölçüm anlamsız: hiç yıldız kazanılmadı");
 
         Assert.AreEqual(beklenen, verilen);
         Assert.AreEqual(oncekiXp + beklenen, ProgressionService.Xp);

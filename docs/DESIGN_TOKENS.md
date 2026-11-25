@@ -847,3 +847,173 @@ ayrılmamıştı ve kartın dikey ritminde 56 birimlik boş bant yoktu
 Güvenli alan payı: kart ±800, tasarım yüksekliği en az 1920 (±960) →
 her kenarda 160 birim (önceki kartta 210). Dört canvas boyutunda ölçüldü,
 taşma yok (`ProgressionFitTests`).
+
+---
+
+# 13. Üç yıldız (Faz 2 / Adım 2.2)
+
+## 13.1 Kurallar
+
+| yıldız | koşul |
+|---|---|
+| ★1 | bölümü tamamla |
+| ★2 | hamle sınırının altında tamamla (sınır DAHİL) |
+| ★3 | ipucu kullanmadan VE **ücretli** Joker kullanmadan tamamla |
+
+**Yıldızlar BAĞIMSIZ, sayı değil BİT MASKESİ.** ★2'yi kaçırıp ★3'ü almak
+mümkün ve ekranda ortadaki yuva boş, sağdaki dolu görünür. Sayı
+tutulsaydı bu durum "2 yıldız" diye kaydedilir, hangi ikisi olduğu
+kaybolur ve yanlış yuva dolardı.
+
+Üç karar ve gerekçeleri:
+
+- **Katalizörün BEDAVA Joker hakkı ★3'ü BOZMAZ.** Katalizör bir ödül
+  olarak tasarlandı (5 sentezde bir bedava parçalama); ★3'ü bozsaydı
+  ödül cezaya dönerdi ve oyuncu kendi kazandığı hakkı kullanmaktan
+  kaçınırdı. Yalnızca **ücretli** Joker bozar.
+- **Geri alma ★3'ü bozmaz.** Hamle sayısı geri almayla birlikte geri
+  gidiyor (`LevelRun.Moves` anlık görüntüye giriyor), yardım bayrakları
+  ise geri ALINMIYOR — ipucunu gerçekten gördün (`discoveredRecipes` ve
+  `AccidentHappened` ile aynı istisna).
+- **Serbest modda yıldız YOK.** Ölçüldü, varsayılmadı: serbest modda
+  `GridManager.CheckWinCondition` hemen dönüyor, yani bölüm hedefi de
+  kazanma ekranı da yok; üstelik ipucu bedava ve sınırsız, kaybetme
+  durumu da yok (`ShowGameOver` matrisi yeniden karıyor). Yıldız orada
+  bir başarıyı ölçmezdi. Kural ayrıca çağrıda açıkça duruyor
+  (`starsAllowed`), sessiz bir varsayıma bırakılmadı.
+
+## 13.2 Modların bölüm tamamlamayla etkileşimi (ölçüm)
+
+| | Normal (0) | Sınav (1) | Serbest (2) |
+|---|---|---|---|
+| bölüm hedefi + kazanma ekranı | var | var | **yok** |
+| kaybetme (oyun sonu ekranı) | var | var | **yok** (matris yeniden karılır) |
+| ipucu | bedelli, en fazla 3 | **engelli** | bedava, sınırsız |
+| entropi ceza taşı | var | var | yok |
+| sentez puanı | ×1 | **×2** | ×1 |
+| **yıldız** | **verilir** | **verilir** | **verilmez** |
+
+Kaynak satırları: `GridManager.CheckWinCondition` (serbest modda erken
+dönüş), `RequestHint` (sınav modunda engel), `ActivateHint` (serbest
+modda bedel yok), `UIManager.ShowGameOver` (serbest modda yeniden
+karma), birleşme puanı (sınav modunda ×2).
+
+> **Sınav modunda ★3 daha KOLAY:** ipucu zaten alınamadığı için ★3'ün
+> iki ölçütünden biri bedava geliyor, geriye yalnızca "ücretli Joker
+> kullanma" kalıyor. Karşılığında oyuncu ipucu desteğinden tamamen
+> vazgeçiyor ve puan ×2 alıyor. **Bu bir gözlem; zorluğa dokunulmadı.**
+
+## 13.3 Hamle sınırları — ONAYLANDI (25 Kasım 2026)
+
+> **Bu tablo artık bir KARAR, öneri değil.** Bir sınır değişecekse:
+> `StarRules.MoveLimits` düzenlenir, `Tools/sim_stars.py` yeniden
+> koşturulur, aşağıdaki iki tablo güncellenir ve `StarTests` yeşil
+> kalmalıdır (sınır tablosunun bölüm sayısı kadar ve pozitif olması
+> testle zorunlu). Yükseltmeler geldiğinde kalibrasyonun bozulmaması
+> `docs/ECONOMY_PROPOSAL.md` §3.1'de şart olarak duruyor.
+
+Oyunda rastgele doğma var, yani tek bir "optimal hamle sayısı" yok.
+Sınır tek koşudan değil **dağılımdan** türetildi: `Tools/sim_stars.py`,
+bölüm başına **2000 tohum**, derinlik-2 bot, yükseltmesiz zemin.
+
+| bölüm | kazanma | kazanan örneklem | medyan | %75 | %90 | **SINIR** | ★2 oranı (kazananlarda) | ★2 (tüm denemeler) | ★3 oranı |
+|---|---|---|---|---|---|---|---|---|---|
+| L1 | 100% | 2000 | 5 | 8 | 12 | **8** | 77% | 77% | 100% |
+| L2 | 100% | 1995 | 7 | 11 | 16 | **11** | 77% | 77% | 100% |
+| L3 | 98% | 1970 | 8 | 15 | 23 | **15** | 76% | 74% | 98% |
+| L4 | 25% | 507 | 27 | 33 | 37 | **33** | 78% | 20% | 25% |
+| L5 | 28% | 556 | 22 | 29 | 32 | **29** | 79% | 22% | 28% |
+| L6 | 17% | 343 | 20 | 28 | 34 | **28** | 77% | 13% | 17% |
+| L7 | 3% | 60 | 31 | 37 | 41 | **37** | 75% | 2% | 3% |
+
+**Kabul şartı karşılandı:** her bölümde ★2 ve ★3 oranı sıfırın üstünde,
+yani ikisi de ulaşılabilir. Örneklem her bölümde 60+ kazanan oyun;
+küçük örneklem uyarısı yok.
+
+**Neden %75 ve neden yuvarlanmadı.** %75, "yetkin bir oyuncunun dört
+koşusundan üçü" demek: ★2 bir ödül olacak kadar zor, erişilemez olacak
+kadar değil. Alternatifler ölçüldü:
+
+| bölüm | medyan | medyan×1,3 | **%75** | %90 |
+|---|---|---|---|---|
+| L1 | 5 | 6 | **8** | 12 |
+| L2 | 7 | 9 | **11** | 16 |
+| L3 | 8 | 10 | **15** | 23 |
+| L4 | 27 | 35 | **33** | 37 |
+| L5 | 22 | 29 | **29** | 32 |
+| L6 | 20 | 26 | **28** | 34 |
+| L7 | 31 | 40 | **37** | 41 |
+
+Medyan×1,3 L4 ve L7'de %90'ı aşıyor (35 > 37'nin altı değil; 40 > 37),
+yani oralarda ★2 neredeyse otomatik olurdu. %90 ise ★2'yi "bitirdiysen
+aldın"a çevirirdi. Beşin katlarına **yuvarlanmadı**: L2'yi 11'den 15'e
+çıkarmak sınırı %90'ın üstüne taşıyıp ikinci yıldızı anlamsızlaştırıyor.
+
+**Botun gücü sınırı neredeyse hiç değiştirmiyor** (600 tohum, aynı
+tohum kümesi):
+
+| bölüm | d1 kazanma | d1 %75 | d2 kazanma | d2 %75 | fark |
+|---|---|---|---|---|---|
+| L1 | 100% | 8 | 100% | 8 | 0 |
+| L2 | 100% | 10 | 100% | 11 | +1 |
+| L3 | 96% | 17 | 98% | 16 | −1 |
+| L4 | 20% | 31 | 24% | 32 | +1 |
+| L5 | 22% | 29 | 27% | 28 | −1 |
+| L6 | 13% | 28 | 18% | 27 | −1 |
+| L7 | 2% | 35 | 2% | 38 | +3 |
+
+Daha güçlü bot daha SIK kazanıyor ama aynı sayıda hamlede bitiriyor
+(fark ±1, yalnızca en küçük örneklemli L7'de 3). Yani sınır çözücü
+gücüne duyarsız; derinlik-2 yeterli bir temel.
+
+**Kalibrasyon YÜKSELTMESİZ zeminde yapıldı.** Araştırma Puanı
+yükseltmeleri (`docs/ECONOMY_PROPOSAL.md`) bölümleri kolaylaştıracak;
+sınırlar onlar yokken ölçüldü ve uygulama turunun bunu bozmaması
+gerekiyor (aynı belgenin §3'üne şart olarak yazıldı).
+
+**Botun sınırı, gizlenmiyor:** bot ipucu, Joker ve geri alma
+KULLANMAZ. ★3'ün koşulu zaten "yardımsız bitirme" olduğu için botun
+kazandığı her oyun ★3'ü de alır — yani **★3 oranı = kazanma oranı**.
+Bu kuralın tanımı, ölçümün kusuru değil. Buna karşılık gerçek oyuncu
+ipucu ve geri almayla L4–L7'de bottan çok daha sık kazanacak; ★3 ise
+tam da o yardımları kullanmamayı istediği için zor kalacak.
+
+## 13.4 Kayıt
+
+Bölüm başına iki şey: kazanılmış yıldızların **maskesi**
+(`levelStars`, OR ile birikir) ve **en iyi hamle sayısı**
+(`levelBestMoves`, MIN ile iyileşir). Kötü bir oynanış iyi sonucun
+üstüne yazamaz.
+
+**Çiftlik koruması maskeden bedava geliyor:** XP yalnızca YENİ bitler
+için ödenir (`yeni & ~eski`), yani aynı ★2'yi tekrar almak 0 XP. Bölüm
+XP'sindeki "en iyi sonuç defteri" ile aynı desen; ikinci bir sayaç
+yazılmadı.
+
+**Geriye dönük hesap yalnızca ★1 verir.** "Bölümü tamamla" kaydedilmiş
+gerçek veridir (`maxLevelUnlocked`); ★2 hamle sayısı, ★3 yardım
+geçmişi ister ve ikisi de 2.2 öncesinde hiç kaydedilmedi. Son bölüm
+muhafazakâr sayılmaz — bitirmek de yalnızca açmak da aynı değeri
+bırakıyor (XP'nin geriye dönük hesabıyla aynı kural).
+
+## 13.5 L4–L7 denge gözlemi (yalnızca GÖZLEM, değişiklik yok)
+
+Yıldız kalibrasyonu yan ürün olarak zorluk verisi üretti. **Bu turda
+hiçbir denge değeri değiştirilmedi**; aşağısı denge turu için veri.
+
+1. **L3 ile L4 arasında uçurum var.** Kazanma oranı %98'den %25'e
+   düşüyor — tek adımda 73 puan. Medyan hamle de 8'den 27'ye çıkıyor.
+   Oyunun zorluk eğrisi kademeli değil, basamaklı.
+2. **L7 diğer zor bölümlerden de ayrışıyor** (%3; L4 %25, L5 %28,
+   L6 %17).
+3. **L7'de daha iyi oynamak işe yaramıyor.** Derinlik-1'den
+   derinlik-2'ye geçince L4 %20→%24, L5 %22→%27, L6 %13→%18
+   iyileşiyor ama L7 %2→%2 sabit. Diğer bölümler BECERİ ile açılıyor,
+   L7 açılmıyor — bu, L7'nin doğma şansıyla kapalı olduğuna işaret
+   ediyor (iki hedefi var: H₂CO₃ + CaCO₃, ve ikisi de derin zincirler).
+4. 13. turun ölçümü duruyor ve bu veriyle uyumlu: Na ağırlığını yarıya
+   indirmek L4'ü %13→%30, L6'yı %11→%20 çıkarıyordu.
+
+Denge turu başlarsa önerilen sıra: önce L3→L4 geçişi, sonra L7'nin
+hedef sayısı ya da spawn havuzu. Ölçüm aracı hazır:
+`python Tools/sim_stars.py 2000 2`.

@@ -957,6 +957,11 @@ public class GridManager : MonoBehaviour
 
     private void ActivateHint(Transform t1, Transform t2, string hintMsg, GameManager gm)
     {
+        // Üçüncü yıldız: ipucu GÖSTERİLDİ. Serbest modda da işaretlenir
+        // (orada yıldız zaten verilmiyor); bayrak "bedel ödendi mi"
+        // değil "yardım görüldü mü" sorusunu yanıtlıyor.
+        LevelRun.NoteHint();
+
         // Serbest modda ipucu bedava; hak da tükenmez
         if (!IsFreeMode)
         {

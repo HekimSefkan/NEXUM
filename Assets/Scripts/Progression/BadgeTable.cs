@@ -76,7 +76,7 @@ public static class Badges
         new Badge(FirstSynthesis, CodeStrings.BadgeFirstSynthesis, true, "flask", "2.1"),
         new Badge(AllReactions, CodeStrings.BadgeAllReactions, true, "book", "2.1"),
         new Badge(FlawlessLevel, CodeStrings.BadgeFlawlessLevel, true, "shield", "2.1"),
-        new Badge(ThreeStars, CodeStrings.BadgeThreeStars, false, "star_full", "2.2"),
+        new Badge(ThreeStars, CodeStrings.BadgeThreeStars, true, "star_full", "2.2"),
         new Badge(Streak7, CodeStrings.BadgeStreak7, false, "flame", "Faz 3"),
         new Badge(Streak30, CodeStrings.BadgeStreak30, false, "flame", "Faz 3"),
         new Badge(Streak100, CodeStrings.BadgeStreak100, false, "flame", "Faz 3"),
@@ -176,6 +176,8 @@ public static class Badges
     ///    DEĞERLENDİRİLMEZ — bilinmeyen bir sınıra göre rozet verilmez.
     ///  - <b>Kazasız Bölüm:</b> yalnızca bölüm bitişinde, o oynanışta
     ///    laboratuvar kazası olmadıysa.
+    ///  - <b>Üç Yıldızlı Bölüm:</b> herhangi bir bölümde üç yıldızın
+    ///    tamamı kazanılmışsa (<c>StarService</c> defterinden okunur).
     /// </summary>
     public static List<string> Evaluate(int recipeTotal, bool flawlessLevelFinished)
     {
@@ -191,6 +193,11 @@ public static class Badges
         }
 
         if (flawlessLevelFinished && TryEarn(FlawlessLevel)) yeni.Add(FlawlessLevel);
+
+        // Üç Yıldızlı Bölüm (2.2): koşul PARAMETRE DEĞİL, çünkü yıldız
+        // defteri aynı derlemede ve kesinleşmiş veridir. Parametre
+        // olsaydı her çağıranın doğru değeri geçirmesi gerekirdi.
+        if (StarService.HasAnyThreeStarLevel && TryEarn(ThreeStars)) yeni.Add(ThreeStars);
 
         return yeni;
     }

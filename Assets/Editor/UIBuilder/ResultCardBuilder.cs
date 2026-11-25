@@ -39,6 +39,7 @@ public static class ResultCardBuilder
     private const string FramePath = "Assets/Art/UI/panel_lg_normal.png";
     private const string StatFramePath = "Assets/Art/UI/panel_sm_normal.png";
     private const string StarEmptyPath = "Assets/Art/UI/star_empty_normal.png";
+    private const string StarFullPath = "Assets/Art/UI/star_full_normal.png";
     private const string TileSlotPath = "Assets/Art/UI/compound_ring_normal.png";
 
     /// <summary>
@@ -61,17 +62,26 @@ public static class ResultCardBuilder
 
     // Dikey ritim (kart merkezine göre). Kart yarı yüksekliği 800.
     // Bantlar ÖLÇÜLDÜ, üst üste binmiyor:
-    //   başlık      665..575      bölüm satırı 570..510
-    //   yıldızlar   498..402      (gizli, yeri ayrılı)
+    // 2.2'de ÜST BLOK YUKARI ALINDI. Kart 1.6'da 1500, 2.1'de 1600
+    // oldu ama üst içerik yerinde kalmıştı: tepede 135 birim ÖLÜ BOŞLUK
+    // vardı. Yıldız yönlendirme satırı (46) o boşluktan çıktı, kart
+    // bir daha büyümedi ve güvenli alan payı 160 birimde kaldı.
+    // Ölçülen yeni ritim (boşluklar 15, üst pay 50):
+    //   başlık      750..660      bölüm satırı 645..585
+    //   yıldızlar   570..474      yıldız satırı 459..413
     //   sayı kutuları 395..245
     //   "ÜRETİLEN"  227..183      hedef satırı 195..-5
     //   "YENİ TEP." -18..-62      tepkime kutusu -60..-280
     //   "+N XP"     -334..-390      (2.1'de eklendi)
     //   buton sat.1 -418..-562    buton sat.2 -578..-722
     //   paylaşım satırı -732..-778    kart iç kenarı -800
-    private const float TitleY = 620f;
-    private const float LevelY = 540f;
-    private const float StarsY = 450f;
+    private const float TitleY = 705f;
+    private const float LevelY = 615f;
+    private const float StarsY = 522f;
+
+    /// <summary>Yıldız yönlendirme satırı: yıldızlar ile sayı kutuları arası.</summary>
+    private const float StarHintY = 436f;
+    private static readonly Vector2 StarHintSize = new Vector2(820f, 46f);
     private const float StatsY = 320f;
     private const float GoalsY = 95f;
     private const float GoalsLabelY = 205f;
@@ -171,24 +181,39 @@ public static class ResultCardBuilder
         GameObject level = Metin(b, theme, card, "LevelText", new Vector2(820f, 60f), LevelY,
                                  theme.typography.subtitle, theme.palette.primaryBright);
 
-        // --- yıldız satırı (Faz 2'ye kadar gizli)
+        // --- yıldız satırı (2.2'de AÇILDI)
         GameObject stars = b.Ensure(CardPath, "StarsRow");
         b.SetFixed(stars, UITokens.Center, new Vector2(3f * StarSpacing, StarSize.y),
                    new Vector2(0f, StarsY));
+
+        List<Image> starImages = new List<Image>();
         for (int i = 0; i < 3; i++)
         {
             GameObject star = b.Ensure(CardPath + "/StarsRow", "Star" + i);
             b.SetFixed(star, UITokens.Center, StarSize,
                        new Vector2((i - 1) * StarSpacing, 0f));
-            b.EnsureComponent<Image>(star, image =>
+            Image img = b.EnsureComponent<Image>(star, image =>
             {
+                // Sahnede BOŞ yıldız kaydedilir; dolu hâli çalışma
+                // zamanında ResultCard yazar. Kaydedilen hâl "henüz
+                // kazanılmadı" olmalı ki kart dolmadan bir kare dolu
+                // görünmesin.
                 image.sprite = LoadSprite(StarEmptyPath);
                 image.type = Image.Type.Simple;
                 image.color = Color.white;
                 image.preserveAspect = true;
                 image.raycastTarget = false;
             });
+
+            // dryRun'da da toplanır: liste boş kalırsa denetleyici alanı
+            // "değişti" görünür ve sahte sapma üretir.
+            if (img != null) starImages.Add(img);
         }
+
+        // --- yıldız yönlendirme satırı: TEK sonraki adım
+        GameObject starHint = Metin(b, theme, card, "StarHintText", StarHintSize,
+                                    StarHintY, theme.typography.label,
+                                    theme.palette.primaryBright);
 
         // --- iki sayı kutusu: kazanılan puan ve hamle
         GameObject scoreValue, movesValue;
@@ -314,8 +339,12 @@ public static class ResultCardBuilder
             rc.goalSymbolTexts = goalSymbols.ToArray();
             rc.goalAmountTexts = goalAmounts.ToArray();
             rc.goalSpacing = GoalSpacing;
-            rc.starsEnabled = false;          // Faz 2
+            rc.starsEnabled = true;           // 2.2
             rc.starsRow = stars;
+            rc.starImages = starImages.ToArray();
+            rc.starFullSprite = LoadSprite(StarFullPath);
+            rc.starEmptySprite = LoadSprite(StarEmptyPath);
+            rc.starHintText = Tmp(starHint);
             rc.nextLevelButton = next;
             rc.restartButton = restart;
             rc.restartSoloX = 0f;
@@ -336,7 +365,10 @@ public static class ResultCardBuilder
                 if (controller != null) SetReference(ui, "resultCard", controller);
             }
 
-            if (stars != null && stars.activeSelf) stars.SetActive(false);
+            // Yıldız satırı 2.2'de AÇIK kaydedilir: bayrak açıkken
+            // sahnenin kayıtlı hâli ile çalışma zamanı ayrışmasın
+            // (hub'daki Gorunurluk kuralıyla aynı gerekçe).
+            if (stars != null && !stars.activeSelf) stars.SetActive(true);
             if (shareMessage != null && shareMessage.activeSelf) shareMessage.SetActive(false);
         }
 

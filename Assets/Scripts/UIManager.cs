@@ -584,7 +584,19 @@ public class UIManager : MonoBehaviour
         // gösterebilsin. Verilen tutar 0 olabilir: aynı bölüm daha iyi
         // oynanmadıysa XP verilmez (çiftlik koruması).
         int levelIndex = LevelManager.Instance != null ? LevelManager.Instance.currentLevelIndex : 0;
-        LevelRun.NoteXp(ProgressionService.AwardLevelComplete(levelIndex, LevelRun.EarnedScore));
+        int xp = ProgressionService.AwardLevelComplete(levelIndex, LevelRun.EarnedScore);
+
+        // YILDIZLAR (2.2). Kural StarRules'te, muhasebe StarService'te;
+        // burada yalnızca GİRDİLER toplanıyor. Serbest modda yıldız yok
+        // (zaten oraya kazanma ekranı da gelmiyor, ama kural çağrıda
+        // açıkça duruyor: sessiz bir varsayıma bırakılmadı).
+        bool yildizVerilir = GridManager.Instance == null || !GridManager.Instance.IsFreeMode;
+        int yildizlar = StarRules.Evaluate(levelIndex, LevelRun.Moves, LevelRun.HintUsed,
+                                           LevelRun.PaidJokerUsed, yildizVerilir);
+        LevelRun.NoteStars(yildizlar);
+        xp += StarService.Record(levelIndex, yildizlar, LevelRun.Moves);
+
+        LevelRun.NoteXp(xp);
 
         // Rozetler: "Kazasız Bölüm" YALNIZCA burada değerlendirilebilir
         // (ölçüt bu oynanışta oyun sonu ekranının görülmemiş olması).

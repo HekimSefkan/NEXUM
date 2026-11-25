@@ -41,6 +41,10 @@ public class TileInteraction : MonoBehaviour, IPointerDownHandler
             // Paramız yetiyorsa taşı parçala
             if (free || manager.SpendScore(cost))
             {
+                // Üçüncü yıldız yalnızca ÜCRETLİ Joker'de kaçar.
+                // Katalizörün bedava hakkı bir ödül; cezaya dönmemeli.
+                if (!free) LevelRun.NotePaidJoker();
+
                 Debug.Log(free
                     ? $"{myElementData.elementName} katalizörle bedava parçalandı!"
                     : $"{myElementData.elementName} parçalandı! -{cost} Puan.");
