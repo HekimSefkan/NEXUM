@@ -317,6 +317,19 @@ public class StarTests
         Assert.AreEqual(0, StarService.StarsFor(4), "son acilan bolum tamamlanmis sayilmamali");
     }
 
+    /// <summary>
+    /// Hesap BİR KEZ koşar — ve bunu bayrak garanti eder, maske değil.
+    ///
+    /// NEGATİF KONTROL BUNU ÖĞRETTİ: testin ilk hâli yalnızca "arka
+    /// arkaya iki çağrı" deniyordu ve bayrak kaldırıldığında bile
+    /// GEÇİYORDU, çünkü ikinci çağrıda bütün birinci yıldız bitleri
+    /// zaten kuruluydu ve <c>yeni</c> kümesi boş çıkıyordu. Yani test
+    /// adının iddia ettiği şeyi ölçmüyordu.
+    ///
+    /// Bayrağın GERÇEKTEN korudugu durum: maske bozulup onarımla
+    /// sıfırlanırsa (<c>SaveService.RepairStarMasks</c>) bir sonraki
+    /// açılış yıldızı ve XP'yi İKİNCİ KEZ vermemeli.
+    /// </summary>
     [Test]
     public void GeriyeDonukHesap_BirKezKosar()
     {
@@ -326,10 +339,25 @@ public class StarTests
         int ilk = StarService.RunBackfillOnce(LevelCount);
         int ikinci = StarService.RunBackfillOnce(LevelCount);
 
-        Debug.Log($"{Tag}_BIRKEZ: ilk +{ilk}, ikinci +{ikinci}");
+        Assert.Greater(ilk, 0, "ölçüm anlamsız: ilk hesap yıldız vermedi");
+        Assert.AreEqual(0, ikinci, "hesap arka arkaya iki kez koştu");
+        Assert.AreEqual(1, SaveService.Data.starBackfillDone, "bayrak kurulmadı");
 
-        Assert.Greater(ilk, 0);
-        Assert.AreEqual(0, ikinci, "hesap tekrar koştu");
+        // --- asıl ölçüm: maske bozulup onarıldı, hesap YİNE koşmamalı
+        int xpOnce = ProgressionService.Xp;
+        SaveService.Data.levelStars[0] = 0;          // onarımın bıraktığı hâl
+        SaveService.MarkDirty();
+
+        int ucuncu = StarService.RunBackfillOnce(LevelCount);
+
+        Debug.Log($"{Tag}_BIRKEZ: ilk +{ilk}, ikinci +{ikinci}, " +
+                  $"maske bozulduktan sonra +{ucuncu} " +
+                  $"(XP {xpOnce} -> {ProgressionService.Xp}, " +
+                  $"L1 maskesi {StarService.StarsFor(0)})");
+
+        Assert.AreEqual(0, ucuncu, "bozulan maske hesabı yeniden tetikledi");
+        Assert.AreEqual(xpOnce, ProgressionService.Xp, "yıldız XP'si ikinci kez ödendi");
+        Assert.AreEqual(0, StarService.StarsFor(0), "yıldız sessizce geri verildi");
     }
 
     [Test]
