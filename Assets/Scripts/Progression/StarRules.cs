@@ -10,7 +10,10 @@
 /// <b>Hamle sınırları ÖLÇÜMLE kalibre edildi</b> (<c>Tools/sim_stars.py</c>,
 /// bölüm başına 2000 tohum, derinlik-2 bot): kazanılan oyunların
 /// hamle dağılımının %75'i. Ayrıntı ve tablo: docs/DESIGN_TOKENS.md 13.
-/// <b>SINIRLAR KULLANICI ONAYINA TABİDİR.</b>
+/// <b>SINIRLAR ONAYLANDI (25 Kasım 2026)</b> — bkz. docs/DESIGN_TOKENS.md
+/// 13.3. Değiştirilecekse Tools/sim_stars.py yeniden koşturulur ve o
+/// tablo güncellenir; yükseltmeler geldiğinde kalibrasyonun bozulmaması
+/// docs/ECONOMY_PROPOSAL.md §3.1'de şart olarak duruyor.
 ///
 /// Bu sınıf oyun kurallarını BİLMEZ: mod, ipucu bedeli, Joker bedeli
 /// hep çağıranın işi. Buraya yalnızca "kaç hamle, yardım alındı mı,

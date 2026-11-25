@@ -903,7 +903,14 @@ karma), birleşme puanı (sınav modunda ×2).
 > kullanma" kalıyor. Karşılığında oyuncu ipucu desteğinden tamamen
 > vazgeçiyor ve puan ×2 alıyor. **Bu bir gözlem; zorluğa dokunulmadı.**
 
-## 13.3 Hamle sınırları — ONAY BEKLİYOR
+## 13.3 Hamle sınırları — ONAYLANDI (25 Kasım 2026)
+
+> **Bu tablo artık bir KARAR, öneri değil.** Bir sınır değişecekse:
+> `StarRules.MoveLimits` düzenlenir, `Tools/sim_stars.py` yeniden
+> koşturulur, aşağıdaki iki tablo güncellenir ve `StarTests` yeşil
+> kalmalıdır (sınır tablosunun bölüm sayısı kadar ve pozitif olması
+> testle zorunlu). Yükseltmeler geldiğinde kalibrasyonun bozulmaması
+> `docs/ECONOMY_PROPOSAL.md` §3.1'de şart olarak duruyor.
 
 Oyunda rastgele doğma var, yani tek bir "optimal hamle sayısı" yok.
 Sınır tek koşudan değil **dağılımdan** türetildi: `Tools/sim_stars.py`,

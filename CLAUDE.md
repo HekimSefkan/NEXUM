@@ -378,7 +378,9 @@ Bunlar istisna değil, **varsayılan**. Bir maddeden sapmak gerekiyorsa gerekçe
   - **Hamle sınırları ÖLÇÜMLE kalibre edilir** (`Tools/sim_stars.py`):
     kazanan oyunların %75'i, yükseltmesiz zeminde. Sınır değişecekse
     araç yeniden koşturulup `docs/DESIGN_TOKENS.md` 13.3 güncellenir.
-    Tablo **kullanıcı onayına tabidir**.
+    **Tablo 25 Kasım 2026'da ONAYLANDI:** 8 · 11 · 15 · 33 · 29 · 28 · 37.
+    Yükseltmeler geldiğinde kalibrasyonun bozulmaması
+    `docs/ECONOMY_PROPOSAL.md` §3.1'de şart olarak duruyor.
   - Ölçüm: `StarTests`, `StarWiringTests`, `StarFitTests`.
 - **`Tools/sim_stars.py`:** yıldız hamle sınırlarını ölçer (bölüm başına
   N tohum, kazanan oyunların hamle dağılımı). `sim_core_loop` üzerine

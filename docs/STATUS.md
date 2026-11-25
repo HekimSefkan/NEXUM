@@ -192,14 +192,15 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
   alma hakkı, katalizör eşiği, başlangıç taşı yükseltmelere bağlanıyor)
   kendi analiz + onay turunu ister.
 
-**2.1'den ONAY BEKLEYEN TEK ŞEY:**
-- **Cihaz testi** — PR #31 hâlâ birleştirilmedi; ekranı etkileyen
-  değişiklikler cihazda görülmedi.
+2.1'de onay bekleyen bir şey KALMADI; PR #31 birleşti.
 
 **2.2'de UYGULANDI:** üç yıldız. `HubFeatures.Stars`,
 `ResultCard.starsEnabled` ve `XpSources.Stars` açıldı; "Üç Yıldızlı
 Bölüm" rozeti kazanılabilir oldu. Hamle sınırları 8 / 11 / 15 / 33 /
-29 / 28 / 37 — **onay bekliyor** (`docs/DESIGN_TOKENS.md` 13.3).
+29 / 28 / 37 — **25 Kasım 2026'da ONAYLANDI**
+(`docs/DESIGN_TOKENS.md` 13.3).
+
+**2.2'den ONAY BEKLEYEN TEK ŞEY:** cihaz testi; PR #32 birleştirilmedi.
 
 **2.3'e devredilenler:** profil panelinin yeniden yapımı (rozet duvarı,
 kesin XP sayısı, **varsayılan oyuncu adının düzeltilmesi**).
