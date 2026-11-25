@@ -5,6 +5,7 @@ using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.TestTools;
 
 /// <summary>
@@ -84,9 +85,14 @@ public class ResultCardTests
         Assert.AreEqual(icons.Length, symbols.Length, "sembol dizisi eksik");
         Assert.AreEqual(icons.Length, amounts.Length, "adet dizisi eksik");
 
-        // Yıldızlar Faz 2'ye kadar KAPALI olmalı
-        Assert.IsFalse(Reflect.Get<bool>(card, "starsEnabled"),
-            "yıldızlar açık görünüyor; Faz 2'ye kadar gizli kalmalı");
+        // Yıldızlar 2.2'de AÇILDI; satır ve görselleri bağlı olmalı.
+        Assert.IsTrue(Reflect.Get<bool>(card, "starsEnabled"),
+            "yıldız bayrağı kapalı; 2.2'de açık olmalı");
+        Assert.IsNotNull(Reflect.Get(card, "starsRow") as Object, "yıldız satırı bağlanmamış");
+        Assert.AreEqual(3, Reflect.Get<Image[]>(card, "starImages").Length,
+            "üç yıldız yuvası bağlanmalı");
+        Assert.IsNotNull(Reflect.Get(card, "starFullSprite") as Object, "dolu yıldız görseli yok");
+        Assert.IsNotNull(Reflect.Get(card, "starEmptySprite") as Object, "boş yıldız görseli yok");
         yield return null;
     }
 
