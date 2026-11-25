@@ -55,6 +55,9 @@ public static class NexumDeviceShot
         // 1.6b: bölüm sonu sonuç kartı. 0 yok, 1 yeni tepkimeli bölüm,
         // 2 yeni tepkime keşfedilmemiş bölüm (ikisi farklı metin gösterir).
         public int sonucKarti;
+
+        // 1.7: ana menü hub'ı. 0 yok, 1 bugünkü bayraklar, 2 hepsi açık.
+        public int hub;
     }
 
     public static readonly Ekran[] Ekranlar =
@@ -63,7 +66,17 @@ public static class NexumDeviceShot
                     ac = new[] { "SafeAreaRoot/MainMenuPanel" },
                     kapa = new[] { "SafeAreaRoot/SettingsPanel", "SafeAreaRoot/HowToPlayPanel",
                                    "SafeAreaRoot/RecipeBookPanel", "SafeAreaRoot/ProfilePanel",
-                                   "SafeAreaRoot/EncyclopediaPanel", "SafeAreaRoot/LevelSelectionPanel" } },
+                                   "SafeAreaRoot/EncyclopediaPanel", "SafeAreaRoot/LevelSelectionPanel" },
+                    hub = 1 },
+
+        // Faz 2/3/5 bayrakları açıldığında hub'ın nasıl duracağı: yerleşim
+        // o gün yeniden ölçülmesin diye bugünden görüntüleniyor.
+        new Ekran { ad = "ana-menu-tum-bayraklar", scene = "Assets/Scenes/MainMenu.unity",
+                    ac = new[] { "SafeAreaRoot/MainMenuPanel" },
+                    kapa = new[] { "SafeAreaRoot/SettingsPanel", "SafeAreaRoot/HowToPlayPanel",
+                                   "SafeAreaRoot/RecipeBookPanel", "SafeAreaRoot/ProfilePanel",
+                                   "SafeAreaRoot/EncyclopediaPanel", "SafeAreaRoot/LevelSelectionPanel" },
+                    hub = 2 },
 
         new Ekran { ad = "ayarlar", scene = "Assets/Scenes/MainMenu.unity",
                     ac = new[] { "SafeAreaRoot/SettingsPanel" },
@@ -210,6 +223,7 @@ public static class NexumDeviceShot
                 if (e.geriBildirim) GeriBildirimiDoldur(canvasGo.transform);
                 if (e.quiz > 0) QuiziDoldur(canvasGo.transform, e.quiz == 2);
                 if (e.sonucKarti > 0) SonucKartiniDoldur(e.sonucKarti == 1);
+                if (e.hub > 0) HubuDoldur(e.hub == 2);
                 BilgiKartiniAyarla(canvasGo.transform, e.bilgiKartlariKapali);
 
                 string yol = $"{OutDir}/{e.ad}_{boy.x}x{boy.y}.png";
@@ -412,6 +426,26 @@ public static class NexumDeviceShot
 
         Debug.Log($"{Tag}_QUIZ: cevap hâli -> {enUzun.name} " +
                   $"(açıklama {Loc.Get(enUzun.ExplanationKey).Length} krk)");
+    }
+
+    /// <summary>
+    /// Ana menü hub'ı: görünürlük ve durum satırları çalışma zamanında
+    /// doluyor (<c>MenuHub.Apply</c>, OnEnable'da). Edit mode'da kart
+    /// boş ve yıldızlar açık görünüyordu. GERÇEK KOD YOLU çağrılır;
+    /// burada yalnızca bayraklar kurulur.
+    /// </summary>
+    public static void HubuDoldur(bool tumBayraklar)
+    {
+        MenuHub hub = Object.FindObjectOfType<MenuHub>(true);
+        if (hub == null) { Debug.LogError($"{Tag}: MenuHub yok"); return; }
+
+        if (tumBayraklar) HubFeatures.TumunuAc();
+        else HubFeatures.Varsayilana();
+
+        hub.Apply();
+        HubFeatures.Varsayilana();   // sonraki ekranı etkilemesin
+
+        Debug.Log($"{Tag}_HUB: tumBayraklar={tumBayraklar}");
     }
 
     /// <summary>

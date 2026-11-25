@@ -155,6 +155,36 @@ MonoBehaviour:
       Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
     english: "\u015Eu an matriste yap\u0131labilecek hi\xE7bir kimyasal sentez g\xF6remiyorum!
       Par\xE7alamay\u0131 veya Geri Almay\u0131 denemelisin."
+  - key: hub.encyclopedia
+    turkish: "ANS\u0130KLOPED\u0130"
+    english: "ANS\u0130KLOPED\u0130"
+  - key: hub.hero
+    turkish: "DENEY\u0130 BA\u015ELAT"
+    english: "DENEY\u0130 BA\u015ELAT"
+  - key: hub.hero_status
+    turkish: "B\xF6l\xFCm {0} \xB7 kald\u0131\u011F\u0131n yerden"
+    english: "B\xF6l\xFCm {0} \xB7 kald\u0131\u011F\u0131n yerden"
+  - key: hub.how_to_play
+    turkish: "Nas\u0131l Oynan\u0131r"
+    english: "Nas\u0131l Oynan\u0131r"
+  - key: hub.level_status
+    turkish: "{0} / {1} a\xE7\u0131k"
+    english: "{0} / {1} a\xE7\u0131k"
+  - key: hub.mentor
+    turkish: Mentor
+    english: Mentor
+  - key: hub.recipe_book
+    turkish: "TAR\u0130F DEFTER\u0130"
+    english: "TAR\u0130F DEFTER\u0130"
+  - key: hub.recipe_status
+    turkish: '{0} / {1} tepkime'
+    english: '{0} / {1} tepkime'
+  - key: hub.settings
+    turkish: Ayarlar
+    english: Ayarlar
+  - key: hub.sound
+    turkish: Ses
+    english: Ses
   - key: hud.tip_button
     turkish: "\u0130PUCU"
     english: HINT

@@ -360,7 +360,10 @@ public static class RecipeBookBuilder
 
         if (!dryRun && panel.activeSelf) panel.SetActive(false);
 
-        if (!oyunSahnesi) BuildMenuEntry(b, theme, dryRun);
+        // 1.7: ana menüdeki beş buton artık hub'ın (MenuHubBuilder) işi.
+        // Burada da kurulsaydı iki kurucu aynı objeleri farklı yerlere
+        // koyar, her koşuda birbirini geri alırdı (1.6a'daki sapma).
+        // Defterin menü girişini de hub devralıyor.
         b.End();
     }
 

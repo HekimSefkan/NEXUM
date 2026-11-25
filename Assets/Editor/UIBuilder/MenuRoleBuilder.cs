@@ -77,8 +77,10 @@ public static class MenuRoleBuilder
     /// kenarında. 300'den 200'e indi — logo üst bandı aldı; 200 dokunma
     /// hedefi alt sınırının (144) üstünde kalıyor.
     /// </summary>
+    // Avatarın ÖLÇÜSÜ ve konumu 1.7'den beri hub'da; burada yalnızca
+    // görünümü (halka + maske) kuruluyor.
     private static readonly Vector2 AvatarSize = new Vector2(200f, 200f);
-    private static readonly float AvatarCenterY = -320f;
+    // AvatarCenterY kaldırıldı: avatarın yerini artık hub belirliyor (1.7).
 
     /// <summary>Portrenin maskesi çerçevenin kenarlığının içinde kalır.</summary>
     private const float RingInset = 0.08f;
@@ -92,19 +94,11 @@ public static class MenuRoleBuilder
     {
         UIBuilder b = UIBuilder.Begin("MenuRole", ScenePath, dryRun);
 
-        Sprite birincil = AssetDatabase.LoadAssetAtPath<Sprite>(PrimaryPath);
-        Sprite ikincil = AssetDatabase.LoadAssetAtPath<Sprite>(SecondaryPath);
-        if (birincil == null || ikincil == null)
-        {
-            b.Error("kit buton sprite'ları bulunamadı");
-            b.End();
-            return;
-        }
-
-        Rol(b, Primary, birincil);
-        foreach (string ad in Secondary) Rol(b, ad, ikincil);
-
-        Logo(b);
+        // 1.7: menü butonlarının ÇERÇEVESİ ve LOGO artık hub'ın işi
+        // (MenuHubBuilder). Burada da yazılsaydı sahne iki kaynaklı olur,
+        // iki kurucu her koşuda birbirini geri alırdı — tam olarak 1.6a'da
+        // kapattığımız hata. Bu kurucuda yalnızca avatarın kit görünümü
+        // (halka + maske) kaldı; avatarı hub konumlandırıyor.
         Avatar(b);
 
         b.End();
@@ -167,27 +161,42 @@ public static class MenuRoleBuilder
     /// Avatar: YUVARLAK metal çerçeve, portre dairesel kırpılmış, sol kenarı
     /// buton bandının sol kenarında ve logonun ALTINDA.
     /// </summary>
+    /// <summary>
+    /// Panelin altında ada göre arar. Hub kurulduktan sonra objeler
+    /// panelin doğrudan çocuğu değil, HubRoot ağacının içinde.
+    /// </summary>
+    private static GameObject AdlaBul(UIBuilder b, string ad)
+    {
+        GameObject panel = b.FindObject(PanelPath);
+        if (panel == null) return null;
+
+        foreach (Transform t in panel.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name == ad) return t.gameObject;
+        }
+        return null;
+    }
+
+    /// <summary>Sahnedeki tam yol (Canvas'tan itibaren).</summary>
+    private static string Yol(GameObject go)
+    {
+        string yol = go.name;
+        Transform t = go.transform;
+        while (t.parent != null)
+        {
+            t = t.parent;
+            yol = t.name + "/" + yol;
+        }
+        return yol;
+    }
+
     private static void Avatar(UIBuilder b)
     {
-        GameObject avatar = b.FindObject(PanelPath + "/ProfileButton");
+        GameObject avatar = AdlaBul(b, "ProfileButton");
         if (avatar == null) { b.Error("ProfileButton yok"); return; }
 
-        // Bandın sol kenarı: butonların en solu (ölçülür, sabit yazılmaz)
-        List<string> butonlar = new List<string>(Secondary) { Primary };
-        float solKenar = butonlar
-            .Select(a => b.FindObject(PanelPath + "/" + a))
-            .Where(g => g != null)
-            .Select(g => g.GetComponent<RectTransform>())
-            .Where(r => r != null)
-            .Select(r => r.anchoredPosition.x - r.sizeDelta.x * 0.5f)
-            .DefaultIfEmpty(0f)
-            .Min();
-
-        // ÜST-ORTA anchor: band ekran merkezine göre dizili, avatar da öyle
-        // olmalı — sol kenara anchor'lanırsa 1440 genişlikte band yerinde
-        // kalır, avatar 30 birim kayardı.
-        Vector2 hedef = new Vector2(solKenar + AvatarSize.x * 0.5f, AvatarCenterY);
-        b.SetFixed(avatar, new Vector2(0.5f, 1f), AvatarSize, hedef);
+        // KONUMLANDIRMA YOK: avatar 1.7'den beri profil şeridinin içinde ve
+        // yerini hub belirliyor. Burada yalnızca kit görünümü kurulur.
 
         Sprite halka = AssetDatabase.LoadAssetAtPath<Sprite>(RingPath);
         if (halka == null) { b.Error($"çerçeve sprite'ı yok: {RingPath}"); return; }
@@ -202,7 +211,10 @@ public static class MenuRoleBuilder
         });
 
         // Dairesel kırpma: maske ÇİZİLMEZ, yalnızca kırpar
-        GameObject maske = b.Ensure(PanelPath + "/ProfileButton", "PortraitMask");
+        // Yol SABİT YAZILMAZ: avatar hub ağacının içinde, yeri değişebilir.
+        // adopt: avatar hub'a taşınınca maskenin YOLU değişti; kayıt defteri
+        // eski yolu taşıyor, yeni yolda açıkça devralınır.
+        GameObject maske = b.Ensure(Yol(avatar), "PortraitMask", adopt: true);
         if (maske == null) return;
 
         b.SetStretch(maske, new Vector2(RingInset, RingInset),
@@ -235,8 +247,7 @@ public static class MenuRoleBuilder
             }
         }
 
-        Debug.Log($"{Tag}_AVATAR: band sol kenarı {solKenar:F0}, avatar " +
-                  $"{AvatarSize.x:F0}x{AvatarSize.y:F0} -> {hedef.x:F0},{hedef.y:F0}; " +
-                  $"yuvarlak çerçeve {halka.name}, portre maskeli");
+        Debug.Log($"{Tag}_AVATAR: yuvarlak çerçeve {halka.name}, portre maskeli " +
+                  "(konumu hub belirliyor)");
     }
 }

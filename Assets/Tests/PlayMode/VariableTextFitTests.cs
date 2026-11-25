@@ -293,7 +293,12 @@ public class VariableTextFitTests
         Transform menuPanel = LayoutCheck.Find("SafeAreaRoot/MainMenuPanel");
         Assert.IsNotNull(menuPanel, "MainMenuPanel yok");
 
-        Transform buton = menuPanel.Find("RecipeBookButton");
+        // 1.7: buton hub ağacının içinde; yol sabit yazılmaz, adla aranır.
+        Transform buton = null;
+        foreach (Transform t in menuPanel.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name == "RecipeBookButton") { buton = t; break; }
+        }
         Assert.IsNotNull(buton, "RecipeBookButton yok");
         TMP_Text etiket = buton.GetComponentInChildren<TMP_Text>(true);
         Assert.IsNotNull(etiket, "defter butonunun etiketi yok");

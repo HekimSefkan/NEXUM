@@ -1,6 +1,8 @@
 # NEXUM – Durum Notu
 
-**Tarih:** 14 Ekim 2026 · **Dal:** `recipe-book` (Faz 1 / Adım 2, PR açık — birleştirilmedi)
+**Tarih:** 24 Kasım 2026 · **Dal:** `menu-hub` (Faz 1 / Adım 1.7, PR açık — birleştirilmedi)
+
+> **FAZ 1 TAMAMLANDI.** Oyuncunun gördüğü bilgi katmanı bitti: tepkime denklemi, tarif defteri, geçersiz birleştirme geri bildirimi, istatistik onarımı, quiz öğrenme katmanı, bölüm sonu sonuç kartı + paylaşım ve ana menü hub'ı.
 
 Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar ve alınan kararlar için `CLAUDE.md`, yayın adımları için `docs/RELEASE_CHECKLIST.md`.
 
@@ -63,6 +65,7 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **Tek kaynak kuralı:** `ReactionText` — denklem gösterimi, tarif defteri ve ansiklopedi kartı aynı kalıbı ve aynı sprite'ı kullanır. Kalıplar sözlükte (`reaction.inputs`, `reaction.equation`).
 - **Tarif defteri** (Adım 2): 21 tarifin listesi, keşif sayacı, ilerleme halkası; keşfedilmemiş satırlarda `? + ? → ?` + kilit ikonu (`Tools/generate_lock.py`). Erişim ana menüden ve duraklat menüsünden. Keşif ilk birleşmede kaydedilir; mevcut oyunculara **geriye dönük doldurma** üretim grafiğinden türetilir (bir bileşiği tek bir tarif üretiyorsa o tarif zorunludur; birden fazla üretici varsa hiçbiri sayılmaz).
 - **Sistem bildirimi** artık kombo bandını kullanmıyor: yeni tarif keşfi ile kombo yazısı aynı karede doğduğu için bildirim tahtanın altındaki kendi bandına alındı.
+- **Ana menü hub'ı** (Adım 1.7): logo · profil şeridi · kahraman kart · ikili kart · mod satırı · bilgi satırı · ikon şeridi. Yerleşim AKAR (`VerticalLayoutGroup` + açık `LayoutElement`): uygulanmamış giriş tamamen gizli, gizli giriş boşluk bırakmıyor. Görünürlüğün tek kaynağı `HubFeatures`; Faz 2/3/5 bir özelliği bitirince orada tek satır değişir. Durum satırları gerçek kayıttan ("Bölüm 4 · kaldığın yerden", "4 / 7 açık", "10 / 21 tepkime") — sahte değer yok. Ses ikonu Ayarlar'la aynı kayıt alanlarını yazar. Ölçüm: bugünkü hâl 1310, tüm bayraklar açık 1514 birim (ikisi de 1920'ye sığıyor, kaydırma yok).
 - **Quiz öğrenme katmanı** (Adım 1.5): 36 sorunun tamamında açıklama (sözlükte, anahtar asset adından türetilir); doğru cevap panelinde başlık + açıklama + "dokun" ipucu, bekleme en az 2 sn / dokununca / en çok 10 sn. Yanlış cevaplanan sorular `SaveData.quizWrongPool`'a girer ve sonraki quizlerde **1/3 oranında** öncelik kazanır (`QuizSelector`); aynı soru üst üste sorulmaz, havuz yalnızca kesinleşmiş cevapla değişir. Banka 16 → **36 soru** (`NexumQuizBank`, idempotent), etiketli (konu · zorluk · ilgili bileşik) — etiketler Faz 5 soru modu için, o mod kurulmadı. Soru puntosu pişirildi (auto-size kapalı, 46). **Bilgi Kartları ayarı** duraklat kartındaki "BİLİYOR MUYDUN?" bölümüne bağlandı. Kimya doğruluğu `docs/QUIZ_REVIEW.md` tablosunda onay bekliyor.
 
 ---
@@ -109,6 +112,18 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **Kazanma ekranı** — `hasWon` bayrağıyla bir kez tetikleniyor.
 - **`TotalScore`** — `Core/TotalScoreService.cs` ile canlandırıldı (gösterim Faz 2'ye bırakıldı).
 - **`Shift()` refactor'ü** — dört kopya blok tek döngüde; parmak izi testiyle davranışın aynı kaldığı kanıtlandı.
+
+**Faz 2'ye devredilenler:**
+- **Yıldızlar.** Üç yıldızlık yer hem kahraman kartta hem bölüm sonu sonuç kartında KURULU ama `HubFeatures.Stars` / `ResultCard.starsEnabled` ile gizli. Bayrak açılınca yerleşim yeniden kurulmayacak; "tüm bayraklar açık" görüntüsü bugünden alındı.
+- **XP'nin kaynağı — KURAL.** XP, bölümde **KAZANILAN** puandan beslenmeli (`LevelRun.EarnedScore`), kalan skordan değil. Kalan skor geri alma ve Joker harcamasından sonra kalan tutardır; ondan XP vermek yardım kullanan oyuncuyu cezalandırır. Profil şeridindeki rütbe + XP alanları kurulu, `HubFeatures.RankAndXp` ile gizli.
+- **`totalScore` hâlâ ÖLÜ-KAYIT.** `SaveService.AddLevelScore` yazıyor, hiçbir ekran göstermiyor. Gösterilmeye başlanacaksa önce anlamı düzeltilmeli: bugünkü değer *kalan* skorların toplamı, "kazanılan toplam" değil (bkz. `docs/STATS_INVENTORY.md`).
+- **L4–L7 denge verisi.** Ölçüm 13. turda alındı ve duruyor: Na ağırlığını yarıya indirmek L4'ü %13→%30, L6'yı %11→%20 çıkarıyor; Ca'yı yarıya indirmek L6'yı %11→%20 çıkarırken L5'i %30→%27 düşürüyor. Uygulanmadı; denge turu bu veriyle başlayabilir.
+
+**Faz 3'e devredilenler:** günlük bulmaca kartı ve gün serisi rozeti (kurulu, `HubFeatures.DailyPuzzle` / `Streak` ile gizli).
+
+**Faz 5'e devredilenler:** KAYNAMA NOKTASI · SONSUZ LAB · HAFTANIN DENEYİ mod kartları ve mentor ikonu (kurulu, gizli). Quiz bankasındaki 36 sorunun etiketleri (konu · zorluk · ilgili bileşik) KAYNAMA NOKTASI'nın süzme verisi olarak hazır.
+
+**Faz 6'ya ertelenenler:** İngilizce çeviri (sözlükte 184 anahtar, 165'i çevrilmedi) ve `docs/NEXT_3B.md`'deki görsel/temizlik notları.
 
 **Açık kalanlar:**
 - **L4–L7 dengesi** — 13. turda bilerek ele alınmadı. Simülatör ölçümü: Na ağırlığını yarıya indirmek L4 %13→%30, L6 %11→%20; Ca'yı yarıya indirmek L6 %11→%20 ama L5 %30→%27 (L5/L7 hedeflerinde CaO ve CaCO₃ var).

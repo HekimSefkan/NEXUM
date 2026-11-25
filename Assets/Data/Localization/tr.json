@@ -163,6 +163,46 @@
             "value": "Şu an matriste yapılabilecek hiçbir kimyasal sentez göremiyorum! Parçalamayı veya Geri Almayı denemelisin."
         },
         {
+            "key": "hub.encyclopedia",
+            "value": "ANSİKLOPEDİ"
+        },
+        {
+            "key": "hub.hero",
+            "value": "DENEYİ BAŞLAT"
+        },
+        {
+            "key": "hub.hero_status",
+            "value": "Bölüm {0} · kaldığın yerden"
+        },
+        {
+            "key": "hub.how_to_play",
+            "value": "Nasıl Oynanır"
+        },
+        {
+            "key": "hub.level_status",
+            "value": "{0} / {1} açık"
+        },
+        {
+            "key": "hub.mentor",
+            "value": "Mentor"
+        },
+        {
+            "key": "hub.recipe_book",
+            "value": "TARİF DEFTERİ"
+        },
+        {
+            "key": "hub.recipe_status",
+            "value": "{0} / {1} tepkime"
+        },
+        {
+            "key": "hub.settings",
+            "value": "Ayarlar"
+        },
+        {
+            "key": "hub.sound",
+            "value": "Ses"
+        },
+        {
             "key": "hud.tip_button",
             "value": "İPUCU"
         },

@@ -83,6 +83,17 @@ public class SettingsManager : MonoBehaviour
         UpdateAllTogglesUI();
     }
 
+    /// <summary>
+    /// Panel her açıldığında anahtarlar kayıttan tazelenir. 1.7'de gerekli
+    /// oldu: hub'daki hızlı sessize alma aynı kayıt alanlarını yazıyor,
+    /// Start'ta bir kez okumak anahtarları bayat bırakıyordu (iki kaynak
+    /// görüntüsü).
+    /// </summary>
+    private void OnEnable()
+    {
+        UpdateAllTogglesUI();
+    }
+
     private void UpdateAllTogglesUI()
     {
         musicToggleImg.sprite = SaveService.Data.musicOn == 1 ? toggleOnSprite : toggleOffSprite;

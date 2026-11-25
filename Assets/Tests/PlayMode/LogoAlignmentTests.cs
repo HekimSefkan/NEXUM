@@ -183,14 +183,18 @@ public class LogoAlignmentTests
         RectTransform safeRoot = LayoutCheck.PrepareSafeRoot();
         Assert.IsNotNull(safeRoot, "SafeAreaRoot yok");
 
-        RectTransform logo = Bul(safeRoot, "MainMenuPanel/Logo");
-        RectTransform avatar = Bul(safeRoot, "MainMenuPanel/ProfileButton");
-        RectTransform oyna = Bul(safeRoot, "MainMenuPanel/PlayButton");
+        // 1.7: objeler hub ağacının içinde; yol SABİT YAZILMAZ, adla aranır.
+        RectTransform logo = Bul(safeRoot, "Logo");
+        RectTransform avatar = Bul(safeRoot, "ProfileButton");
+        RectTransform oyna = Bul(safeRoot, "PlayButton");
+        RectTransform serit = Bul(safeRoot, "ProfileStrip");
         Assert.IsNotNull(logo, "ana menüde Logo yok");
         Assert.IsNotNull(avatar, "ProfileButton yok");
         Assert.IsNotNull(oyna, "PlayButton yok");
+        Assert.IsNotNull(serit, "ProfileStrip yok");
 
         List<string> hatalar = new List<string>();
+        List<float> icPaylar = new List<float>();
 
         foreach (Vector2 boyut in LayoutCheck.CanvasSizes)
         {
@@ -202,37 +206,54 @@ public class LogoAlignmentTests
             Vector4 l = LayoutCheck.LocalRect(safeRoot, logo);
             Vector4 a = LayoutCheck.LocalRect(safeRoot, avatar);
             Vector4 p = LayoutCheck.LocalRect(safeRoot, oyna);
+            Vector4 sr = LayoutCheck.LocalRect(safeRoot, serit);
 
             float logoMerkez = (l.x + l.z) * 0.5f;
-            float bandSol = p.x;
             float avatarSol = a.x;
+            float seritIcPay = avatarSol - sr.x;
+            icPaylar.Add(seritIcPay);
 
             Debug.Log($"{Tag}_USTBANT: {ekran} | logo merkez {logoMerkez:F1} " +
                       $"({l.y:F0}..{l.w:F0}) | avatar sol {avatarSol:F1} ({a.y:F0}..{a.w:F0}) | " +
-                      $"band sol {bandSol:F1} | OYNA üst {p.w:F0}");
+                      $"şerit sol {sr.x:F1} (iç pay {seritIcPay:F1}) | OYNA üst {p.w:F0}");
 
             if (Mathf.Abs(logoMerkez) > 1f)
             {
                 hatalar.Add($"{ekran}: logo kutusu ortada değil ({logoMerkez:F1})");
             }
-            if (Mathf.Abs(avatarSol - bandSol) > 1f)
+            // 1.7: avatar artık buton bandının değil, PROFİL ŞERİDİNİN
+            // içinde. Kural da ona göre: avatarın şeride iç payı her ekran
+            // boyutunda AYNI kalmalı (ekranla birlikte kaymasın).
+            if (seritIcPay < 0f)
             {
-                hatalar.Add($"{ekran}: avatar sol kenarı band kenarında değil " +
-                            $"({avatarSol:F1} ≠ {bandSol:F1})");
+                hatalar.Add($"{ekran}: avatar şeridin dışına taşıyor ({seritIcPay:F1})");
             }
             if (LayoutCheck.OverlapArea(l, a) > 1f) hatalar.Add($"{ekran}: logo × avatar çakışıyor");
             if (LayoutCheck.OverlapArea(l, p) > 1f) hatalar.Add($"{ekran}: logo × OYNA çakışıyor");
             if (LayoutCheck.OverlapArea(a, p) > 1f) hatalar.Add($"{ekran}: avatar × OYNA çakışıyor");
         }
 
+        if (icPaylar.Count > 1 && Mathf.Abs(icPaylar.Max() - icPaylar.Min()) > 1f)
+        {
+            hatalar.Add($"avatarın şerit iç payı ekran boyutuna göre değişiyor: " +
+                        string.Join(", ", icPaylar.Select(v => v.ToString("F1"))));
+        }
+
         foreach (string h in hatalar) Debug.Log($"{Tag}_SORUN: {h}");
         Assert.IsEmpty(hatalar, string.Join(" | ", hatalar));
     }
 
-    private static RectTransform Bul(RectTransform safeRoot, string yol)
+    /// <summary>
+    /// Ada göre arar. Yol sabit yazılmaz: 1.7'de ana menü objeleri hub
+    /// ağacının içine taşındı, yollar değişti.
+    /// </summary>
+    private static RectTransform Bul(RectTransform safeRoot, string ad)
     {
-        Transform t = safeRoot.Find(yol);
-        return t as RectTransform;
+        foreach (Transform t in safeRoot.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name == ad) return t as RectTransform;
+        }
+        return null;
     }
 
     /// <summary>
