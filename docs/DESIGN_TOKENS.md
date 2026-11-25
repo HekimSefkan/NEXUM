@@ -678,3 +678,145 @@ için draw call harcanmaz.
 yani bant *karartmayla* tutturulamaz, ancak düz bir açık örtüyle
 **yükseltilerek** tutturulabilirdi — o da görselin derinliğini silerdi.
 Ölçülen değerler PR'da; karartma alfası bu yüzden 0'da bırakıldı.
+
+---
+
+# 12. İlerleme: XP, rütbe ve rozet (Faz 2 / Adım 2.1)
+
+## 12.1 Rütbe adlarının envanteri ve çelişkiler
+
+Projede rütbe/unvan geçen **her** metin tarandı (kod, sözlük, sahneler,
+belgeler). Bulunanlar:
+
+| nerede | metin | ne işe yarıyordu |
+|---|---|---|
+| `CodeStrings.ProfileDefaultName` / `profile.default_name` | "Baş Kimyager" | **oyuncu adı yoksa gösterilen VARSAYILAN AD** — rütbe değil |
+| `hint.exam_mode`, `hint.limit_reached` | "…güvenmelisin **Baş Kimyager**!" | asistanın oyuncuya hitabı — rütbe değil |
+| `mainmenu.herocard.profileunvantext` | "Baş Kimyager Adayı" (yeşil renk etiketiyle) | ana menüde SABİT yazılı unvan; hiçbir veriye bağlı değil |
+| plan (2.1 brifi) | Çırak → Stajyer Kimyager → Laborant → Araştırmacı → Kimyager → Baş Kimyager → Nobel Adayı | yedi basamaklı rütbe merdiveni |
+| mockup'lar | "Stajyer", "Doçent" | tasarım görselleri |
+
+**Üç çelişki ve çözümleri:**
+
+1. **"Baş Kimyager" hem varsayılan oyuncu adı hem 6. rütbe.** Oyuncu adını
+   boş bırakan biri, daha ilk gün ekranda "Baş Kimyager" yazarken rütbesi
+   "Çırak" olacaktı. *Çözüm önerisi:* rütbe merdiveninde "Baş Kimyager"
+   KALIR (planın sırası), varsayılan oyuncu adı değiştirilir. Bu tur
+   değiştirmedi — varsayılan ad kayıt ekranının işi ve 2.3'te profil
+   paneli yeniden yapılırken ele alınacak. **ONAY BEKLİYOR.**
+2. **"Doçent" yalnızca mockup'ta var.** Akademik bir unvan; merdivenin
+   geri kalanı laboratuvar kariyeri (çırak → laborant → araştırmacı →
+   kimyager). *Çözüm:* merdivene alınmadı. **ONAY BEKLİYOR.**
+3. **"Stajyer Kimyager" mi "Stajyer" mi?** Plan uzun hâli, mockup kısa
+   hâli yazıyor. Ölçüm karar verdi: profil şeridindeki rütbe kutusu 300
+   birim, 30 punto; "Stajyer Kimyager" %99 dolduruyor (%85 kuralının
+   üstü), "Stajyer" %53. *Çözüm:* **"Stajyer"**. **ONAY BEKLİYOR.**
+
+**Tek tablo artık tek yerde:** `ProgressionTable.Ranks` sırayı ve eşiği,
+`CodeStrings.Rank0..Rank6` metni tutuyor. Başka hiçbir yerde rütbe adı
+yazılı değil.
+
+## 12.2 Rütbe tablosu — ONAY BEKLİYOR
+
+Eşikler uydurulmadı: `Tools/sim_xp.py` kazanılan puanı ölçtü,
+`RankTableTests` tabloyu o ölçümle doğruluyor.
+
+| # | rütbe | eşik (XP) | aralık | bugün ulaşılır mı | tahmini ulaşma |
+|---|---|---|---|---|---|
+| 1 | Çırak | 0 | — | başlangıç | — |
+| 2 | Stajyer | 150 | +150 | evet | **ilk oturum** (L1 + L2) |
+| 3 | Laborant | 400 | +250 | evet | L1–L3 + ~8 tarif (~15 dk) |
+| 4 | Araştırmacı | 800 | +400 | evet | L1–L4 + ~15 tarif + birkaç soru (~1 sa) |
+| 5 | Kimyager | 1400 | +600 | evet | 7 bölüm + 21 tarif + ~20 soru |
+| 6 | Baş Kimyager | 2400 | +1000 | **hayır** | Faz 3 (günlük bulmaca) sonrası |
+| 7 | Nobel Adayı | 4000 | +1600 | **hayır** | Faz 3–5 içerikleri sonrası |
+
+**Ölçülen değerler** (`RankTableTests`, bugünkü içerikle):
+
+- ilk oturum: L1 sonu **131 XP** (hâlâ Çırak), L2 sonu **232 XP** → Stajyer
+- bugünkü tavan: bölüm 677 + tarif 630 + quiz 432 = **1739 XP** → **5/7**
+- aralıklar: 150 / 250 / 400 / 600 / 1000 / 1600 (oran ≈ 1,6; her aralık
+  bir öncekinden büyük — test bunu zorunlu kılıyor)
+
+**Tahmini süreler tahmindir**, ölçüm değil: oyuncu hızına ve L4–L7
+kazanma oranına bağlı (bot ölçümünde %3–%37). Kesin olan, XP'nin
+nereden geldiği ve tavanın nerede olduğu.
+
+## 12.3 XP miktarları
+
+| kaynak | XP | bugünkü tavan | durum |
+|---|---|---|---|
+| bölüm ilk tamamlama | 60 | 7 × 60 = 420 | açık |
+| kazanılan puan payı | `kazanılan / 5` | ≈ 257 | açık |
+| yeni tarif keşfi | 30 | 21 × 30 = 630 | açık |
+| quiz ilk doğru cevabı | 12 | 36 × 12 = 432 | açık |
+| bölüm yıldızı | 20 | — | **kapalı** (2.2) |
+| günlük bulmaca | 40 | — | **kapalı** (Faz 3) |
+| ansiklopedi kartı | 10 | — | **kapalı** (Faz 4) |
+
+Kapalı kaynaklar `XpSources` bayrak tablosunda; miktarları TANIMLI ama
+`ProgressionService` onlardan XP vermiyor (`ProgressionTests` ölçüyor).
+
+**Quiz XP'si en büyük kaynak değil, bilerek:** quiz yalnızca oyun sonu
+ekranındaki ikinci şans akışından açılıyor, yani XP'sini almak için
+KAYBETMEK gerekiyor. Tarif keşfi (630) quizden (432) önde tutuldu.
+
+## 12.4 Rozetler — ONAY BEKLİYOR
+
+Görseller: `docs/ui-kit/badges.png`. Çerçeve kitteki madalya çerçevesi
+(`badge_frame_normal`, 9-slice), glif simge ailesinden
+(`Tools/generate_icons_family.py`). Yeni görsel dili açılmadı.
+
+| rozet | glif | koşul | durum |
+|---|---|---|---|
+| İlk Sentez | erlenmayer | ilk birleşme | **açık** |
+| Tüm Tepkimeler | defter | 21 / 21 tarif keşfi | **açık** |
+| Kazasız Bölüm | kalkan | oyun sonu ekranı görülmeden bitirilen bölüm | **açık** |
+| Üç Yıldızlı Bölüm | yıldız | — | kapalı (2.2) |
+| 7 / 30 / 100 Gün Seri | alev | — | kapalı (Faz 3) |
+| Günlük Bulmaca x10 | takvim | — | kapalı (Faz 3) |
+| Ansiklopedi Kurdu | defter | — | kapalı (Faz 4) |
+
+Kapalı rozetler **tanımlı ama kazanılamaz**: `Badges.TryEarn` onları
+reddediyor ve hata logluyor (`BadgeTests` ölçüyor). Rozet **XP vermez** —
+ikinci bir XP musluğu açılmadı.
+
+Glifler bugün `Assets`'e ALINMADI: 2.1'de ekranda rozet duvarı yok
+(profil panelinin yeniden yapımı 2.3). Kullanılmayan sprite build'e
+girmiyor.
+
+## 12.5 Kutlama ölçülü
+
+Oyuncu daha önce katalizörün tam ekran yeşil parlamasından rahatsız
+olmuştu. Rütbe kutlamasında:
+
+- zemin **sabit alfalı düz perde** (`palette.scrim`, alfa 0,72) — tam
+  ekran parlama, hale ya da nabız YOK,
+- tek hareket kartın **bir seferlik** ölçek tween'i, süresi temadan
+  (`motion.durationMedium` = 0,30 sn) — döngü yok,
+- kendiliğinden kapanma yok: **dokununca** kapanır (perdenin kendisi
+  butondur; karttaki hiçbir grafik raycast yakalamaz),
+- **oyunun ortasında açılmaz**: yalnızca sonuç kartının ölçek tween'i
+  bitince ve ana menüde geriye dönük hesabın ardından
+  (`ProgressionWiringTests.OynanisSirasinda_KutlamaAcilmiyor`),
+- **bir kez** gösterilir (`rankCelebrated`).
+
+`scrim` palete yeni eklenen roldür (`NexumTheme` + `NexumPalette`,
+`PaletteTests` ikisini bağlıyor): perdenin tonu kurucuya hex olarak
+yazılmıyor.
+
+## 12.6 Sonuç kartı 1500 → 1600
+
+1.6'da **yalnızca yıldız satırının** yeri ayrılmıştı; XP satırının yeri
+ayrılmamıştı ve kartın dikey ritminde 56 birimlik boş bant yoktu
+(bantlar arası en büyük açıklık 18 birim). Üç seçenek ölçüldü:
+
+| seçenek | sonuç |
+|---|---|
+| tepkime kutusunu kısmak | 4 satır 173 birim istiyor; kutu 260 → 206'ya inerdi, %85 sınırına dayanırdı |
+| sayı kutularını üçe çıkarmak | "KAZANILAN PUAN" etiketi 260 birimlik kutuya sığmıyor |
+| **kartı büyütmek** | **seçildi** — üst yarı hiç değişmiyor, buton satırları 60 birim aşağı kayıyor |
+
+Güvenli alan payı: kart ±800, tasarım yüksekliği en az 1920 (±960) →
+her kenarda 160 birim (önceki kartta 210). Dört canvas boyutunda ölçüldü,
+taşma yok (`ProgressionFitTests`).

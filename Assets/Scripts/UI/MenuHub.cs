@@ -28,8 +28,8 @@ public class MenuHub : MonoBehaviour
     [Tooltip("Rütbe adı (2.1). Metin sözlükten, rütbe ProgressionService'ten.")]
     public TextMeshProUGUI rankText;
 
-    [Tooltip("XP çubuğunun DOLAN parçası. Genişlik anchorMax.x ile sürülür.")]
-    public RectTransform xpFill;
+    [Tooltip("XP çubuğunun DOLAN parçası (Image.Type.Filled, yatay).")]
+    public Image xpFill;
     [Tooltip("Gün serisi rozeti (Faz 3): HubFeatures.Streak ile yönetilir.")]
     public GameObject streakBadge;
 
@@ -196,9 +196,10 @@ public class MenuHub : MonoBehaviour
     /// panelinin işi (2.3); kutlama da toplamı yazıyor. Çubuk ilerlemeyi
     /// anlatmaya yetiyor.
     ///
-    /// Çubuğun dolan parçası <c>anchorMax.x</c> ile sürülür, <c>fillAmount</c>
-    /// ile DEĞİL: dolgu 9-dilim bir sprite ve <c>Image.Type.Filled</c>
-    /// 9-dilimi kapatır.
+    /// Çubuğun dolan parçası <c>fillAmount</c> ile sürülür. Dolgu rect'ini
+    /// daraltmak denendi ve 9-dilim ÇÖKTÜ: sprite'ın kenarlığı 17+17, yani
+    /// 34 birimden dar her dolgu bozuluyor (<c>SlicedCollapseTests</c>).
+    /// Filled'da sprite kendi ölçüsünde çizilip kırpılıyor.
     /// </summary>
     private void ApplyRank()
     {
@@ -207,13 +208,7 @@ public class MenuHub : MonoBehaviour
             rankText.text = Loc.Get(ProgressionService.RankNameKey);
         }
 
-        if (xpFill != null)
-        {
-            float oran = ProgressionService.RankProgress01;
-            Vector2 max = xpFill.anchorMax;
-            xpFill.anchorMax = new Vector2(oran, max.y);
-            xpFill.offsetMax = new Vector2(0f, xpFill.offsetMax.y);
-        }
+        if (xpFill != null) xpFill.fillAmount = ProgressionService.RankProgress01;
     }
 
     /// <summary>

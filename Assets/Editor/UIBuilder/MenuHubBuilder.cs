@@ -154,13 +154,21 @@ public static class MenuHubBuilder
             i.raycastTarget = false;
         });
 
+        // Dolgu izin TAMAMINI kaplar ve YATAY KIRPILIR (Image.Type.Filled).
+        // Sliced + daralan rect denendi ve ÇÖKTÜ: progress_fill_selected'ın
+        // kenarlığı 17+17, yani 34 birimden dar her dolgu 9-dilimi bozuyor
+        // (SlicedCollapseTests 3x56 rect'te "orta alan -31x22" ölçtü).
+        // Filled'da sprite kendi ölçüsünde çizilip kırpılıyor: sol uç
+        // yuvarlak kalıyor, sağ uç dolgu sınırında kesiliyor.
         GameObject xpFill = b.Ensure(RootPath + "/ProfileStrip/RankXpGroup/XpBar", "Fill");
-        // Sol kenara yapışık, genişliği 0: çalışma zamanında oran yazılır.
-        b.SetBand(xpFill, 0f, 0f, 0f, 1f);
+        b.SetStretch(xpFill, UITokens.Zero, UITokens.One);
         b.EnsureComponent<Image>(xpFill, i =>
         {
             i.sprite = LoadSprite(BarPath);
-            i.type = Image.Type.Sliced;
+            i.type = Image.Type.Filled;
+            i.fillMethod = Image.FillMethod.Horizontal;
+            i.fillOrigin = (int)Image.OriginHorizontal.Left;
+            i.fillAmount = 0f;
             i.color = Color.white;
             i.raycastTarget = false;
         });
@@ -306,7 +314,7 @@ public static class MenuHubBuilder
             h.playerNameText = Tmp(nameText);
             h.rankXpGroup = rankXp;
             h.rankText = Tmp(rankText);
-            h.xpFill = xpFill != null ? xpFill.transform as RectTransform : null;
+            h.xpFill = xpFill != null ? xpFill.GetComponent<Image>() : null;
             h.streakBadge = streak;
             h.heroStatusText = Tmp(heroStatus);
             h.heroStars = heroStars;

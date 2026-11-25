@@ -65,7 +65,7 @@ public static class ResultCardBuilder
     //   yıldızlar   498..402      (gizli, yeri ayrılı)
     //   sayı kutuları 395..245
     //   "ÜRETİLEN"  227..183      hedef satırı 195..-5
-    //   "YENİ TEP." -18..-62      tepkime kutusu -60..-320
+    //   "YENİ TEP." -18..-62      tepkime kutusu -60..-280
     //   "+N XP"     -334..-390      (2.1'de eklendi)
     //   buton sat.1 -418..-562    buton sat.2 -578..-722
     //   paylaşım satırı -732..-778    kart iç kenarı -800
@@ -76,8 +76,17 @@ public static class ResultCardBuilder
     private const float GoalsY = 95f;
     private const float GoalsLabelY = 205f;
     private const float ReactionsLabelY = -40f;
-    private const float ReactionsY = -190f;
-    private static readonly Vector2 ReactionsSize = new Vector2(820f, 260f);
+    private const float ReactionsY = -170f;
+
+    /// <summary>
+    /// Tepkime kutusu 260'tan 220'ye indi (2.1). Kutu 260 iken 4 satırlık
+    /// metin (172 birim) kutunun içinde ortalanıyor ve boyalı alt kenarı
+    /// -276'ya iniyordu; XP satırının üst kenarı -334, yani ikisi arasında
+    /// 58 birim kalıyordu ve cihaz görüntüsünde satırlar birbirine
+    /// yapışık okunuyordu. 220'de boyalı alan -256'da bitiyor, açıklık
+    /// 78 birim. Doluluk 172/220 = %78 (sınır %85).
+    /// </summary>
+    private static readonly Vector2 ReactionsSize = new Vector2(820f, 220f);
 
     /// <summary>Deneyim satırı: tepkime kutusu (-320) ile buton satırı (-418) arası.</summary>
     private const float XpRowY = -362f;

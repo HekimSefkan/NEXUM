@@ -145,8 +145,10 @@ public static class RankUpPanelBuilder
         GameObject xp = Metin(b, theme, "XpText", new Vector2(680f, 44f), XpY,
                               theme.typography.label, theme.palette.textSecondary);
 
+        // textMuted (#515961) kart yüzeyinde 1,82:1 kalıyordu (ContrastTests
+        // ölçtü, sınır 4,5:1). textSecondary 6:1 üstünde.
         GameObject hint = Metin(b, theme, "HintText", new Vector2(680f, 40f), HintY,
-                                theme.typography.label, theme.palette.textMuted);
+                                theme.typography.label, theme.palette.textSecondary);
         EnsureLocalized(b, hint, CodeStrings.RankUpHint);
 
         // --- denetleyici
