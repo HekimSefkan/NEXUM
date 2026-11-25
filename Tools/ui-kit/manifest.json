@@ -4927,5 +4927,197 @@
         ]
       }
     }
+  },
+  "rozetler": {
+    "aciklama": "Rozet gorseli = kitteki madalya cercevesi (badge_frame_normal, 9-slice) + buradan bir glif. Glif CERCEVESIZ uretilir; cerceve Unity'de altina konur. Cizgi kalinligi ve olcek simge ailesiyle birebir.",
+    "durumlar": [
+      "normal",
+      "disabled"
+    ],
+    "cozunurlukler": [
+      384
+    ],
+    "sprites": {
+      "badge_flask_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "flask",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_flask_disabled_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "flask",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_book_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "book",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_book_disabled_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "book",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_shield_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "shield",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_shield_disabled_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "shield",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_flame_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "flame",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_flame_disabled_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "flame",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_calendar_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "calendar",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_calendar_disabled_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "calendar",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_star_full_normal_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "star_full",
+        "durum": "normal",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "badge_star_full_disabled_384.png": {
+        "tip": "sabit",
+        "boyut": [
+          384,
+          384
+        ],
+        "glif": "star_full",
+        "durum": "disabled",
+        "border": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
   }
 }

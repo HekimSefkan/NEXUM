@@ -257,6 +257,142 @@ ICONS = {
 }
 
 
+# ---------------------------------------------------------- rozet glifleri
+# Rozet gorseli = kitteki MADALYA CERCEVESI (badge_frame_normal) + buradan
+# bir glif. Yeni bir gorsel dili ACILMAZ: ayni cizgi kalinligi (kal), ayni
+# uc geometrisi, ayni olcek (yaricap ~0.175*S) simge ailesiyle birebir.
+#
+# Glif CERCEVESIZ uretilir: cerceve 9-slice sprite olarak Unity'de altina
+# konur, yani glifin kendi panosu olmaz (ikinci bir cerceve iki kat kenarlik
+# demekti).
+
+def g_balon(d, S, kal, c):
+    """Erlenmayer: 'ilk sentez'. Kimyanin en tanidik kabi."""
+    cx, cy = S * 0.5, S * 0.52
+    bw, bh = S * 0.165, S * 0.15
+    boyun = S * 0.055
+    ust = cy - bh
+    # boyun
+    d.line([(cx - boyun, ust), (cx - boyun, ust - S * 0.075)], fill=c, width=kal)
+    d.line([(cx + boyun, ust), (cx + boyun, ust - S * 0.075)], fill=c, width=kal)
+    d.line([(cx - boyun * 1.5, ust - S * 0.075), (cx + boyun * 1.5, ust - S * 0.075)],
+           fill=c, width=kal)
+    # govde: iki yan duvar + taban
+    d.line([(cx - boyun, ust), (cx - bw, cy + bh)], fill=c, width=kal)
+    d.line([(cx + boyun, ust), (cx + bw, cy + bh)], fill=c, width=kal)
+    d.line([(cx - bw, cy + bh), (cx + bw, cy + bh)], fill=c, width=kal)
+    # sivi yuzeyi
+    d.line([(cx - bw * 0.72, cy + bh * 0.3), (cx + bw * 0.72, cy + bh * 0.3)],
+           fill=c, width=kal)
+
+
+def g_kitap(d, S, kal, c):
+    """Defter: 'tum tepkimeler' ve 'ansiklopedi kurdu'.
+
+    ACIK kitap denendi ve 96 birimde kutu gibi okundu (iki egik sayfa
+    kenari ayni cizgi kalinliginda birlesiyor). Kapali defter + sirt +
+    iki satir izi daha ayirt edilebilir.
+    """
+    cx, cy = S * 0.5, S * 0.5
+    w, h = S * 0.145, S * 0.175
+    d.rectangle([cx - w, cy - h, cx + w, cy + h], outline=c, width=kal)
+    # sirt
+    d.line([(cx - w * 0.42, cy - h), (cx - w * 0.42, cy + h)], fill=c, width=kal)
+    # sayfa izleri
+    for i in (-1, 1):
+        y = cy + i * h * 0.34
+        d.line([(cx - w * 0.1, y), (cx + w * 0.62, y)], fill=c, width=kal)
+
+
+def g_kalkan(d, S, kal, c):
+    """Kalkan: 'kazasiz bolum'. Icinde onay isareti YOK (iki glif bir arada
+    cizgi yogunlugunu ikiye katliyordu, 96 birimde okunmuyor)."""
+    cx, cy = S * 0.5, S * 0.5
+    w, h = S * 0.145, S * 0.17
+    d.line([(cx - w, cy - h * 0.75), (cx, cy - h)], fill=c, width=kal)
+    d.line([(cx, cy - h), (cx + w, cy - h * 0.75)], fill=c, width=kal)
+    d.line([(cx - w, cy - h * 0.75), (cx - w, cy + h * 0.1)], fill=c, width=kal)
+    d.line([(cx + w, cy - h * 0.75), (cx + w, cy + h * 0.1)], fill=c, width=kal)
+    d.line([(cx - w, cy + h * 0.1), (cx, cy + h)], fill=c, width=kal)
+    d.line([(cx + w, cy + h * 0.1), (cx, cy + h)], fill=c, width=kal)
+
+
+def g_alev(d, S, kal, c):
+    """Alev: gun serisi rozetleri (Faz 3). Bunsen bekinin dili.
+
+    Iki deneme elendi: simetrik ucgen elmas/ok gibi okundu, yarim daire +
+    kenar cizgisi ise kalin cizgide ic ice iki hat gibi gorundu. Govde tek
+    KAPALI yol: asimetrik damla, sag omuz disa tasiyor.
+    """
+    cx = S * 0.5
+    noktalar = [
+        (cx, S * 0.300),                 # uc
+        (cx + S * 0.072, S * 0.400),
+        (cx + S * 0.138, S * 0.498),     # sag omuz
+        (cx + S * 0.118, S * 0.600),
+        (cx, S * 0.658),                 # taban
+        (cx - S * 0.118, S * 0.600),
+        (cx - S * 0.132, S * 0.488),     # sol omuz
+        (cx - S * 0.058, S * 0.382),
+    ]
+    d.line(noktalar + [noktalar[0]], fill=c, width=kal, joint="curve")
+
+
+def g_takvim(d, S, kal, c):
+    """Takvim: gunluk bulmaca (Faz 3)."""
+    cx, cy = S * 0.5, S * 0.52
+    w, h = S * 0.165, S * 0.145
+    d.rectangle([cx - w, cy - h, cx + w, cy + h], outline=c, width=kal)
+    d.line([(cx - w, cy - h * 0.42), (cx + w, cy - h * 0.42)], fill=c, width=kal)
+    for yon in (-0.5, 0.5):
+        x = cx + yon * w
+        d.line([(x, cy - h - S * 0.045), (x, cy - h + S * 0.02)], fill=c, width=kal)
+
+
+BADGE_GLYPHS = {
+    "flask": g_balon,
+    "book": g_kitap,
+    "shield": g_kalkan,
+    "flame": g_alev,
+    "calendar": g_takvim,
+    "star_full": g_yildiz_dolu,
+}
+
+# Rozet 160 birimde cizilir; 1440 genislikte 213 piksel, x1,5 = 320 ->
+# 384 kaynak hem kuculterek cizdirir hem import kuralini (1,5 kat)
+# kisitlamaz.
+BADGE_SIZES = [384]
+BADGE_OUT = os.path.join(ROOT, "Tools", "ui-kit", "badges")
+
+# Rozet durumu IKI tane: kazanilmis (parlak glif) ve kilitli (sonuk glif).
+# Simge ailesinin durum tablosundan okunur, ikinci bir renk tanimlanmaz.
+BADGE_STATES = ("normal", "disabled")
+
+
+def badge_glyph(size, ad, durum):
+    """Cercevesiz glif: saydam zemin, simge ailesiyle ayni cizgi kalinligi."""
+    st = STATES[durum]
+    S = size * SS
+    img = Image.new("RGBA", (S, S), CLEAR)
+    kal = max(2, int(S * 0.052))
+    BADGE_GLYPHS[ad](ImageDraw.Draw(img), S, kal, PAL[st["glyph"]] + (255,))
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def uret_rozetler():
+    os.makedirs(BADGE_OUT, exist_ok=True)
+    kayit = {}
+    for ad in BADGE_GLYPHS:
+        for durum in BADGE_STATES:
+            for boy in BADGE_SIZES:
+                dosya = "badge_%s_%s_%d.png" % (ad, durum, boy)
+                badge_glyph(boy, ad, durum).save(os.path.join(BADGE_OUT, dosya))
+                kayit[dosya] = {"tip": "sabit", "boyut": [boy, boy],
+                                "glif": ad, "durum": durum, "border": [0, 0, 0, 0]}
+    print("rozet glifleri: %d sprite -> %s" % (len(kayit), BADGE_OUT))
+    return kayit
+
+
 def icon(size, ad, durum):
     """Tek simge. Cerceve = yuvarlak metal pano + ince izgara."""
     st = STATES[durum]
@@ -368,6 +504,7 @@ def uret():
 
     kayit.update(uret_cember())
     kayit.update(uret_maske())
+    rozetler = uret_rozetler()
 
     if os.path.exists(MANIFEST):
         man = json.load(open(MANIFEST, encoding="utf-8"))
@@ -381,6 +518,15 @@ def uret():
         "durumlar": list(STATES.keys()),
         "cozunurlukler": SIZES,
         "sprites": kayit,
+    }
+    man["rozetler"] = {
+        "aciklama": "Rozet gorseli = kitteki madalya cercevesi "
+                    "(badge_frame_normal, 9-slice) + buradan bir glif. "
+                    "Glif CERCEVESIZ uretilir; cerceve Unity'de altina konur. "
+                    "Cizgi kalinligi ve olcek simge ailesiyle birebir.",
+        "durumlar": list(BADGE_STATES),
+        "cozunurlukler": BADGE_SIZES,
+        "sprites": rozetler,
     }
     with open(MANIFEST, "w", encoding="utf-8") as f:
         json.dump(man, f, ensure_ascii=False, indent=2)
