@@ -68,6 +68,19 @@ public static class ProgressionService
 {
     private const string Tag = "NEXUM_XP";
 
+    /// <summary>
+    /// Kabul edilen en büyük bölüm indeksi + 1. Kayıt katmanının sayı
+    /// listesi tavanıyla (<c>SaveService</c> IntListMax) aynı olmalı:
+    /// buradan büyük bir indeks, onarımın keseceği bir liste üretirdi.
+    /// </summary>
+    private const int MaxLevels = 64;
+
+    /// <summary>
+    /// XP ödemiş soru adı listesinin tavanı. Kayıt katmanının ad listesi
+    /// tavanıyla (NameListMax) aynı; bugünkü banka 36 soru.
+    /// </summary>
+    private const int MaxQuizAwards = 256;
+
     // =================================================================== XP
 
     public static int Xp
@@ -137,7 +150,15 @@ public static class ProgressionService
     public static int AwardLevelComplete(int levelIndex, int earnedScore)
     {
         if (!XpSources.LevelComplete) return 0;
-        if (levelIndex < 0) return 0;
+
+        // Akıl dışı indeks kabul edilmez: defter listesi indeksle büyüyor,
+        // yani sınırsız bir indeks sınırsız bellek demekti. Sınır kayıt
+        // katmanının liste tavanıyla aynı (SaveService.IntListMax).
+        if (levelIndex < 0 || levelIndex >= MaxLevels)
+        {
+            Debug.LogError($"{Tag}: akil disi bolum indeksi {levelIndex} -> 0 XP");
+            return 0;
+        }
 
         int hak = ProgressionTable.LevelClearXp + ScoreXp(earnedScore);
         List<int> granted = EnsureLevelList(levelIndex);
@@ -224,6 +245,14 @@ public static class ProgressionService
         {
             odenen = new List<string>();
             d.quizXpAwarded = odenen;
+        }
+
+        // Liste bankanın boyuyla sınırlı kalmalı: banka okunamazsa
+        // (bankSize 0) tavan uygulanamıyor, o zaman bu sınır devreye girer.
+        if (odenen.Count >= MaxQuizAwards)
+        {
+            Debug.LogError($"{Tag}: quiz odul listesi tavana dayandi ({odenen.Count}) -> 0 XP");
+            return 0;
         }
 
         if (odenen.Contains(questionName))

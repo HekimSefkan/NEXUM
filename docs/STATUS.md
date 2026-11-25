@@ -1,7 +1,12 @@
 # NEXUM – Durum Notu
 
-**Tarih:** 24 Kasım 2026 · **Dal:** `menu-hub` (Faz 1 / Adım 1.7, PR açık — birleştirilmedi)
+**Tarih:** 25 Kasım 2026 · **Dal:** `progression` (Faz 2 / Adım 2.1, PR açık — birleştirilmedi)
 
+> **FAZ 2 / 2.1 AÇIK PR.** XP, rütbe ve rozet sistemi kuruldu; rütbe adları,
+> eşikler ve rozet görselleri **kullanıcı onayı bekliyor**
+> (`docs/DESIGN_TOKENS.md` bölüm 12, `docs/ui-kit/badges.png`).
+> Araştırma Puanı yalnızca ÖNERİ: `docs/ECONOMY_PROPOSAL.md`, kod yazılmadı.
+>
 > **FAZ 1 TAMAMLANDI.** Oyuncunun gördüğü bilgi katmanı bitti: tepkime denklemi, tarif defteri, geçersiz birleştirme geri bildirimi, istatistik onarımı, quiz öğrenme katmanı, bölüm sonu sonuç kartı + paylaşım ve ana menü hub'ı.
 
 Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar ve alınan kararlar için `CLAUDE.md`, yayın adımları için `docs/RELEASE_CHECKLIST.md`.
@@ -23,7 +28,7 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - `.gitattributes` ile satır sonları LF'e sabitlendi; `Builds/`, paketler ve ekran görüntüleri git dışında.
 - `AppBootstrap`: 60 FPS, sahne yüklenince `timeScale = 1`, arka plana geçince `PlayerPrefs.Save`.
 - **Doğrulama aracı** `Assets/Editor/NexumValidation.cs`: kopuk referans, null alan, NaN rect, UnityEvent hedefi, bölüm çözülebilirliği, doku/ikon/yayın kontrolleri. Beklenen sonuç: `OK`, 0 uyarı.
-- **PlayMode testleri** (`Assets/Tests/PlayMode`): panel kaydırma, girdi kilidi, geri tuşu, kayıt uyarısı, yerleşim ölçümü, çekirdek döngü, kayıt göçü, lokalizasyon, tepkime denklemi, ok kalibrasyonu, tarif defteri — toplam **59 test**.
+- **PlayMode testleri** (`Assets/Tests/PlayMode`): panel kaydırma, girdi kilidi, geri tuşu, kayıt uyarısı, yerleşim ölçümü, çekirdek döngü, kayıt göçü, lokalizasyon, tepkime denklemi, ok kalibrasyonu, tarif defteri, sonuç kartı, menü hub'ı, ilerleme (XP/rütbe/rozet) — toplam **192 test** (2.1 itibarıyla).
 
 **Doku, ses ve boyut**
 - Doku import kuralı (kullanımın 1,5 katı, çalışma zamanı atamaları dahil) tüm dokulara uygulandı.
@@ -67,6 +72,33 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **Sistem bildirimi** artık kombo bandını kullanmıyor: yeni tarif keşfi ile kombo yazısı aynı karede doğduğu için bildirim tahtanın altındaki kendi bandına alındı.
 - **Ana menü hub'ı** (Adım 1.7): logo · profil şeridi · kahraman kart · ikili kart · mod satırı · bilgi satırı · ikon şeridi. Yerleşim AKAR (`VerticalLayoutGroup` + açık `LayoutElement`): uygulanmamış giriş tamamen gizli, gizli giriş boşluk bırakmıyor. Görünürlüğün tek kaynağı `HubFeatures`; Faz 2/3/5 bir özelliği bitirince orada tek satır değişir. Durum satırları gerçek kayıttan ("Bölüm 4 · kaldığın yerden", "4 / 7 açık", "10 / 21 tepkime") — sahte değer yok. Ses ikonu Ayarlar'la aynı kayıt alanlarını yazar. Ölçüm: bugünkü hâl 1310, tüm bayraklar açık 1514 birim (ikisi de 1920'ye sığıyor, kaydırma yok).
 - **Quiz öğrenme katmanı** (Adım 1.5): 36 sorunun tamamında açıklama (sözlükte, anahtar asset adından türetilir); doğru cevap panelinde başlık + açıklama + "dokun" ipucu, bekleme en az 2 sn / dokununca / en çok 10 sn. Yanlış cevaplanan sorular `SaveData.quizWrongPool`'a girer ve sonraki quizlerde **1/3 oranında** öncelik kazanır (`QuizSelector`); aynı soru üst üste sorulmaz, havuz yalnızca kesinleşmiş cevapla değişir. Banka 16 → **36 soru** (`NexumQuizBank`, idempotent), etiketli (konu · zorluk · ilgili bileşik) — etiketler Faz 5 soru modu için, o mod kurulmadı. Soru puntosu pişirildi (auto-size kapalı, 46). **Bilgi Kartları ayarı** duraklat kartındaki "BİLİYOR MUYDUN?" bölümüne bağlandı. Kimya doğruluğu `docs/QUIZ_REVIEW.md` tablosunda onay bekliyor.
+
+**Faz 2 — ilerleme ve ödül katmanı**
+- **XP, rütbe ve rozet** (Adım 2.1, PR açık): `Assets/Scripts/Progression`
+  (`Nexum.Progression` asmdef) — XP tablosu, yedi rütbe, dokuz rozet.
+  Derleme hiçbir oyun tipine bağlı değil; bölüm/tarif/quiz sayıları
+  `ProgressionBootstrap` üzerinden parametre olarak geliyor.
+  - **XP kaynakları:** bölüm tamamlama (60 + kazanılan/5), tarif keşfi (30),
+    quiz ilk doğru cevabı (12). Yıldız / günlük bulmaca / ansiklopedi
+    kaynakları `XpSources` tablosunda TANIMLI ama kapalı.
+  - **Çiftlik yok:** bölüm XP'si "en iyi sonuç" defteri (`levelXpGranted`);
+    aynı bölümü tekrar bitirmek 0 XP, daha iyi bitirmek yalnızca farkı
+    veriyor. Quiz soru başına bir kez ödüyor (`quizXpAwarded` +
+    `quizXpPaid` tavanı).
+  - **Geri alınan hamle XP bırakmaz** — anlık görüntüyle değil YAPIYLA:
+    XP'nin hiçbir yazıcısı geri alınabilir bir ana bağlı değil.
+  - **Kayıt sürüm 4:** `xp`, `levelXpGranted`, `quizXpAwarded`,
+    `quizXpPaid`, `badges`, `rankCelebrated`, `xpBackfillDone`. Geriye
+    dönük hesap yalnızca kaydedilmiş veriden (tamamlanmış bölüm, keşfedilen
+    tarif, `quizCorrect`); puan payı verilmez çünkü bölüm başına kazanılan
+    puan hiç kaydedilmedi.
+  - **Kutlama** `RankUpPanel`: iki sahnede de kurulu, ölçülü (tam ekran
+    parlama yok, döngü yok, dokununca kapanır, **bir kez** gösterilir).
+  - **Görünür yerler:** sonuç kartında "+N XP" satırı (kart 1500 → 1600),
+    hub profil şeridinde rütbe adı + XP çubuğu.
+  - **Rozet görselleri** `docs/ui-kit/badges.png` — kullanıcı onayı bekliyor;
+    glifler henüz `Assets`'e alınmadı (rozet duvarı 2.3'ün işi).
+  - **Araştırma Puanı** `docs/ECONOMY_PROPOSAL.md` — yalnızca öneri.
 
 ---
 
@@ -114,12 +146,28 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
 - **`Shift()` refactor'ü** — dört kopya blok tek döngüde; parmak izi testiyle davranışın aynı kaldığı kanıtlandı.
 
 **Faz 2'ye devredilenler:**
-- **Yıldızlar.** Üç yıldızlık yer hem kahraman kartta hem bölüm sonu sonuç kartında KURULU ama `HubFeatures.Stars` / `ResultCard.starsEnabled` ile gizli. Bayrak açılınca yerleşim yeniden kurulmayacak; "tüm bayraklar açık" görüntüsü bugünden alındı.
-- **XP'nin kaynağı — KURAL.** XP, bölümde **KAZANILAN** puandan beslenmeli (`LevelRun.EarnedScore`), kalan skordan değil. Kalan skor geri alma ve Joker harcamasından sonra kalan tutardır; ondan XP vermek yardım kullanan oyuncuyu cezalandırır. Profil şeridindeki rütbe + XP alanları kurulu, `HubFeatures.RankAndXp` ile gizli.
-- **`totalScore` hâlâ ÖLÜ-KAYIT.** `SaveService.AddLevelScore` yazıyor, hiçbir ekran göstermiyor. Gösterilmeye başlanacaksa önce anlamı düzeltilmeli: bugünkü değer *kalan* skorların toplamı, "kazanılan toplam" değil (bkz. `docs/STATS_INVENTORY.md`).
+- **Yıldızlar (2.2).** Üç yıldızlık yer hem kahraman kartta hem bölüm sonu sonuç kartında KURULU ama `HubFeatures.Stars` / `ResultCard.starsEnabled` ile gizli. Yıldız XP'si (`ProgressionTable.StarXp = 20`) ve "Üç Yıldızlı Bölüm" rozeti de tanımlı ama `XpSources.Stars` / `Badges` ile kapalı; 2.2'de tek satır açılır.
+- ~~**XP'nin kaynağı — KURAL.**~~ **2.1'de UYGULANDI:** XP `LevelRun.EarnedScore`'dan besleniyor, `HubFeatures.RankAndXp` açıldı.
+- **`totalScore` hâlâ ÖLÜ-KAYIT.** `SaveService.AddLevelScore` yazıyor, hiçbir ekran göstermiyor. XP ondan beslenmiyor. `docs/ECONOMY_PROPOSAL.md` kaldırılmasını ve yerini Araştırma Puanı'nın almasını öneriyor (bkz. `docs/STATS_INVENTORY.md`).
 - **L4–L7 denge verisi.** Ölçüm 13. turda alındı ve duruyor: Na ağırlığını yarıya indirmek L4'ü %13→%30, L6'yı %11→%20 çıkarıyor; Ca'yı yarıya indirmek L6'yı %11→%20 çıkarırken L5'i %30→%27 düşürüyor. Uygulanmadı; denge turu bu veriyle başlayabilir.
 
-**Faz 3'e devredilenler:** günlük bulmaca kartı ve gün serisi rozeti (kurulu, `HubFeatures.DailyPuzzle` / `Streak` ile gizli).
+**2.1'den ONAY BEKLEYENLER (cihaz testi + karar):**
+- **Rütbe adları ve eşikleri** — `docs/DESIGN_TOKENS.md` 12.1 / 12.2.
+  Üç çelişki çözüm önerisiyle birlikte orada: "Baş Kimyager" hem varsayılan
+  oyuncu adı hem 6. rütbe (cihaz görüntüsünde yan yana görünüyor),
+  "Doçent" merdivene alınmadı, "Stajyer Kimyager" ölçüm sonucu "Stajyer"e
+  kısaldı.
+- **Rozet görselleri** — `docs/ui-kit/badges.png`.
+- **Araştırma Puanı önerisi** — `docs/ECONOMY_PROPOSAL.md` sonundaki üç
+  açık soru.
+
+**2.2'ye devredilenler:** yıldızlar (yer kurulu, XP ve rozet tanımlı,
+bayraklar kapalı).
+
+**2.3'e devredilenler:** profil panelinin yeniden yapımı (rozet duvarı,
+kesin XP sayısı, varsayılan oyuncu adının düzeltilmesi).
+
+**Faz 3'e devredilenler:** günlük bulmaca kartı ve gün serisi rozeti (kurulu, `HubFeatures.DailyPuzzle` / `Streak` ile gizli). Günlük bulmaca, `docs/ECONOMY_PROPOSAL.md`'ye göre Araştırma Puanı'nın tek YENİLENEBİLİR kaynağı olacak.
 
 **Faz 5'e devredilenler:** KAYNAMA NOKTASI · SONSUZ LAB · HAFTANIN DENEYİ mod kartları ve mentor ikonu (kurulu, gizli). Quiz bankasındaki 36 sorunun etiketleri (konu · zorluk · ilgili bileşik) KAYNAMA NOKTASI'nın süzme verisi olarak hazır.
 
@@ -154,6 +202,6 @@ Bu belge projeye ara verirken bırakılan durumu özetler. Ayrıntılı kurallar
    & "C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe" -batchmode -runTests -projectPath "C:\Projects\NEXUM" -testPlatform PlayMode -testResults "C:\Projects\NEXUM\Logs\tests.xml" -logFile "C:\Projects\NEXUM\Logs\tests.log" | Out-Null
    Set-Location "C:\Projects\NEXUM"; git status --short
    ```
-   Beklenen: `NEXUM_VALIDATION: OK` + 0 uyarı, PlayMode 59/59. PlayMode testi `ProjectSettings.asset` içindeki `runInBackground` değerini 1 yapar; commit etmeden `git restore` ile geri alınır.
+   Beklenen: `NEXUM_VALIDATION: OK` + 0 uyarı, PlayMode **192/192** (2.1 ölçümü). PlayMode testi `ProjectSettings.asset` içindeki `runInBackground` değerini 1 yapar; commit etmeden `git restore` ile geri alınır.
 4. **Dal ve PR akışı:** `main`'den yeni bir dal aç (`git switch -c <konu>`), her adımı ayrı commit et, push edip PR aç. Cihazda görsel doğrulama gerektiren değişiklikler kullanıcı test etmeden birleştirilmez; belge/ayar değişiklikleri validator + testler temizse birleştirilebilir. `main`'e doğrudan commit, force push ve geçmiş yeniden yazma yok.
 5. **Ölçmeden düzeltme yok:** yerleşim sorunlarında `Assets/Tests/PlayMode/LayoutProbeTests.cs` çalışma zamanı dikdörtgenlerini referans birimiyle loglar; sahnedeki kayıtlı değerler TMP ve layout grupları yüzünden yanıltabilir.
